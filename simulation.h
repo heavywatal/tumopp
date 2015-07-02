@@ -64,6 +64,9 @@ class Simulation {
     //! Target directory to which the contents in WORK_DIR are moved
     fs::path OUT_DIR = TMP_DIR / wtl::strftime("out%Y%m%d");
 
+    //! Project directory
+    fs::path PROJECT_DIR;
+
   public:
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 

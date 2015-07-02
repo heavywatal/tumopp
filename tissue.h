@@ -26,7 +26,13 @@ class Tissue {
     static size_t MAX_SIZE_;
     static size_t DIMENSIONS_;
 
-    void grow();
+    Tissue() {
+        tumor_.emplace(std::vector<int>(DIMENSIONS_), Gland());
+    }
+
+    std::string grow();
+
+    std::string tsv() const;
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();

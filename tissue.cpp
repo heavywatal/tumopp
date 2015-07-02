@@ -12,8 +12,10 @@
 
 #include "cxxwtils/prandom.hpp"
 #include "cxxwtils/iostr.hpp"
+#include "cxxwtils/gz.hpp"
+#include "cxxwtils/debug.hpp"
 
-size_t Tissue::MAX_SIZE_ = 100;
+size_t Tissue::MAX_SIZE_ = 10000;
 size_t Tissue::DIMENSIONS_ = 2;
 
 boost::program_options::options_description& Tissue::opt_description() {
@@ -28,19 +30,20 @@ boost::program_options::options_description& Tissue::opt_description() {
 
 
 inline std::vector<int> random_direction(const size_t dimension) {
-    std::vector<int> direction(dimension);
-    int sign = wtl::prandom().randrange(2);  // 0 or 1
-    sign *= 2;  // 0 or 2
-    sign -= 1;  // -1 or 1
-    direction[wtl::prandom().randrange(dimension)] = sign;
+    std::vector<int> direction(dimension, -1);
+    for (size_t i=0; i<dimension; ++i) {
+        direction[i] += wtl::prandom().randrange(3);
+    }
+    if (direction == std::vector<int>(dimension, 0)) {
+        return random_direction(dimension);
+    }
     return direction;
 }
 
-void Tissue::grow() {
-    tumor_.emplace(std::vector<int>(DIMENSIONS_), Gland());
-    std::cout << tumor_ << std::endl;
+std::string Tissue::grow() {HERE;
     std::ostringstream history;
     history.precision(16);
+    history << "size\teffect\n";
     while (tumor_.size() < MAX_SIZE_) {
         auto parent = tumor_.begin();
         std::advance(parent, wtl::prandom().randrange(tumor_.size()));
@@ -56,8 +59,8 @@ void Tissue::grow() {
             push(daughter, parent->first, random_direction(DIMENSIONS_));
         }
     }
-    std::cout << tumor_ << std::endl;
-    std::cout << history.str() << std::endl;
+    //derr(tumor_ << std::endl);
+    return history.str();
 }
 
 void Tissue::push(const Gland& daughter, std::vector<int> coord, const std::vector<int>& direction) {
@@ -67,6 +70,23 @@ void Tissue::push(const Gland& daughter, std::vector<int> coord, const std::vect
         push(result.first->second, coord, direction);
         tumor_[coord] = daughter;
     }
+}
+
+std::string Tissue::tsv() const {
+    std::ostringstream ost;
+    std::string sep("\t");
+    ost.precision(16);
+    std::vector<std::string> axes{"x", "y", "z"};
+    for (size_t i=0; i<DIMENSIONS_; ++i) {
+        ost << axes[i] << sep;
+    }
+    ost << "sites" << sep << "fitness\n";
+    for (auto& item: tumor_) {
+        wtl::ost_join(ost, item.first, sep) << sep;
+        wtl::ost_join(ost, item.second.sites(), "|") << sep
+            << item.second.fitness() << "\n";
+    }
+    return ost.str();
 }
 
 void Tissue::unit_test() {

@@ -20,6 +20,7 @@ namespace boost {
 
 class Gland {
   public:
+    static double CELLS_PER_GLAND_;
     static double MUTATION_RATE_;
     static double MUTATION_SIGMA_;
     static double APOPTOSIS_RATE_;
@@ -28,6 +29,7 @@ class Gland {
     bool apoptosis() const;
 
     double fitness() const {return fitness_;}
+    const std::vector<size_t>& sites() const {return sites_;}
 
     friend std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
         return ost << gland.fitness();

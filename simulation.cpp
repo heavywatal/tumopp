@@ -56,6 +56,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
         description.print(std::cout);
         exit(0);
     }
+    PROJECT_DIR = fs::canonical(argv[0]).parent_path();
     OUT_DIR = fs::path(vm["top_dir"].as<std::string>());
     wtl::sfmt().seed(SEED);
     const std::string CONFIG_STRING = wtl::flags_into_string(description, vm);
@@ -85,9 +86,14 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() {HERE;
     switch (MODE) {
-      case 0:
-        tissue_.grow();
+      case 0: {
+        std::string history = tissue_.grow();
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << history;
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.tsv();
+        auto plot = (PROJECT_DIR / "plot2d.R").c_str();
+        if (wtl::exists(plot)) {system(plot);}
         break;
+      }
       case 1:
         break;
       default:
