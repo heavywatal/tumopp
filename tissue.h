@@ -8,8 +8,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include <deque>
-#include <bitset>
+#include <map>
 #include <string>
 
 #include "gland.h"
@@ -25,17 +24,17 @@ namespace boost {
 class Tissue {
   public:
     static size_t MAX_SIZE_;
+    static size_t DIMENSIONS_;
 
     void grow();
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 
-    std::string str_fitness() const;
-    std::string str_malignancy() const;
-
   private:
-    std::deque<Gland> glands_;
+    void push(const Gland& daughter, std::vector<int> parent_pos, const std::vector<int>& direction);
+
+    std::map<std::vector<int>, Gland> tumor_;
 };
 
 #endif /* TISSUE_H_ */

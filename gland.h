@@ -21,15 +21,17 @@ namespace boost {
 class Gland {
   public:
     static double MUTATION_RATE_;
-    static double SIGMA_;
+    static double MUTATION_SIGMA_;
+    static double APOPTOSIS_RATE_;
 
-    Gland(bool malignant=false): malignant_{malignant} {}
-
-    void mutate();
+    bool mutate();
     bool apoptosis() const;
-    int fission() const;
+
     double fitness() const {return fitness_;}
-    unsigned int malignant() const {return static_cast<unsigned int>(malignant_);}
+
+    friend std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
+        return ost << gland.fitness();
+    }
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();
@@ -37,7 +39,6 @@ class Gland {
   private:
     static size_t MUTATED_SITES_;
 
-    bool malignant_ = false;
     double fitness_ = 1.0;
     std::vector<size_t> sites_;
 };

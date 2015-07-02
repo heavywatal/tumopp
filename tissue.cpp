@@ -13,52 +13,60 @@
 #include "cxxwtils/prandom.hpp"
 #include "cxxwtils/iostr.hpp"
 
-size_t Tissue::MAX_SIZE_ = 20;
+size_t Tissue::MAX_SIZE_ = 100;
+size_t Tissue::DIMENSIONS_ = 2;
 
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Tissue"};
     desc.add_options()
-        ("max,l", po::value<size_t>(&MAX_SIZE_)->default_value(MAX_SIZE_))
+        ("max,N", po::value<size_t>(&MAX_SIZE_)->default_value(MAX_SIZE_))
+        ("dimensions,d", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
     ;
     return desc;
 }
 
+
+inline std::vector<int> random_direction(const size_t dimension) {
+    std::vector<int> direction(dimension);
+    int sign = wtl::prandom().randrange(2);  // 0 or 1
+    sign *= 2;  // 0 or 2
+    sign -= 1;  // -1 or 1
+    direction[wtl::prandom().randrange(dimension)] = sign;
+    return direction;
+}
+
 void Tissue::grow() {
-    glands_.resize(MAX_SIZE_);
-    glands_[MAX_SIZE_ / 2 - 1] = Gland(true);
-    std::cout << str_malignancy() << std::endl;
-    for (size_t t=0; t<20; ++t) {
-        for (size_t i=0; i<glands_.size(); ++i) {
-            auto& parent = glands_[i];
-            if (!parent.malignant()) continue;
-            Gland daughter = parent;
-            daughter.mutate();
-            if (parent.apoptosis()) {
-                parent = daughter;
-            } else {
-                const size_t direction = static_cast<size_t>(wtl::prandom().bernoulli(0.5));
-                auto pos = i + direction;
-                if (pos < MAX_SIZE_ / 2) {
-                    glands_.pop_front();
-                } else {
-                    glands_.pop_back();
-                    ++i;
-                }
-                glands_.insert(glands_.begin() + pos, daughter);
-            }
+    tumor_.emplace(std::vector<int>(DIMENSIONS_), Gland());
+    std::cout << tumor_ << std::endl;
+    std::ostringstream history;
+    history.precision(16);
+    while (tumor_.size() < MAX_SIZE_) {
+        auto parent = tumor_.begin();
+        std::advance(parent, wtl::prandom().randrange(tumor_.size()));
+        Gland daughter = parent->second;
+        double fitness = daughter.fitness();
+        if (daughter.mutate()) {
+            history << tumor_.size() << "\t"
+                    << daughter.fitness() - fitness << "\n";
         }
-        //std::cout << str_fitness() << std::endl;
-        std::cout << str_malignancy() << std::endl;
+        if (parent->second.apoptosis()) {
+            parent->second = daughter;
+        } else {
+            push(daughter, parent->first, random_direction(DIMENSIONS_));
+        }
     }
+    std::cout << tumor_ << std::endl;
+    std::cout << history.str() << std::endl;
 }
 
-std::string Tissue::str_fitness() const {
-    return wtl::oss_join(glands_, ",", [](const Gland& x) {return x.fitness();});
-}
-
-std::string Tissue::str_malignancy() const {
-    return wtl::oss_join(glands_, "", [](const Gland& x) {return x.malignant();});
+void Tissue::push(const Gland& daughter, std::vector<int> coord, const std::vector<int>& direction) {
+    std::transform(coord.begin(), coord.end(),direction.begin(), coord.begin(), std::plus<int>());
+    auto result = tumor_.emplace(coord, daughter);
+    if (!result.second) {
+        push(result.first->second, coord, direction);
+        tumor_[coord] = daughter;
+    }
 }
 
 void Tissue::unit_test() {
