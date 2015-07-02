@@ -15,7 +15,7 @@
 #include "cxxwtils/gz.hpp"
 #include "cxxwtils/debug.hpp"
 
-size_t Tissue::MAX_SIZE_ = 10000;
+size_t Tissue::MAX_SIZE_ = 20000;
 size_t Tissue::DIMENSIONS_ = 2;
 
 boost::program_options::options_description& Tissue::opt_description() {
@@ -43,7 +43,13 @@ inline std::vector<int> random_direction(const size_t dimension) {
 std::string Tissue::grow() {HERE;
     std::ostringstream history;
     history.precision(16);
-    history << "size\teffect\n";
+    std::vector<std::string> xyz{"x", "y", "z"};
+    xyz.resize(DIMENSIONS_);
+    history << "size\teffect";
+    for (auto x: xyz) {
+        history << "\torigin_" << x;
+    }
+    history << "\n";
     while (tumor_.size() < MAX_SIZE_) {
         auto parent = tumor_.begin();
         std::advance(parent, wtl::prandom().randrange(tumor_.size()));
@@ -51,7 +57,8 @@ std::string Tissue::grow() {HERE;
         double fitness = daughter.fitness();
         if (daughter.mutate()) {
             history << tumor_.size() << "\t"
-                    << daughter.fitness() - fitness << "\n";
+                    << daughter.fitness() - fitness << "\t"
+                    << wtl::oss_join(parent->first, "\t") << "\n";
         }
         if (parent->second.apoptosis()) {
             parent->second = daughter;

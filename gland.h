@@ -20,9 +20,17 @@ namespace boost {
 
 class Gland {
   public:
+    // 80 billion cells / 8 million glands = 10000
     static double CELLS_PER_GLAND_;
+
+    // per gland per division
+    // {1e-8 to 1e-4}
     static double MUTATION_RATE_;
+
+    // {0, 0.2, 0.6}
     static double MUTATION_SIGMA_;
+
+    // 0.2 fixed in the article
     static double APOPTOSIS_RATE_;
 
     bool mutate();

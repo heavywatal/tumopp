@@ -13,8 +13,8 @@
 #include "cxxwtils/prandom.hpp"
 #include "cxxwtils/iostr.hpp"
 
-double Gland::CELLS_PER_GLAND_ = 1e5;
-double Gland::MUTATION_RATE_ = 1e-6;
+double Gland::CELLS_PER_GLAND_ = 1e4;
+double Gland::MUTATION_RATE_ = 1e-5;
 double Gland::MUTATION_SIGMA_ = 0.0;
 double Gland::APOPTOSIS_RATE_ = 0.2;
 

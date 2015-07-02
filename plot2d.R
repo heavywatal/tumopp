@@ -26,6 +26,7 @@ population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %
 
 .p = .data %>>%
     mutate(size=ifelse(size <= .threshold, size, NA), effect=NULL) %>>%
+    dplyr::select(-starts_with('origin_')) %>>%
     filter(!duplicated(.)) %>>%
     group_by(x, y) %>>%
     filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
