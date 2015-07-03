@@ -40,42 +40,44 @@ inline std::vector<int> random_direction(const size_t dimension) {
     return direction;
 }
 
-std::string Tissue::grow() {HERE;
-    std::ostringstream history;
-    history.precision(16);
-    std::vector<std::string> xyz{"x", "y", "z"};
-    xyz.resize(DIMENSIONS_);
-    history << "size\teffect";
-    for (auto x: xyz) {
-        history << "\torigin_" << x;
+void Tissue::mark(const size_t n) {HERE;
+    tumor_.clear();
+    while (tumor_.size() < n) {
+        Gland daughter;
+        daughter.mutate();
+        std::vector<int> current_coords(DIMENSIONS_);
+        push(std::move(daughter), &current_coords, random_direction(DIMENSIONS_));
+        mutation_coords_.push_back(current_coords);
+        mutation_stages_.push_back(tumor_.size());
     }
-    history << "\n";
+}
+
+void Tissue::grow() {HERE;
     std::vector<std::vector<int> > coords;
     coords.reserve(MAX_SIZE_);
-    coords.push_back(std::vector<int>(DIMENSIONS_));
+    for (const auto& item: tumor_) {
+        coords.push_back(item.first);
+    }
     while (tumor_.size() < MAX_SIZE_) {
         auto current_coords = *wtl::prandom().choice(coords.begin(), coords.end());
         auto& parent = tumor_[current_coords];
         Gland daughter = parent;
-        double fitness = daughter.fitness();
-        if (daughter.bernoulli_mutation()) {
-            daughter.mutate();
-            history << tumor_.size() << "\t"
-                    << daughter.fitness() - fitness << "\t"
-                    << wtl::oss_join(current_coords, "\t") << "\n";
-        }
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
-            // TODO: rate-limiting
             push(std::move(daughter), &current_coords, random_direction(DIMENSIONS_));
-            coords.push_back(std::move(current_coords));
+            coords.push_back(current_coords);
+        }
+        if (Gland::bernoulli_mutation()) {
+            tumor_[current_coords].mutate();
+            mutation_coords_.push_back(std::move(current_coords));
+            mutation_stages_.push_back(tumor_.size());
         }
     }
-    return history.str();
 }
 
 void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<int>& direction) {
+    // TODO: rate-limiting
     std::transform(coord->begin(), coord->end(), direction.begin(), coord->begin(), std::plus<int>());
     auto it = tumor_.find(*coord);
     if (it == tumor_.end()) {
@@ -86,9 +88,8 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     }
 }
 
-std::string Tissue::tsv() const {
+std::string Tissue::snapshot(const std::string& sep) const {HERE;
     std::ostringstream ost;
-    std::string sep("\t");
     ost.precision(16);
     std::vector<std::string> axes{"x", "y", "z"};
     axes.resize(DIMENSIONS_);
@@ -97,6 +98,24 @@ std::string Tissue::tsv() const {
         wtl::ost_join(ost, item.first, sep) << sep;
         wtl::ost_join(ost, item.second.sites(), "|") << sep
             << item.second.fitness() << "\n";
+    }
+    return ost.str();
+}
+
+std::string Tissue::mutation_history(const std::string& sep) const {HERE;
+    std::ostringstream ost;
+    ost.precision(16);
+    std::vector<std::string> xyz{"x", "y", "z"};
+    xyz.resize(DIMENSIONS_);
+    ost << "size" << sep << "effect";
+    for (auto x: xyz) {
+        ost << sep << "origin_" << x;
+    }
+    ost << "\n";
+    for (size_t i=0; i<mutation_coords_.size(); ++i) {
+        ost << mutation_stages_[i] << sep
+            << Gland::MUTATION_EFFECTS()[i] << sep;
+        wtl::ost_join(ost, mutation_coords_[i], sep) << "\n";
     }
     return ost.str();
 }

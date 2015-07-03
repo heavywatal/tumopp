@@ -29,10 +29,12 @@ class Tissue {
     Tissue() {
         tumor_.emplace(std::vector<int>(DIMENSIONS_), Gland());
     }
+    void mark(const size_t n);
 
-    std::string grow();
+    void grow();
 
-    std::string tsv() const;
+    std::string snapshot(const std::string& sep="\t") const;
+    std::string mutation_history(const std::string& sep="\t") const;
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();
@@ -41,6 +43,8 @@ class Tissue {
     void push(Gland&& daughter, std::vector<int>* current_coords, const std::vector<int>& direction);
 
     std::map<std::vector<int>, Gland> tumor_;
+    std::vector<std::vector<int>> mutation_coords_;
+    std::vector<size_t> mutation_stages_;
 };
 
 #endif /* TISSUE_H_ */

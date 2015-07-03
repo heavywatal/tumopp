@@ -39,24 +39,31 @@ class Gland {
     Gland(Gland&& other) = default;
     Gland& operator=(Gland&&) = default;
 
+    double fitness() const {
+        double result = 1.0;
+        for (const auto i: sites_) {
+            result += MUTATION_EFFECTS_[i];
+        }
+        return std::min(std::max(1.0, result), 5.0);
+    }
+
     void mutate();
-    bool bernoulli_mutation() const;
+
+    static bool bernoulli_mutation();
     bool bernoulli_apoptosis() const;
 
-    double fitness() const {return fitness_;}
+    // getter
     const std::vector<size_t>& sites() const {return sites_;}
+    static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
-    friend std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
-        return ost << gland.fitness();
-    }
+    friend std::ostream& operator<< (std::ostream& ost, const Gland& gland);
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 
   private:
-    static size_t MUTATED_SITES_;
+    static std::vector<double> MUTATION_EFFECTS_;
 
-    double fitness_ = 1.0;
     std::vector<size_t> sites_;
 };
 

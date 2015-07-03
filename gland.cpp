@@ -18,7 +18,7 @@ double Gland::MUTATION_RATE_ = 1e-5;
 double Gland::MUTATION_SIGMA_ = 0.0;
 double Gland::APOPTOSIS_RATE_ = 0.2;
 
-size_t Gland::MUTATED_SITES_ = 0;
+std::vector<double> Gland::MUTATION_EFFECTS_;
 
 boost::program_options::options_description& Gland::opt_description() {
     namespace po = boost::program_options;
@@ -33,18 +33,20 @@ boost::program_options::options_description& Gland::opt_description() {
 }
 
 void Gland::mutate() {
-    sites_.push_back(MUTATED_SITES_++);
-    fitness_ += wtl::prandom().gauss(0.0, MUTATION_SIGMA_);
-    fitness_ = std::max(fitness_, 1.0);
-    fitness_ = std::min(fitness_, 5.0);
+    sites_.push_back(MUTATION_EFFECTS_.size());
+    MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
 }
 
-bool Gland::bernoulli_mutation() const {
+bool Gland::bernoulli_mutation() {
     return wtl::prandom().bernoulli(MUTATION_RATE_ * CELLS_PER_GLAND_);
 }
 
 bool Gland::bernoulli_apoptosis() const {
-    return wtl::prandom().bernoulli(APOPTOSIS_RATE_ / fitness_);
+    return wtl::prandom().bernoulli(APOPTOSIS_RATE_ / fitness());
+}
+
+std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
+    return ost << gland.sites_;
 }
 
 void Gland::unit_test() {

@@ -87,17 +87,18 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 void Simulation::run() {HERE;
     switch (MODE) {
       case 0: {
-        std::string history = tissue_.grow();
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << history;
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.tsv();
+        tissue_.mark(4);
+        tissue_.grow();
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue_.mutation_history();
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.snapshot();
         auto plot = (PROJECT_DIR / "plot2d.R").c_str();
         if (wtl::exists(plot)) {system(plot);}
         break;
       }
       case 1: {
-        std::string history = tissue_.grow();
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << history;
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.tsv();
+        tissue_.grow();
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue_.mutation_history();
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.snapshot();
         break;
       }
       default:
