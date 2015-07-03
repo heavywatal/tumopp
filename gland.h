@@ -33,6 +33,12 @@ class Gland {
     // 0.2 fixed in the article
     static double APOPTOSIS_RATE_;
 
+    Gland() = default;
+    Gland(const Gland& other) = default;
+    Gland& operator=(const Gland&) = delete;
+    Gland(Gland&& other) = default;
+    Gland& operator=(Gland&&) = default;
+
     bool mutate();
     bool apoptosis() const;
 

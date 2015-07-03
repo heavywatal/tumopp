@@ -94,8 +94,12 @@ void Simulation::run() {HERE;
         if (wtl::exists(plot)) {system(plot);}
         break;
       }
-      case 1:
+      case 1: {
+        std::string history = tissue_.grow();
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << history;
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.tsv();
         break;
+      }
       default:
         exit(1);
     }

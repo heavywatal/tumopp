@@ -38,7 +38,7 @@ class Tissue {
     static boost::program_options::options_description& opt_description();
 
   private:
-    void push(const Gland& daughter, std::vector<int> parent_pos, const std::vector<int>& direction);
+    void push(Gland&& daughter, std::vector<int>* current_coords, const std::vector<int>& direction);
 
     std::map<std::vector<int>, Gland> tumor_;
 };

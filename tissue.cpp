@@ -50,33 +50,38 @@ std::string Tissue::grow() {HERE;
         history << "\torigin_" << x;
     }
     history << "\n";
+    std::vector<std::vector<int> > coords;
+    coords.reserve(MAX_SIZE_);
+    coords.push_back(std::vector<int>(DIMENSIONS_));
     while (tumor_.size() < MAX_SIZE_) {
-        auto parent = tumor_.begin();
-        // TODO: rate-limiting
-        std::advance(parent, wtl::prandom().randrange(tumor_.size()));
-        Gland daughter = parent->second;
+        auto current_coords = *wtl::prandom().choice(coords.begin(), coords.end());
+        auto& parent = tumor_[current_coords];
+        Gland daughter = parent;
         double fitness = daughter.fitness();
         if (daughter.mutate()) {
             history << tumor_.size() << "\t"
                     << daughter.fitness() - fitness << "\t"
-                    << wtl::oss_join(parent->first, "\t") << "\n";
+                    << wtl::oss_join(current_coords, "\t") << "\n";
         }
-        if (parent->second.apoptosis()) {
-            parent->second = daughter;
+        if (parent.apoptosis()) {
+            parent = std::move(daughter);
         } else {
             // TODO: rate-limiting
-            push(daughter, parent->first, random_direction(DIMENSIONS_));
+            push(std::move(daughter), &current_coords, random_direction(DIMENSIONS_));
+            coords.push_back(std::move(current_coords));
         }
     }
     return history.str();
 }
 
-void Tissue::push(const Gland& daughter, std::vector<int> coord, const std::vector<int>& direction) {
-    std::transform(coord.begin(), coord.end(),direction.begin(), coord.begin(), std::plus<int>());
-    auto result = tumor_.emplace(coord, daughter);
-    if (!result.second) {
-        push(result.first->second, coord, direction);
-        tumor_[coord] = daughter;
+void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<int>& direction) {
+    std::transform(coord->begin(), coord->end(), direction.begin(), coord->begin(), std::plus<int>());
+    auto it = tumor_.find(*coord);
+    if (it == tumor_.end()) {
+        tumor_.emplace(*coord, std::move(daughter));
+    } else {
+        push(std::move(it->second), coord, direction);
+        it->second = std::move(daughter);
     }
 }
 
