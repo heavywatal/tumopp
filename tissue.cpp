@@ -58,12 +58,13 @@ std::string Tissue::grow() {HERE;
         auto& parent = tumor_[current_coords];
         Gland daughter = parent;
         double fitness = daughter.fitness();
-        if (daughter.mutate()) {
+        if (daughter.bernoulli_mutation()) {
+            daughter.mutate();
             history << tumor_.size() << "\t"
                     << daughter.fitness() - fitness << "\t"
                     << wtl::oss_join(current_coords, "\t") << "\n";
         }
-        if (parent.apoptosis()) {
+        if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
             // TODO: rate-limiting

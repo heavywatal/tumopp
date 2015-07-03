@@ -39,8 +39,9 @@ class Gland {
     Gland(Gland&& other) = default;
     Gland& operator=(Gland&&) = default;
 
-    bool mutate();
-    bool apoptosis() const;
+    void mutate();
+    bool bernoulli_mutation() const;
+    bool bernoulli_apoptosis() const;
 
     double fitness() const {return fitness_;}
     const std::vector<size_t>& sites() const {return sites_;}

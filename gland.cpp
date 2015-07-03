@@ -32,18 +32,18 @@ boost::program_options::options_description& Gland::opt_description() {
     return desc;
 }
 
-bool Gland::mutate() {
-    if (wtl::prandom().bernoulli(MUTATION_RATE_ * CELLS_PER_GLAND_)) {
-        fitness_ += wtl::prandom().gauss(0.0, MUTATION_SIGMA_);
-        fitness_ = std::max(fitness_, 1.0);
-        fitness_ = std::min(fitness_, 5.0);
-        sites_.push_back(MUTATED_SITES_++);
-        return true;
-    }
-    return false;
+void Gland::mutate() {
+    sites_.push_back(MUTATED_SITES_++);
+    fitness_ += wtl::prandom().gauss(0.0, MUTATION_SIGMA_);
+    fitness_ = std::max(fitness_, 1.0);
+    fitness_ = std::min(fitness_, 5.0);
 }
 
-bool Gland::apoptosis() const {
+bool Gland::bernoulli_mutation() const {
+    return wtl::prandom().bernoulli(MUTATION_RATE_ * CELLS_PER_GLAND_);
+}
+
+bool Gland::bernoulli_apoptosis() const {
     return wtl::prandom().bernoulli(APOPTOSIS_RATE_ / fitness_);
 }
 
