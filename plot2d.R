@@ -38,7 +38,7 @@ population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())
 #.p
-ggsave('early_mutations.png', .p)
+ggsave('early_mutations.png', .p, width=7, height=7)
 
 .heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
 
@@ -50,4 +50,4 @@ ggsave('early_mutations.png', .p)
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())
 #.p
-ggsave('gradient.png', .p)
+ggsave('gradient.png', .p, width=7, height=7)

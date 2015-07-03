@@ -71,7 +71,7 @@ release:
 
 instruments: release
 	@echo $(shell gdate +%F_%T)
-	instruments -t "/Applications/Xcode.app/Contents/Applications/Instruments.app/Contents/Resources/templates/Time Profiler.tracetemplate" -D ~/tmp/profile$(shell gdate +%F_%T) ${PROGRAM} -T200
+	instruments -t "/Applications/Xcode.app/Contents/Applications/Instruments.app/Contents/Resources/templates/Time Profiler.tracetemplate" -D ~/tmp/profile$(shell gdate +%F_%T) ${PROGRAM} -N 50000
 
 ${OBJDIR}/%.o: | ${OBJDIR}
 	$(COMPILE.cpp) ${OUTPUT_OPTION} $<

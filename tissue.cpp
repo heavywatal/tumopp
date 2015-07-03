@@ -52,6 +52,7 @@ std::string Tissue::grow() {HERE;
     history << "\n";
     while (tumor_.size() < MAX_SIZE_) {
         auto parent = tumor_.begin();
+        // TODO: rate-limiting
         std::advance(parent, wtl::prandom().randrange(tumor_.size()));
         Gland daughter = parent->second;
         double fitness = daughter.fitness();
@@ -63,10 +64,10 @@ std::string Tissue::grow() {HERE;
         if (parent->second.apoptosis()) {
             parent->second = daughter;
         } else {
+            // TODO: rate-limiting
             push(daughter, parent->first, random_direction(DIMENSIONS_));
         }
     }
-    //derr(tumor_ << std::endl);
     return history.str();
 }
 
@@ -84,10 +85,8 @@ std::string Tissue::tsv() const {
     std::string sep("\t");
     ost.precision(16);
     std::vector<std::string> axes{"x", "y", "z"};
-    for (size_t i=0; i<DIMENSIONS_; ++i) {
-        ost << axes[i] << sep;
-    }
-    ost << "sites" << sep << "fitness\n";
+    axes.resize(DIMENSIONS_);
+    wtl::ost_join(ost, axes, sep) << sep << "sites" << sep << "fitness\n";
     for (auto& item: tumor_) {
         wtl::ost_join(ost, item.first, sep) << sep;
         wtl::ost_join(ost, item.second.sites(), "|") << sep
