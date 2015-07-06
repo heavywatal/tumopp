@@ -26,8 +26,8 @@ class Tissue {
     static size_t MAX_SIZE_;
     static size_t DIMENSIONS_;
 
-    Tissue() {
-        tumor_.emplace(std::vector<int>(DIMENSIONS_), Gland());
+    Tissue(): coords_{std::vector<int>(DIMENSIONS_)} {
+        tumor_.emplace(coords_.front(), Gland());
     }
     void mark(const size_t n);
 
@@ -45,6 +45,7 @@ class Tissue {
     void push(Gland&& daughter, std::vector<int>* current_coords, const std::vector<int>& direction);
 
     std::map<std::vector<int>, Gland> tumor_;
+    std::vector<std::vector<int>> coords_;
     std::vector<std::vector<int>> mutation_coords_;
     std::vector<size_t> mutation_stages_;
 };

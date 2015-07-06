@@ -53,20 +53,15 @@ void Tissue::mark(const size_t n) {HERE;
 }
 
 void Tissue::grow() {HERE;
-    std::vector<std::vector<int> > coords;
-    coords.reserve(MAX_SIZE_);
-    for (const auto& item: tumor_) {
-        coords.push_back(item.first);
-    }
+    coords_.reserve(MAX_SIZE_);
     while (tumor_.size() < MAX_SIZE_) {
-        auto current_coords = *wtl::prandom().choice(coords.begin(), coords.end());
+        auto current_coords = *wtl::prandom().choice(coords_.begin(), coords_.end());
         auto& parent = tumor_[current_coords];
         Gland daughter = parent;
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
             push(std::move(daughter), &current_coords, random_direction(DIMENSIONS_));
-            coords.push_back(current_coords);
         }
         if (Gland::bernoulli_mutation()) {
             tumor_[current_coords].mutate();
@@ -81,6 +76,7 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     std::transform(coord->begin(), coord->end(), direction.begin(), coord->begin(), std::plus<int>());
     auto it = tumor_.find(*coord);
     if (it == tumor_.end()) {
+        coords_.push_back(*coord);
         tumor_.emplace(*coord, std::move(daughter));
     } else {
         push(std::move(it->second), coord, direction);
