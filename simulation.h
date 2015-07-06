@@ -1,14 +1,6 @@
 // -*- mode: c++; coding: utf-8 -*-
 /*! @file simulation.h
     @brief Interface of Simulation class
-    @defgroup biol_param Biological parameters
-    @defgroup biol_proc Biological processes
-    @{
-        @defgroup habitat_pareference Habitat preference
-        @defgroup natural_selection Natural selection
-        @defgroup mating Mating
-        @defgroup life_cycle Life cycle
-    @}
 */
 #pragma once
 #ifndef SIMULATION_H_
@@ -62,7 +54,7 @@ class Simulation {
     fs::path WORK_DIR;
 
     //! Target directory to which the contents in WORK_DIR are moved
-    fs::path OUT_DIR = TMP_DIR / wtl::strftime("out%Y%m%d");
+    fs::path OUT_DIR = TMP_DIR / wtl::strftime("crc%Y%m%d");
 
     //! Project directory
     fs::path PROJECT_DIR;
