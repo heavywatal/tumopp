@@ -15,15 +15,10 @@
 #include "cxxwtils/gz.hpp"
 #include "cxxwtils/debug.hpp"
 
-size_t Tissue::MAX_SIZE_ = 20000;
-size_t Tissue::DIMENSIONS_ = 2;
-
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Tissue"};
     desc.add_options()
-        ("max,N", po::value<size_t>(&MAX_SIZE_)->default_value(MAX_SIZE_))
-        ("dimensions,d", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
     ;
     return desc;
 }
@@ -42,8 +37,8 @@ inline std::vector<int> random_direction(const size_t dimension) {
 
 void Tissue::mark(const size_t n) {HERE;
     while (tumor_.size() < n) {
-        std::vector<int> coords(DIMENSIONS_);
-        push(Gland(), &coords, random_direction(DIMENSIONS_));
+        std::vector<int> coord = coords_.front();
+        push(Gland(), &coord, random_direction(coord.size()));
     }
     for (auto& item: tumor_) {
         item.second.mutate();
@@ -52,16 +47,16 @@ void Tissue::mark(const size_t n) {HERE;
     }
 }
 
-void Tissue::grow() {HERE;
-    coords_.reserve(MAX_SIZE_);
-    while (tumor_.size() < MAX_SIZE_) {
+void Tissue::grow(const size_t max_size) {HERE;
+    coords_.reserve(max_size);
+    while (tumor_.size() < max_size) {
         auto current_coords = *wtl::prandom().choice(coords_.begin(), coords_.end());
         auto& parent = tumor_[current_coords];
         Gland daughter = parent;
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
-            push(std::move(daughter), &current_coords, random_direction(DIMENSIONS_));
+            push(std::move(daughter), &current_coords, random_direction(current_coords.size()));
         }
         if (Gland::bernoulli_mutation()) {
             tumor_[current_coords].mutate();
@@ -88,7 +83,7 @@ std::string Tissue::snapshot(const std::string& sep) const {HERE;
     std::ostringstream ost;
     ost.precision(16);
     std::vector<std::string> axes{"x", "y", "z"};
-    axes.resize(DIMENSIONS_);
+    axes.resize(coords_.front().size());
     wtl::ost_join(ost, axes, sep) << sep << "sites" << sep << "fitness\n";
     for (auto& item: tumor_) {
         wtl::ost_join(ost, item.first, sep) << sep;
@@ -102,7 +97,7 @@ std::string Tissue::mutation_history(const std::string& sep) const {HERE;
     std::ostringstream ost;
     ost.precision(16);
     std::vector<std::string> xyz{"x", "y", "z"};
-    xyz.resize(DIMENSIONS_);
+    xyz.resize(mutation_coords_.front().size());
     ost << "size" << sep << "effect";
     for (auto x: xyz) {
         ost << sep << "origin_" << x;
@@ -123,9 +118,11 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
 void Tissue::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
-    Tissue tissue;
+    Tissue tissue(3);
     tissue.mark(4);
+    tissue.grow(10);
     std::cerr << tissue << std::endl;
+    std::cerr << tissue.coords_ << std::endl;
     std::cerr << tissue.snapshot() << std::endl;
     std::cerr << tissue.mutation_history() << std::endl;
 }

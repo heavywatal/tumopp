@@ -28,6 +28,8 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
         ("label", po::value<std::string>(&LABEL)->default_value("default"))
         ("top_dir", po::value<std::string>()->default_value(OUT_DIR.string()))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
+        ("max,N", po::value<size_t>(&MAX_SIZE)->default_value(MAX_SIZE))
+        ("dimensions,D", po::value<size_t>(&DIMENSIONS)->default_value(DIMENSIONS))
     ;
     return description;
 }
@@ -87,18 +89,20 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 void Simulation::run() {HERE;
     switch (MODE) {
       case 0: {
-        tissue_.mark(4);
-        tissue_.grow();
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue_.mutation_history();
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.snapshot();
+        Tissue tissue(DIMENSIONS);
+        tissue.mark(4);
+        tissue.grow(MAX_SIZE);
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
         auto plot = (PROJECT_DIR / "plot2d.R").c_str();
         if (wtl::exists(plot)) {system(plot);}
         break;
       }
       case 1: {
-        tissue_.grow();
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue_.mutation_history();
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue_.snapshot();
+        Tissue tissue(DIMENSIONS);
+        tissue.grow(MAX_SIZE);
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
         break;
       }
       default:
