@@ -56,7 +56,7 @@ class Gland {
     const std::vector<size_t>& sites() const {return sites_;}
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
-    friend std::ostream& operator<< (std::ostream& ost, const Gland& gland);
+    friend std::ostream& operator<< (std::ostream&, const Gland&);
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();

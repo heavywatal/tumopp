@@ -41,14 +41,14 @@ inline std::vector<int> random_direction(const size_t dimension) {
 }
 
 void Tissue::mark(const size_t n) {HERE;
-    tumor_.clear();
     while (tumor_.size() < n) {
-        Gland daughter;
-        daughter.mutate();
-        std::vector<int> current_coords(DIMENSIONS_);
-        push(std::move(daughter), &current_coords, random_direction(DIMENSIONS_));
-        mutation_coords_.push_back(current_coords);
-        mutation_stages_.push_back(tumor_.size());
+        std::vector<int> coords(DIMENSIONS_);
+        push(Gland(), &coords, random_direction(DIMENSIONS_));
+    }
+    for (auto& item: tumor_) {
+        item.second.mutate();
+        mutation_coords_.push_back(item.first);
+        mutation_stages_.push_back(mutation_coords_.size());
     }
 }
 
@@ -120,7 +120,16 @@ std::string Tissue::mutation_history(const std::string& sep) const {HERE;
     return ost.str();
 }
 
+std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
+    return ost << tissue.tumor_;
+}
+
 void Tissue::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
+    Tissue tissue;
+    tissue.mark(4);
+    std::cerr << tissue << std::endl;
+    std::cerr << tissue.snapshot() << std::endl;
+    std::cerr << tissue.mutation_history() << std::endl;
 }

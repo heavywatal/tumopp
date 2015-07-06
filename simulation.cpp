@@ -34,8 +34,8 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
 
 //! Unit test for each class
 inline void test() {HERE;
-    Tissue::unit_test();
     Gland::unit_test();
+    Tissue::unit_test();
 }
 
 Simulation::Simulation(int argc, char* argv[]) {HERE;

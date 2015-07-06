@@ -36,6 +36,8 @@ class Tissue {
     std::string snapshot(const std::string& sep="\t") const;
     std::string mutation_history(const std::string& sep="\t") const;
 
+    friend std::ostream& operator<< (std::ostream&, const Tissue&);
+
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 

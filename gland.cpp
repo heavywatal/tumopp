@@ -52,4 +52,6 @@ std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
 void Gland::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
+    Gland gland;
+    std::cerr << gland << std::endl;
 }
