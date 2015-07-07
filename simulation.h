@@ -13,8 +13,6 @@
 
 #include "cxxwtils/iostr.hpp"
 
-#include "tissue.h"
-
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
@@ -37,6 +35,12 @@ class Simulation {
 
     //! Control execution mode
     int MODE = 0;
+
+    //! Dimensions: {1, 2, 3}
+    size_t DIMENSIONS = 2;
+
+    //! Max tumor size to stop simulation
+    size_t MAX_SIZE = 20000;
 
     //! Group name of this run such as altered parameter
     std::string LABEL;
@@ -71,10 +75,6 @@ class Simulation {
     boost::program_options::options_description& opt_description();
 
   private:
-
-    /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
-    // data members
-    Tissue tissue_;
 };
 
 #endif /* SIMULATION_H_ */

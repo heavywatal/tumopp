@@ -23,18 +23,19 @@ namespace boost {
 
 class Tissue {
   public:
-    static size_t MAX_SIZE_;
-    static size_t DIMENSIONS_;
-
-    Tissue() {
-        tumor_.emplace(std::vector<int>(DIMENSIONS_), Gland());
+    Tissue(const std::vector<int>& origin): coords_{1, origin} {
+        tumor_.emplace(origin, Gland());
     }
+    Tissue(const size_t dimensions=2): Tissue{std::vector<int>(dimensions)} {};
+
     void mark(const size_t n);
 
-    void grow();
+    void grow(const size_t max_size);
 
     std::string snapshot(const std::string& sep="\t") const;
     std::string mutation_history(const std::string& sep="\t") const;
+
+    friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();
@@ -43,6 +44,7 @@ class Tissue {
     void push(Gland&& daughter, std::vector<int>* current_coords, const std::vector<int>& direction);
 
     std::map<std::vector<int>, Gland> tumor_;
+    std::vector<std::vector<int>> coords_;
     std::vector<std::vector<int>> mutation_coords_;
     std::vector<size_t> mutation_stages_;
 };
