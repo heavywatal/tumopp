@@ -87,27 +87,24 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 }
 
 void Simulation::run() {HERE;
+    Tissue tissue(DIMENSIONS);
+    tissue.mark(4);
     switch (MODE) {
       case 0: {
-        Tissue tissue(DIMENSIONS);
-        tissue.mark(4);
-        tissue.grow(MAX_SIZE);
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
-        auto plot = (PROJECT_DIR / "plot2d.R").c_str();
-        if (wtl::exists(plot)) {system(plot);}
+        tissue.grow_even(MAX_SIZE);
         break;
       }
       case 1: {
-        Tissue tissue(DIMENSIONS);
-        tissue.grow(MAX_SIZE);
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
+        tissue.grow_random(MAX_SIZE);
         break;
       }
       default:
         exit(1);
     }
+    wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
+    wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
+    auto plot = (PROJECT_DIR / "plot2d.R").c_str();
+    if (wtl::exists(plot)) {system(plot);}
     derr("mv results to " << OUT_DIR << std::endl);
     fs::rename(WORK_DIR, OUT_DIR);
     std::cout << wtl::iso8601datetime() << std::endl;

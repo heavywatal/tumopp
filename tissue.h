@@ -30,7 +30,8 @@ class Tissue {
 
     void mark(const size_t n);
 
-    void grow(const size_t max_size);
+    void grow_random(const size_t max_size);
+    void grow_even(const size_t max_size);
 
     std::string snapshot(const std::string& sep="\t") const;
     std::string mutation_history(const std::string& sep="\t") const;

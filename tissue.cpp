@@ -47,7 +47,7 @@ void Tissue::mark(const size_t n) {HERE;
     }
 }
 
-void Tissue::grow(const size_t max_size) {HERE;
+void Tissue::grow_random(const size_t max_size) {HERE;
     coords_.reserve(max_size);
     while (tumor_.size() < max_size) {
         auto current_coords = *wtl::prandom().choice(coords_.begin(), coords_.end());
@@ -55,6 +55,34 @@ void Tissue::grow(const size_t max_size) {HERE;
         Gland daughter = parent;
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
+        } else {
+            push(std::move(daughter), &current_coords, random_direction(current_coords.size()));
+        }
+        if (Gland::bernoulli_mutation()) {
+            tumor_[current_coords].mutate();
+            mutation_coords_.push_back(std::move(current_coords));
+            mutation_stages_.push_back(tumor_.size());
+        }
+    }
+}
+
+void Tissue::grow_even(const size_t max_size) {HERE;
+    coords_.reserve(max_size);
+    size_t age = 1;
+    for (auto it=tumor_.begin(); tumor_.size() < max_size; ++it) {
+        while (it != tumor_.end() && it->second.age() == age) {++it;}
+        if (it == tumor_.end()) {
+            if (tumor_.size() > max_size / 2) {
+                return grow_random(max_size);
+            }
+            it = tumor_.begin();
+            ++age;
+        }
+        it->second.stamp(age);
+        auto current_coords = it->first;
+        Gland daughter = it->second;
+        if (it->second.bernoulli_apoptosis()) {
+            it->second = std::move(daughter);
         } else {
             push(std::move(daughter), &current_coords, random_direction(current_coords.size()));
         }
@@ -76,6 +104,7 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     } else {
         push(std::move(it->second), coord, direction);
         it->second = std::move(daughter);
+        *coord = it->first;
     }
 }
 
@@ -120,7 +149,7 @@ void Tissue::unit_test() {
     std::cerr.precision(15);
     Tissue tissue(3);
     tissue.mark(4);
-    tissue.grow(10);
+    tissue.grow_even(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.coords_ << std::endl;
     std::cerr << tissue.snapshot() << std::endl;

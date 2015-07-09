@@ -48,12 +48,14 @@ class Gland {
     }
 
     void mutate();
+    void stamp(const size_t x) {age_ = x;}
 
     static bool bernoulli_mutation();
     bool bernoulli_apoptosis() const;
 
     // getter
     const std::vector<size_t>& sites() const {return sites_;}
+    size_t age() const {return age_;}
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
     friend std::ostream& operator<< (std::ostream&, const Gland&);
@@ -65,6 +67,7 @@ class Gland {
     static std::vector<double> MUTATION_EFFECTS_;
 
     std::vector<size_t> sites_;
+    size_t age_ = 0;
 };
 
 #endif /* GLAND_H_ */
