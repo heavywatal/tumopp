@@ -24,22 +24,55 @@ boost::program_options::options_description& Tissue::opt_description() {
 }
 
 
-inline std::vector<int> random_direction(const size_t dimension) {
-    std::vector<int> direction(dimension, -1);
-    for (size_t i=0; i<dimension; ++i) {
+inline std::vector<int> random_direction(const std::vector<int>& current_coord) {
+    const size_t dimensions = current_coord.size();
+    std::vector<int> direction(dimensions, -1);
+    for (size_t i=0; i<dimensions; ++i) {
         direction[i] += wtl::prandom().randrange(3);
     }
-    if (direction == std::vector<int>(dimension, 0)) {
-        return random_direction(dimension);
+    if (direction == std::vector<int>(dimensions, 0)) {
+        return random_direction(current_coord);
     }
     return direction;
 }
 
-void Tissue::mark(const size_t n) {HERE;
+inline std::vector<int> random_outward(const std::vector<int>& current_coord) {
+    const size_t dimensions = current_coord.size();
+    std::vector<int> direction(dimensions);
+    for (size_t i=0; i<dimensions; ++i) {
+        int n = wtl::prandom().randrange(2);
+        if (current_coord[i] > 0) {direction[i] = n;}
+        else {direction[i] = -n;}
+    }
+    if (direction == std::vector<int>(dimensions)) {
+        return random_outward(current_coord);
+    }
+    return direction;
+}
+
+void Tissue::init_regularly() {HERE;
+    const size_t dimensions = coords_.front().size();
+    const size_t n = std::pow(2, dimensions);
+    for (size_t i=1; i<n; ++i) {
+        std::bitset<3> bs(i);
+        std::vector<int> coord(dimensions);
+        for (size_t j=0; j<n; ++j) {
+            coord[j] = static_cast<int>(bs[j]);
+        }
+        emplace(coord, Gland());
+    }
+}
+
+void Tissue::init_randomly() {HERE;
+    const size_t dimensions = coords_.front().size();
+    const size_t n = std::pow(2, dimensions);
     while (tumor_.size() < n) {
         std::vector<int> coord = coords_.front();
-        push(Gland(), &coord, random_direction(coord.size()));
+        push(Gland(), &coord, random_direction(coord));
     }
+}
+
+void Tissue::stain() {HERE;
     for (auto& item: tumor_) {
         item.second.mutate();
         mutation_coords_.push_back(item.first);
@@ -50,17 +83,17 @@ void Tissue::mark(const size_t n) {HERE;
 void Tissue::grow_random(const size_t max_size) {HERE;
     coords_.reserve(max_size);
     while (tumor_.size() < max_size) {
-        auto current_coords = *wtl::prandom().choice(coords_.begin(), coords_.end());
-        auto& parent = tumor_[current_coords];
+        auto current_coord = *wtl::prandom().choice(coords_.begin(), coords_.end());
+        auto& parent = tumor_[current_coord];
         Gland daughter = parent;
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
-            push(std::move(daughter), &current_coords, random_direction(current_coords.size()));
+            push(std::move(daughter), &current_coord, random_direction(current_coord));
         }
         if (Gland::bernoulli_mutation()) {
-            tumor_[current_coords].mutate();
-            mutation_coords_.push_back(std::move(current_coords));
+            tumor_[current_coord].mutate();
+            mutation_coords_.push_back(std::move(current_coord));
             mutation_stages_.push_back(tumor_.size());
         }
     }
@@ -79,19 +112,24 @@ void Tissue::grow_even(const size_t max_size) {HERE;
             ++age;
         }
         it->second.stamp(age);
-        auto current_coords = it->first;
+        auto current_coord = it->first;
         Gland daughter = it->second;
         if (it->second.bernoulli_apoptosis()) {
             it->second = std::move(daughter);
         } else {
-            push(std::move(daughter), &current_coords, random_direction(current_coords.size()));
+            push(std::move(daughter), &current_coord, random_direction(current_coord));
         }
         if (Gland::bernoulli_mutation()) {
-            tumor_[current_coords].mutate();
-            mutation_coords_.push_back(std::move(current_coords));
+            tumor_[current_coord].mutate();
+            mutation_coords_.push_back(std::move(current_coord));
             mutation_stages_.push_back(tumor_.size());
         }
     }
+}
+
+void Tissue::emplace(const std::vector<int>& coord, Gland&& daughter) {
+    coords_.push_back(coord);
+    tumor_.emplace(coord, std::move(daughter));
 }
 
 void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<int>& direction) {
@@ -99,8 +137,7 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     std::transform(coord->begin(), coord->end(), direction.begin(), coord->begin(), std::plus<int>());
     auto it = tumor_.find(*coord);
     if (it == tumor_.end()) {
-        coords_.push_back(*coord);
-        tumor_.emplace(*coord, std::move(daughter));
+        emplace(*coord, std::move(daughter));
     } else {
         push(std::move(it->second), coord, direction);
         it->second = std::move(daughter);
@@ -148,7 +185,7 @@ void Tissue::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
     Tissue tissue(3);
-    tissue.mark(4);
+    tissue.stain();
     tissue.grow_even(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.coords_ << std::endl;

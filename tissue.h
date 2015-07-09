@@ -25,10 +25,13 @@ class Tissue {
   public:
     Tissue(const std::vector<int>& origin): coords_{1, origin} {
         tumor_.emplace(origin, Gland());
+        init_regularly();
     }
     Tissue(const size_t dimensions=2): Tissue{std::vector<int>(dimensions)} {};
 
-    void mark(const size_t n);
+    void init_regularly();
+    void init_randomly();
+    void stain();
 
     void grow_random(const size_t max_size);
     void grow_even(const size_t max_size);
@@ -42,6 +45,7 @@ class Tissue {
     static boost::program_options::options_description& opt_description();
 
   private:
+    void emplace(const std::vector<int>& current_coords, Gland&& daughter);
     void push(Gland&& daughter, std::vector<int>* current_coords, const std::vector<int>& direction);
 
     std::map<std::vector<int>, Gland> tumor_;

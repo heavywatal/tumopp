@@ -88,7 +88,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() {HERE;
     Tissue tissue(DIMENSIONS);
-    tissue.mark(4);
+    tissue.stain();
     switch (MODE) {
       case 0: {
         tissue.grow_even(MAX_SIZE);
