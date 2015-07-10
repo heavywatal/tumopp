@@ -53,10 +53,11 @@ inline std::vector<int> random_outward(const std::vector<int>& current_coord) {
 void Tissue::init_regularly() {HERE;
     const size_t dimensions = coords_.front().size();
     const size_t n = std::pow(2, dimensions);
-    for (size_t i=1; i<n; ++i) {
+    coords_.reserve(n);
+    for (size_t i=tumor_.size(); i<n; ++i) {
         std::bitset<3> bs(i);
         std::vector<int> coord(dimensions);
-        for (size_t j=0; j<n; ++j) {
+        for (size_t j=0; j<dimensions; ++j) {
             coord[j] = static_cast<int>(bs[j]);
         }
         emplace(coord, Gland());
