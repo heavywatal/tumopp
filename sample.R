@@ -14,51 +14,41 @@ history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
 
 population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %>>% (?.)
 
-.sample = population %>>%
+#########1#########2#########3#########4#########5#########6#########7#########
+
+sample_glands = function(popultion) {population %>>%
     mutate(half=ifelse(x<1, 'left', 'right')) %>>%
     group_by(half) %>>%
     sample_n(5) %>>%
-    mutate(serial=seq_len(n())) %>>% (?.)
+    mutate(serial=seq_len(n()))
+}
 
-
-# summary statistics
-## the number of distinct CNAs (different strings)
-
-.unnested = .sample %>>%
+unnest_ = function(samples) {samples %>>%
     mutate(site=strsplit(sites, '\\|'), sites=NULL) %>>%
     unnest(site) %>>%
-    mutate(site=as.integer(site)) %>>%
-    (?.)
+    mutate(site=as.integer(site))
+}
 
-.sites = unique(.unnested$site)
-length(.sites)
-
-## Shannon index of binary patterns
-
-.binary = .unnested %>>%
+binarize = function(unnested) {unnested %>>%
+    (~ .sites = unique(.$site)) %>>%
     group_by(half, serial) %>>%
     do(data.frame(site=.sites, exists=.sites %in% .$site)) %>>%
     ungroup %>>%
-    arrange(site) %>>%
-    (?.)
+    arrange(site)
+}
 
-.binary %>>%
+# summary statistics
+##  the number of distinct CNAs (different strings)
+##  the total number of alterations
+##  Shannon index of binary patterns
+##  the number of variegated alterations
+##  the number of side-variegated alterations
+
+summarize_alt = function(binary) {binary %>>%
     group_by(site) %>>%
-    summarise(p= sum(exists) / n()) %>>%
-    summarise(entropy=sum(-p * log(p) - (1-p) * log(1 - p)))
-
-## the total number of alterations
-
-nrow(.unnested)
-
-## the number of variegated alterations
-## the number of side-variegated alterations
-
-.binary %>>% as.data.frame
-
-.binary %>>%
-    group_by(site, half) %>>%
-    summarise(any=any(exists), all=all(exists))
+    summarise(alterations=sum(exists), p=alterations / n()) %>>% #(?.) %>>%
+    summarise(distinct=n(), alterations=sum(alterations), entropy=sum(-p * log(p) - (1-p) * log(1 - p)))
+}
 
 #  lhs rhs
 #  --- ---: ERROR
@@ -67,4 +57,39 @@ nrow(.unnested)
 #  any any: variegated
 #  any all: side-variegated
 #  all all: public
+summarize_pattern = function(binary) {binary %>>%
+    group_by(site, half) %>>%
+    summarise(any=any(exists), all=all(exists)) %>>% #(?.) %>>%
+    group_by(site) %>>%
+    summarise(public=all(all),
+        side_variegated=(!public) & any(all) & all(any),
+        variegated=(!any(all)) & all(any),
+        side_specific=(!public) & (!any(any)) & any(all),
+        regional=(!any(all)) & (!variegated) & any(any)) %>>%
+    summarise_each(funs(sum), -site)
+}
 
+summarize_glands = function(samples) {
+    .binary = samples %>>% #(?.) %>>%
+        unnest_ %>>% #(?.) %>>%
+        binarize #%>>% (?.)
+    bind_cols(summarize_alt(.binary), summarize_pattern(.binary))
+}
+
+population %>>%
+    sample_glands %>>%
+    summarize_glands
+
+#########1#########2#########3#########4#########5#########6#########7#########
+
+.repeated = rdply(100, {
+    population %>>%
+        sample_glands %>>%
+        summarize_glands
+}) %>>% tbl_df %>>% (?.)
+
+.repeated %>>%
+    gather(variable, value, -.n) %>>%
+    ggplot(aes(value))+
+    geom_histogram()+
+    facet_wrap(~variable)
