@@ -81,7 +81,9 @@ class Gland {
     //! The history of mutation effects
     static std::vector<double> MUTATION_EFFECTS_;
 
+    //! Mutated sites (infinite-site model)
     std::vector<size_t> sites_;
+    //! The age of the last division
     size_t age_ = 0;
 };
 

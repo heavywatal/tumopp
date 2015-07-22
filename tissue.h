@@ -51,6 +51,7 @@ class Tissue {
     //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
+    //! Unit test
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 
@@ -60,9 +61,13 @@ class Tissue {
     //! Emplace daughter gland and push other glands outward
     void push(Gland&& daughter, std::vector<int>* current_coord, const std::vector<int>& direction);
 
+    //! key: coords, value: gland
     std::map<std::vector<int>, Gland> tumor_;
+    //! The coordinates of the existing glands
     std::vector<std::vector<int>> coords_;
+    //! The coordinates of the past mutations
     std::vector<std::vector<int>> mutation_coords_;
+    //! Timing of mutations (tumor size as proxy)
     std::vector<size_t> mutation_stages_;
 };
 
