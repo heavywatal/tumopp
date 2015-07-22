@@ -1,6 +1,6 @@
 // -*- mode: c++; coding: utf-8 -*-
 /*! @file tissue.h
-    @brief Interface of Gland class
+    @brief Interface of Tissue class
 */
 #pragma once
 #ifndef TISSUE_H_
@@ -23,30 +23,42 @@ namespace boost {
 
 class Tissue {
   public:
+    //! Constructor
     Tissue(const std::vector<int>& origin): coords_{1, origin} {
         tumor_.emplace(origin, Gland());
         init_regularly();
     }
+    //! Constructor
     Tissue(const size_t dimensions=2): Tissue{std::vector<int>(dimensions)} {};
 
+    //! Initiate tumor with 2^D glands regularly
     void init_regularly();
+    //! Initiate tumor with 2^D glands randomly
     void init_randomly();
+    //! Mark first cells with mutation
     void stain();
 
+    //! Big bang model
     void grow_random(const size_t max_size);
+    //! Another extreme
     void grow_even(const size_t max_size);
 
+    //! Return tumor state as TSV string
     std::string snapshot(const std::string& sep="\t") const;
+    //! Return mutation_coords_ as TSV string
     std::string mutation_history(const std::string& sep="\t") const;
 
+    //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 
   private:
-    void emplace(const std::vector<int>& current_coords, Gland&& daughter);
-    void push(Gland&& daughter, std::vector<int>* current_coords, const std::vector<int>& direction);
+    //! Emplace daughter gland at the specified coord
+    void emplace(const std::vector<int>& current_coord, Gland&& daughter);
+    //! Emplace daughter gland and push other glands outward
+    void push(Gland&& daughter, std::vector<int>* current_coord, const std::vector<int>& direction);
 
     std::map<std::vector<int>, Gland> tumor_;
     std::vector<std::vector<int>> coords_;

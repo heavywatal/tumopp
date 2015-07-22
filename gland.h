@@ -20,25 +20,30 @@ namespace boost {
 
 class Gland {
   public:
-    // 80 billion cells / 8 million glands = 10000
+    //! 80 billion cells / 8 million glands = 10000
     static double CELLS_PER_GLAND_;
 
-    // per gland per division
-    // {1e-8 to 1e-4}
+    //! per gland per division {1e-8 to 1e-4}
     static double MUTATION_RATE_;
 
-    // {0, 0.2, 0.6}
+    //! {0, 0.2, 0.6}
     static double MUTATION_SIGMA_;
 
-    // 0.2 fixed in the article
+    //! 0.2 fixed in the article
     static double APOPTOSIS_RATE_;
 
+    //! Default constructor
     Gland() = default;
+    //! Copy constructor
     Gland(const Gland& other) = default;
+    //! Copy assignment operator
     Gland& operator=(const Gland&) = delete;
+    //! Move constructor
     Gland(Gland&& other) = default;
+    //! Move assignment operator
     Gland& operator=(Gland&&) = default;
 
+    //! Calculate fitness
     double fitness() const {
         double result = 1.0;
         for (const auto i: sites_) {
@@ -47,23 +52,33 @@ class Gland {
         return std::min(std::max(1.0, result), 5.0);
     }
 
+    //! Mutate and record
     void mutate();
+
+    //! Update age_
     void stamp(const size_t x) {age_ = x;}
 
+    //! Bernoulli trial of mutation
     static bool bernoulli_mutation();
+    //! Bernoulli trial of apoptosis
     bool bernoulli_apoptosis() const;
 
-    // getter
+    //! Getter
     const std::vector<size_t>& sites() const {return sites_;}
+    //! Getter
     size_t age() const {return age_;}
+    //! Getter
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
+    //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Gland&);
 
+    //! Unit test
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 
   private:
+    //! The history of mutation effects
     static std::vector<double> MUTATION_EFFECTS_;
 
     std::vector<size_t> sites_;

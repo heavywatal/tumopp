@@ -1,6 +1,6 @@
 // -*- mode: c++; coding: utf-8 -*-
 /*! @file tissue.cpp
-    @brief Implementation of Gland class
+    @brief Implementation of Tissue class
 */
 #include "tissue.h"
 
