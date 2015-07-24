@@ -20,6 +20,16 @@ double Gland::APOPTOSIS_RATE_ = 0.2;
 
 std::vector<double> Gland::MUTATION_EFFECTS_;
 
+//! Program options
+/*! @return Program options description
+
+    Command line option | Symbol       | Variable
+    --------------------| ------------ | -------------------------
+    `-c,--cells`        | -            | Gland::CELLS_PER_GLAND_
+    `-u,--mutation`     | \f$\mu\f$    | Gland::MUTATION_RATE_
+    `-s,--sigma`        | \f$\sigma\f$ | Gland::MUTATION_SIGMA_
+    `-a,--apoptosis`    | \f$\alpha\f$ | Gland::APOPTOSIS_RATE_
+*/
 boost::program_options::options_description& Gland::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Gland"};
@@ -45,6 +55,7 @@ bool Gland::bernoulli_apoptosis() const {
     return wtl::prandom().bernoulli(APOPTOSIS_RATE_ / fitness());
 }
 
+//! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
     return ost << gland.sites_;
 }

@@ -48,7 +48,6 @@ class Tissue {
     //! Return mutation_coords_ as TSV string
     std::string mutation_history(const std::string& sep="\t") const;
 
-    //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! Unit test

@@ -16,6 +16,14 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 // functions
 
+//! Program options
+/*! @return Program options description
+
+    Command line option | Symbol | Variable
+    --------------------| ------ | -------------------------
+    `-N,--max`          | -      | Simulation::MAX_SIZE
+    `-D,--dimensions`   | -      | Simulation::DIMENSIONS
+*/
 boost::program_options::options_description& Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
     static po::options_description description("Simulation");

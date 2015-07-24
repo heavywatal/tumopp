@@ -70,7 +70,6 @@ class Gland {
     //! Getter
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
-    //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Gland&);
 
     //! Unit test

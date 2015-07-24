@@ -15,6 +15,7 @@
 #include "cxxwtils/gz.hpp"
 #include "cxxwtils/debug.hpp"
 
+//! Program options
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Tissue"};
@@ -23,7 +24,7 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-
+//! random vector of {-1, 0, 1}
 inline std::vector<int> random_direction(const std::vector<int>& current_coord) {
     const size_t dimensions = current_coord.size();
     std::vector<int> direction(dimensions, -1);
@@ -36,6 +37,7 @@ inline std::vector<int> random_direction(const std::vector<int>& current_coord) 
     return direction;
 }
 
+//! random vector of {-1, 0, 1} outward
 inline std::vector<int> random_outward(const std::vector<int>& current_coord) {
     const size_t dimensions = current_coord.size();
     std::vector<int> direction(dimensions);
@@ -178,6 +180,7 @@ std::string Tissue::mutation_history(const std::string& sep) const {HERE;
     return ost.str();
 }
 
+//! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
     return ost << tissue.tumor_;
 }
