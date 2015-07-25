@@ -113,6 +113,8 @@ void Simulation::run() {HERE;
     wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
     auto plot = (PROJECT_DIR / "plot2d.R").c_str();
     if (wtl::exists(plot)) {system(plot);}
+    auto sample = (PROJECT_DIR / "sample.R").c_str();
+    if (wtl::exists(sample)) {system(sample);}
     derr("mv results to " << OUT_DIR << std::endl);
     fs::rename(WORK_DIR, OUT_DIR);
     std::cout << wtl::iso8601datetime() << std::endl;

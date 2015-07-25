@@ -10,7 +10,7 @@ library(ggplot2)
 indir = .argv[1]
 indir = ifelse(is.na(indir), '.', indir)
 
-history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
+#history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
 
 population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %>>% (?.)
 
@@ -88,8 +88,12 @@ population %>>%
         summarize_glands
 }) %>>% tbl_df %>>% (?.)
 
-.repeated %>>%
+.p = .repeated %>>%
     gather(variable, value, -.n) %>>%
     ggplot(aes(value))+
     geom_histogram()+
-    facet_wrap(~variable)
+    facet_wrap(~variable)+
+    theme_bw()+
+    theme(panel.grid.minor=element_blank())
+#.p
+ggsave('repeated_sampling.png', .p, width=7, height=7)
