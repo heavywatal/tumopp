@@ -32,7 +32,7 @@ population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %
     filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
     mutate(size=as.factor(size)) %>>%
     ggplot(aes(x, y, fill=size))+
-    geom_tile(alpha=0.66)+
+    geom_raster(alpha=0.66)+
     scale_fill_hue(na.value='white')+
     theme(panel.background=element_rect(fill='grey80'))+
     theme(panel.grid=element_blank())+
@@ -44,7 +44,7 @@ ggsave('early_mutations.png', .p, width=7, height=7)
 
 .p = .data %>>%
     ggplot(aes(x, y, fill=size))+
-    geom_tile(alpha=0.5)+
+    geom_raster(alpha=0.5)+
     scale_fill_gradientn(colours=.heat_colours, na.value='white')+
     theme(panel.background=element_rect(fill='grey80'))+
     theme(panel.grid=element_blank())+
