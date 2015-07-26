@@ -86,7 +86,8 @@ population %>>%
     population %>>%
         sample_glands %>>%
         summarize_glands
-}) %>>% tbl_df %>>% (?.)
+}, .id='sampling') %>>% tbl_df %>>% (?.)
+write.table(.repeated, file=gzfile("samples.tsv.gz"), sep='\t', quote=FALSE, row.names=FALSE)
 
 .p = .repeated %>>%
     gather(variable, value, -.n) %>>%
