@@ -25,6 +25,16 @@ namespace boost {
 /*! @brief Represents single run
 */
 class Simulation {
+  public:
+    //! Parse command arguments
+    Simulation(int argc, char* argv[]);
+
+    //! Top level function that should be called from main()
+    void run();
+
+    boost::program_options::options_description& opt_description();
+
+    /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
 
     //! Print extra information
@@ -62,19 +72,6 @@ class Simulation {
 
     //! Project directory
     fs::path PROJECT_DIR;
-
-  public:
-    /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
-
-    //! Parse command arguments
-    Simulation(int argc, char* argv[]);
-
-    //! Top level function that should be called from main()
-    void run();
-
-    boost::program_options::options_description& opt_description();
-
-  private:
 };
 
 #endif /* SIMULATION_H_ */
