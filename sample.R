@@ -90,7 +90,7 @@ population %>>%
 write.table(.repeated, file=gzfile("samples.tsv.gz"), sep='\t', quote=FALSE, row.names=FALSE)
 
 .p = .repeated %>>%
-    gather(variable, value, -.n) %>>%
+    gather(variable, value, -sampling) %>>%
     ggplot(aes(value))+
     geom_histogram()+
     facet_wrap(~variable)+
