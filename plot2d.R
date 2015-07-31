@@ -10,8 +10,8 @@ library(ggplot2)
 indir = .argv[1]
 indir = ifelse(is.na(indir), '.', indir)
 
+conf = wtl::read.conf(file.path(indir, 'program_options.conf')) %>>% (?.)
 history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
-
 population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %>>% (?.)
 
 .data = population %>>%
@@ -22,10 +22,10 @@ population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %
     dplyr::select(-sites) %>>%
     arrange(x, y) %>>% (?.)
 
-.threshold = history$size %>>% nth(4)
+#########1#########2#########3#########4#########5#########6#########7#########
 
-.p = .data %>>%
-    mutate(size=ifelse(size <= .threshold, size, NA), effect=NULL) %>>%
+plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
+    mutate(size=ifelse(size <= num_tracing, size, NA), effect=NULL) %>>%
     dplyr::select(-starts_with('origin_')) %>>%
     filter(!duplicated(.)) %>>%
     group_by(x, y) %>>%
@@ -37,17 +37,30 @@ population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %
     theme(panel.background=element_rect(fill='grey80'))+
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())
-#.p
-ggsave('early_mutations.png', .p, width=7, height=7)
+}
 
 .heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
 
-.p = .data %>>%
+plot_mutation_history_2d = function(.data) {.data %>>%
     ggplot(aes(x, y, fill=size))+
     geom_raster(alpha=0.5)+
     scale_fill_gradientn(colours=.heat_colours, na.value='white')+
     theme(panel.background=element_rect(fill='grey80'))+
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())
+}
+
+#########1#########2#########3#########4#########5#########6#########7#########
+
+if (conf[['dimensions']] == 2) {
+
+.threshold = history$size %>>% nth(4)
+.p = plot_early_mutations_2d(.data, .threshold)
+#.p
+ggsave('early_mutations.png', .p, width=7, height=7)
+
+.p = plot_mutation_history_2d(.data)
 #.p
 ggsave('gradient.png', .p, width=7, height=7)
+
+}
