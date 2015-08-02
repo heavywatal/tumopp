@@ -24,6 +24,8 @@ population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %
 
 #########1#########2#########3#########4#########5#########6#########7#########
 
+.heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
+
 plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
     mutate(size=ifelse(size <= num_tracing, size, NA), effect=NULL) %>>%
     dplyr::select(-starts_with('origin_')) %>>%
@@ -38,8 +40,6 @@ plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())
 }
-
-.heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
 
 plot_mutation_history_2d = function(.data) {.data %>>%
     ggplot(aes(x, y, fill=size))+
