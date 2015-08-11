@@ -7,6 +7,9 @@ library(dplyr)
 library(ggplot2)
 library(animation)
 
+(.argv = commandArgs(trailingOnly=FALSE))
+(..file.. = sub('--file=', '', grep('--file=', .argv, value=TRUE)))
+
 .argv = commandArgs(trailingOnly=TRUE)
 indir = .argv[1]
 indir = ifelse(is.na(indir), '.', indir)
@@ -119,3 +122,5 @@ writeWebGL()
 #                radius=1, col=marker, alpha=ifelse(marker==3, 0.8, 0.06)))
 
 }  # fi 2D/3D
+
+source(file.path(dirname(..file..), 'sample.R'))

@@ -6,14 +6,6 @@ library(plyr)
 library(dplyr)
 library(ggplot2)
 
-.argv = commandArgs(trailingOnly=TRUE)
-indir = .argv[1]
-indir = ifelse(is.na(indir), '.', indir)
-
-#history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
-
-population = read_tsv(file.path(indir, 'population.tsv.gz'), col_types='iicd') %>>% (?.)
-
 #########1#########2#########3#########4#########5#########6#########7#########
 
 sample_glands = function(popultion) {population %>>%
