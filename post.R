@@ -64,6 +64,8 @@ ggsave('early_mutations.png', .p, width=7, height=7)
 #.p
 ggsave('gradient.png', .p, width=7, height=7)
 
+source(file.path(dirname(..file..), 'sample.R'))
+
 #########1#########2#########3#########4#########5#########6#########7#########
 } else {
 #########1#########2#########3#########4#########5#########6#########7#########
@@ -84,8 +86,6 @@ plot_early_mutations_3d = function(.z=0, .data) {.data %>>%
     theme(legend.position='right')
 }
 #plot_early_mutations_3d(20, early3d)
-
-
 
 early3d = unnested %>>%
     filter(size <= 8) %>>%
@@ -121,6 +121,6 @@ writeWebGL()
 #with(early3d, spheres3d(early3d,# %>>% filter(sqrt(x^2 + y^2 + z^2)>14),
 #                radius=1, col=marker, alpha=ifelse(marker==3, 0.8, 0.06)))
 
+#########1#########2#########3#########4#########5#########6#########7#########
 }  # fi 2D/3D
-
-source(file.path(dirname(..file..), 'sample.R'))
+#########1#########2#########3#########4#########5#########6#########7#########
