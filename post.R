@@ -26,6 +26,8 @@ unnested = population %>>%
     dplyr::select(-sites) %>>%
     arrange(x, y) %>>% (?.)
 
+source(file.path(dirname(..file..), 'sample.R'))
+
 #########1#########2#########3#########4#########5#########6#########7#########
 if (conf[['dimensions']] == 2) {
 
@@ -63,8 +65,6 @@ ggsave('early_mutations.png', .p, width=7, height=7)
 .p = plot_mutation_history_2d(unnested)
 #.p
 ggsave('gradient.png', .p, width=7, height=7)
-
-source(file.path(dirname(..file..), 'sample.R'))
 
 #########1#########2#########3#########4#########5#########6#########7#########
 } else {
