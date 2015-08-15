@@ -59,6 +59,7 @@ class Tissue {
     void emplace(const std::vector<int>& current_coord, Gland&& daughter);
     //! Emplace daughter gland and push other glands outward
     void push(Gland&& daughter, std::vector<int>* current_coord, const std::vector<int>& direction);
+    void fill_neighbors(Gland&& daughter, std::vector<int>* current_coord);
 
     //! key: coords, value: gland
     std::map<std::vector<int>, Gland> tumor_;

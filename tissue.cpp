@@ -148,6 +148,10 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     }
 }
 
+void Tissue::fill_neighbors(Gland&& daughter, std::vector<int>* current_coord) {
+    //! @todo
+}
+
 std::string Tissue::snapshot(const std::string& sep) const {HERE;
     std::ostringstream ost;
     ost.precision(16);
