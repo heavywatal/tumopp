@@ -44,9 +44,12 @@ class Tissue {
     void grow_even(const size_t max_size);
 
     //! Return tumor state as TSV string
-    std::string snapshot(const std::string& sep="\t") const;
+    std::string snapshot() const;
     //! Return mutation_coords_ as TSV string
-    std::string mutation_history(const std::string& sep="\t") const;
+    std::string mutation_history() const;
+
+    std::string snapshot_header() const;
+    std::string evolution_history() const;
 
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
@@ -70,6 +73,9 @@ class Tissue {
     std::vector<std::vector<int>> mutation_coords_;
     //! Timing of mutations (tumor size as proxy)
     std::vector<size_t> mutation_stages_;
+    std::vector<std::string> evolution_history_;
+
+    const std::string sep_ = "\t";
 };
 
 #endif /* TISSUE_H_ */

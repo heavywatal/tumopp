@@ -146,6 +146,8 @@ void Tissue::grow_random(const size_t max_size) {HERE;
 void Tissue::grow_even(const size_t max_size) {HERE;
     coords_.reserve(max_size);
     size_t age = 1;
+    evolution_history_.reserve(max_size);
+    evolution_history_.push_back(snapshot());
     for (auto it=tumor_.begin(); tumor_.size() < max_size; ++it) {
         while (it != tumor_.end() && it->second.age() == age) {++it;}
         if (it == tumor_.end()) {
@@ -166,7 +168,14 @@ void Tissue::grow_even(const size_t max_size) {HERE;
             mutation_coords_.push_back(std::move(current_coord));
             mutation_stages_.push_back(tumor_.size());
         }
+        if (tumor_.size() <= 256) {
+            evolution_history_.push_back(snapshot());
+        }
     }
+}
+
+std::string Tissue::evolution_history() const {
+    return wtl::str_join(evolution_history_, "");
 }
 
 void Tissue::emplace(const std::vector<int>& coord, Gland&& daughter) {
@@ -203,7 +212,7 @@ void Tissue::fill_neighbor(Gland&& daughter, const std::vector<int>& current_coo
     std::vector<int> new_coord;
     if (empty_neighbors.empty()) {
         new_coord = *wtl::prandom().choice(neighbors.begin(), neighbors.end());
-        fill_neighbors(std::move(tumor_[current_coord]), new_coord);
+        fill_neighbor(std::move(tumor_[current_coord]), new_coord);
     } else {
         new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
             [](const std::vector<int>& x, const std::vector<int>& y){
@@ -214,34 +223,42 @@ void Tissue::fill_neighbor(Gland&& daughter, const std::vector<int>& current_coo
     tumor_[current_coord] = std::move(daughter);
 }
 
-std::string Tissue::snapshot(const std::string& sep) const {HERE;
+std::string Tissue::snapshot_header() const {HERE;
     std::ostringstream ost;
     ost.precision(16);
+    ost << "time" << sep_ << "size" << sep_;
     std::vector<std::string> axes{"x", "y", "z"};
     axes.resize(coords_.front().size());
-    wtl::ost_join(ost, axes, sep) << sep << "sites" << sep << "fitness\n";
+    wtl::ost_join(ost, axes, sep_) << sep_ << "sites" << sep_ << "fitness\n";
+    return ost.str();
+}
+
+std::string Tissue::snapshot() const {HERE;
+    std::ostringstream ost;
+    ost.precision(16);
     for (auto& item: tumor_) {
-        wtl::ost_join(ost, item.first, sep) << sep;
-        wtl::ost_join(ost, item.second.sites(), "|") << sep
+        ost << evolution_history_.size() << sep_ << tumor_.size() << sep_;
+        wtl::ost_join(ost, item.first, sep_) << sep_;
+        wtl::ost_join(ost, item.second.sites(), "|") << sep_
             << item.second.fitness() << "\n";
     }
     return ost.str();
 }
 
-std::string Tissue::mutation_history(const std::string& sep) const {HERE;
+std::string Tissue::mutation_history() const {HERE;
     std::ostringstream ost;
     ost.precision(16);
     std::vector<std::string> xyz{"x", "y", "z"};
     xyz.resize(mutation_coords_.front().size());
-    ost << "size" << sep << "effect";
+    ost << "size" << sep_ << "effect";
     for (auto x: xyz) {
-        ost << sep << "origin_" << x;
+        ost << sep_ << "origin_" << x;
     }
     ost << "\n";
     for (size_t i=0; i<mutation_coords_.size(); ++i) {
-        ost << mutation_stages_[i] << sep
-            << Gland::MUTATION_EFFECTS()[i] << sep;
-        wtl::ost_join(ost, mutation_coords_[i], sep) << "\n";
+        ost << mutation_stages_[i] << sep_
+            << Gland::MUTATION_EFFECTS()[i] << sep_;
+        wtl::ost_join(ost, mutation_coords_[i], sep_) << "\n";
     }
     return ost.str();
 }

@@ -17,14 +17,17 @@ indir = ifelse(is.na(indir), '.', indir)
 conf = wtl::read.conf(file.path(indir, 'program_options.conf')) %>>% (?.)
 history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
 population = read_tsv(file.path(indir, 'population.tsv.gz')) %>>% (?.)
+evolution = read_tsv(file.path(indir, 'evolution_history.tsv.gz'),
+                col_types=list(sites=col_character())) %>>% (?.)
 
 unnested = population %>>%
     mutate(sites=strsplit(sites, '\\|')) %>>%
     unnest(sites) %>>%
     bind_rows(population %>>% filter(sites=='')) %>>%
+    dplyr::select(-size) %>>%
     full_join(history %>>% name_rows, by=c(sites='.rownames')) %>>%
     dplyr::select(-sites) %>>%
-    arrange(x, y) %>>% (?.)
+    arrange(time, x, y) %>>% (?.)
 
 source(file.path(dirname(..file..), 'sample.R'))
 
@@ -65,6 +68,39 @@ ggsave('early_mutations.png', .p, width=7, height=7)
 .p = plot_mutation_history_2d(unnested)
 #.p
 ggsave('gradient.png', .p, width=7, height=7)
+
+
+
+str(evolution)
+unnested_evolution = evolution %>>%
+    mutate(sites=strsplit(sites, '\\|')) %>>%
+    unnest(sites) %>>%
+    filter(extract_numeric(sites) <= 4) %>>% (?.)
+
+maxabs = with(population, max(abs(c(x, y)))) %>>% (?.)
+
+plot_early_evolution_2d = function(.time) {unnested_evolution %>>%
+    filter(time==.time) %>>%
+    mutate(marker=as.factor(sites)) %>>%
+    bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
+                          fitness=-1, marker=as.factor(seq_len(4)))) %>>%
+    ggplot(aes(x, y, fill=marker))+
+    geom_raster(alpha=0.66, stat='identity', position='identity', interpolate=FALSE)+
+    scale_fill_hue(na.value='white')+
+    coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
+    theme(panel.background=element_blank())+
+    theme(panel.grid=element_blank())+
+    theme(axis.title=element_blank())+
+    theme(legend.position='none')
+}
+#print(plot_early_evolution_2d(210))
+
+animation::saveGIF({
+    for (.t in unique(evolution$time)) {
+        print(plot_early_evolution_2d(.t))
+    }},
+    'evolution.gif', loop=FALSE, interval=0.1, outdir=getwd())
+
 
 #########1#########2#########3#########4#########5#########6#########7#########
 } else {

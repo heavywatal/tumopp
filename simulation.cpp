@@ -110,7 +110,10 @@ void Simulation::run() {HERE;
         exit(1);
     }
     wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
-    wtl::gzip{wtl::Fout{"population.tsv.gz"}} << tissue.snapshot();
+    wtl::gzip{wtl::Fout{"population.tsv.gz"}}
+        << tissue.snapshot_header() << tissue.snapshot();
+    wtl::gzip{wtl::Fout{"evolution_history.tsv.gz"}}
+        << tissue.snapshot_header() << tissue.evolution_history();
     auto post = (PROJECT_DIR / "post.R").c_str();
     if (wtl::exists(post)) {system(post);}
     derr("mv results to " << OUT_DIR << std::endl);
