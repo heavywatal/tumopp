@@ -14,6 +14,7 @@
 #include "cxxwtils/iostr.hpp"
 #include "cxxwtils/gz.hpp"
 #include "cxxwtils/debug.hpp"
+#include "cxxwtils/algorithm.hpp"
 
 //! Program options
 boost::program_options::options_description& Tissue::opt_description() {
@@ -22,6 +23,45 @@ boost::program_options::options_description& Tissue::opt_description() {
     desc.add_options()
     ;
     return desc;
+}
+
+template <class T>
+std::vector<T> operator+(const std::vector<T>& lhs, const std::vector<T>& rhs) {
+    assert(lhs.size() == rhs.size());
+    std::vector<T> result;
+    result.reserve(lhs.size());
+    std::transform(lhs.begin(), lhs.end(), rhs.begin(),
+                   std::back_inserter(result), std::plus<T>());
+    return result;
+}
+
+template <class T>
+std::vector<T>& operator+=(std::vector<T>& lhs, const std::vector<T>& rhs) {
+    assert(lhs.size() == rhs.size());
+    std::transform(lhs.begin(), lhs.end(), rhs.begin(),
+                   lhs.begin(), std::plus<T>());
+    return lhs;
+}
+
+//! @arg dimensions 2 or 3
+inline std::vector<std::vector<int>> all_directions(const size_t dimensions) {
+    assert(dimensions == 2 || dimensions == 3);
+    std::vector<std::vector<int>> output;
+    output.reserve(std::pow(3, dimensions) - 1);
+    for (const int x: {-1, 0, 1}) {
+        for (const int y: {-1, 0, 1}) {
+            if (dimensions == 2) {
+                if (x == 0 && y == 0) continue;
+                output.push_back({x, y});
+                continue;
+            }
+            for (const int z: {-1, 0, 1}) {
+                if (x == 0 && y == 0 && z == 0) continue;
+                output.push_back({x, y, z});
+            }
+        }
+    }
+    return output;
 }
 
 //! random vector of {-1, 0, 1}
@@ -92,7 +132,8 @@ void Tissue::grow_random(const size_t max_size) {HERE;
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
-            push(std::move(daughter), &current_coord, random_direction(current_coord));
+            fill_neighbor(std::move(daughter), current_coord);
+//            push(std::move(daughter), &current_coord, random_direction(current_coord));
         }
         if (Gland::bernoulli_mutation()) {
             tumor_[current_coord].mutate();
@@ -108,9 +149,6 @@ void Tissue::grow_even(const size_t max_size) {HERE;
     for (auto it=tumor_.begin(); tumor_.size() < max_size; ++it) {
         while (it != tumor_.end() && it->second.age() == age) {++it;}
         if (it == tumor_.end()) {
-            if (tumor_.size() > max_size / 2) {
-                return grow_random(max_size);
-            }
             it = tumor_.begin();
             ++age;
         }
@@ -120,7 +158,8 @@ void Tissue::grow_even(const size_t max_size) {HERE;
         if (it->second.bernoulli_apoptosis()) {
             it->second = std::move(daughter);
         } else {
-            push(std::move(daughter), &current_coord, random_direction(current_coord));
+            fill_neighbor(std::move(daughter), current_coord);
+//            push(std::move(daughter), &current_coord, random_direction(current_coord));
         }
         if (Gland::bernoulli_mutation()) {
             tumor_[current_coord].mutate();
@@ -148,8 +187,31 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     }
 }
 
-void Tissue::fill_neighbors(Gland&& daughter, std::vector<int>* current_coord) {
-    //! @todo
+//! @todo
+void Tissue::fill_neighbor(Gland&& daughter, const std::vector<int>& current_coord) {
+    const size_t dimensions = current_coord.size();
+    static const auto directions = all_directions(dimensions);
+    auto neighbors = directions;
+    std::vector<std::vector<int>> empty_neighbors;
+    empty_neighbors.reserve(neighbors.size());
+    for (auto& x: neighbors) {
+        x += current_coord;
+        if (tumor_.find(x) == tumor_.end()) {
+            empty_neighbors.push_back(x);
+        }
+    }
+    std::vector<int> new_coord;
+    if (empty_neighbors.empty()) {
+        new_coord = *wtl::prandom().choice(neighbors.begin(), neighbors.end());
+        fill_neighbors(std::move(tumor_[current_coord]), new_coord);
+    } else {
+        new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
+            [](const std::vector<int>& x, const std::vector<int>& y){
+                return wtl::devsq(x) < wtl::devsq(y);
+        });
+        emplace(new_coord, std::move(tumor_[current_coord]));
+    }
+    tumor_[current_coord] = std::move(daughter);
 }
 
 std::string Tissue::snapshot(const std::string& sep) const {HERE;
