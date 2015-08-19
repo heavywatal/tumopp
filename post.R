@@ -77,17 +77,20 @@ unnested_evolution = evolution %>>%
     unnest(sites) %>>%
     filter(extract_numeric(sites) <= 4) %>>% (?.)
 
-maxabs = with(population, max(abs(c(x, y)))) %>>% (?.)
+maxabs = with(evolution %>>% filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
 
-plot_early_evolution_2d = function(.time) {unnested_evolution %>>%
-    filter(time==.time) %>>%
-    mutate(marker=as.factor(sites)) %>>%
-    bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
+plot_early_evolution_2d = function(.time) {
+    .data = unnested_evolution %>>%
+        filter(time==.time) %>>%
+        mutate(marker=as.factor(sites))
+    .data %>>%
+        bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
                           fitness=-1, marker=as.factor(seq_len(4)))) %>>%
     ggplot(aes(x, y, fill=marker))+
     geom_raster(alpha=0.66, stat='identity', position='identity', interpolate=FALSE)+
     scale_fill_hue(na.value='white')+
     coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
+    labs(title=paste0('t = ', .time, ', N = ', nrow(.data)))+
     theme(panel.background=element_blank())+
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())+
@@ -99,8 +102,8 @@ animation::saveGIF({
     for (.t in unique(evolution$time)) {
         print(plot_early_evolution_2d(.t))
     }},
-    'evolution.gif', loop=FALSE, interval=0.1, outdir=getwd())
-
+    'evolution.gif', loop=1, interval=0.1, outdir=getwd())
+#dev.off()
 
 #########1#########2#########3#########4#########5#########6#########7#########
 } else {

@@ -233,7 +233,7 @@ std::string Tissue::snapshot_header() const {HERE;
     return ost.str();
 }
 
-std::string Tissue::snapshot() const {HERE;
+std::string Tissue::snapshot() const {
     std::ostringstream ost;
     ost.precision(16);
     for (auto& item: tumor_) {
