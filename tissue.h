@@ -42,6 +42,8 @@ class Tissue {
     void grow_random(const size_t max_size);
     //! Another extreme
     void grow_even(const size_t max_size);
+    //! in-between
+    void grow_poisson(const size_t max_size);
 
     //! Return tumor state as TSV string
     std::string snapshot() const;
@@ -64,6 +66,8 @@ class Tissue {
     void push(Gland&& daughter, std::vector<int>* current_coord, const std::vector<int>& direction);
     //! Emplace daughter gland at a neighboring site and push if needed
     void fill_neighbor(Gland&& daughter, const std::vector<int>& current_coord);
+    void push_neighbor(Gland&& daughter, const std::vector<int>& current_coord,
+                       const std::vector<int>& direction={});
 
     //! key: coords, value: gland
     std::map<std::vector<int>, Gland> tumor_;

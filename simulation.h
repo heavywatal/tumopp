@@ -50,7 +50,7 @@ class Simulation {
     size_t DIMENSIONS = 2;
 
     //! Max tumor size to stop simulation
-    size_t MAX_SIZE = 20000;
+    size_t MAX_SIZE = 16384;
 
     //! Group name of this run such as altered parameter
     std::string LABEL;
