@@ -82,6 +82,27 @@ inline std::vector<std::vector<int>> proximal_directions(const size_t dimensions
     return output;
 }
 
+//! @arg dimensions 2
+inline std::vector<std::vector<int>> hex_directions(const size_t dimensions) {
+    assert(dimensions == 2);
+    std::vector<std::vector<int>> output;
+    output.reserve(std::pow(3, dimensions) - 1);
+    for (const int x: {-1, 0, 1}) {
+        for (const int y: {-1, 0, 1}) {
+            if (dimensions == 2) {
+                if (x == 0 && y == 0) continue;
+                output.push_back({x, y});
+                continue;
+            }
+            for (const int z: {-1, 0, 1}) {
+                if (x == 0 && y == 0 && z == 0) continue;
+                output.push_back({x, y, z});
+            }
+        }
+    }
+    return output;
+}
+
 //! random vector of {-1, 0, 1}
 inline std::vector<int> random_direction(const std::vector<int>& current_coord) {
     const size_t dimensions = current_coord.size();
@@ -240,11 +261,6 @@ void Tissue::push_neighbor(Gland&& daughter, const std::vector<int>& current_coo
             new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
         }
         new_coord = current_coord + new_dir;
-//        new_coord = *wtl::prandom().choice(neighbors.begin(), neighbors.end());
-//        new_coord = *std::max_element(neighbors.begin(), neighbors.end(),
-//            [](const std::vector<int>& x, const std::vector<int>& y){
-//                return wtl::devsq(x) < wtl::devsq(y);
-//        });
         push_neighbor(std::move(tumor_[current_coord]), new_coord, new_dir);
     } else {
         new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
@@ -273,10 +289,6 @@ void Tissue::fill_neighbor(Gland&& daughter, const std::vector<int>& current_coo
     std::vector<int> new_coord;
     if (empty_neighbors.empty()) {
         new_coord = *wtl::prandom().choice(neighbors.begin(), neighbors.end());
-//        new_coord = *std::max_element(neighbors.begin(), neighbors.end(),
-//            [](const std::vector<int>& x, const std::vector<int>& y){
-//                return wtl::devsq(x) < wtl::devsq(y);
-//        });
         fill_neighbor(std::move(tumor_[current_coord]), new_coord);
     } else {
         new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
@@ -345,4 +357,10 @@ void Tissue::unit_test() {
     std::cerr << tissue.mutation_history() << std::endl;
     std::cerr << proximal_directions(2) << std::endl;
     std::cerr << proximal_directions(3) << std::endl;
+    Hex h(3, 2);
+    std::cerr << h << std::endl;
+    std::cerr << h.radius() << std::endl;
+    std::cerr << Hex::distance(h, Hex(1, 3)) << std::endl;
+    std::cerr << Hex::directions() << std::endl;
+    std::cerr << h.neighbors() << std::endl;
 }

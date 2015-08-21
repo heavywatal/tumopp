@@ -6,10 +6,14 @@
 #ifndef TISSUE_H_
 #define TISSUE_H_
 #include <cmath>
+#include <cassert>
 #include <iostream>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <string>
+
+#include <boost/functional/hash.hpp>
 
 #include "gland.h"
 
@@ -19,6 +23,82 @@ namespace boost {
     namespace program_options {
         class options_description;
     }
+}
+
+class Hex {
+  public:
+    Hex(const int x, const int y): x_(x), y_(y) {}
+    Hex(const int x, const int y, int z): Hex{x, y} {assert(z += y == -x);}
+    Hex(const std::vector<int>& v): x_(v[0]), y_(v[1]) {}
+    int x() const {return x_;}
+    int y() const {return y_;}
+    int z() const {return -x_ -y_;}
+
+    int radius() const {
+        int d = std::abs(x_);
+        d += std::abs(y_);
+        d += std::abs(z());
+        return d /= 2;
+    }
+
+    std::vector<Hex> neighbors() const {
+        std::vector<Hex> output;
+        output.reserve(6);
+        for (auto& v: directions()) {
+            output.push_back(v += *this);
+        }
+        return output;
+    }
+
+    static int distance(const Hex& lhs, const Hex& rhs) {
+        return (lhs - rhs).radius();
+    }
+    static std::vector<Hex> directions() {
+        std::vector<Hex> output;
+        output.reserve(6);
+        std::vector<int> v{-1, 0, 1};
+        do {
+            output.push_back(Hex(v[0], v[1]));
+        } while (std::next_permutation(v.begin(), v.end()));
+        return output;
+    }
+    Hex& operator+= (const Hex& rhs) {
+        x_ += rhs.x_;
+        y_ += rhs.y_;
+        return *this;
+    }
+    Hex operator+ (const Hex& rhs) const {
+        return Hex(x_ + rhs.x_, y_ + rhs.y_);
+    }
+    Hex operator- (const Hex& rhs) const {
+        return Hex(x_ - rhs.x_, y_ - rhs.y_);
+    }
+    bool operator= (const Hex& rhs) const {
+        return x_ == rhs.x_ && y_ == rhs.y_;
+    }
+    friend std::ostream& operator<< (std::ostream& ost, const Hex& hex) {
+        return ost << "[" << hex.x_ << ", " << hex.y_ << ", " << hex.z() << "]";
+    }
+
+  private:
+    int x_;
+    int y_;
+};
+
+namespace std {
+  template <> struct hash<Hex> {
+    size_t operator() (const Hex& hex) const {
+        size_t h = 0;
+        boost::hash_combine(h, hex.x());
+        boost::hash_combine(h, hex.y());
+        return h;
+    }
+  };
+  template <> struct hash<std::vector<int>> {
+    size_t operator() (const std::vector<int>& v) const {
+        return boost::hash_range(v.begin(), v.end());
+    }
+  };
 }
 
 class Tissue {
@@ -70,7 +150,7 @@ class Tissue {
                        const std::vector<int>& direction={});
 
     //! key: coords, value: gland
-    std::map<std::vector<int>, Gland> tumor_;
+    std::unordered_map<std::vector<int>, Gland> tumor_;
     //! The coordinates of the existing glands
     std::vector<std::vector<int>> coords_;
     //! The coordinates of the past mutations
