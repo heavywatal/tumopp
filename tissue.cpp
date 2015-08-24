@@ -187,17 +187,18 @@ void Tissue::grow_even(const size_t max_size) {HERE;
     size_t age = 1;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
-    for (auto it=tumor_.begin(); tumor_.size() < max_size; ++it) {
-        while (it != tumor_.end() && it->second.age() == age) {++it;}
-        if (it == tumor_.end()) {
-            it = tumor_.begin();
+    for (auto it=coords_.rbegin(); tumor_.size() < max_size; ++it) {
+        while (it != coords_.rend() && tumor_[*it].age() == age) {++it;}
+        if (it == coords_.rend()) {
+            it = coords_.rbegin();
             ++age;
         }
-        it->second.stamp(age);
-        auto current_coord = it->first;
-        Gland daughter = it->second;
-        if (it->second.bernoulli_apoptosis()) {
-            it->second = std::move(daughter);
+        auto& mother = tumor_[*it];
+        mother.stamp(age);
+        auto current_coord = *it;
+        Gland daughter = mother;
+        if (mother.bernoulli_apoptosis()) {
+            mother = std::move(daughter);
         } else {
             push_neighbor(std::move(daughter), current_coord);
 //            push(std::move(daughter), &current_coord, random_direction(current_coord));
