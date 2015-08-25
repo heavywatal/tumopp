@@ -33,6 +33,7 @@ class Hex {
     int x() const {return x_;}
     int y() const {return y_;}
     int z() const {return -x_ -y_;}
+    std::vector<int> vec() const {return {x_, y_};}
 
     int radius() const {
         int d = std::abs(x_);
@@ -102,6 +103,7 @@ namespace std {
 }
 
 class Tissue {
+    typedef std::vector<int> coord_t;
   public:
     //! Constructor
     Tissue(const std::vector<int>& origin): coords_{1, origin} {
@@ -147,6 +149,8 @@ class Tissue {
     //! Emplace daughter gland at a neighboring site and push if needed
     void fill_neighbor(Gland&& daughter, const std::vector<int>& current_coord);
     void push_neighbor(Gland&& daughter, const std::vector<int>& current_coord,
+                       const std::vector<int>& direction={});
+    void hex_neighbor(Gland&& daughter, const std::vector<int>& current_coord,
                        const std::vector<int>& direction={});
 
     //! key: coords, value: gland

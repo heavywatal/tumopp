@@ -241,11 +241,46 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
 }
 
 //! @todo
-void Tissue::push_neighbor(Gland&& daughter, const std::vector<int>& current_coord,
+void Tissue::hex_neighbor(Gland&& daughter, const std::vector<int>& current_coord,
                            const std::vector<int>& direction) {
     const size_t dimensions = current_coord.size();
 //    static const auto directions = all_directions(dimensions);
-    static const auto directions = proximal_directions(dimensions);
+//    static const auto directions = proximal_directions(dimensions);
+    static const auto directions = Hex::directions();
+//    auto neighbors = directions;
+    auto neighbors = Hex(current_coord).neighbors();
+    std::vector<std::vector<int>> empty_neighbors;
+    empty_neighbors.reserve(neighbors.size());
+    for (auto& x: neighbors) {
+//        x += current_coord;
+        if (tumor_.find(x.vec()) == tumor_.end()) {
+            empty_neighbors.push_back(x.vec());
+        }
+    }
+    std::vector<int> new_coord;
+    if (empty_neighbors.empty()) {
+        auto new_dir = direction;
+        if (direction.empty()) {
+            new_dir = wtl::prandom().choice(directions.begin(), directions.end())->vec();
+        }
+        new_coord = current_coord + new_dir;
+        push_neighbor(std::move(tumor_[current_coord]), new_coord, new_dir);
+    } else {
+        new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
+            [](const std::vector<int>& x, const std::vector<int>& y){
+                return wtl::devsq(x) < wtl::devsq(y);
+        });
+        emplace(new_coord, std::move(tumor_[current_coord]));
+    }
+    tumor_[current_coord] = std::move(daughter);
+}
+
+//! @todo
+void Tissue::push_neighbor(Gland&& daughter, const std::vector<int>& current_coord,
+                           const std::vector<int>& direction) {
+    const size_t dimensions = current_coord.size();
+    static const auto directions = all_directions(dimensions);
+//    static const auto directions = proximal_directions(dimensions);
     auto neighbors = directions;
     std::vector<std::vector<int>> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
