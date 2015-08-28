@@ -82,27 +82,6 @@ inline std::vector<std::vector<int>> proximal_directions(const size_t dimensions
     return output;
 }
 
-//! @arg dimensions 2
-inline std::vector<std::vector<int>> hex_directions(const size_t dimensions) {
-    assert(dimensions == 2);
-    std::vector<std::vector<int>> output;
-    output.reserve(std::pow(3, dimensions) - 1);
-    for (const int x: {-1, 0, 1}) {
-        for (const int y: {-1, 0, 1}) {
-            if (dimensions == 2) {
-                if (x == 0 && y == 0) continue;
-                output.push_back({x, y});
-                continue;
-            }
-            for (const int z: {-1, 0, 1}) {
-                if (x == 0 && y == 0 && z == 0) continue;
-                output.push_back({x, y, z});
-            }
-        }
-    }
-    return output;
-}
-
 //! random vector of {-1, 0, 1}
 inline std::vector<int> random_direction(const std::vector<int>& current_coord) {
     const size_t dimensions = current_coord.size();
@@ -200,7 +179,8 @@ void Tissue::grow_even(const size_t max_size) {HERE;
         if (mother.bernoulli_apoptosis()) {
             mother = std::move(daughter);
         } else {
-            push_neighbor(std::move(daughter), current_coord);
+            hex_neighbor(std::move(daughter), current_coord);
+//            push_neighbor(std::move(daughter), current_coord);
 //            push(std::move(daughter), &current_coord, random_direction(current_coord));
         }
         if (Gland::bernoulli_mutation()) {
