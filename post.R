@@ -111,7 +111,7 @@ plot_early_evolution_2d_hex = function(.time) {
     theme(axis.title=element_blank())+
     theme(legend.position='none')
 }
-print(plot_early_evolution_2d_hex(210))
+#print(plot_early_evolution_2d_hex(210))
 animation::saveGIF({
     for (.t in unique(evolution$time)) {
         print(plot_early_evolution_2d_hex(.t))
@@ -145,16 +145,25 @@ animation::saveGIF({
 #dev.off()
 
 #########1#########2#########3#########4#########5#########6#########7#########
-} else {
+} else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
+
+trans_coord_hex3D = function(mtrx) {mtrx %>>%
+    mutate(y= y + x * 0.5) %>>%
+    mutate(x= x * sqrt(3) * 0.5) %>>%
+    mutate(x= x + z * sqrt(3) / 3) %>>%
+    mutate(z= z * 0.8)  # TODO: ~0.8
+}
 
 plot_early_mutations_3d = function(.z=0, .data) {.data %>>%
     filter(z==.z) %>>%
     bind_rows(data_frame(x=maxabs+seq_len(8), y=maxabs+seq_len(8), z=.z,
                           fitness=-1, marker=as.factor(seq_len(8)))) %>>%
     #(?.) %>>% (?str(.)) %>>%
-    ggplot(aes(x, y, fill=marker))+
-    geom_raster(alpha=0.66, stat='identity', position='identity', interpolate=FALSE)+
+    ggplot(aes(x, y, colour=marker))+
+    geom_point(alpha=0.66, size=5)+
+#    ggplot(aes(x, y, fill=marker))+
+#    geom_raster(alpha=0.66, stat='identity', position='identity', interpolate=FALSE)+
     geom_hline(yintercept=.z)+
     scale_fill_hue(na.value='white')+
     coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
@@ -169,12 +178,13 @@ early3d = unnested %>>%
     filter(size <= 8) %>>%
     dplyr::select(-effect, -starts_with('origin_')) %>>%
     filter(!duplicated(.)) %>>%
+    trans_coord_hex3D %>>%
     mutate(marker=as.factor(size), size=NULL) %>>% (?.)
 
 maxabs = with(population, max(abs(c(x, y, z)))) %>>% (?.)
 
 animation::saveGIF({
-    for (i in seq(-maxabs, maxabs)) {
+    for (i in unique(early3d %>>% arrange(z) %>>% (z))) {
         print(plot_early_mutations_3d(i, early3d))
     }},
     'animation.gif', loop=TRUE, interval=0.15, outdir=getwd())
@@ -192,12 +202,34 @@ clear3d()
 axes3d()
 with(early3d %>>% filter(sqrt(x^2 + y^2 + z^2)>12), spheres3d(x, y, z,
                 radius=1, col=marker, alpha=0.8))
+title3d('', '', 'x', 'y', 'z')
 writeWebGL()
 
-#clear3d()
-#axes3d()
-#with(early3d, spheres3d(early3d,# %>>% filter(sqrt(x^2 + y^2 + z^2)>14),
-#                radius=1, col=marker, alpha=ifelse(marker==3, 0.8, 0.06)))
+
+if (FALSE) {  # Thinking about hex 3D neighbors
+.hex_xy = read_csv('x,y,z
+0,0,0
+0,1,0
+0,-1,0
+-1,0,0
+-1,1,0
+1,0,0
+1,-1,0')
+
+.hex = .hex_xy %>>%
+    bind_rows(.hex_xy %>>% filter(x > 0 | (x==0 & y==0)) %>>% mutate(z=-1)) %>>%
+    bind_rows(.hex_xy %>>% filter(x < 0 | (x==0 & y==0)) %>>% mutate(z=1)) %>>% (?.) %>>%
+
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+#rgl::view3d(-25, 15, 40, zoom=0.9)
+rgl::view3d(0, 0, 0, zoom=0.9)
+clear3d()
+axes3d()
+with(.hex, spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
+}  # fi 3D neighbors
 
 #########1#########2#########3#########4#########5#########6#########7#########
 }  # fi 2D/3D
