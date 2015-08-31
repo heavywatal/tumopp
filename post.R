@@ -34,6 +34,20 @@ source(file.path(dirname(..file..), 'sample.R'))
 #########1#########2#########3#########4#########5#########6#########7#########
 if (conf[['dimensions']] == 2) {
 
+.p = unnested %>>%
+    filter(size <= 4) %>>%
+    dplyr::select(-starts_with('origin_')) %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5) %>>%
+    mutate(size=as.factor(size)) %>>%
+    ggplot(aes(x, y, colour=size))+
+    geom_point(alpha=0.66)+
+    scale_colour_hue(na.value='white')+
+    theme(panel.background=element_rect(fill='grey80'))+
+    theme(panel.grid=element_blank())+
+    theme(axis.title=element_blank())
+#.p
+ggsave('early_mutations_hex.png', .p, width=7, height=7)
+
 .heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
 
 plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
@@ -78,6 +92,31 @@ unnested_evolution = evolution %>>%
     filter(extract_numeric(sites) <= 4) %>>% (?.)
 
 maxabs = with(evolution %>>% filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
+
+plot_early_evolution_2d_hex = function(.time) {
+    .data = unnested_evolution %>>%
+        filter(time==.time) %>>%
+        mutate(marker=as.factor(sites)) %>>%
+        mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
+    .data %>>%
+        bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
+                          fitness=-1, marker=as.factor(seq_len(4)))) %>>%
+    ggplot(aes(x, y, colour=marker))+
+    geom_point(alpha=0.66, size=10)+
+    scale_color_hue(na.value='white')+
+    coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
+    labs(title=paste0('t = ', .time, ', N = ', nrow(.data)))+
+    theme(panel.background=element_blank())+
+    theme(panel.grid=element_blank())+
+    theme(axis.title=element_blank())+
+    theme(legend.position='none')
+}
+print(plot_early_evolution_2d_hex(210))
+animation::saveGIF({
+    for (.t in unique(evolution$time)) {
+        print(plot_early_evolution_2d_hex(.t))
+    }},
+    'evolution_hex.gif', loop=1, interval=0.1, outdir=getwd())
 
 plot_early_evolution_2d = function(.time) {
     .data = unnested_evolution %>>%
