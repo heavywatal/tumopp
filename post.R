@@ -148,11 +148,20 @@ animation::saveGIF({
 } else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
 
-trans_coord_hex3D = function(mtrx) {mtrx %>>%
+#  hexagonal close packed
+trans_coord_hcc = function(mtrx) {mtrx %>>%
+    mutate(y= y + x * 0.5) %>>%
+    mutate(x= x * sqrt(3) * 0.5) %>>%
+    mutate(x= x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>>%
+    mutate(z= z * 0.816497)  # TODO
+}
+
+#  face centered cubic (cubic close packed)
+trans_coord_fcc = function(mtrx) {mtrx %>>%
     mutate(y= y + x * 0.5) %>>%
     mutate(x= x * sqrt(3) * 0.5) %>>%
     mutate(x= x + z * sqrt(3) / 3) %>>%
-    mutate(z= z * 0.8)  # TODO: ~0.8
+    mutate(z= z * 0.816497)  # TODO
 }
 
 plot_early_mutations_3d = function(.z=0, .data) {.data %>>%
@@ -216,19 +225,58 @@ if (FALSE) {  # Thinking about hex 3D neighbors
 1,0,0
 1,-1,0')
 
-.hex = .hex_xy %>>%
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+rgl::view3d(20, 10, 60)
+clear3d()
+axes3d()
+.hex_xy %>>%
     bind_rows(.hex_xy %>>% filter(x > 0 | (x==0 & y==0)) %>>% mutate(z=-1)) %>>%
     bind_rows(.hex_xy %>>% filter(x < 0 | (x==0 & y==0)) %>>% mutate(z=1)) %>>% (?.) %>>%
+    trans_coord_fcc %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
+
 
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
 rgl::clear3d()
-#rgl::view3d(-25, 15, 40, zoom=0.9)
-rgl::view3d(0, 0, 0, zoom=0.9)
+rgl::view3d(40, 20, 60)
 clear3d()
 axes3d()
-with(.hex, spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+.hex_xy %>>%
+    bind_rows(.hex_xy %>>% mutate(z=-1) %>>% filter(x < 0 | (x==0 & y==0))) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=1) %>>% filter(x < 0 | (x==0 & y==0))) %>>% (?.) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=5)) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=4) %>>% filter(x > 0 | (x==0 & y==0))) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=6) %>>% filter(x > 0 | (x==0 & y==0))) %>>%
+    trans_coord_hcc %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
 title3d('', '', 'x', 'y', 'z')
+
+
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+rgl::view3d(70, 5, 60)
+clear3d()
+axes3d()
+.r = 2; seq(-.r, .r) %>>%
+    (expand.grid(x=., y=., z=.)) %>>%
+    trans_coord_hcc %>>%
+#    trans_coord_fcc %>>%
+    mutate(r= sqrt(x*x+y*y+z*z)) %>>%
+#    filter(r <= 3) %>>% (?.) %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
+
+#  even
+max(z, d + z/2)
+
+#  odd
+
+
 }  # fi 3D neighbors
 
 #########1#########2#########3#########4#########5#########6#########7#########

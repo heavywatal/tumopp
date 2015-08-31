@@ -385,4 +385,6 @@ void Tissue::unit_test() {
     std::cerr << Hex(h - Hex({1, 3})).radius() << std::endl;
     std::cerr << Hex::directions() << std::endl;
     std::cerr << h.neighbors() << std::endl;
+    std::cerr << hex_directions(2) << std::endl;
+    std::cerr << hex_directions(3) << std::endl;
 }
