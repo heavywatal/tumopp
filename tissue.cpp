@@ -25,24 +25,6 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-template <class T>
-std::vector<T> operator+(const std::vector<T>& lhs, const std::vector<T>& rhs) {
-    assert(lhs.size() == rhs.size());
-    std::vector<T> result;
-    result.reserve(lhs.size());
-    std::transform(lhs.begin(), lhs.end(), rhs.begin(),
-                   std::back_inserter(result), std::plus<T>());
-    return result;
-}
-
-template <class T>
-std::vector<T>& operator+=(std::vector<T>& lhs, const std::vector<T>& rhs) {
-    assert(lhs.size() == rhs.size());
-    std::transform(lhs.begin(), lhs.end(), rhs.begin(),
-                   lhs.begin(), std::plus<T>());
-    return lhs;
-}
-
 //! @arg dimensions 2 or 3
 inline std::vector<std::vector<int>> all_directions(const size_t dimensions) {
     assert(dimensions == 2 || dimensions == 3);
@@ -287,15 +269,15 @@ void Tissue::hex_neighbor(Gland&& daughter, const std::vector<int>& current_coor
     std::vector<std::vector<int>> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
     for (auto& x: neighbors) {
-        if (tumor_.find(x.vec()) == tumor_.end()) {
-            empty_neighbors.push_back(x.vec());
+        if (tumor_.find(x) == tumor_.end()) {
+            empty_neighbors.push_back(x);
         }
     }
     std::vector<int> new_coord;
     if (empty_neighbors.empty()) {
         auto new_dir = direction;
         if (direction.empty()) {
-            new_dir = wtl::prandom().choice(directions.begin(), directions.end())->vec();
+            new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
         }
         new_coord = current_coord + new_dir;
         push_neighbor(std::move(tumor_[current_coord]), new_coord, new_dir);
@@ -397,10 +379,10 @@ void Tissue::unit_test() {
     std::cerr << tissue.mutation_history() << std::endl;
     std::cerr << proximal_directions(2) << std::endl;
     std::cerr << proximal_directions(3) << std::endl;
-    Hex h(3, 2);
+    Hex h({3, 2});
     std::cerr << h << std::endl;
     std::cerr << h.radius() << std::endl;
-    std::cerr << Hex::distance(h, Hex(1, 3)) << std::endl;
+    std::cerr << Hex(h - Hex({1, 3})).radius() << std::endl;
     std::cerr << Hex::directions() << std::endl;
     std::cerr << h.neighbors() << std::endl;
 }

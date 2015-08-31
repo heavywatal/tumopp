@@ -19,71 +19,63 @@
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-namespace boost {
-    namespace program_options {
-        class options_description;
-    }
+
+template <class T>
+std::vector<T>& operator+=(std::vector<T>& lhs, const std::vector<T>& rhs) {
+    assert(lhs.size() == rhs.size());
+    std::transform(lhs.begin(), lhs.end(), rhs.begin(),
+                   lhs.begin(), std::plus<T>());
+    return lhs;
+}
+template <class T>
+std::vector<T>& operator-=(std::vector<T>& lhs, const std::vector<T>& rhs) {
+    assert(lhs.size() == rhs.size());
+    std::transform(lhs.begin(), lhs.end(), rhs.begin(),
+                   lhs.begin(), std::minus<T>());
+    return lhs;
 }
 
-class Hex {
+template <class T>
+std::vector<T> operator+(std::vector<T> lhs, const std::vector<T>& rhs) {
+    return lhs += rhs;
+}
+
+template <class T>
+std::vector<T> operator-(std::vector<T> lhs, const std::vector<T>& rhs) {
+    return lhs -= rhs;
+}
+
+class Hex: public std::vector<int> {
   public:
-    Hex(const int x, const int y): x_(x), y_(y) {}
-    Hex(const int x, const int y, int z): Hex{x, y} {assert(z += y == -x);}
-    Hex(const std::vector<int>& v): x_(v[0]), y_(v[1]) {}
-    int x() const {return x_;}
-    int y() const {return y_;}
-    int z() const {return -x_ -y_;}
-    std::vector<int> vec() const {return {x_, y_};}
+    Hex(const std::vector<int>& v): std::vector<int>(v) {}
+    int x() const {return this->operator[](0);}
+    int y() const {return this->operator[](1);}
+    int z() const {return -x() -y();}
 
     int radius() const {
-        int d = std::abs(x_);
-        d += std::abs(y_);
+        int d = std::abs(x());
+        d += std::abs(y());
         d += std::abs(z());
         return d /= 2;
     }
 
-    std::vector<Hex> neighbors() const {
-        std::vector<Hex> output;
-        output.reserve(6);
-        for (auto& v: directions()) {
-            output.push_back(v += *this);
+    std::vector<std::vector<int>> neighbors() const {
+        auto output = directions();
+        for (auto& v: output) {
+            v += *this;
         }
         return output;
     }
 
-    static int distance(const Hex& lhs, const Hex& rhs) {
-        return (lhs - rhs).radius();
-    }
-    static std::vector<Hex> directions() {
-        std::vector<Hex> output;
+    static std::vector<std::vector<int>> directions() {
+        std::vector<std::vector<int>> output;
         output.reserve(6);
         std::vector<int> v{-1, 0, 1};
         do {
-            output.push_back(Hex(v[0], v[1]));
+            output.push_back({v[0], v[1]});
         } while (std::next_permutation(v.begin(), v.end()));
         return output;
     }
-    Hex& operator+= (const Hex& rhs) {
-        x_ += rhs.x_;
-        y_ += rhs.y_;
-        return *this;
-    }
-    Hex operator+ (const Hex& rhs) const {
-        return Hex(x_ + rhs.x_, y_ + rhs.y_);
-    }
-    Hex operator- (const Hex& rhs) const {
-        return Hex(x_ - rhs.x_, y_ - rhs.y_);
-    }
-    bool operator= (const Hex& rhs) const {
-        return x_ == rhs.x_ && y_ == rhs.y_;
-    }
-    friend std::ostream& operator<< (std::ostream& ost, const Hex& hex) {
-        return ost << "[" << hex.x_ << ", " << hex.y_ << ", " << hex.z() << "]";
-    }
-
-  private:
-    int x_;
-    int y_;
 };
 
 namespace std {
@@ -100,6 +92,12 @@ namespace std {
         return boost::hash_range(v.begin(), v.end());
     }
   };
+}
+
+namespace boost {
+    namespace program_options {
+        class options_description;
+    }
 }
 
 class Tissue {
