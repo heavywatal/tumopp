@@ -48,7 +48,29 @@ if (conf[['dimensions']] == 2) {
 #.p
 ggsave('early_mutations_hex.png', .p, width=7, height=7)
 
-.heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
+
+.all_glands = unnested %>>%
+    group_by(x, y) %>>%
+    summarise(size= 0) %>>% ungroup %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5) %>>%
+    (?.)
+
+.p = unnested %>>%
+    filter(60 <= size,  size <= 100) %>>%
+    dplyr::select(-starts_with('origin_')) %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5) %>>%
+    mutate(size=as.factor(size)) %>>%
+    ggplot(aes(x, y, colour=size))+
+    geom_point(data=.all_glands, colour='#FFFFFF')+
+    geom_point(alpha=0.66)+
+    scale_colour_hue(na.value='white')+
+    theme(panel.background=element_rect(fill='grey80'))+
+    theme(panel.grid=element_blank())+
+    theme(axis.title=element_blank())
+#.p
+ggsave('early_mid_mutations_hex.png', .p, width=7, height=7)
+
+
 
 plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
     mutate(size=ifelse(size <= num_tracing, size, NA), effect=NULL) %>>%
@@ -65,6 +87,7 @@ plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
     theme(axis.title=element_blank())
 }
 
+.heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
 plot_mutation_history_2d = function(.data) {.data %>>%
     ggplot(aes(x, y, fill=size))+
     geom_raster(alpha=0.5)+
