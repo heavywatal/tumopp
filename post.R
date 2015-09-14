@@ -210,7 +210,7 @@ early3d = unnested %>>%
     filter(size <= 8) %>>%
     dplyr::select(-effect, -starts_with('origin_')) %>>%
     filter(!duplicated(.)) %>>%
-    trans_coord_hex3D %>>%
+    trans_coord_fcc %>>%
     mutate(marker=as.factor(size), size=NULL) %>>% (?.)
 
 maxabs = with(population, max(abs(c(x, y, z)))) %>>% (?.)
@@ -287,8 +287,8 @@ clear3d()
 axes3d()
 .r = 2; seq(-.r, .r) %>>%
     (expand.grid(x=., y=., z=.)) %>>%
-    trans_coord_hcc %>>%
-#    trans_coord_fcc %>>%
+#    trans_coord_hcc %>>%
+    trans_coord_fcc %>>%
     mutate(r= sqrt(x*x+y*y+z*z)) %>>%
 #    filter(r <= 3) %>>% (?.) %>>%
 with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
