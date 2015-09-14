@@ -22,7 +22,6 @@
     Command line option | Symbol | Variable
     --------------------| ------ | -------------------------
     `-N,--max`          | -      | Simulation::MAX_SIZE
-    `-D,--dimensions`   | -      | Simulation::DIMENSIONS
 */
 boost::program_options::options_description& Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
@@ -37,7 +36,6 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
         ("top_dir", po::value<std::string>()->default_value(OUT_DIR.string()))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
         ("max,N", po::value<size_t>(&MAX_SIZE)->default_value(MAX_SIZE))
-        ("dimensions,D", po::value<size_t>(&DIMENSIONS)->default_value(DIMENSIONS))
     ;
     return description;
 }
@@ -95,7 +93,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 }
 
 void Simulation::run() {HERE;
-    Tissue tissue(DIMENSIONS);
+    Tissue tissue;
     tissue.stain();
     switch (MODE) {
       case 0: {

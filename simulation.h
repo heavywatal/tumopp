@@ -46,9 +46,6 @@ class Simulation {
     //! Control execution mode
     int MODE = 0;
 
-    //! Dimensions: {1, 2, 3}
-    size_t DIMENSIONS = 2;
-
     //! Max tumor size to stop simulation
     size_t MAX_SIZE = 16384;
 
