@@ -37,26 +37,15 @@ boost::program_options::options_description& Tissue::opt_description() {
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-class Orthogonal: public std::vector<int> {
+class Orthogonal: public Coord {
   public:
     Orthogonal() = default;
-    Orthogonal(const std::vector<int>& v): std::vector<int>(v) {}
-    size_t distance() const {
-        return std::accumulate(begin(), end(), 0, [](const int lhs, const int rhs) {
+    size_t distance(const std::vector<int>& v) const {
+        return std::accumulate(v.begin(), v.end(), 0, [](const int lhs, const int rhs) {
             return std::abs(lhs) + std::abs(rhs);
         });
     }
-    std::vector<Orthogonal> neighbors() const {
-        const auto dirs = directions(size());
-        std::vector<Orthogonal> output;
-        output.reserve(dirs.size());
-        for (const auto& v: dirs) {
-            output.push_back(v + *this);
-        }
-        return output;
-    }
-
-    static std::vector<std::vector<int>> directions(const size_t dimensions) {
+    std::vector<std::vector<int>> directions(const size_t dimensions) const {
         std::vector<std::vector<int>> output;
         output.reserve(2 * dimensions);
         std::vector<int> v(dimensions, 0);
@@ -73,25 +62,15 @@ class Orthogonal: public std::vector<int> {
     }
 };
 
-class Lattice: public std::vector<int> {
+class Lattice: public Coord {
   public:
     Lattice() = default;
-    Lattice(const std::vector<int>& v): std::vector<int>(v) {}
-    size_t distance() const {
-        return *std::max_element(begin(), end(), [](const int lhs, const int rhs) {
+    size_t distance(const std::vector<int>& v) const {
+        return std::abs(*std::max_element(v.begin(), v.end(), [](const int lhs, const int rhs) {
             return std::abs(lhs) < std::abs(rhs);
-        });
+        }));
     }
-    std::vector<Lattice> neighbors() const {
-        const auto dirs = directions(size());
-        std::vector<Lattice> output;
-        output.reserve(dirs.size());
-        for (const auto& v: dirs) {
-            output.push_back(v + *this);
-        }
-        return output;
-    }
-    static std::vector<std::vector<int>> directions(const size_t dimensions) {
+    std::vector<std::vector<int>> directions(const size_t dimensions) const {
         std::vector<std::vector<int>> output;
         output.reserve(std::pow(3, dimensions) - 1);
         for (const int x: {-1, 0, 1}) {
@@ -111,34 +90,23 @@ class Lattice: public std::vector<int> {
     }
 };
 
-class Hex: public std::vector<int> {
+class Hex: public Coord {
   public:
     Hex() = default;
-    Hex(const std::vector<int>& v): std::vector<int>(v) {}
-    size_t distance() const {
-        std::vector<int> absv;
-        absv.reserve(this->size() * 2);
-        for (auto x: *this) {
+    size_t distance(const std::vector<int>& v) const {
+        std::vector<size_t> absv;
+        absv.reserve(v.size() * 2);
+        for (auto x: v) {
             absv.push_back(std::abs(x));
         }
-        absv.push_back(std::abs(xy()));
-        if (size() == 3) {
-            absv.push_back(std::abs(xz()));
+        absv.push_back(std::abs(v[0] + v[1]));
+        if (v.size() == 3) {
+            absv.push_back(std::abs(v[0] + v[2]));
         }
         return *std::max_element(absv.begin(), absv.end());
     }
 
-    std::vector<Hex> neighbors() const {
-        const auto dirs = directions(size());
-        std::vector<Hex> output;
-        output.reserve(dirs.size());
-        for (const auto& v: dirs) {
-            output.push_back(v + *this);
-        }
-        return output;
-    }
-
-    static std::vector<std::vector<int>> directions(const size_t dimensions) {
+    std::vector<std::vector<int>> directions(const size_t dimensions) const {
         std::vector<std::vector<int>> output;
         std::vector<int> v{-1, 0, 1};
         if (dimensions == 2) {
@@ -161,31 +129,13 @@ class Hex: public std::vector<int> {
         }
         return output;
     }
-
-  private:
-    int xy() const {return -this->operator[](0) -this->operator[](1);}
-    int xz() const {return -this->operator[](0) -this->operator[](2);}
 };
-
-//namespace std {
-//  template <> struct hash<Hex> {
-//    size_t operator() (const Hex& hex) const {
-//        size_t h = 0;
-//        boost::hash_combine(h, hex.x());
-//        boost::hash_combine(h, hex.y());
-//        return h;
-//    }
-//  };
-//}
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-Tissue::coord_t Tissue::outward(const coord_t& current) {
-    const auto candidates = current.neighbors();
-    return *std::max_element(candidates.begin(), candidates.end(),
-                             [](const coord_t& lhs, const coord_t& rhs) {
-        return lhs.distance() < rhs.distance();
-    });
+Tissue::Tissue(const std::vector<int>& origin): coord_func_(new Hex()) {
+    emplace(origin, Gland());
+    init_regularly();
 }
 
 void Tissue::grow_random(const size_t max_size) {HERE;
@@ -198,8 +148,8 @@ void Tissue::grow_random(const size_t max_size) {HERE;
             parent = std::move(daughter);
         } else {
 //            push(std::move(daughter), &current_coord);
-//            push_fill(std::move(daughter), current_coord);
-            walk_fill(std::move(daughter), current_coord);
+            push_fill(std::move(daughter), current_coord);
+//            walk_fill(std::move(daughter), current_coord);
         }
         if (Gland::bernoulli_mutation()) {
             tumor_[current_coord].mutate();
@@ -227,8 +177,8 @@ void Tissue::grow_even(const size_t max_size) {HERE;
         if (mother.bernoulli_apoptosis()) {
             mother = std::move(daughter);
         } else {
-            push(std::move(daughter), &current_coord);
-//            push_fill(std::move(daughter), current_coord);
+//            push(std::move(daughter), &current_coord);
+            push_fill(std::move(daughter), current_coord);
 //            walk_fill(std::move(daughter), current_coord);
         }
         if (Gland::bernoulli_mutation()) {
@@ -259,7 +209,7 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
     // TODO: rate-limiting
     auto new_dir = direction;
     if (direction.empty()) {
-        const auto directions = coord_t::directions(coord->size());
+        const auto directions = coord_func_->directions(coord->size());
         new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
     }
     *coord += new_dir;
@@ -276,9 +226,9 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
 //! @todo
 void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
                        const std::vector<int>& direction) {
-    static const auto directions = coord_t::directions(current_coord.size());
-    const auto neighbors = coord_t(current_coord).neighbors();
-    std::vector<coord_t> empty_neighbors;
+    static const auto directions = coord_func_->directions(current_coord.size());
+    const auto neighbors = coord_func_->neighbors(current_coord);
+    std::vector<std::vector<int>> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
     for (auto& x: neighbors) {
         if (tumor_.find(x) == tumor_.end()) {
@@ -294,8 +244,8 @@ void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
         push_fill(std::move(tumor_[current_coord]), new_coord, new_dir);
     } else {
         auto new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
-            [](const coord_t& x, const coord_t& y) {
-                return x.distance() < y.distance();
+            [this](const std::vector<int>& x, const std::vector<int>& y) {
+                return coord_func_->distance(x) < coord_func_->distance(y);
         });
         emplace(new_coord, std::move(tumor_[current_coord]));
     }
@@ -304,9 +254,9 @@ void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
 
 //! @todo
 void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) {
-    static const auto directions = coord_t::directions(current_coord.size());
-    const auto neighbors = coord_t(current_coord).neighbors();
-    std::vector<coord_t> empty_neighbors;
+    static const auto directions = coord_func_->directions(current_coord.size());
+    const auto neighbors = coord_func_->neighbors(current_coord);
+    std::vector<std::vector<int>> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
     for (auto& x: neighbors) {
         if (tumor_.find(x) == tumor_.end()) {
@@ -318,8 +268,8 @@ void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) 
         walk_fill(std::move(tumor_[current_coord]), new_coord);
     } else {
         auto new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
-            [](const coord_t& x, const coord_t& y) {
-                return x.distance() < y.distance();
+            [this](const std::vector<int>& x, const std::vector<int>& y) {
+                return coord_func_->distance(x) < coord_func_->distance(y);
         });
         emplace(new_coord, std::move(tumor_[current_coord]));
     }
@@ -327,7 +277,7 @@ void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) 
 }
 
 void Tissue::init_regularly() {HERE;
-    for (const auto& coord: coord_t(coords_.front()).neighbors()) {
+    for (const auto& coord: coord_func_->neighbors(coords_.front())) {
         emplace(coord, Gland());
     }
 }
@@ -387,12 +337,11 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
 
 template <class T> inline
 void test_coordinate(const std::vector<int>& v) {
-    T coord(v);
+    T coord;
     std::cerr << typeid(coord).name() << std::endl;
-    std::cerr << coord << std::endl;
-    std::cerr << coord.distance() << std::endl;
-    std::cerr << coord.neighbors() << std::endl;
-    std::cerr << T::directions(v.size()) << std::endl;
+    std::cerr << coord.distance(v) << std::endl;
+    std::cerr << coord.neighbors(v) << std::endl;
+    std::cerr << coord.directions(v.size()) << std::endl;
 }
 
 void Tissue::unit_test() {

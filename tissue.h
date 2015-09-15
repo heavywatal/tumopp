@@ -60,20 +60,38 @@ namespace boost {
     }
 }
 
+
+class Coord {
+  public:
+    Coord() = default;
+    virtual ~Coord() = default;
+    std::vector<std::vector<int>> neighbors(const std::vector<int>& v) const {
+        std::vector<std::vector<int>> output = directions(v.size());
+        for (auto& d: output) {
+            d += v;
+        }
+        return output;
+    }
+    std::vector<int> outward(const std::vector<int>& v) const {
+        const auto candidates = neighbors(v);
+        return *std::max_element(candidates.begin(), candidates.end(),
+                                 [this](const std::vector<int>& lhs, const std::vector<int>& rhs) {
+            return distance(lhs) < distance(rhs);
+        });
+    }
+    virtual std::vector<std::vector<int>> directions(const size_t dimensions) const = 0;
+    virtual size_t distance(const std::vector<int>& v) const = 0;
+};
 class Orthogonal;
 class Lattice;
 class Hex;
 
 class Tissue {
-    typedef Hex coord_t;
   public:
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue(const std::vector<int>& origin=std::vector<int>(DIMENSIONS_)) {
-        emplace(origin, Gland());
-        init_regularly();
-    }
+    Tissue(const std::vector<int>& origin=std::vector<int>(DIMENSIONS_));
 
     //! Initiate tumor with neighboring glands regularly
     void init_regularly();
@@ -106,7 +124,6 @@ class Tissue {
   private:
     //! Dimensions: {1, 2, 3}
     static size_t DIMENSIONS_;
-    static coord_t outward(const coord_t& current);
 
     //! Emplace daughter gland at the specified coord
     void emplace(const std::vector<int>& current_coord, Gland&& daughter);
@@ -118,6 +135,8 @@ class Tissue {
                    const std::vector<int>& direction={});
     //! Change direction before push_fill
     void walk_fill(Gland&& daughter, const std::vector<int>& current_coord);
+
+    std::unique_ptr<Coord> coord_func_;
 
     //! key: coords, value: gland
     std::unordered_map<std::vector<int>, Gland> tumor_;
