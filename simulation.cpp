@@ -94,6 +94,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() {HERE;
     Tissue tissue;
+    tissue.set_coord<Hex>();
     tissue.stain();
     switch (MODE) {
       case 0: {
