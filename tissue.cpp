@@ -179,19 +179,6 @@ class Hex: public std::vector<int> {
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-//! random vector of {-1, 0, 1}
-inline std::vector<int> random_direction(const std::vector<int>& current_coord) {
-    const size_t dimensions = current_coord.size();
-    std::vector<int> direction(dimensions, -1);
-    for (size_t i=0; i<dimensions; ++i) {
-        direction[i] += wtl::prandom().randrange(3);
-    }
-    if (direction == std::vector<int>(dimensions, 0)) {
-        return random_direction(current_coord);
-    }
-    return direction;
-}
-
 //! random vector of {-1, 0, 1} outward
 inline std::vector<int> random_outward(const std::vector<int>& current_coord) {
     const size_t dimensions = current_coord.size();
@@ -290,7 +277,6 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
 //! @todo
 void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
                        const std::vector<int>& direction) {
-    typedef Hex coord_t;
     static const auto directions = coord_t::directions(DIMENSIONS());
     const auto neighbors = coord_t(current_coord).neighbors();
     std::vector<coord_t> empty_neighbors;
@@ -319,7 +305,6 @@ void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
 
 //! @todo
 void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) {
-    typedef Hex coord_t;
     static const auto directions = coord_t::directions(DIMENSIONS());
     const auto neighbors = coord_t(current_coord).neighbors();
     std::vector<coord_t> empty_neighbors;
@@ -343,25 +328,8 @@ void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) 
 }
 
 void Tissue::init_regularly() {HERE;
-    const size_t dimensions = coords_.front().size();
-    const size_t n = std::pow(2, dimensions);
-    coords_.reserve(n);
-    for (size_t i=tumor_.size(); i<n; ++i) {
-        std::bitset<3> bs(i);
-        std::vector<int> coord(dimensions);
-        for (size_t j=0; j<dimensions; ++j) {
-            coord[j] = static_cast<int>(bs[j]);
-        }
+    for (const auto& coord: coord_t(coords_.front()).neighbors()) {
         emplace(coord, Gland());
-    }
-}
-
-void Tissue::init_randomly() {HERE;
-    const size_t dimensions = coords_.front().size();
-    const size_t n = std::pow(2, dimensions);
-    while (tumor_.size() < n) {
-        std::vector<int> coord = coords_.front();
-        push(Gland(), &coord, random_direction(coord));
     }
 }
 

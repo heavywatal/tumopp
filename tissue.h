@@ -60,20 +60,24 @@ namespace boost {
     }
 }
 
+class Orthogonal;
+class Lattice;
+class Hex;
+
 class Tissue {
-    typedef std::vector<int> coord_t;
+    typedef Hex coord_t;
   public:
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue(const std::vector<int>& origin=std::vector<int>(DIMENSIONS_)): coords_{1, origin} {
-        tumor_.emplace(origin, Gland());
+    Tissue(const std::vector<int>& origin=std::vector<int>(DIMENSIONS_)) {
+        emplace(origin, Gland());
         init_regularly();
     }
 
-    //! Initiate tumor with 2^D glands regularly
+    //! Initiate tumor with neighboring glands regularly
     void init_regularly();
-    //! Initiate tumor with 2^D glands randomly
+    //! Initiate tumor with neighboring glands randomly
     void init_randomly();
     //! Mark first cells with mutation
     void stain();
