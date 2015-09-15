@@ -106,12 +106,13 @@ class Tissue {
   private:
     //! Dimensions: {1, 2, 3}
     static size_t DIMENSIONS_;
+    static coord_t outward(const coord_t& current);
 
     //! Emplace daughter gland at the specified coord
     void emplace(const std::vector<int>& current_coord, Gland&& daughter);
     //! Emplace daughter gland and push other glands outward
     void push(Gland&& daughter, std::vector<int>* current_coord,
-              const std::vector<int>& direction);
+              const std::vector<int>& direction={});
     //! Push if not exists an empty neighbor
     void push_fill(Gland&& daughter, const std::vector<int>& current_coord,
                    const std::vector<int>& direction={});

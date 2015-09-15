@@ -55,6 +55,7 @@ class Orthogonal: public std::vector<int> {
         }
         return output;
     }
+
     static std::vector<std::vector<int>> directions(const size_t dimensions) {
         std::vector<std::vector<int>> output;
         output.reserve(2 * dimensions);
@@ -179,19 +180,12 @@ class Hex: public std::vector<int> {
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-//! random vector of {-1, 0, 1} outward
-inline std::vector<int> random_outward(const std::vector<int>& current_coord) {
-    const size_t dimensions = current_coord.size();
-    std::vector<int> direction(dimensions);
-    for (size_t i=0; i<dimensions; ++i) {
-        int n = wtl::prandom().randrange(2);
-        if (current_coord[i] > 0) {direction[i] = n;}
-        else {direction[i] = -n;}
-    }
-    if (direction == std::vector<int>(dimensions)) {
-        return random_outward(current_coord);
-    }
-    return direction;
+Tissue::coord_t Tissue::outward(const coord_t& current) {
+    const auto candidates = current.neighbors();
+    return *std::max_element(candidates.begin(), candidates.end(),
+                             [](const coord_t& lhs, const coord_t& rhs) {
+        return lhs.distance() < rhs.distance();
+    });
 }
 
 void Tissue::grow_random(const size_t max_size) {HERE;
@@ -203,7 +197,7 @@ void Tissue::grow_random(const size_t max_size) {HERE;
         if (parent.bernoulli_apoptosis()) {
             parent = std::move(daughter);
         } else {
-//            push(std::move(daughter), &current_coord, random_direction(current_coord));
+//            push(std::move(daughter), &current_coord);
 //            push_fill(std::move(daughter), current_coord);
             walk_fill(std::move(daughter), current_coord);
         }
@@ -233,8 +227,8 @@ void Tissue::grow_even(const size_t max_size) {HERE;
         if (mother.bernoulli_apoptosis()) {
             mother = std::move(daughter);
         } else {
-//            push(std::move(daughter), &current_coord, random_direction(current_coord));
-            push_fill(std::move(daughter), current_coord);
+            push(std::move(daughter), &current_coord);
+//            push_fill(std::move(daughter), current_coord);
 //            walk_fill(std::move(daughter), current_coord);
         }
         if (Gland::bernoulli_mutation()) {
@@ -263,12 +257,17 @@ void Tissue::emplace(const std::vector<int>& coord, Gland&& daughter) {
 
 void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<int>& direction) {
     // TODO: rate-limiting
-    std::transform(coord->begin(), coord->end(), direction.begin(), coord->begin(), std::plus<int>());
+    auto new_dir = direction;
+    if (direction.empty()) {
+        const auto directions = coord_t::directions(coord->size());
+        new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
+    }
+    *coord += new_dir;
     auto it = tumor_.find(*coord);
     if (it == tumor_.end()) {
         emplace(*coord, std::move(daughter));
     } else {
-        push(std::move(it->second), coord, direction);
+        push(std::move(it->second), coord, new_dir);
         it->second = std::move(daughter);
         *coord = it->first;
     }
@@ -277,7 +276,7 @@ void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<i
 //! @todo
 void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
                        const std::vector<int>& direction) {
-    static const auto directions = coord_t::directions(DIMENSIONS());
+    static const auto directions = coord_t::directions(current_coord.size());
     const auto neighbors = coord_t(current_coord).neighbors();
     std::vector<coord_t> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
@@ -305,7 +304,7 @@ void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
 
 //! @todo
 void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) {
-    static const auto directions = coord_t::directions(DIMENSIONS());
+    static const auto directions = coord_t::directions(current_coord.size());
     const auto neighbors = coord_t(current_coord).neighbors();
     std::vector<coord_t> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
