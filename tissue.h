@@ -40,16 +40,12 @@ class Tissue {
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue(const std::vector<int>& origin=std::vector<int>(DIMENSIONS_));
+    Tissue(): coord_func_(new Lattice) {};
 
     //! Set coordinate function object
     template <class FuncObj>
     void set_coord() {coord_func_.reset(new FuncObj());}
 
-    //! Initiate tumor with neighboring glands regularly
-    void init_regularly();
-    //! Initiate tumor with neighboring glands randomly
-    void init_randomly();
     //! Mark first cells with mutation
     void stain();
 

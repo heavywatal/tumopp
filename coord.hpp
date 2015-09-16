@@ -62,6 +62,20 @@ class Coord {
     }
     virtual std::vector<std::vector<int>> directions(const size_t dimensions) const = 0;
     virtual size_t distance(const std::vector<int>& v) const = 0;
+    virtual std::vector<std::vector<int>> origins(const size_t dimensions) const {
+        const size_t n = std::pow(2, dimensions);
+        std::vector<std::vector<int>> output;
+        output.reserve(n);
+        for (size_t i=0; i<n; ++i) {
+            std::bitset<3> bs(i);
+            std::vector<int> v(dimensions);
+            for (size_t j=0; j<dimensions; ++j) {
+                v[j] = static_cast<int>(bs[j]);
+            }
+            output.push_back(v);
+        }
+        return output;
+    }
 };
 
 class Lattice: public Coord {
@@ -154,6 +168,14 @@ class Hexagonal: public Coord {
             output.push_back({0, 0, 1});
             output.push_back({-1, 0, 1});
             output.push_back({-1, 1, 1});
+        }
+        return output;
+    }
+    std::vector<std::vector<int>> origins(const size_t dimensions) const {
+        std::vector<std::vector<int>> output = Lattice().origins(dimensions);
+        if (dimensions == 3) {
+            output.resize(3);
+            output.push_back({1, 0, -1});
         }
         return output;
     }

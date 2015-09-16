@@ -167,11 +167,14 @@ plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
 #plot_early_mutations_3d_section(0, early3d)
 
 early3d = unnested %>>%
-    filter(size <= 13) %>>%
+    filter(size <= ifelse(conf[['coord']] == 2, 4, 8)) %>>%
     dplyr::select(-effect, -starts_with('origin_')) %>>%
     filter(!duplicated(.)) %>>%
-    trans_coord_fcc %>>%
     mutate(size=as.factor(size)) %>>% (?.)
+
+if (conf[['coord']] == 3) {
+    early3d = early3d %>>% trans_coord_fcc
+}
 
 maxabs = with(population, max(abs(c(x, y, z)))) %>>% (?.)
 

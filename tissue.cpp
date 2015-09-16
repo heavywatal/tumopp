@@ -34,11 +34,6 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-Tissue::Tissue(const std::vector<int>& origin): coord_func_(new Lattice()) {
-    emplace(origin, Gland());
-    init_regularly();
-}
-
 void Tissue::grow_random(const size_t max_size) {HERE;
     coords_.reserve(max_size);
     while (tumor_.size() < max_size) {
@@ -177,13 +172,11 @@ void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) 
     tumor_[current_coord] = std::move(daughter);
 }
 
-void Tissue::init_regularly() {HERE;
-    for (const auto& coord: coord_func_->neighbors(coords_.front())) {
+void Tissue::stain() {HERE;
+    assert(tumor_.empty());
+    for (const auto& coord: coord_func_->origins(DIMENSIONS_)) {
         emplace(coord, Gland());
     }
-}
-
-void Tissue::stain() {HERE;
     for (auto& item: tumor_) {
         item.second.mutate();
         mutation_coords_.push_back(item.first);
@@ -253,6 +246,7 @@ void Tissue::unit_test() {
     tissue.grow_even(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.coords_ << std::endl;
+    std::cerr << tissue.snapshot_header() << std::endl;
     std::cerr << tissue.snapshot() << std::endl;
     std::cerr << tissue.mutation_history() << std::endl;
 
@@ -263,4 +257,9 @@ void Tissue::unit_test() {
     test_coordinate<Lattice>({3, -2, 1});
     test_coordinate<Diagonal>({3, -2, 1});
     test_coordinate<Hexagonal>({3, -2, 1});
+
+    std::cerr << Lattice().origins(2) << std::endl;
+    std::cerr << Lattice().origins(3) << std::endl;
+    std::cerr << Hexagonal().origins(2) << std::endl;
+    std::cerr << Hexagonal().origins(3) << std::endl;
 }
