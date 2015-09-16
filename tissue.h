@@ -5,7 +5,6 @@
 #pragma once
 #ifndef TISSUE_H_
 #define TISSUE_H_
-#include <cmath>
 #include <cassert>
 #include <iostream>
 #include <vector>

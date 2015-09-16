@@ -4,7 +4,6 @@
 */
 #include "tissue.h"
 
-#include <cmath>
 #include <iostream>
 #include <sstream>
 

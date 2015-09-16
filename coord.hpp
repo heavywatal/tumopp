@@ -6,6 +6,7 @@
 #ifndef COORD_HPP_
 #define COORD_HPP_
 
+#include <cmath>
 #include <vector>
 #include <algorithm>
 #include <numeric>

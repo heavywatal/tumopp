@@ -92,6 +92,7 @@ Depend:
 mainsrcs := $(addprefix ${SRCDIR}/,\
 gland.h \
 gland.cpp \
+coord.hpp \
 tissue.h \
 tissue.cpp \
 simulation.h \
