@@ -37,22 +37,6 @@ unnested_evolution = evolution %>>%
 source(file.path(dirname(..file..), 'sample.R'))
 
 
-#########1#########2#########3#########4#########5#########6#########7#########
-if (conf[['dimensions']] == 2) {
-
-#########1#########2#########3#########4#########5#########6#########7#########
-if (conf[['coord']] == 'hex') {
-
-unnested = unnested %>>%
-    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
-
-unnested_evolution = unnested_evolution %>>%
-    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
-
-}  # fi hex
-#########1#########2#########3#########4#########5#########6#########7#########
-
-
 gglattice2D = function(.data, .size=1.6) {
     .p = ggplot(.data, aes(x, y))
     .p = if (conf[['coord']] == 'hex') {.p+
@@ -69,6 +53,22 @@ theme2D =
     theme(panel.background=element_rect(fill='grey80'))+
     theme(panel.grid=element_blank())+
     theme(axis.title=element_blank())
+
+
+#########1#########2#########3#########4#########5#########6#########7#########
+if (conf[['dimensions']] == 2) {
+
+#########1#########2#########3#########4#########5#########6#########7#########
+if (conf[['coord']] == 'hex') {
+
+unnested = unnested %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
+
+unnested_evolution = unnested_evolution %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
+
+}  # fi hex
+#########1#########2#########3#########4#########5#########6#########7#########
 
 .p = unnested %>>%
     mutate(size=ifelse(size <= 4, size, NA)) %>>%
@@ -193,7 +193,7 @@ rgl::view3d(-25, 15, 40, zoom=0.9)
 clear3d()
 axes3d()
 with(early3d %>>% filter(sqrt(x^2 + y^2 + z^2)>12), spheres3d(x, y, z,
-                radius=1, col=marker, alpha=0.8))
+                radius=1, col=size, alpha=0.8))
 title3d('', '', 'x', 'y', 'z')
 writeWebGL()
 
@@ -259,6 +259,27 @@ max(z, d + z/2)
 
 #  odd
 
+
+
+
+
+.hex_xy = read_csv('x,y,z
+0,0,0
+1,0,0
+0,1,0
+1,0,-1
+')
+
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+rgl::view3d(20, 10, 60)
+clear3d()
+axes3d()
+.hex_xy %>>%
+    trans_coord_fcc %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
 
 }  # fi 3D neighbors
 
