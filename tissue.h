@@ -77,13 +77,15 @@ class Tissue {
     //! Emplace daughter gland at the specified coord
     void emplace(const std::vector<int>& current_coord, Gland&& daughter);
     //! Emplace daughter gland and push other glands outward
-    void push(Gland&& daughter, std::vector<int>* current_coord,
+    void push(Gland&& daughter, const std::vector<int>& current_coord,
               const std::vector<int>& direction={});
     //! Push if not exists an empty neighbor
     void push_fill(Gland&& daughter, const std::vector<int>& current_coord,
                    const std::vector<int>& direction={});
     //! Change direction before push_fill
     void walk_fill(Gland&& daughter, const std::vector<int>& current_coord);
+    //! Fill inner layer first and move outward
+    void push_layer(Gland&& daughter, const std::vector<int>& current_coord);
 
     std::unique_ptr<Coord> coord_func_;
 

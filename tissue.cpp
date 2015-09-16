@@ -36,14 +36,16 @@ boost::program_options::options_description& Tissue::opt_description() {
 
 void Tissue::grow_random(const size_t max_size) {HERE;
     coords_.reserve(max_size);
+    evolution_history_.reserve(max_size);
+    evolution_history_.push_back(snapshot());
     while (tumor_.size() < max_size) {
         auto current_coord = *wtl::prandom().choice(coords_.begin(), coords_.end());
-        auto& parent = tumor_[current_coord];
-        Gland daughter = parent;
-        if (parent.bernoulli_apoptosis()) {
-            parent = std::move(daughter);
+        auto& mother = tumor_[current_coord];
+        Gland daughter = mother;
+        if (mother.bernoulli_apoptosis()) {
+            mother = std::move(daughter);
         } else {
-//            push(std::move(daughter), &current_coord);
+//            push(std::move(daughter), current_coord);
             push_fill(std::move(daughter), current_coord);
 //            walk_fill(std::move(daughter), current_coord);
         }
@@ -51,6 +53,9 @@ void Tissue::grow_random(const size_t max_size) {HERE;
             tumor_[current_coord].mutate();
             mutation_coords_.push_back(std::move(current_coord));
             mutation_stages_.push_back(tumor_.size());
+        }
+        if (tumor_.size() <= 256) {
+            evolution_history_.push_back(snapshot());
         }
     }
 }
@@ -66,15 +71,15 @@ void Tissue::grow_even(const size_t max_size) {HERE;
             it = coords_.rbegin();
             ++age;
         }
-        auto& mother = tumor_[*it];
-        mother.stamp(age);
         auto current_coord = *it;
+        auto& mother = tumor_[current_coord];
+        mother.stamp(age);
         Gland daughter = mother;
         if (mother.bernoulli_apoptosis()) {
             mother = std::move(daughter);
         } else {
-//            push(std::move(daughter), &current_coord);
-            push_fill(std::move(daughter), current_coord);
+            push(std::move(daughter), current_coord);
+//            push_fill(std::move(daughter), current_coord);
 //            walk_fill(std::move(daughter), current_coord);
         }
         if (Gland::bernoulli_mutation()) {
@@ -101,25 +106,22 @@ void Tissue::emplace(const std::vector<int>& coord, Gland&& daughter) {
     tumor_.emplace(coord, std::move(daughter));
 }
 
-void Tissue::push(Gland&& daughter, std::vector<int>* coord, const std::vector<int>& direction) {
-    // TODO: rate-limiting
+
+void Tissue::push(Gland&& daughter, const std::vector<int>& current_coord, const std::vector<int>& direction) {
     auto new_dir = direction;
     if (direction.empty()) {
-        const auto directions = coord_func_->directions(coord->size());
+        const auto directions = coord_func_->directions(current_coord.size());
         new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
     }
-    *coord += new_dir;
-    auto it = tumor_.find(*coord);
-    if (it == tumor_.end()) {
-        emplace(*coord, std::move(daughter));
+    auto new_coord = current_coord + new_dir;
+    if (tumor_.find(new_coord) == tumor_.end()) {
+        emplace(new_coord, std::move(tumor_[current_coord]));
     } else {
-        push(std::move(it->second), coord, new_dir);
-        it->second = std::move(daughter);
-        *coord = it->first;
+        push(std::move(tumor_[current_coord]), new_coord, new_dir);
     }
+    tumor_[current_coord] = std::move(daughter);
 }
 
-//! @todo
 void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
                        const std::vector<int>& direction) {
     static const auto directions = coord_func_->directions(current_coord.size());
@@ -148,7 +150,6 @@ void Tissue::push_fill(Gland&& daughter, const std::vector<int>& current_coord,
     tumor_[current_coord] = std::move(daughter);
 }
 
-//! @todo
 void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) {
     static const auto directions = coord_func_->directions(current_coord.size());
     const auto neighbors = coord_func_->neighbors(current_coord);
@@ -171,6 +172,11 @@ void Tissue::walk_fill(Gland&& daughter, const std::vector<int>& current_coord) 
     }
     tumor_[current_coord] = std::move(daughter);
 }
+
+//! @todo
+void Tissue::push_layer(Gland&& daughter, const std::vector<int>& current_coord) {
+}
+
 
 void Tissue::stain() {HERE;
     assert(tumor_.empty());
