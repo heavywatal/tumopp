@@ -29,148 +29,112 @@ unnested = population %>>%
     dplyr::select(-sites) %>>%
     arrange(time, x, y) %>>% (?.)
 
-source(file.path(dirname(..file..), 'sample.R'))
-
 unnested_evolution = evolution %>>%
     mutate(sites=strsplit(sites, '\\|')) %>>%
     unnest(sites) %>>%
     filter(extract_numeric(sites) <= 4) %>>% (?.)
 
-maxabs = with(evolution %>>% filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
+source(file.path(dirname(..file..), 'sample.R'))
 
 
 #########1#########2#########3#########4#########5#########6#########7#########
 if (conf[['dimensions']] == 2) {
+
+#########1#########2#########3#########4#########5#########6#########7#########
 if (conf[['coord']] == 'hex') {
 
+unnested = unnested %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
 
-.p = unnested %>>%
-    filter(size <= 4) %>>%
-    dplyr::select(-starts_with('origin_')) %>>%
-    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5) %>>%
-    mutate(size=as.factor(size)) %>>%
-    ggplot(aes(x, y, colour=size))+
-    geom_point(alpha=0.66)+
-    scale_colour_hue(na.value='white')+
-    theme(panel.background=element_rect(fill='grey80'))+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())
-#.p
-ggsave('early_mutations.png', .p, width=7, height=7)
+unnested_evolution = unnested_evolution %>>%
+    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
+
+}  # fi hex
+#########1#########2#########3#########4#########5#########6#########7#########
 
 
-.all_glands = unnested %>>%
-    group_by(x, y) %>>%
-    summarise(size= 0) %>>% ungroup %>>%
-    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5) %>>%
-    (?.)
-
-.p = unnested %>>%
-    filter(60 <= size,  size <= 100) %>>%
-    dplyr::select(-starts_with('origin_')) %>>%
-    mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5) %>>%
-    mutate(size=as.factor(size)) %>>%
-    ggplot(aes(x, y, colour=size))+
-    geom_point(data=.all_glands, colour='#FFFFFF')+
-    geom_point(alpha=0.66)+
-    scale_colour_hue(na.value='white')+
-    theme(panel.background=element_rect(fill='grey80'))+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())
-#.p
-ggsave('early_mid_mutations.png', .p, width=7, height=7)
-
-plot_early_evolution_2d_hex = function(.time) {
-    .data = unnested_evolution %>>%
-        filter(time==.time) %>>%
-        mutate(marker=as.factor(sites)) %>>%
-        mutate(y= y + x * 0.5, x= x * sqrt(3) * 0.5)
-    .data %>>%
-        bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
-                          fitness=-1, marker=as.factor(seq_len(4)))) %>>%
-    ggplot(aes(x, y, colour=marker))+
-    geom_point(alpha=0.66, size=10)+
-    scale_color_hue(na.value='white')+
-    coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
-    labs(title=paste0('t = ', .time, ', N = ', nrow(.data)))+
-    theme(panel.background=element_blank())+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())+
-    theme(legend.position='none')
+gglattice2D = function(.data, .size=1.6) {
+    .p = ggplot(.data, aes(x, y))
+    .p = if (conf[['coord']] == 'hex') {.p+
+        geom_point(aes(colour=size), alpha=0.66, size=.size)+
+        scale_colour_hue(na.value='white')
+    } else {.p+
+        geom_raster(aes(fill=size), alpha=0.66)+
+        scale_fill_hue(na.value='white')
+    }
+    .p
 }
-#print(plot_early_evolution_2d_hex(210))
-animation::saveGIF({
-    for (.t in unique(evolution$time)) {
-        print(plot_early_evolution_2d_hex(.t))
-    }},
-    'evolution.gif', loop=1, interval=0.1, outdir=getwd())
 
-#########1#########2#########3#########4#########5#########6#########7#########
-} else {  # lattice, diag
-#########1#########2#########3#########4#########5#########6#########7#########
+theme2D =
+    theme(panel.background=element_rect(fill='grey80'))+
+    theme(panel.grid=element_blank())+
+    theme(axis.title=element_blank())
 
-plot_early_mutations_2d = function(.data, num_tracing=4) {.data %>>%
-    mutate(size=ifelse(size <= num_tracing, size, NA), effect=NULL) %>>%
-    dplyr::select(-starts_with('origin_')) %>>%
+.p = unnested %>>%
+    mutate(size=ifelse(size <= 4, size, NA)) %>>%
+    dplyr::select(-starts_with('origin_'), -effect) %>>%
     filter(!duplicated(.)) %>>%
     group_by(x, y) %>>%
     filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
     mutate(size=as.factor(size)) %>>%
-    ggplot(aes(x, y, fill=size))+
-    geom_raster(alpha=0.66)+
-    scale_fill_hue(na.value='white')+
-    theme(panel.background=element_rect(fill='grey80'))+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())
-}
-
-.heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
-plot_mutation_history_2d = function(.data) {.data %>>%
-    ggplot(aes(x, y, fill=size))+
-    geom_raster(alpha=0.5)+
-    scale_fill_gradientn(colours=.heat_colours, na.value='white')+
-    theme(panel.background=element_rect(fill='grey80'))+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())
-}
-
-.threshold = history$size %>>% nth(4)
-.p = plot_early_mutations_2d(unnested, .threshold)
+    gglattice2D + theme2D
 #.p
 ggsave('early_mutations.png', .p, width=7, height=7)
 
+.p = unnested %>>%
+    mutate(size=ifelse(60 <= size & size <= 100, size, NA)) %>>%
+    dplyr::select(-starts_with('origin_'), -effect) %>>%
+    filter(!duplicated(.)) %>>%
+    group_by(x, y) %>>%
+    filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
+    mutate(size=as.factor(size)) %>>%
+    gglattice2D + theme2D
+#.p
+ggsave('early_mid_mutations.png', .p, width=7, height=7)
+
+
+.heat_colours = c('#0000FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000')
+plot_mutation_history_2d = function(.data) {
+    .p = ggplot(.data, aes(x, y))
+    .p = if (conf[['coord']] == 'hex') {.p+
+        geom_point(aes(colour=size), alpha=0.5)+
+        scale_colour_gradientn(colours=.heat_colours, na.value='white')
+    } else {.p +
+        geom_raster(aes(fill=size), alpha=0.5)+
+        scale_fill_gradientn(colours=.heat_colours, na.value='white')
+    }
+    .p + theme2D
+}
 .p = plot_mutation_history_2d(unnested)
 #.p
 ggsave('gradient.png', .p, width=7, height=7)
 
+
+maxabs = with(evolution %>>% filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
+
 plot_early_evolution_2d = function(.time) {
     .data = unnested_evolution %>>%
         filter(time==.time) %>>%
-        mutate(marker=as.factor(sites))
+        mutate(size=as.factor(sites))
     .data %>>%
         bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
-                          fitness=-1, marker=as.factor(seq_len(4)))) %>>%
-    ggplot(aes(x, y, fill=marker))+
-    geom_raster(alpha=0.66, stat='identity', position='identity', interpolate=FALSE)+
-    scale_fill_hue(na.value='white')+
+                          fitness=-1, size=as.factor(seq_len(4)))) %>>%
+    gglattice2D(10)+
     coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
     labs(title=paste0('t = ', .time, ', N = ', nrow(.data)))+
-    theme(panel.background=element_blank())+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())+
+    theme2D+
     theme(legend.position='none')
 }
-#print(plot_early_evolution_2d(210))
+#print(plot_early_evolution_2d(10))
 
 animation::saveGIF({
     for (.t in unique(evolution$time)) {
         print(plot_early_evolution_2d(.t))
     }},
     'evolution.gif', loop=1, interval=0.1, outdir=getwd())
-#dev.off()
 
 #########1#########2#########3#########4#########5#########6#########7#########
-}} else {  # 3D
+} else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
 
 #  hexagonal close packed
@@ -189,39 +153,33 @@ trans_coord_fcc = function(mtrx) {mtrx %>>%
     mutate(z= z * 0.816497)  # TODO
 }
 
-plot_early_mutations_3d = function(.z=0, .data) {.data %>>%
+plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
     filter(z==.z) %>>%
     bind_rows(data_frame(x=maxabs+seq_len(8), y=maxabs+seq_len(8), z=.z,
-                          fitness=-1, marker=as.factor(seq_len(8)))) %>>%
+                          fitness=-1, size=as.factor(seq_len(8)))) %>>%
     #(?.) %>>% (?str(.)) %>>%
-    ggplot(aes(x, y, colour=marker))+
-    geom_point(alpha=0.66, size=5)+
-#    ggplot(aes(x, y, fill=marker))+
-#    geom_raster(alpha=0.66, stat='identity', position='identity', interpolate=FALSE)+
+    gglattice2D(5)+
     geom_hline(yintercept=.z)+
-    scale_fill_hue(na.value='white')+
     coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
-    theme(panel.background=element_rect(fill='grey80'))+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())+
+    theme2D+
     theme(legend.position='right')
 }
-#plot_early_mutations_3d(20, early3d)
+#plot_early_mutations_3d_section(0, early3d)
 
 early3d = unnested %>>%
     filter(size <= 13) %>>%
     dplyr::select(-effect, -starts_with('origin_')) %>>%
     filter(!duplicated(.)) %>>%
     trans_coord_fcc %>>%
-    mutate(marker=as.factor(size), size=NULL) %>>% (?.)
+    mutate(size=as.factor(size)) %>>% (?.)
 
 maxabs = with(population, max(abs(c(x, y, z)))) %>>% (?.)
 
 animation::saveGIF({
     for (i in unique(early3d %>>% arrange(z) %>>% (z))) {
-        print(plot_early_mutations_3d(i, early3d))
+        print(plot_early_mutations_3d_section(i, early3d))
     }},
-    'animation.gif', loop=TRUE, interval=0.15, outdir=getwd())
+    'serial_section.gif', loop=TRUE, interval=0.15, outdir=getwd())
 
 
 #########1#########2#########3#########4#########5#########6#########7#########
