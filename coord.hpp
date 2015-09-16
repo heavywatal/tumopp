@@ -64,9 +64,9 @@ class Coord {
     virtual size_t distance(const std::vector<int>& v) const = 0;
 };
 
-class Orthogonal: public Coord {
+class Lattice: public Coord {
   public:
-    Orthogonal() = default;
+    Lattice() = default;
     size_t distance(const std::vector<int>& v) const {
         return std::accumulate(v.begin(), v.end(), 0, [](const int lhs, const int rhs) {
             return std::abs(lhs) + std::abs(rhs);
@@ -90,9 +90,9 @@ class Orthogonal: public Coord {
 };
 
 
-class Lattice: public Coord {
+class Diagonal: public Coord {
   public:
-    Lattice() = default;
+    Diagonal() = default;
     size_t distance(const std::vector<int>& v) const {
         return std::abs(*std::max_element(v.begin(), v.end(), [](const int lhs, const int rhs) {
             return std::abs(lhs) < std::abs(rhs);
@@ -118,9 +118,9 @@ class Lattice: public Coord {
     }
 };
 
-class Hex: public Coord {
+class Hexagonal: public Coord {
   public:
-    Hex() = default;
+    Hexagonal() = default;
     size_t distance(const std::vector<int>& v) const {
         std::vector<size_t> absv;
         absv.reserve(v.size() * 2);

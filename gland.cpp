@@ -25,7 +25,7 @@ std::vector<double> Gland::MUTATION_EFFECTS_;
 
     Command line option | Symbol       | Variable
     --------------------| ------------ | -------------------------
-    `-c,--cells`        | -            | Gland::CELLS_PER_GLAND_
+    `-n,--cells`        | -            | Gland::CELLS_PER_GLAND_
     `-u,--mutation`     | \f$\mu\f$    | Gland::MUTATION_RATE_
     `-s,--sigma`        | \f$\sigma\f$ | Gland::MUTATION_SIGMA_
     `-a,--apoptosis`    | \f$\alpha\f$ | Gland::APOPTOSIS_RATE_
@@ -34,7 +34,7 @@ boost::program_options::options_description& Gland::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Gland"};
     desc.add_options()
-        ("cells,c", po::value<double>(&CELLS_PER_GLAND_)->default_value(CELLS_PER_GLAND_))
+        ("cells,n", po::value<double>(&CELLS_PER_GLAND_)->default_value(CELLS_PER_GLAND_))
         ("mutation,u", po::value<double>(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
         ("sigma,s", po::value<double>(&MUTATION_SIGMA_)->default_value(MUTATION_SIGMA_))
         ("apoptosis,a", po::value<double>(&APOPTOSIS_RATE_)->default_value(APOPTOSIS_RATE_))

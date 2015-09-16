@@ -37,6 +37,12 @@ class Simulation {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
 
+    //! Max tumor size to stop simulation
+    size_t MAX_SIZE = 16384;
+
+    //! Coordinate system
+    std::string COORDINATE = "lattice";
+
     //! Print extra information
     bool VERBOSE = false;
 
@@ -45,9 +51,6 @@ class Simulation {
 
     //! Control execution mode
     int MODE = 0;
-
-    //! Max tumor size to stop simulation
-    size_t MAX_SIZE = 16384;
 
     //! Group name of this run such as altered parameter
     std::string LABEL;

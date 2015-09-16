@@ -27,6 +27,8 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
     namespace po = boost::program_options;
     static po::options_description description("Simulation");
     description.add_options()
+        ("max,N", po::value<size_t>(&MAX_SIZE)->default_value(MAX_SIZE))
+        ("coord,C", po::value<std::string>(&COORDINATE)->default_value(COORDINATE))
         ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "produce help")
         ("verbose,v", po::value<bool>(&VERBOSE)
             ->default_value(VERBOSE)->implicit_value(true), "verbose output")
@@ -35,7 +37,6 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
         ("label", po::value<std::string>(&LABEL)->default_value("default"))
         ("top_dir", po::value<std::string>()->default_value(OUT_DIR.string()))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
-        ("max,N", po::value<size_t>(&MAX_SIZE)->default_value(MAX_SIZE))
     ;
     return description;
 }
@@ -94,7 +95,9 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() {HERE;
     Tissue tissue;
-    tissue.set_coord<Hex>();
+    if (COORDINATE == "lattice") {tissue.set_coord<Lattice>();}
+    else if (COORDINATE == "diag") {tissue.set_coord<Diagonal>();}
+    else if (COORDINATE == "hex") {tissue.set_coord<Hexagonal>();}
     tissue.stain();
     switch (MODE) {
       case 0: {

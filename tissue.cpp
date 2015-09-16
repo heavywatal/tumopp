@@ -34,7 +34,7 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-Tissue::Tissue(const std::vector<int>& origin): coord_func_(new Hex()) {
+Tissue::Tissue(const std::vector<int>& origin): coord_func_(new Lattice()) {
     emplace(origin, Gland());
     init_regularly();
 }
@@ -256,11 +256,11 @@ void Tissue::unit_test() {
     std::cerr << tissue.snapshot() << std::endl;
     std::cerr << tissue.mutation_history() << std::endl;
 
-    test_coordinate<Orthogonal>({3, -2});
     test_coordinate<Lattice>({3, -2});
-    test_coordinate<Hex>({3, -2});
+    test_coordinate<Diagonal>({3, -2});
+    test_coordinate<Hexagonal>({3, -2});
 
-    test_coordinate<Orthogonal>({3, -2, 1});
     test_coordinate<Lattice>({3, -2, 1});
-    test_coordinate<Hex>({3, -2, 1});
+    test_coordinate<Diagonal>({3, -2, 1});
+    test_coordinate<Hexagonal>({3, -2, 1});
 }
