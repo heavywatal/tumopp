@@ -5,11 +5,11 @@
 #pragma once
 #ifndef TISSUE_H_
 #define TISSUE_H_
-#include <cassert>
+
 #include <iostream>
 #include <vector>
-#include <map>
-#include <unordered_map>
+#include <unordered_set>
+#include <memory>
 #include <string>
 
 #include <boost/functional/hash.hpp>
@@ -19,14 +19,26 @@
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-
 namespace std {
   template <> struct hash<std::vector<int>> {
     size_t operator() (const std::vector<int>& v) const {
         return boost::hash_range(v.begin(), v.end());
     }
   };
+  template <> struct hash<std::shared_ptr<Gland>> {
+    size_t operator() (const std::shared_ptr<Gland>& x) const {
+        return std::hash<std::vector<int>>()(x->coord());
+    }
+  };
 }
+
+class equal_shptr_gland {
+  public:
+    bool operator() (const std::shared_ptr<Gland>& lhs,
+                     const std::shared_ptr<Gland>& rhs) {
+        return lhs->coord() == rhs->coord();
+    }
+};
 
 namespace boost {
     namespace program_options {
@@ -74,25 +86,20 @@ class Tissue {
     //! Dimensions: {1, 2, 3}
     static size_t DIMENSIONS_;
 
-    //! Emplace daughter gland at the specified coord
-    void emplace(const std::vector<int>& current_coord, Gland&& daughter);
     //! Emplace daughter gland and push other glands outward
-    void push(Gland&& daughter, const std::vector<int>& current_coord,
-              const std::vector<int>& direction={});
+    void push(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction={});
     //! Push if not exists an empty neighbor
-    void push_fill(Gland&& daughter, const std::vector<int>& current_coord,
-                   const std::vector<int>& direction={});
+    void push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction={});
     //! Change direction before push_fill
-    void walk_fill(Gland&& daughter, const std::vector<int>& current_coord);
+    void walk_fill(const std::shared_ptr<Gland>& daughter);
     //! Fill inner layer first and move outward
-    void push_layer(Gland&& daughter, const std::vector<int>& current_coord);
+    void push_layer(const std::shared_ptr<Gland>& daughter);
 
     std::unique_ptr<Coord> coord_func_;
 
-    //! key: coords, value: gland
-    std::unordered_map<std::vector<int>, Gland> tumor_;
-    //! The coordinates of the existing glands
-    std::vector<std::vector<int>> coords_;
+    std::unordered_set<std::shared_ptr<Gland>,
+        std::hash<std::shared_ptr<Gland>>,
+        equal_shptr_gland> tumor_;
     //! The coordinates of the past mutations
     std::vector<std::vector<int>> mutation_coords_;
     //! Timing of mutations (tumor size as proxy)

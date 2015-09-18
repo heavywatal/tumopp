@@ -5,9 +5,8 @@
 #pragma once
 #ifndef GLAND_H_
 #define GLAND_H_
-#include <iostream>
+
 #include <vector>
-#include <bitset>
 #include <string>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
@@ -18,8 +17,11 @@ namespace boost {
     }
 }
 
+
 class Gland {
   public:
+    //! Constructor
+    Gland(const std::vector<int>& v): coord_(v) {}
     //! Default constructor
     Gland() = default;
     //! Copy constructor
@@ -51,10 +53,14 @@ class Gland {
     //! Bernoulli trial of apoptosis
     bool bernoulli_apoptosis() const;
 
+    void set_coord(std::vector<int> v) {coord_.swap(v);}
+
     //! Getter
     const std::vector<size_t>& sites() const {return sites_;}
     //! Getter
     size_t age() const {return age_;}
+    //! Getter
+    const std::vector<int>& coord() const {return coord_;}
     //! Getter
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
@@ -84,6 +90,8 @@ class Gland {
     std::vector<size_t> sites_;
     //! The age of the last division
     size_t age_ = 0;
+
+    std::vector<int> coord_;
 };
 
 #endif /* GLAND_H_ */

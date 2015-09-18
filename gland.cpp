@@ -4,7 +4,6 @@
 */
 #include "gland.h"
 
-#include <cmath>
 #include <iostream>
 #include <sstream>
 
