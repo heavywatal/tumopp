@@ -35,69 +35,42 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-void Tissue::grow_random(const size_t max_size) {HERE;
+void Tissue::grow(const size_t max_size, const bool model) {HERE;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
+    std::vector<std::shared_ptr<Gland>> new_glands;
     while (tumor_.size() < max_size) {
-        auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
-        auto& mother = *it;
-        auto daughter = std::make_shared<Gland>(*mother);
-        if (mother->bernoulli_apoptosis()) {
-            tumor_.erase(it);
-            tumor_.insert(daughter);
-        } else {
-            //push(daughter);
-            push_fill(daughter);
-            //walk_fill(daughter);
-        }
-        if (Gland::bernoulli_mutation()) {
-            daughter->mutate();
-            mutation_coords_.push_back(daughter->coord());
-            mutation_stages_.push_back(tumor_.size());
-        }
-        if (tumor_.size() <= 128) {
-            evolution_history_.push_back(snapshot());
-        }
-    }
-}
-
-void Tissue::grow_even(const size_t max_size) {HERE;
-    evolution_history_.reserve(max_size);
-    evolution_history_.push_back(snapshot());
-    while (tumor_.size() < max_size) {
-        std::vector<std::shared_ptr<Gland>> new_glands;
-        new_glands.reserve(tumor_.size());
-        for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
-            auto& mother = *it;
-            if (mother->bernoulli_apoptosis()) {
-                if (Gland::bernoulli_mutation()) {
-                    mother->mutate();
-                    mutation_coords_.push_back(mother->coord());
-                    mutation_stages_.push_back(tumor_.size());
-                }
-            } else {
-                new_glands.push_back(mother);
+        if (model) {
+            new_glands.reserve(tumor_.size());
+            for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
+                new_glands.push_back(*it);
             }
+        } else {
+            auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
+            new_glands.push_back(*it);
         }
         for (auto& gland: new_glands) {
-            auto daughter = std::make_shared<Gland>(*gland);  // Gland copy ctor
-            if (Gland::bernoulli_mutation()) {
-                daughter->mutate();
-                mutation_coords_.push_back(daughter->coord());
-                mutation_stages_.push_back(tumor_.size());
+            if (!gland->bernoulli_apoptosis()) {
+                auto daughter = std::make_shared<Gland>(*gland);  // Gland copy ctor
+                if (Gland::bernoulli_mutation()) {
+                    daughter->mutate();
+                    mutation_coords_.push_back(daughter->coord());
+                    mutation_stages_.push_back(tumor_.size());
+                }
+                push(daughter);
+                //push_fill(daughter);
+                //walk_fill(daughter);
+                if (tumor_.size() <= 128) {
+                    evolution_history_.push_back(snapshot());
+                }
             }
-            //push(daughter);
-            push_fill(daughter);
-            //walk_fill(daughter);
-            if (tumor_.size() <= 128) {
-                evolution_history_.push_back(snapshot());
+            if (Gland::bernoulli_mutation()) {
+                gland->mutate();
+                mutation_coords_.push_back(gland->coord());
+                mutation_stages_.push_back(tumor_.size());
             }
         }
     }
-}
-
-void Tissue::grow_poisson(const size_t max_size) {HERE;
-    //! @todo
 }
 
 std::string Tissue::evolution_history() const {
@@ -105,19 +78,18 @@ std::string Tissue::evolution_history() const {
 }
 
 
-void Tissue::push(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction) {
-    auto new_dir = direction;
+void Tissue::push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction) {
     if (direction.empty()) {
         const auto directions = coord_func_->directions(daughter->coord().size());
-        new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
+        direction = *wtl::prandom().choice(directions.begin(), directions.end());
     }
-    auto new_coord = daughter->coord() + new_dir;
+    auto new_coord = daughter->coord() + direction;
     auto found = tumor_.find(daughter);
     auto existing = *found;
     tumor_.erase(found);
     existing->set_coord(new_coord);
     if (!tumor_.insert(existing).second) {
-        push(existing, new_dir);
+        push(existing, direction);
     }
     tumor_.insert(daughter);
 }
@@ -276,7 +248,7 @@ void Tissue::unit_test() {
 
     Tissue tissue;
     tissue.stain();
-    tissue.grow_even(10);
+    tissue.grow(10, false);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.snapshot_header();
     std::cerr << tissue.snapshot() << std::endl;

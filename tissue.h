@@ -61,12 +61,8 @@ class Tissue {
     //! Mark first cells with mutation
     void stain();
 
-    //! Big bang model
-    void grow_random(const size_t max_size);
-    //! Another extreme
-    void grow_even(const size_t max_size);
-    //! in-between
-    void grow_poisson(const size_t max_size);
+    //!
+    void grow(const size_t max_size, const bool model);
 
     //! Return tumor state as TSV string
     std::string snapshot() const;
@@ -87,7 +83,7 @@ class Tissue {
     static size_t DIMENSIONS_;
 
     //! Emplace daughter gland and push other glands outward
-    void push(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction={});
+    void push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction={});
     //! Push if not exists an empty neighbor
     void push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction={});
     //! Change direction before push_fill

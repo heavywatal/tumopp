@@ -101,11 +101,11 @@ void Simulation::run() {HERE;
     tissue.stain();
     switch (MODE) {
       case 0: {
-        tissue.grow_even(MAX_SIZE);
+        tissue.grow(MAX_SIZE, true);
         break;
       }
       case 1: {
-        tissue.grow_random(MAX_SIZE);
+        tissue.grow(MAX_SIZE, false);
         break;
       }
       default:
