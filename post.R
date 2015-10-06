@@ -127,11 +127,13 @@ plot_early_evolution_2d = function(.time) {
 }
 #print(plot_early_evolution_2d(10))
 
+if (FALSE) {
 animation::saveGIF({
     for (.t in unique(evolution$time)) {
         print(plot_early_evolution_2d(.t))
     }},
     'evolution.gif', loop=1, interval=0.1, outdir=getwd())
+}
 
 #########1#########2#########3#########4#########5#########6#########7#########
 } else {  # 3D
