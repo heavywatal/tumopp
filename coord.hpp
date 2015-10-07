@@ -79,9 +79,9 @@ class Coord {
     }
 };
 
-class Lattice: public Coord {
+class Neumann: public Coord {
   public:
-    Lattice() = default;
+    Neumann() = default;
     size_t distance(const std::vector<int>& v) const {
         return std::accumulate(v.begin(), v.end(), 0, [](const int lhs, const int rhs) {
             return std::abs(lhs) + std::abs(rhs);
@@ -105,9 +105,9 @@ class Lattice: public Coord {
 };
 
 
-class Diagonal: public Coord {
+class Moore: public Coord {
   public:
-    Diagonal() = default;
+    Moore() = default;
     size_t distance(const std::vector<int>& v) const {
         return std::abs(*std::max_element(v.begin(), v.end(), [](const int lhs, const int rhs) {
             return std::abs(lhs) < std::abs(rhs);
@@ -173,7 +173,7 @@ class Hexagonal: public Coord {
         return output;
     }
     std::vector<std::vector<int>> origins(const size_t dimensions) const {
-        std::vector<std::vector<int>> output = Lattice().origins(dimensions);
+        std::vector<std::vector<int>> output = Neumann().origins(dimensions);
         if (dimensions == 3) {
             output.resize(3);
             output.push_back({1, 0, -1});

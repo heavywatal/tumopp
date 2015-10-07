@@ -233,16 +233,16 @@ void Tissue::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
 
-    test_coordinate<Lattice>({3, -2});
-    test_coordinate<Diagonal>({3, -2});
+    test_coordinate<Neumann>({3, -2});
+    test_coordinate<Moore>({3, -2});
     test_coordinate<Hexagonal>({3, -2});
 
-    test_coordinate<Lattice>({3, -2, 1});
-    test_coordinate<Diagonal>({3, -2, 1});
+    test_coordinate<Neumann>({3, -2, 1});
+    test_coordinate<Moore>({3, -2, 1});
     test_coordinate<Hexagonal>({3, -2, 1});
 
-    std::cerr << Lattice().origins(2) << std::endl;
-    std::cerr << Lattice().origins(3) << std::endl;
+    std::cerr << Neumann().origins(2) << std::endl;
+    std::cerr << Neumann().origins(3) << std::endl;
     std::cerr << Hexagonal().origins(2) << std::endl;
     std::cerr << Hexagonal().origins(3) << std::endl;
 

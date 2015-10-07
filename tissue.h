@@ -52,7 +52,7 @@ class Tissue {
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue(): coord_func_(new Lattice) {};
+    Tissue(): coord_func_(new Neumann) {};
 
     //! Set coordinate function object
     template <class FuncObj>

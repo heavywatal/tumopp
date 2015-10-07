@@ -95,8 +95,8 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() {HERE;
     Tissue tissue;
-    if (COORDINATE == "lattice") {tissue.set_coord<Lattice>();}
-    else if (COORDINATE == "diag") {tissue.set_coord<Diagonal>();}
+    if (COORDINATE == "neumann") {tissue.set_coord<Neumann>();}
+    else if (COORDINATE == "moore") {tissue.set_coord<Moore>();}
     else if (COORDINATE == "hex") {tissue.set_coord<Hexagonal>();}
     tissue.stain();
     switch (MODE) {
