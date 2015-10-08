@@ -18,6 +18,8 @@
 
 
 size_t Tissue::DIMENSIONS_ = 2;
+std::string Tissue::SCHEDULE_ = "random";
+std::string Tissue::PACKING_ = "push";
 
 //! Program options
 /*! @return Program options description
@@ -31,6 +33,8 @@ boost::program_options::options_description& Tissue::opt_description() {
     static po::options_description desc{"Tissue"};
     desc.add_options()
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
+        ("schedule,S", po::value<std::string>(&SCHEDULE_)->default_value(SCHEDULE_))
+        ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
     ;
     return desc;
 }
@@ -40,15 +44,17 @@ void Tissue::grow(const size_t max_size, const bool model) {HERE;
     evolution_history_.push_back(snapshot());
     std::vector<std::shared_ptr<Gland>> new_glands;
     while (tumor_.size() < max_size) {
-        if (model) {
+        if (SCHEDULE_ == "random") {
+            auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
+            new_glands.push_back(*it);
+        } else if (SCHEDULE_ == "poisson") {
+            //! @todo
+        } else if (SCHEDULE_ == "even") {
             new_glands.reserve(tumor_.size());
             for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
                 new_glands.push_back(*it);
             }
-        } else {
-            auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
-            new_glands.push_back(*it);
-        }
+        } else {exit(1);}
         for (auto& gland: new_glands) {
             if (!gland->bernoulli_apoptosis()) {
                 auto daughter = std::make_shared<Gland>(*gland);  // Gland copy ctor
@@ -57,9 +63,9 @@ void Tissue::grow(const size_t max_size, const bool model) {HERE;
                     mutation_coords_.push_back(daughter->coord());
                     mutation_stages_.push_back(tumor_.size());
                 }
-                push(daughter);
-                //push_fill(daughter);
-                //walk_fill(daughter);
+                if (PACKING_ == "push") {push(daughter);}
+                else if (PACKING_ == "push_fill") {push_fill(daughter);}
+                else if (PACKING_ == "walk_fill") {walk_fill(daughter);}
                 if (tumor_.size() <= 128) {
                     evolution_history_.push_back(snapshot());
                 }

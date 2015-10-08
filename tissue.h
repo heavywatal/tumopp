@@ -82,6 +82,12 @@ class Tissue {
     //! Dimensions: {1, 2, 3}
     static size_t DIMENSIONS_;
 
+    //! replication schedule: random, poisson, even
+    static std::string SCHEDULE_;
+
+    //! packing method: push, push_fill, walk_fill
+    static std::string PACKING_;
+
     //! Emplace daughter gland and push other glands outward
     void push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction={});
     //! Push if not exists an empty neighbor
