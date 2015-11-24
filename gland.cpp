@@ -9,8 +9,8 @@
 
 #include <boost/program_options.hpp>
 
-#include "cxxwtils/prandom.hpp"
-#include "cxxwtils/iostr.hpp"
+#include <cxxwtils/prandom.hpp>
+#include <cxxwtils/iostr.hpp>
 
 double Gland::CELLS_PER_GLAND_ = 1e4;
 double Gland::MUTATION_RATE_ = 1e-5;

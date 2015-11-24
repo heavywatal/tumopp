@@ -2,7 +2,7 @@
 PACKAGE := $(notdir ${CURDIR})
 SRCDIR := .
 OBJDIR := build
-INCLUDEDIR := -isystem /usr/local/include -iquote ${HOME}/local/include
+INCLUDEDIR := -isystem /usr/local/include -isystem ${HOME}/local/include
 PROGRAM := a.out
 
 
@@ -14,7 +14,7 @@ vpath %.cpp ${SRCDIR}
 
 
 ## Options
-GXX := $(firstword $(foreach x,g++-4.9 g++-4.8 g++,$(shell which $x)))
+GXX := $(notdir $(firstword $(foreach x,g++-5 g++-4.9 g++-4.8 g++,$(shell which $x))))
 CXX_ARRAY := clang++ ${GXX}
 CXX := $(firstword $(foreach x,${CXX_ARRAY},$(shell which $x)))
 CC := $(CXX)
@@ -26,12 +26,11 @@ TARGET_ARCH := -march=core2 -m64 -msse -msse2 -msse3
 
 ifneq (,$(filter $(CXX), ${GXX}))
   CXXFLAGS += -mfpmath=sse
-  CPPFLAGS += -pthread -isystem /usr/local/boost-gcc/include -D_GLIBCXX_USE_NANOSLEEP
-  LDFLAGS += -L/usr/local/boost-gcc/lib -static-libstdc++
+  CPPFLAGS += -pthread -D_GLIBCXX_USE_NANOSLEEP
+  LDFLAGS += -L${HOME}/local/boost-gcc/lib -static-libstdc++
 else
-  CPPFLAGS += -isystem /usr/local/boost-clang/include
   CXXFLAGS += -stdlib=libc++
-  LDFLAGS += -L/usr/local/boost-clang/lib
+  LDFLAGS += -L${HOME}/local/boost-clang/lib
   ifeq ($(shell uname), Linux)
     LDLIBS += -lpthread -lsupc++
   endif

@@ -4,11 +4,11 @@
 */
 #include "simulation.h"
 
-#include "cxxwtils/iostr.hpp"
-#include "cxxwtils/getopt.hpp"
-#include "cxxwtils/prandom.hpp"
-#include "cxxwtils/os.hpp"
-#include "cxxwtils/gz.hpp"
+#include <cxxwtils/iostr.hpp>
+#include <cxxwtils/getopt.hpp>
+#include <cxxwtils/prandom.hpp>
+#include <cxxwtils/os.hpp>
+#include <cxxwtils/gz.hpp>
 
 #include "tissue.h"
 #include "gland.h"
