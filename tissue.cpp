@@ -48,7 +48,14 @@ void Tissue::grow(const size_t max_size, const bool model) {HERE;
             auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
             new_glands.push_back(*it);
         } else if (SCHEDULE_ == "poisson") {
-            //! @todo
+            new_glands.reserve(tumor_.size());
+            for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
+                //! @todo fitness
+                const size_t n = wtl::prandom().poisson(1.0);
+                for (size_t i=0; i<n; ++i) {
+                    new_glands.push_back(*it);
+                }
+            }
         } else if (SCHEDULE_ == "even") {
             new_glands.reserve(tumor_.size());
             for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
