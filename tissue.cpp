@@ -39,6 +39,17 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
+
+void Tissue::stain() {HERE;
+    assert(tumor_.empty());
+    for (const auto& coord: coord_func_->origins(DIMENSIONS_)) {
+        std::shared_ptr<Gland> founder(new Gland(coord));
+        founder->mutate();
+        tumor_.insert(founder);
+        mutation_coords_.push_back(coord);
+        mutation_stages_.push_back(mutation_coords_.size());
+    }
+}
 void Tissue::grow(const size_t max_size, const bool model) {HERE;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
@@ -174,18 +185,6 @@ void Tissue::walk_fill(const std::shared_ptr<Gland>& daughter) {
 
 //! @todo
 void Tissue::push_layer(const std::shared_ptr<Gland>& daughter) {
-}
-
-
-void Tissue::stain() {HERE;
-    assert(tumor_.empty());
-    for (const auto& coord: coord_func_->origins(DIMENSIONS_)) {
-        std::shared_ptr<Gland> founder(new Gland(coord));
-        founder->mutate();
-        tumor_.insert(founder);
-        mutation_coords_.push_back(coord);
-        mutation_stages_.push_back(mutation_coords_.size());
-    }
 }
 
 std::string Tissue::snapshot_header() const {HERE;
