@@ -82,8 +82,8 @@ void Tissue::grow(const size_t max_size) {HERE;
                     mutation_stages_.push_back(tumor_.size());
                 }
                 if (PACKING_ == "push") {push(daughter);}
-                else if (PACKING_ == "push_fill") {push_fill(daughter);}
-                else if (PACKING_ == "walk_fill") {walk_fill(daughter);}
+                else if (PACKING_ == "pushfill") {push_fill(daughter);}
+                else if (PACKING_ == "walkfill") {walk_fill(daughter);}
                 if (tumor_.size() <= 128) {
                     evolution_history_.push_back(snapshot());
                 }
