@@ -62,7 +62,7 @@ class Tissue {
     void stain();
 
     //!
-    void grow(const size_t max_size, const bool model);
+    void grow(const size_t max_size);
 
     //! Return tumor state as TSV string
     std::string snapshot() const;

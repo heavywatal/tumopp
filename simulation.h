@@ -41,7 +41,7 @@ class Simulation {
     size_t MAX_SIZE = 16384;
 
     //! Coordinate system
-    std::string COORDINATE = "lattice";
+    std::string COORDINATE = "moore";
 
     //! Print extra information
     bool VERBOSE = false;

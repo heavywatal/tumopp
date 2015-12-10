@@ -50,11 +50,11 @@ void Tissue::stain() {HERE;
         mutation_stages_.push_back(mutation_coords_.size());
     }
 }
-void Tissue::grow(const size_t max_size, const bool model) {HERE;
+void Tissue::grow(const size_t max_size) {HERE;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
-    std::vector<std::shared_ptr<Gland>> new_glands;
     while (tumor_.size() < max_size) {
+        std::vector<std::shared_ptr<Gland>> new_glands;
         if (SCHEDULE_ == "random") {
             auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
             new_glands.push_back(*it);
@@ -260,7 +260,7 @@ void Tissue::unit_test() {
 
     Tissue tissue;
     tissue.stain();
-    tissue.grow(10, false);
+    tissue.grow(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.snapshot_header();
     std::cerr << tissue.snapshot() << std::endl;

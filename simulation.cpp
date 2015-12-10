@@ -22,6 +22,7 @@
     Command line option | Symbol | Variable
     --------------------| ------ | -------------------------
     `-N,--max`          | -      | Simulation::MAX_SIZE
+    `-C,--coord`        | -      | Simulation::COORDINATE
 */
 boost::program_options::options_description& Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
@@ -101,11 +102,11 @@ void Simulation::run() {HERE;
     tissue.stain();
     switch (MODE) {
       case 0: {
-        tissue.grow(MAX_SIZE, true);
+        tissue.grow(MAX_SIZE);
         break;
       }
       case 1: {
-        tissue.grow(MAX_SIZE, false);
+        tissue.grow(MAX_SIZE);
         break;
       }
       default:
