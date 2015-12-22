@@ -6,6 +6,7 @@ import sys
 import os
 import re
 import itertools
+import multiprocessing
 from collections import OrderedDict
 
 import execu
@@ -60,6 +61,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-n', '--dry-run', action='store_true')
+    parser.add_argument('-j', '--threads', type=int,
+                        default=multiprocessing.cpu_count())
     parser.add_argument('-Q', '--torque', action='store_true')
     parser.add_argument('-C', '--directory', default=os.getcwd())
     parser.add_argument('-q', '--queue',
@@ -83,7 +86,7 @@ if __name__ == '__main__':
             qargs['-N'] = rex.search(' '.join(cmd)).group(1)
             torque.qsub(cmd, args.dry_run, ppn=1, **qargs)
     else:
-        pool = execu.Pool()
+        pool = execu.Pool(args.threads)
         for cmd in commands:
             strcmd = ' '.join(cmd)
             print(strcmd)
