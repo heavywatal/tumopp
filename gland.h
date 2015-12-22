@@ -39,7 +39,8 @@ class Gland {
         for (const auto i: sites_) {
             result += MUTATION_EFFECTS_[i];
         }
-        return std::min(std::max(1.0, result), 5.0);
+        return result;
+        //return std::min(std::max(1.0, result), 5.0);
     }
 
     //! Mutate and record
@@ -50,8 +51,10 @@ class Gland {
 
     //! Bernoulli trial of mutation
     static bool bernoulli_mutation();
-    //! Bernoulli trial of apoptosis
-    bool bernoulli_apoptosis() const;
+    //! Bernoulli trial of birth
+    bool bernoulli_birth() const;
+    //! Bernoulli trial of death
+    bool bernoulli_death() const;
 
     void set_coord(std::vector<int> v) {coord_.swap(v);}
 
@@ -80,8 +83,9 @@ class Gland {
     //! {0, 0.2, 0.6}
     static double MUTATION_SIGMA_;
 
-    //! 0.2 fixed in the article
-    static double APOPTOSIS_RATE_;
+    static double BIRTH_RATE_;
+
+    static double DEATH_RATE_;
 
     //! The history of mutation effects
     static std::vector<double> MUTATION_EFFECTS_;

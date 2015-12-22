@@ -96,6 +96,7 @@ class Tissue {
     void walk_fill(const std::shared_ptr<Gland>& daughter);
     //! Fill inner layer first and move outward
     void push_layer(const std::shared_ptr<Gland>& daughter);
+    bool fill_empty(const std::shared_ptr<Gland>& daughter);
 
     std::unique_ptr<Coord> coord_func_;
 

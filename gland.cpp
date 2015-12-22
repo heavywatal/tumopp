@@ -15,7 +15,8 @@
 double Gland::CELLS_PER_GLAND_ = 1e4;
 double Gland::MUTATION_RATE_ = 1e-5;
 double Gland::MUTATION_SIGMA_ = 0.0;
-double Gland::APOPTOSIS_RATE_ = 0.2;
+double Gland::BIRTH_RATE_ = 1.0;
+double Gland::DEATH_RATE_ = 0.0;
 
 std::vector<double> Gland::MUTATION_EFFECTS_;
 
@@ -27,7 +28,8 @@ std::vector<double> Gland::MUTATION_EFFECTS_;
     `-n,--cells`        | -            | Gland::CELLS_PER_GLAND_
     `-u,--mutation`     | \f$\mu\f$    | Gland::MUTATION_RATE_
     `-s,--sigma`        | \f$\sigma\f$ | Gland::MUTATION_SIGMA_
-    `-a,--apoptosis`    | \f$\alpha\f$ | Gland::APOPTOSIS_RATE_
+    `-b,--birth`        | \f$\b\f$     | Gland::BIRTH_RATE_
+    `-d,--death`        | \f$\d\f$     | Gland::DEATH_RATE_
 */
 boost::program_options::options_description& Gland::opt_description() {
     namespace po = boost::program_options;
@@ -36,7 +38,8 @@ boost::program_options::options_description& Gland::opt_description() {
         ("cells,n", po::value<double>(&CELLS_PER_GLAND_)->default_value(CELLS_PER_GLAND_))
         ("mutation,u", po::value<double>(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
         ("sigma,s", po::value<double>(&MUTATION_SIGMA_)->default_value(MUTATION_SIGMA_))
-        ("apoptosis,a", po::value<double>(&APOPTOSIS_RATE_)->default_value(APOPTOSIS_RATE_))
+        ("birth,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
+        ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
     ;
     return desc;
 }
@@ -50,8 +53,12 @@ bool Gland::bernoulli_mutation() {
     return wtl::prandom().bernoulli(MUTATION_RATE_ * CELLS_PER_GLAND_);
 }
 
-bool Gland::bernoulli_apoptosis() const {
-    return wtl::prandom().bernoulli(APOPTOSIS_RATE_ / fitness());
+bool Gland::bernoulli_birth() const {
+    return wtl::prandom().bernoulli(BIRTH_RATE_);
+}
+
+bool Gland::bernoulli_death() const {
+    return wtl::prandom().bernoulli(DEATH_RATE_ / fitness());
 }
 
 //! Stream operator for debug print

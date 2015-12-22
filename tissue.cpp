@@ -55,44 +55,49 @@ void Tissue::grow(const size_t max_size) {HERE;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
     while (tumor_.size() < max_size) {
-        std::vector<std::shared_ptr<Gland>> new_glands;
+        std::vector<std::shared_ptr<Gland>> mothers;
         if (SCHEDULE_ == "random") {
             auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
-            new_glands.push_back(*it);
+            mothers.push_back(*it);
         } else if (SCHEDULE_ == "poisson") {
-            new_glands.reserve(tumor_.size());
+            mothers.reserve(tumor_.size());
             for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
                 //! @todo fitness
                 const size_t n = wtl::prandom().poisson(1.0);
                 for (size_t i=0; i<n; ++i) {
-                    new_glands.push_back(*it);
+                    mothers.push_back(*it);
                 }
             }
         } else if (SCHEDULE_ == "even") {
-            new_glands.reserve(tumor_.size());
+            mothers.reserve(tumor_.size());
             for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
-                new_glands.push_back(*it);
+                mothers.push_back(*it);
             }
         } else {exit(1);}
-        for (auto& gland: new_glands) {
-            if (!gland->bernoulli_apoptosis()) {
-                auto daughter = std::make_shared<Gland>(*gland);  // Gland copy ctor
-                if (Gland::bernoulli_mutation()) {
+        for (auto& mother: mothers) {
+            const auto neighbors = coord_func_->neighbors(mother->coord());
+            if (mother->bernoulli_birth()) {
+                auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
+                bool success = true;
+                if (PACKING_ == "push") {push(daughter);}
+                else if (PACKING_ == "pushfill") {push_fill(daughter);}
+                else if (PACKING_ == "walkfill") {walk_fill(daughter);}
+                else if (PACKING_ == "empty") {success = fill_empty(daughter);}
+                if (success && Gland::bernoulli_mutation()) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
                     mutation_stages_.push_back(tumor_.size());
                 }
-                if (PACKING_ == "push") {push(daughter);}
-                else if (PACKING_ == "pushfill") {push_fill(daughter);}
-                else if (PACKING_ == "walkfill") {walk_fill(daughter);}
-                if (tumor_.size() <= 128) {
-                    evolution_history_.push_back(snapshot());
-                }
             }
-            if (Gland::bernoulli_mutation()) {
-                gland->mutate();
-                mutation_coords_.push_back(gland->coord());
+            if (mother->bernoulli_death()) {
+                tumor_.erase(mother);
+            } else if (Gland::bernoulli_mutation()) {
+                mother->mutate();
+                mutation_coords_.push_back(mother->coord());
                 mutation_stages_.push_back(tumor_.size());
+            }
+            if (tumor_.size() <= 128) {
+                evolution_history_.push_back(snapshot());
             }
         }
     }
@@ -102,6 +107,13 @@ std::string Tissue::evolution_history() const {
     return wtl::str_join(evolution_history_, "");
 }
 
+bool Tissue::fill_empty(const std::shared_ptr<Gland>& daughter) {
+    const auto neighbors = coord_func_->neighbors(daughter->coord());
+    auto it = wtl::prandom().choice(neighbors.begin(), neighbors.end());
+    daughter->set_coord(*it);
+    const auto result = tumor_.insert(daughter);
+    return result.second;
+}
 
 void Tissue::push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction) {
     if (direction.empty()) {
