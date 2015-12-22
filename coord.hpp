@@ -46,10 +46,11 @@ std::vector<T> operator-(std::vector<T> lhs, const std::vector<T>& rhs) {
 class Coord {
   public:
     Coord() = delete;
-    explicit Coord(const size_t d): dimensions(d) {}
+    Coord(const size_t d): dimensions(d) {}
     virtual ~Coord() = default;
     const size_t dimensions;
     const std::vector<std::vector<int>>& directions() const {return directions_;}
+    size_t max_neighbors() const {return max_neighbors_;}
     std::vector<std::vector<int>> neighbors(const std::vector<int>& v) const {
         std::vector<std::vector<int>> output = directions_;
         for (auto& d: output) {
@@ -81,13 +82,15 @@ class Coord {
     }
   protected:
     std::vector<std::vector<int>> directions_;
+    size_t max_neighbors_;
 };
 
 class Neumann: public Coord {
   public:
     Neumann() = delete;
     explicit Neumann(const size_t d): Coord(d) {
-        directions_.reserve(2 * dimensions);
+        max_neighbors_ = 2 * d;
+        directions_.reserve(max_neighbors_);
         std::vector<int> v(dimensions, 0);
         v.back() += 1;
         do {
@@ -106,12 +109,13 @@ class Neumann: public Coord {
     }
 };
 
-
+//! Neumann + diagonal cells
 class Moore: public Coord {
   public:
     Moore() = delete;
     explicit Moore(const size_t d): Coord(d) {
-        directions_.reserve(std::pow(3, dimensions) - 1);
+        max_neighbors_ = std::pow(3, dimensions) - 1;
+        directions_.reserve(max_neighbors_);
         for (const int x: {-1, 0, 1}) {
             for (const int y: {-1, 0, 1}) {
                 if (dimensions == 2) {
@@ -137,15 +141,15 @@ class Hexagonal: public Coord {
   public:
     Hexagonal() = delete;
     explicit Hexagonal(const size_t d): Coord(d) {
+        max_neighbors_ = 6 * (d - 1);
         std::vector<int> v{-1, 0, 1};
+        directions_.reserve(max_neighbors_);
         if (dimensions == 2) {
-            directions_.reserve(6);
             do {
                 directions_.push_back({v[0], v[1]});
             } while (std::next_permutation(v.begin(), v.end()));
         }
         else {
-            directions_.reserve(12);
             do {
                 directions_.push_back({v[0], v[1], 0});
             } while (std::next_permutation(v.begin(), v.end()));
