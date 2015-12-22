@@ -42,7 +42,7 @@ boost::program_options::options_description& Tissue::opt_description() {
 
 void Tissue::stain() {HERE;
     assert(tumor_.empty());
-    for (const auto& coord: coord_func_->origins(DIMENSIONS_)) {
+    for (const auto& coord: coord_func_->origins()) {
         std::shared_ptr<Gland> founder(new Gland(coord));
         founder->mutate();
         tumor_.insert(founder);
@@ -50,6 +50,7 @@ void Tissue::stain() {HERE;
         mutation_stages_.push_back(mutation_coords_.size());
     }
 }
+
 void Tissue::grow(const size_t max_size) {HERE;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
@@ -104,7 +105,7 @@ std::string Tissue::evolution_history() const {
 
 void Tissue::push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction) {
     if (direction.empty()) {
-        const auto directions = coord_func_->directions(daughter->coord().size());
+        const auto directions = coord_func_->directions();
         direction = *wtl::prandom().choice(directions.begin(), directions.end());
     }
     auto new_coord = daughter->coord() + direction;
@@ -118,9 +119,8 @@ void Tissue::push(const std::shared_ptr<Gland>& daughter, std::vector<int> direc
     tumor_.insert(daughter);
 }
 
-
 void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction) {
-    static const auto directions = coord_func_->directions(daughter->coord().size());
+    static const auto directions = coord_func_->directions();
     auto neighbors = coord_func_->neighbors(daughter->coord());
     if (!direction.empty()) {
         auto previous = std::find(neighbors.begin(), neighbors.end(), daughter->coord() - direction);
@@ -156,7 +156,7 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector
 }
 
 void Tissue::walk_fill(const std::shared_ptr<Gland>& daughter) {
-    static const auto directions = coord_func_->directions(daughter->coord().size());
+    static const auto directions = coord_func_->directions();
     auto neighbors = coord_func_->neighbors(daughter->coord());
     std::vector<std::vector<int>> empty_neighbors;
     empty_neighbors.reserve(neighbors.size());
@@ -234,11 +234,11 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
 
 template <class T> inline
 void test_coordinate(const std::vector<int>& v) {
-    T coord;
+    T coord(v.size());
     std::cerr << typeid(coord).name() << std::endl;
     std::cerr << coord.distance(v) << std::endl;
     std::cerr << coord.neighbors(v) << std::endl;
-    std::cerr << coord.directions(v.size()) << std::endl;
+    std::cerr << coord.directions() << std::endl;
 }
 
 void Tissue::unit_test() {
@@ -253,10 +253,10 @@ void Tissue::unit_test() {
     test_coordinate<Moore>({3, -2, 1});
     test_coordinate<Hexagonal>({3, -2, 1});
 
-    std::cerr << Neumann().origins(2) << std::endl;
-    std::cerr << Neumann().origins(3) << std::endl;
-    std::cerr << Hexagonal().origins(2) << std::endl;
-    std::cerr << Hexagonal().origins(3) << std::endl;
+    std::cerr << Neumann(2).origins() << std::endl;
+    std::cerr << Neumann(3).origins() << std::endl;
+    std::cerr << Hexagonal(2).origins() << std::endl;
+    std::cerr << Hexagonal(3).origins() << std::endl;
 
     Tissue tissue;
     tissue.stain();

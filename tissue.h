@@ -52,11 +52,11 @@ class Tissue {
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue(): coord_func_(new Neumann) {};
+    Tissue(): coord_func_(new Neumann(DIMENSIONS_)) {};
 
     //! Set coordinate function object
     template <class FuncObj>
-    void set_coord() {coord_func_.reset(new FuncObj());}
+    void set_coord() {coord_func_.reset(new FuncObj(DIMENSIONS_));}
 
     //! Mark first cells with mutation
     void stain();
