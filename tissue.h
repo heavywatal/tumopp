@@ -89,13 +89,14 @@ class Tissue {
     static std::string PACKING_;
 
     //! Emplace daughter gland and push other glands outward
-    void push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction={});
+    void push(const std::shared_ptr<Gland>& moving, std::vector<int> direction={});
     //! Push if not exists an empty neighbor
     void push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction={});
     //! Change direction before push_fill
     void walk_fill(const std::shared_ptr<Gland>& daughter);
     //! Fill inner layer first and move outward
     void push_layer(const std::shared_ptr<Gland>& daughter);
+    //! Do not push and fill empty space
     bool fill_empty(const std::shared_ptr<Gland>& daughter);
 
     std::unique_ptr<Coord> coord_func_;

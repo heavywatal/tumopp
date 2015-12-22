@@ -107,28 +107,19 @@ std::string Tissue::evolution_history() const {
     return wtl::str_join(evolution_history_, "");
 }
 
-bool Tissue::fill_empty(const std::shared_ptr<Gland>& daughter) {
-    const auto neighbors = coord_func_->neighbors(daughter->coord());
-    auto it = wtl::prandom().choice(neighbors.begin(), neighbors.end());
-    daughter->set_coord(*it);
-    const auto result = tumor_.insert(daughter);
-    return result.second;
-}
-
-void Tissue::push(const std::shared_ptr<Gland>& daughter, std::vector<int> direction) {
+void Tissue::push(const std::shared_ptr<Gland>& moving, std::vector<int> direction) {
     if (direction.empty()) {
         const auto directions = coord_func_->directions();
         direction = *wtl::prandom().choice(directions.begin(), directions.end());
     }
-    auto new_coord = daughter->coord() + direction;
-    auto found = tumor_.find(daughter);
-    auto existing = *found;
-    tumor_.erase(found);
-    existing->set_coord(new_coord);
-    if (!tumor_.insert(existing).second) {
+    moving->set_coord(moving->coord() + direction);
+    const auto result = tumor_.insert(moving);
+    if (!result.second) {
+        const std::shared_ptr<Gland> existing = *result.first;
+        tumor_.erase(result.first);
         push(existing, direction);
+        tumor_.insert(moving);
     }
-    tumor_.insert(daughter);
 }
 
 void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction) {
@@ -197,6 +188,14 @@ void Tissue::walk_fill(const std::shared_ptr<Gland>& daughter) {
 
 //! @todo
 void Tissue::push_layer(const std::shared_ptr<Gland>& daughter) {
+}
+
+bool Tissue::fill_empty(const std::shared_ptr<Gland>& daughter) {
+    const auto neighbors = coord_func_->neighbors(daughter->coord());
+    auto it = wtl::prandom().choice(neighbors.begin(), neighbors.end());
+    daughter->set_coord(*it);
+    const auto result = tumor_.insert(daughter);
+    return result.second;
 }
 
 std::string Tissue::snapshot_header() const {HERE;
