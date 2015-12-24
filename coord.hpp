@@ -52,6 +52,9 @@ class Coord {
     const size_t dimensions;
     const std::vector<std::vector<int>>& directions() const {return directions_;}
     size_t max_neighbors() const {return max_neighbors_;}
+    std::vector<int> origin() const {
+        return std::vector<int>(dimensions);
+    }
     std::vector<std::vector<int>> neighbors(const std::vector<int>& v) const {
         std::vector<std::vector<int>> output = directions_;
         for (auto& d: output) {
@@ -68,11 +71,16 @@ class Coord {
         const auto candidates = neighbors(v);
         return *std::max_element(candidates.begin(), candidates.end(),
                                  [this](const std::vector<int>& lhs, const std::vector<int>& rhs) {
-            return distance(lhs) < distance(rhs);
+            return euclidean_distance(lhs) < euclidean_distance(rhs);
         });
     }
-    virtual size_t distance(const std::vector<int>& v) const = 0;
-    virtual std::vector<std::vector<int>> origins() const {
+    virtual size_t graph_distance(const std::vector<int>& v) const = 0;
+    double euclidean_distance(const std::vector<int>& v) const {
+        double result = 0;
+        for (const int x: v) {result += x * x;}
+        return std::sqrt(result);
+    }
+    virtual std::vector<std::vector<int>> core() const {
         const size_t n = std::pow(2, dimensions);
         std::vector<std::vector<int>> output;
         output.reserve(n);
@@ -108,7 +116,8 @@ class Neumann: public Coord {
             directions_.push_back(v);
         } while (std::next_permutation(v.begin(), v.end()));
     }
-    size_t distance(const std::vector<int>& v) const {
+    //! Manhattan distance
+    size_t graph_distance(const std::vector<int>& v) const {
         return std::accumulate(v.begin(), v.end(), 0, [](const int lhs, const int rhs) {
             return std::abs(lhs) + std::abs(rhs);
         });
@@ -136,7 +145,8 @@ class Moore: public Coord {
             }
         }
     }
-    size_t distance(const std::vector<int>& v) const {
+    //! Chebyshev/chessboard distance
+    size_t graph_distance(const std::vector<int>& v) const {
         return std::abs(*std::max_element(v.begin(), v.end(), [](const int lhs, const int rhs) {
             return std::abs(lhs) < std::abs(rhs);
         }));
@@ -167,7 +177,7 @@ class Hexagonal: public Coord {
             directions_.push_back({-1, 1, 1});
         }
     }
-    size_t distance(const std::vector<int>& v) const {
+    size_t graph_distance(const std::vector<int>& v) const {
         std::vector<size_t> absv;
         absv.reserve(v.size() * 2);
         for (auto x: v) {
@@ -179,9 +189,13 @@ class Hexagonal: public Coord {
         }
         return *std::max_element(absv.begin(), absv.end());
     }
+    //! @todo
+    double euclidean_distance(const std::vector<int>& v) const {
+        return static_cast<double>(graph_distance(v));
+    }
 
-    std::vector<std::vector<int>> origins() const {
-        std::vector<std::vector<int>> output = Neumann(dimensions).origins();
+    std::vector<std::vector<int>> core() const {
+        std::vector<std::vector<int>> output = Neumann(dimensions).core();
         if (dimensions == 3) {
             output.resize(3);
             output.push_back({1, 0, -1});

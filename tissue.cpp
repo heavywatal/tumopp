@@ -42,7 +42,7 @@ boost::program_options::options_description& Tissue::opt_description() {
 
 void Tissue::stain() {HERE;
     assert(tumor_.empty());
-    for (const auto& coord: coord_func_->origins()) {
+    for (const auto& coord: coord_func_->core()) {
         std::shared_ptr<Gland> founder(new Gland(coord));
         founder->mutate();
         tumor_.insert(founder);
@@ -80,8 +80,8 @@ void Tissue::grow(const size_t max_size) {HERE;
                 auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
                 bool success = true;
                 if (PACKING_ == "push") {push(daughter);}
-                else if (PACKING_ == "pushfill") {push_fill(daughter);}
-                else if (PACKING_ == "walkfill") {walk_fill(daughter);}
+                else if (PACKING_ == "pushfill") {push_fill(daughter, coord_func_->origin());}
+                else if (PACKING_ == "walkfill") {push_fill(daughter);}
                 else if (PACKING_ == "empty") {success = fill_empty(daughter);}
                 if (success && Gland::bernoulli_mutation()) {
                     daughter->mutate();
@@ -125,10 +125,11 @@ void Tissue::push(const std::shared_ptr<Gland>& moving, std::vector<int> directi
 void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction) {
     const auto present_coord = daughter->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
-    std::sort(neighbors.begin(), neighbors.end(),
-        [this](const std::vector<int>& x, const std::vector<int>& y) {
-            return coord_func_->distance(x) < coord_func_->distance(y);
-        });
+    std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
+//    std::sort(neighbors.begin(), neighbors.end(),
+//        [this](const std::vector<int>& x, const std::vector<int>& y) {
+//            return coord_func_->euclidean_distance(x) < coord_func_->euclidean_distance(y);
+//        });
     for (auto& x: neighbors) {
         daughter->set_coord(x);
         if (tumor_.insert(daughter).second) {
@@ -136,8 +137,12 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector
             return;
         }
     }
-    if (direction.empty()){
-        // choose a direction randomly
+    if (direction.empty()) {
+        // choose a random direction everytime
+        daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
+        push_fill(daughter);    
+    } else if (direction == coord_func_->origin()) {
+        // choose a random direction at first call
         daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
         push_fill(daughter, daughter->coord() - present_coord);
     } else {
@@ -145,25 +150,6 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector
         daughter->set_coord(present_coord + direction);
         push_fill(daughter, direction);
     }
-}
-
-void Tissue::walk_fill(const std::shared_ptr<Gland>& daughter) {
-    const auto present_coord = daughter->coord();
-    auto neighbors = coord_func_->neighbors(present_coord);
-    std::sort(neighbors.begin(), neighbors.end(),
-        [this](const std::vector<int>& x, const std::vector<int>& y) {
-            return coord_func_->distance(x) < coord_func_->distance(y);
-        });
-    for (auto& x: neighbors) {
-        daughter->set_coord(x);
-        if (tumor_.insert(daughter).second) {
-            // end if found and filled an empty space
-            return;
-        }
-    }
-    // change direction every time
-    daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
-    walk_fill(daughter);
 }
 
 //! @todo
@@ -225,7 +211,8 @@ template <class T> inline
 void test_coordinate(const std::vector<int>& v) {
     T coord(v.size());
     std::cerr << typeid(coord).name() << std::endl;
-    std::cerr << coord.distance(v) << std::endl;
+    std::cerr << coord.graph_distance(v) << std::endl;
+    std::cerr << coord.euclidean_distance(v) << std::endl;
     std::cerr << coord.neighbors(v) << std::endl;
     std::cerr << coord.directions() << std::endl;
 }
@@ -242,10 +229,10 @@ void Tissue::unit_test() {
     test_coordinate<Moore>({3, -2, 1});
     test_coordinate<Hexagonal>({3, -2, 1});
 
-    std::cerr << Neumann(2).origins() << std::endl;
-    std::cerr << Neumann(3).origins() << std::endl;
-    std::cerr << Hexagonal(2).origins() << std::endl;
-    std::cerr << Hexagonal(3).origins() << std::endl;
+    std::cerr << Neumann(2).core() << std::endl;
+    std::cerr << Neumann(3).core() << std::endl;
+    std::cerr << Hexagonal(2).core() << std::endl;
+    std::cerr << Hexagonal(3).core() << std::endl;
 
     Tissue tissue;
     tissue.stain();
