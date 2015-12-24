@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <random>
 
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
@@ -57,6 +58,11 @@ class Coord {
             d += v;
         }
         return output;
+    }
+    template <class RNG> inline
+    std::vector<int> random_neighbor(const std::vector<int>& v, RNG& rng) const {
+        std::uniform_int_distribution<ptrdiff_t> uniform(0, max_neighbors_ - 1);
+        return v + directions_[uniform(rng)];
     }
     std::vector<int> outward(const std::vector<int>& v) const {
         const auto candidates = neighbors(v);

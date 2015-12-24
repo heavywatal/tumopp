@@ -191,9 +191,7 @@ void Tissue::push_layer(const std::shared_ptr<Gland>& daughter) {
 }
 
 bool Tissue::fill_empty(const std::shared_ptr<Gland>& daughter) {
-    const auto neighbors = coord_func_->neighbors(daughter->coord());
-    auto it = wtl::prandom().choice(neighbors.begin(), neighbors.end());
-    daughter->set_coord(*it);
+    daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::prandom()));
     const auto result = tumor_.insert(daughter);
     return result.second;
 }
