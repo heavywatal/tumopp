@@ -83,6 +83,7 @@ void Tissue::grow(const size_t max_size) {HERE;
                 else if (PACKING_ == "pushfill") {push_fill(daughter, coord_func_->origin());}
                 else if (PACKING_ == "walkfill") {push_fill(daughter);}
                 else if (PACKING_ == "empty") {success = fill_empty(daughter);}
+                else if (PACKING_ == "layer") {push_layer(daughter);}
                 if (success && Gland::bernoulli_mutation()) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
@@ -126,10 +127,6 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector
     const auto present_coord = daughter->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
-//    std::sort(neighbors.begin(), neighbors.end(),
-//        [this](const std::vector<int>& x, const std::vector<int>& y) {
-//            return coord_func_->euclidean_distance(x) < coord_func_->euclidean_distance(y);
-//        });
     for (auto& x: neighbors) {
         daughter->set_coord(x);
         if (tumor_.insert(daughter).second) {
@@ -152,8 +149,9 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector
     }
 }
 
-//! @todo
+//! @todo pushはするけど内側の層から
 void Tissue::push_layer(const std::shared_ptr<Gland>& daughter) {
+    auto this_layer = coord_func_->layer(coord_func_->graph_distance(daughter->coord()));
 }
 
 bool Tissue::fill_empty(const std::shared_ptr<Gland>& daughter) {
