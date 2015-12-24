@@ -123,67 +123,47 @@ void Tissue::push(const std::shared_ptr<Gland>& moving, std::vector<int> directi
 }
 
 void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction) {
-    static const auto directions = coord_func_->directions();
-    auto neighbors = coord_func_->neighbors(daughter->coord());
-    if (!direction.empty()) {
-        auto previous = std::find(neighbors.begin(), neighbors.end(), daughter->coord() - direction);
-        neighbors.erase(previous);
-    }
-    std::vector<std::vector<int>> empty_neighbors;
-    empty_neighbors.reserve(neighbors.size());
-    for (auto& x: neighbors) {
-        if (tumor_.find(std::shared_ptr<Gland>(new Gland(x))) == tumor_.end()) {
-            empty_neighbors.push_back(x);
-        }
-    }
-    auto found = tumor_.find(daughter);
-    auto existing = *found;
-    tumor_.erase(found);
-    if (empty_neighbors.empty()) {
-        auto new_dir = direction;
-        if (direction.empty()) {
-            new_dir = *wtl::prandom().choice(directions.begin(), directions.end());
-        }
-        auto new_coord = daughter->coord() + new_dir;
-        existing->set_coord(new_coord);
-        push_fill(existing, new_dir);
-    } else {
-        auto new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
-            [this](const std::vector<int>& x, const std::vector<int>& y) {
-                return coord_func_->distance(x) < coord_func_->distance(y);
+    const auto present_coord = daughter->coord();
+    auto neighbors = coord_func_->neighbors(present_coord);
+    std::sort(neighbors.begin(), neighbors.end(),
+        [this](const std::vector<int>& x, const std::vector<int>& y) {
+            return coord_func_->distance(x) < coord_func_->distance(y);
         });
-        existing->set_coord(new_coord);
-        tumor_.insert(existing);
+    for (auto& x: neighbors) {
+        daughter->set_coord(x);
+        if (tumor_.insert(daughter).second) {
+            // end if found and filled an empty space
+            return;
+        }
     }
-    tumor_.insert(daughter);
+    if (direction.empty()){
+        // choose a direction randomly
+        daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
+        push_fill(daughter, daughter->coord() - present_coord);
+    } else {
+        // keep the direction
+        daughter->set_coord(present_coord + direction);
+        push_fill(daughter, direction);
+    }
 }
 
 void Tissue::walk_fill(const std::shared_ptr<Gland>& daughter) {
-    static const auto directions = coord_func_->directions();
-    auto neighbors = coord_func_->neighbors(daughter->coord());
-    std::vector<std::vector<int>> empty_neighbors;
-    empty_neighbors.reserve(neighbors.size());
+    const auto present_coord = daughter->coord();
+    auto neighbors = coord_func_->neighbors(present_coord);
+    std::sort(neighbors.begin(), neighbors.end(),
+        [this](const std::vector<int>& x, const std::vector<int>& y) {
+            return coord_func_->distance(x) < coord_func_->distance(y);
+        });
     for (auto& x: neighbors) {
-        if (tumor_.find(std::shared_ptr<Gland>(new Gland(x))) == tumor_.end()) {
-            empty_neighbors.push_back(x);
+        daughter->set_coord(x);
+        if (tumor_.insert(daughter).second) {
+            // end if found and filled an empty space
+            return;
         }
     }
-    auto found = tumor_.find(daughter);
-    auto existing = *found;
-    tumor_.erase(found);
-    if (empty_neighbors.empty()) {
-        auto new_coord = *wtl::prandom().choice(neighbors.begin(), neighbors.end());
-        existing->set_coord(new_coord);
-        walk_fill(existing);
-    } else {
-        auto new_coord = *std::min_element(empty_neighbors.begin(), empty_neighbors.end(),
-            [this](const std::vector<int>& x, const std::vector<int>& y) {
-                return coord_func_->distance(x) < coord_func_->distance(y);
-        });
-        existing->set_coord(new_coord);
-        tumor_.insert(existing);
-    }
-    tumor_.insert(daughter);
+    // change direction every time
+    daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
+    walk_fill(daughter);
 }
 
 //! @todo
