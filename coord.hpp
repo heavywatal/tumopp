@@ -80,11 +80,17 @@ class Coord {
         for (const int x: v) {result += x * x;}
         return std::sqrt(result);
     }
-    //! @todo
-    std::vector<std::vector<int>> layer(const size_t d) const {
-        std::vector<std::vector<int>> output;
-        // graph_distance(v) == d
-        return output;
+    double radius(size_t volume) const {
+        volume /= M_PI;
+        if (dimensions == 2) {
+            // S = pi r^2
+            return std::sqrt(volume);
+        } else {
+            // V = 4/3 pi r^3
+            volume *= 3.0;
+            volume /= 4.0;
+            return std::pow(volume, 1.0/3.0);
+        }
     }
     virtual std::vector<std::vector<int>> core() const {
         const size_t n = std::pow(2, dimensions);
