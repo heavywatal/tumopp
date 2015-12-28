@@ -139,6 +139,8 @@ animation::saveGIF({
 } else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
 
+library(rgl)
+
 #  hexagonal close packed
 trans_coord_hcc = function(mtrx) {mtrx %>>%
     mutate(y= y + x * 0.5) %>>%
@@ -156,7 +158,7 @@ trans_coord_fcc = function(mtrx) {mtrx %>>%
 }
 
 plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
-    filter(z==.z) %>>%
+    dplyr::filter(z==.z) %>>%
     bind_rows(data_frame(x=maxabs+seq_len(8), y=maxabs+seq_len(8), z=.z,
                           fitness=-1, size=as.factor(seq_len(8)))) %>>%
     #(?.) %>>% (?str(.)) %>>%
@@ -169,9 +171,9 @@ plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
 #plot_early_mutations_3d_section(0, early3d)
 
 early3d = unnested %>>%
-    filter(size <= ifelse(conf[['coord']] == 2, 4, 8)) %>>%
+    dplyr::filter(size <= ifelse(conf[['coord']] == 2, 4, 8)) %>>%
     dplyr::select(-effect, -starts_with('origin_')) %>>%
-    filter(!duplicated(.)) %>>%
+    dplyr::filter(!duplicated(.)) %>>%
     mutate(size=as.factor(size)) %>>% (?.)
 
 if (conf[['coord']] == 3) {
@@ -189,60 +191,21 @@ animation::saveGIF({
 
 #########1#########2#########3#########4#########5#########6#########7#########
 
-library(rgl)
-
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
 rgl::clear3d()
 rgl::view3d(-25, 15, 40, zoom=0.9)
 clear3d()
 axes3d()
-with(early3d %>>% filter(sqrt(x^2 + y^2 + z^2)>12), spheres3d(x, y, z,
+with(early3d %>>% dplyr::filter(sqrt(x^2 + y^2 + z^2)>12), spheres3d(x, y, z,
                 radius=1, col=size, alpha=0.8))
 title3d('', '', 'x', 'y', 'z')
 writeWebGL()
 
 
 if (FALSE) {  # Thinking about hex 3D neighbors
-.hex_xy = read_csv('x,y,z
-0,0,0
-0,1,0
-0,-1,0
--1,0,0
--1,1,0
-1,0,0
-1,-1,0')
 
-if (rgl.cur()) {rgl.close()}
-rgl::open3d(windowRect=c(0, 0, 600, 600))
-rgl::clear3d()
-rgl::view3d(20, 10, 60)
-clear3d()
-axes3d()
-.hex_xy %>>%
-    bind_rows(.hex_xy %>>% filter(x > 0 | (x==0 & y==0)) %>>% mutate(z=-1)) %>>%
-    bind_rows(.hex_xy %>>% filter(x < 0 | (x==0 & y==0)) %>>% mutate(z=1)) %>>% (?.) %>>%
-    trans_coord_fcc %>>%
-with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
-title3d('', '', 'x', 'y', 'z')
-
-
-if (rgl.cur()) {rgl.close()}
-rgl::open3d(windowRect=c(0, 0, 600, 600))
-rgl::clear3d()
-rgl::view3d(40, 20, 60)
-clear3d()
-axes3d()
-.hex_xy %>>%
-    bind_rows(.hex_xy %>>% mutate(z=-1) %>>% filter(x < 0 | (x==0 & y==0))) %>>%
-    bind_rows(.hex_xy %>>% mutate(z=1) %>>% filter(x < 0 | (x==0 & y==0))) %>>% (?.) %>>%
-    bind_rows(.hex_xy %>>% mutate(z=5)) %>>%
-    bind_rows(.hex_xy %>>% mutate(z=4) %>>% filter(x > 0 | (x==0 & y==0))) %>>%
-    bind_rows(.hex_xy %>>% mutate(z=6) %>>% filter(x > 0 | (x==0 & y==0))) %>>%
-    trans_coord_hcc %>>%
-with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
-title3d('', '', 'x', 'y', 'z')
-
+## transformation
 
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
@@ -250,23 +213,58 @@ rgl::clear3d()
 rgl::view3d(70, 5, 60)
 clear3d()
 axes3d()
-.r = 2; seq(-.r, .r) %>>%
+.r = 2
+seq(-.r, .r) %>>%
     (expand.grid(x=., y=., z=.)) %>>%
 #    trans_coord_hcc %>>%
     trans_coord_fcc %>>%
     mutate(r= sqrt(x*x+y*y+z*z)) %>>%
-#    filter(r <= 3) %>>% (?.) %>>%
+#    dplyr::filter(r <= 3) %>>% (?.) %>>%
 with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
 title3d('', '', 'x', 'y', 'z')
 
-#  even
-max(z, d + z/2)
 
-#  odd
+## cells, volume, radius
+
+.r = 60
+.cells = seq(-.r, .r) %>>%
+    (expand.grid(grid='regular', x=., y=., z=.)) %>>%
+    tbl_df %>>%
+    bind_rows(trans_coord_fcc(.) %>>% mutate(grid='hex')) %>>%
+    mutate(r= sqrt(x*x+y*y+z*z)) %>>%
+    dplyr::filter(r < 0.75 * .r) %>>%
+    group_by(grid) %>>%
+    mutate(n = order(order(r))) %>>%
+    (?.)
+
+.curve = data_frame(grid='regular', r=seq_len(100) / 2) %>>%
+    mutate(n=pi * 4 * r^3 / 3) %>>%
+    bind_rows(mutate(., grid='hex', n= sqrt(2) * n)) %>>%
+    (?.)
+
+.p = .cells %>>%
+    ggplot(aes(n, r, colour=grid))+
+    geom_point()+
+    geom_path(data=.curve)
+.p
+ggsave('radius-nodes.png', .p, width=7, height=7)
+
+.cells %>>% group_by(grid) %>>% tally
+summary(.cells)
+
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+rgl::view3d(70, 5, 60)
+clear3d()
+axes3d()
+.cells %>>%
+    dplyr::filter(r > 47) %>>% (?.) %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
 
 
-
-
+## minimum
 
 .hex_xy = read_csv('x,y,z
 0,0,0
@@ -285,6 +283,48 @@ axes3d()
     trans_coord_fcc %>>%
 with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
 title3d('', '', 'x', 'y', 'z')
+
+## neighbors
+
+.hex_xy = read_csv('x,y,z
+0,0,0
+0,1,0
+0,-1,0
+-1,0,0
+-1,1,0
+1,0,0
+1,-1,0')
+
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+rgl::view3d(20, 10, 60)
+clear3d()
+axes3d()
+.hex_xy %>>%
+    bind_rows(.hex_xy %>>% dplyr::filter(x > 0 | (x==0 & y==0)) %>>% mutate(z=-1)) %>>%
+    bind_rows(.hex_xy %>>% dplyr::filter(x < 0 | (x==0 & y==0)) %>>% mutate(z=1)) %>>% (?.) %>>%
+    trans_coord_fcc %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
+
+
+if (rgl.cur()) {rgl.close()}
+rgl::open3d(windowRect=c(0, 0, 600, 600))
+rgl::clear3d()
+rgl::view3d(40, 20, 60)
+clear3d()
+axes3d()
+.hex_xy %>>%
+    bind_rows(.hex_xy %>>% mutate(z=-1) %>>% dplyr::filter(x < 0 | (x==0 & y==0))) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=1) %>>% dplyr::filter(x < 0 | (x==0 & y==0))) %>>% (?.) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=5)) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=4) %>>% dplyr::filter(x > 0 | (x==0 & y==0))) %>>%
+    bind_rows(.hex_xy %>>% mutate(z=6) %>>% dplyr::filter(x > 0 | (x==0 & y==0))) %>>%
+    trans_coord_hcc %>>%
+with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
+title3d('', '', 'x', 'y', 'z')
+
 
 }  # fi 3D neighbors
 
