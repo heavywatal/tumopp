@@ -23,16 +23,16 @@ evolution = read_tsv(file.path(indir, 'evolution_history.tsv.gz'),
 unnested = population %>>%
     mutate(sites=strsplit(sites, '\\|')) %>>%
     unnest(sites) %>>%
-    bind_rows(population %>>% filter(sites=='')) %>>%
+    bind_rows(population %>>% dplyr::filter(sites=='')) %>>%
     dplyr::select(-size) %>>%
-    full_join(history %>>% name_rows, by=c(sites='.rownames')) %>>%
+    full_join(history %>>% add_rownames('sites'), by='sites') %>>%
     dplyr::select(-sites) %>>%
     arrange(time, x, y) %>>% (?.)
 
 unnested_evolution = evolution %>>%
     mutate(sites=strsplit(sites, '\\|')) %>>%
     unnest(sites) %>>%
-    filter(extract_numeric(sites) <= 4) %>>% (?.)
+    dplyr::filter(extract_numeric(sites) <= 4) %>>% (?.)
 
 source(file.path(dirname(..file..), 'sample.R'))
 
@@ -73,9 +73,9 @@ unnested_evolution = unnested_evolution %>>%
 .p = unnested %>>%
     mutate(size=ifelse(size <= 4, size, NA)) %>>%
     dplyr::select(-starts_with('origin_'), -effect) %>>%
-    filter(!duplicated(.)) %>>%
+    dplyr::filter(!duplicated(.)) %>>%
     group_by(x, y) %>>%
-    filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
+    dplyr::filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
     mutate(size=as.factor(size)) %>>%
     gglattice2D + theme2D
 #.p
@@ -84,9 +84,9 @@ ggsave('early_mutations.png', .p, width=7, height=7)
 .p = unnested %>>%
     mutate(size=ifelse(60 <= size & size <= 100, size, NA)) %>>%
     dplyr::select(-starts_with('origin_'), -effect) %>>%
-    filter(!duplicated(.)) %>>%
+    dplyr::filter(!duplicated(.)) %>>%
     group_by(x, y) %>>%
-    filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
+    dplyr::filter(!(n() > 1 & is.na(size))) %>>% ungroup %>>%
     mutate(size=as.factor(size)) %>>%
     gglattice2D + theme2D
 #.p
@@ -110,11 +110,11 @@ plot_mutation_history_2d = function(.data) {
 ggsave('gradient.png', .p, width=7, height=7)
 
 
-maxabs = with(evolution %>>% filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
+maxabs = with(evolution %>>% dplyr::filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
 
 plot_early_evolution_2d = function(.time) {
     .data = unnested_evolution %>>%
-        filter(time==.time) %>>%
+        dplyr::filter(time==.time) %>>%
         mutate(size=as.factor(sites))
     .data %>>%
         bind_rows(data_frame(x=maxabs+seq_len(4), y=maxabs+seq_len(4),
@@ -144,17 +144,17 @@ library(rgl)
 #  hexagonal close packed
 trans_coord_hcc = function(mtrx) {mtrx %>>%
     mutate(y= y + x * 0.5) %>>%
-    mutate(x= x * sqrt(3) * 0.5) %>>%
+    mutate(x= x * sqrt(3.0 / 4.0)) %>>%
     mutate(x= x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>>%
-    mutate(z= z * 0.816497)  # TODO
+    mutate(z= z * sqrt(2.0 / 3.0))
 }
 
 #  face centered cubic (cubic close packed)
 trans_coord_fcc = function(mtrx) {mtrx %>>%
     mutate(y= y + x * 0.5) %>>%
-    mutate(x= x * sqrt(3) * 0.5) %>>%
-    mutate(x= x + z * sqrt(3) / 3) %>>%
-    mutate(z= z * 0.816497)  # TODO
+    mutate(x= x * sqrt(3.0 / 4.0)) %>>%
+    mutate(x= x + z / sqrt(3.0)) %>>%
+    mutate(z= z * sqrt(2.0 / 3.0))
 }
 
 plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
@@ -171,23 +171,22 @@ plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
 #plot_early_mutations_3d_section(0, early3d)
 
 early3d = unnested %>>%
-    dplyr::filter(size <= ifelse(conf[['coord']] == 2, 4, 8)) %>>%
+    dplyr::filter(size <= ifelse(conf[['coord']] == 'hex', 4, 8)) %>>%
     dplyr::select(-effect, -starts_with('origin_')) %>>%
     dplyr::filter(!duplicated(.)) %>>%
     mutate(size=as.factor(size)) %>>% (?.)
 
-if (conf[['coord']] == 3) {
+if (conf[['coord']] == 'hex') {
     early3d = early3d %>>% trans_coord_fcc
 }
 
 maxabs = with(population, max(abs(c(x, y, z)))) %>>% (?.)
 
-animation::saveGIF({
-    for (i in unique(early3d %>>% arrange(z) %>>% (z))) {
-        print(plot_early_mutations_3d_section(i, early3d))
-    }},
-    'serial_section.gif', loop=TRUE, interval=0.15, outdir=getwd())
-
+#animation::saveGIF({
+#    for (i in unique(early3d %>>% arrange(z) %>>% (z))) {
+#        print(plot_early_mutations_3d_section(i, early3d))
+#    }},
+#    'serial_section.gif', loop=TRUE, interval=0.15, outdir=getwd())
 
 #########1#########2#########3#########4#########5#########6#########7#########
 
