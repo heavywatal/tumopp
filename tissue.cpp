@@ -136,7 +136,7 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector
     if (direction.empty()) {
         // choose a random direction everytime
         daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
-        push_fill(daughter);    
+        push_fill(daughter);
     } else if (direction == coord_func_->origin()) {
         // choose a random direction at first call
         daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
@@ -200,31 +200,43 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
 }
 
 template <class T> inline
-void test_coordinate(const std::vector<int>& v) {
+void test_coordinate(const std::vector<int>& v) {HERE;
     T coord(v.size());
-    std::cerr << typeid(coord).name() << std::endl;
+    std::cerr << coord.core() << std::endl;
+    for (auto x: coord.directions()) {
+        std::cerr << x  << ": " << coord.euclidean_distance(x) << std::endl;
+    }
+    std::cerr << coord.neighbors(v) << std::endl;
     std::cerr << coord.graph_distance(v) << std::endl;
     std::cerr << coord.euclidean_distance(v) << std::endl;
-    std::cerr << coord.neighbors(v) << std::endl;
-    std::cerr << coord.directions() << std::endl;
 }
 
-void Tissue::unit_test() {
-    std::cerr << __PRETTY_FUNCTION__ << std::endl;
+template <class T> inline
+void test_radius() {HERE;
+    Tissue tissue;
+    tissue.set_coord<T>();
+    tissue.stain();
+    tissue.grow(100);
+    std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
+    tissue.grow(1000);
+    std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
+}
+
+void Tissue::unit_test() {HERE;
     std::cerr.precision(15);
 
-    test_coordinate<Neumann>({3, -2});
-    test_coordinate<Moore>({3, -2});
-    test_coordinate<Hexagonal>({3, -2});
+    const std::vector<int> v2{3, -2};
+    test_coordinate<Neumann>(v2);
+    test_coordinate<Moore>(v2);
+    test_coordinate<Hexagonal>(v2);
 
-    test_coordinate<Neumann>({3, -2, 1});
-    test_coordinate<Moore>({3, -2, 1});
-    test_coordinate<Hexagonal>({3, -2, 1});
+    const std::vector<int> v3{3, -2, 1};
+    test_coordinate<Neumann>(v3);
+    test_coordinate<Moore>(v3);
+    test_coordinate<Hexagonal>(v3);
 
-    std::cerr << Neumann(2).core() << std::endl;
-    std::cerr << Neumann(3).core() << std::endl;
-    std::cerr << Hexagonal(2).core() << std::endl;
-    std::cerr << Hexagonal(3).core() << std::endl;
+    test_radius<Moore>();
+    test_radius<Hexagonal>();
 
     Tissue tissue;
     tissue.stain();

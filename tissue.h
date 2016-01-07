@@ -74,6 +74,9 @@ class Tissue {
 
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
+    size_t size() const {return tumor_.size();};
+    double radius() const {return coord_func_->radius(tumor_.size());}
+
     //! Unit test
     static void unit_test();
     static boost::program_options::options_description& opt_description();
