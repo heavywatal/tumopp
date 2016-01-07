@@ -46,16 +46,10 @@ std::vector<T> operator-(std::vector<T> lhs, const std::vector<T>& rhs) {
 
 class Coord {
   public:
-    Coord() = delete;
-    explicit Coord(const size_t d): dimensions(d) {}
-    virtual ~Coord() = default;
-
-    // properties
-    const size_t dimensions;
+    // methods
     const std::vector<std::vector<int>>& directions() const {return directions_;}
     size_t max_neighbors() const {return max_neighbors_;}
 
-    // methods
     std::vector<int> origin() const {
         return std::vector<int>(dimensions);
     }
@@ -82,9 +76,7 @@ class Coord {
     // virtual methods
     virtual size_t graph_distance(const std::vector<int>& v) const = 0;
     virtual double euclidean_distance(const std::vector<int>& v) const {
-        double result = 0;
-        for (const int x: v) {result += x * x;}
-        return std::sqrt(result);
+        return _euclidean_distance(v);
     }
     virtual double radius(size_t volume) const {
         double x = volume;
@@ -113,7 +105,23 @@ class Coord {
         }
         return output;
     }
+
+    virtual ~Coord() = default;
+
+    // properties
+    const size_t dimensions;
+
   protected:
+    Coord() = delete;
+    explicit Coord(const size_t d): dimensions(d) {}
+
+    template <class T> inline
+    double _euclidean_distance(const std::vector<T>& v) const {
+        double result = 0;
+        for (const auto x: v) {result += x * x;}
+        return std::sqrt(result);
+    }
+
     std::vector<std::vector<int>> directions_;
     size_t max_neighbors_;
 };
@@ -135,6 +143,7 @@ class Neumann final: public Coord {
             directions_.push_back(v);
         } while (std::next_permutation(v.begin(), v.end()));
     }
+    ~Neumann() = default;
     //! Manhattan distance
     virtual size_t graph_distance(const std::vector<int>& v) const override {
         return std::accumulate(v.begin(), v.end(), 0, [](const int lhs, const int rhs) {
@@ -164,6 +173,7 @@ class Moore final: public Coord {
             }
         }
     }
+    ~Moore() = default;
     //! Chebyshev/chessboard distance
     virtual size_t graph_distance(const std::vector<int>& v) const override {
         return std::abs(*std::max_element(v.begin(), v.end(), [](const int lhs, const int rhs) {
@@ -196,6 +206,7 @@ class Hexagonal final: public Coord {
             directions_.push_back({-1, 1, 1});
         }
     }
+    ~Hexagonal() = default;
     virtual size_t graph_distance(const std::vector<int>& v) const override {
         std::vector<size_t> absv;
         absv.reserve(v.size() * 2);
@@ -208,9 +219,15 @@ class Hexagonal final: public Coord {
         }
         return *std::max_element(absv.begin(), absv.end());
     }
-    //! @todo
     virtual double euclidean_distance(const std::vector<int>& v) const override {
-        return static_cast<double>(graph_distance(v));
+        std::vector<double> true_pos(v.begin(), v.end());
+        true_pos[1] += true_pos[0] * 0.5;
+        true_pos[0] *= std::sqrt(3.0 / 4.0);
+        if (v.size() > 2) {
+            true_pos[0] += true_pos[2] / sqrt(3.0);
+            true_pos[2] *= std::sqrt(2.0 / 3.0);
+        }
+        return _euclidean_distance(true_pos);
     }
     virtual double radius(size_t volume) const override {
         if (dimensions == 2) {
