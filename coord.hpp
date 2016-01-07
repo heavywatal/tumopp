@@ -47,11 +47,15 @@ std::vector<T> operator-(std::vector<T> lhs, const std::vector<T>& rhs) {
 class Coord {
   public:
     Coord() = delete;
-    Coord(const size_t d): dimensions(d) {}
+    explicit Coord(const size_t d): dimensions(d) {}
     virtual ~Coord() = default;
+
+    // properties
     const size_t dimensions;
     const std::vector<std::vector<int>>& directions() const {return directions_;}
     size_t max_neighbors() const {return max_neighbors_;}
+
+    // methods
     std::vector<int> origin() const {
         return std::vector<int>(dimensions);
     }
@@ -74,22 +78,25 @@ class Coord {
             return euclidean_distance(lhs) < euclidean_distance(rhs);
         });
     }
+
+    // virtual methods
     virtual size_t graph_distance(const std::vector<int>& v) const = 0;
-    double euclidean_distance(const std::vector<int>& v) const {
+    virtual double euclidean_distance(const std::vector<int>& v) const {
         double result = 0;
         for (const int x: v) {result += x * x;}
         return std::sqrt(result);
     }
-    double radius(size_t volume) const {
-        volume /= M_PI;
+    virtual double radius(size_t volume) const {
+        double x = volume;
+        x /= M_PI;
         if (dimensions == 2) {
             // S = pi r^2
-            return std::sqrt(volume);
+            return std::sqrt(x);
         } else {
             // V = 4/3 pi r^3
-            volume *= 3.0;
-            volume /= 4.0;
-            return std::pow(volume, 1.0/3.0);
+            x *= 3.0;
+            x /= 4.0;
+            return std::pow(x, 1.0/3.0);
         }
     }
     virtual std::vector<std::vector<int>> core() const {
@@ -111,7 +118,7 @@ class Coord {
     size_t max_neighbors_;
 };
 
-class Neumann: public Coord {
+class Neumann final: public Coord {
   public:
     Neumann() = delete;
     explicit Neumann(const size_t d): Coord(d) {
@@ -129,7 +136,7 @@ class Neumann: public Coord {
         } while (std::next_permutation(v.begin(), v.end()));
     }
     //! Manhattan distance
-    size_t graph_distance(const std::vector<int>& v) const {
+    virtual size_t graph_distance(const std::vector<int>& v) const override {
         return std::accumulate(v.begin(), v.end(), 0, [](const int lhs, const int rhs) {
             return std::abs(lhs) + std::abs(rhs);
         });
@@ -137,7 +144,7 @@ class Neumann: public Coord {
 };
 
 //! Neumann + diagonal cells
-class Moore: public Coord {
+class Moore final: public Coord {
   public:
     Moore() = delete;
     explicit Moore(const size_t d): Coord(d) {
@@ -158,14 +165,14 @@ class Moore: public Coord {
         }
     }
     //! Chebyshev/chessboard distance
-    size_t graph_distance(const std::vector<int>& v) const {
+    virtual size_t graph_distance(const std::vector<int>& v) const override {
         return std::abs(*std::max_element(v.begin(), v.end(), [](const int lhs, const int rhs) {
             return std::abs(lhs) < std::abs(rhs);
         }));
     }
 };
 
-class Hexagonal: public Coord {
+class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;
     explicit Hexagonal(const size_t d): Coord(d) {
@@ -189,7 +196,7 @@ class Hexagonal: public Coord {
             directions_.push_back({-1, 1, 1});
         }
     }
-    size_t graph_distance(const std::vector<int>& v) const {
+    virtual size_t graph_distance(const std::vector<int>& v) const override {
         std::vector<size_t> absv;
         absv.reserve(v.size() * 2);
         for (auto x: v) {
@@ -202,11 +209,17 @@ class Hexagonal: public Coord {
         return *std::max_element(absv.begin(), absv.end());
     }
     //! @todo
-    double euclidean_distance(const std::vector<int>& v) const {
+    virtual double euclidean_distance(const std::vector<int>& v) const override {
         return static_cast<double>(graph_distance(v));
     }
-
-    std::vector<std::vector<int>> core() const {
+    virtual double radius(size_t volume) const override {
+        if (dimensions == 2) {
+            return Coord::radius(volume) * std::sqrt(3.0 / 4.0);
+        } else {
+            return Coord::radius(volume) * std::sqrt(0.5);
+        }
+    }
+    virtual std::vector<std::vector<int>> core() const override {
         std::vector<std::vector<int>> output = Neumann(dimensions).core();
         if (dimensions == 3) {
             output.resize(3);
