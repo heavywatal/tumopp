@@ -40,9 +40,6 @@ class Simulation {
     //! Max tumor size to stop simulation
     size_t MAX_SIZE = 16384;
 
-    //! Coordinate system
-    std::string COORDINATE = "moore";
-
     //! Print extra information
     bool VERBOSE = false;
 

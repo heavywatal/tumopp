@@ -22,14 +22,12 @@
     Command line option | Symbol | Variable
     --------------------| ------ | -------------------------
     `-N,--max`          | -      | Simulation::MAX_SIZE
-    `-C,--coord`        | -      | Simulation::COORDINATE
 */
 boost::program_options::options_description& Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
     static po::options_description description("Simulation");
     description.add_options()
         ("max,N", po::value<size_t>(&MAX_SIZE)->default_value(MAX_SIZE))
-        ("coord,C", po::value<std::string>(&COORDINATE)->default_value(COORDINATE))
         ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "produce help")
         ("verbose,v", po::value<bool>(&VERBOSE)
             ->default_value(VERBOSE)->implicit_value(true), "verbose output")
@@ -96,9 +94,6 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() {HERE;
     Tissue tissue;
-    if (COORDINATE == "neumann") {tissue.set_coord<Neumann>();}
-    else if (COORDINATE == "moore") {tissue.set_coord<Moore>();}
-    else if (COORDINATE == "hex") {tissue.set_coord<Hexagonal>();}
     tissue.stain();
     switch (MODE) {
       case 0: {

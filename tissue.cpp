@@ -18,6 +18,7 @@
 
 
 size_t Tissue::DIMENSIONS_ = 2;
+std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::SCHEDULE_ = "random";
 std::string Tissue::PACKING_ = "push";
 
@@ -27,12 +28,16 @@ std::string Tissue::PACKING_ = "push";
     Command line option | Symbol | Variable
     --------------------| ------ | -------------------------
     `-D,--dimensions`   | -      | Tissue::DIMENSIONS_
+    `-C,--coord`        | -      | Tissue::COORDINATE_
+    `-S,--schedule`     | -      | Tissue::SCHEDULE_
+    `-P,--packing`      | -      | Tissue::PACKING_
 */
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Tissue"};
     desc.add_options()
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
+        ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
         ("schedule,S", po::value<std::string>(&SCHEDULE_)->default_value(SCHEDULE_))
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
     ;
@@ -43,7 +48,7 @@ boost::program_options::options_description& Tissue::opt_description() {
 void Tissue::stain() {HERE;
     assert(tumor_.empty());
     for (const auto& coord: coord_func_->core()) {
-        std::shared_ptr<Gland> founder(new Gland(coord));
+        auto founder = std::make_shared<Gland>(coord);
         founder->mutate();
         tumor_.insert(founder);
         mutation_coords_.push_back(coord);
@@ -75,7 +80,6 @@ void Tissue::grow(const size_t max_size) {HERE;
             }
         } else {exit(1);}
         for (auto& mother: mothers) {
-            const auto neighbors = coord_func_->neighbors(mother->coord());
             if (mother->bernoulli_birth()) {
                 auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
                 bool success = true;

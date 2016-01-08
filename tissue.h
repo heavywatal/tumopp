@@ -52,11 +52,15 @@ class Tissue {
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue(): coord_func_(new Neumann(DIMENSIONS_)) {};
+    Tissue() {
+        if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
+        else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
+        else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
+    }
 
     //! Set coordinate function object
     template <class FuncObj>
-    void set_coord() {coord_func_.reset(new FuncObj(DIMENSIONS_));}
+    void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
 
     //! Mark first cells with mutation
     void stain();
@@ -84,6 +88,9 @@ class Tissue {
   private:
     //! Dimensions: {1, 2, 3}
     static size_t DIMENSIONS_;
+
+    //! Coordinate system
+    static std::string COORDINATE_;
 
     //! replication schedule: random, poisson, even
     static std::string SCHEDULE_;
