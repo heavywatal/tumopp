@@ -80,6 +80,9 @@ class Tissue {
 
     size_t size() const {return tumor_.size();};
     double radius() const {return coord_func_->radius(tumor_.size());}
+    double relative_pos(std::shared_ptr<Gland> x) const {
+        return coord_func_->euclidean_distance(x->coord()) / radius();
+    }
 
     //! Unit test
     static void unit_test();
