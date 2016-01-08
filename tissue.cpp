@@ -177,13 +177,14 @@ std::string Tissue::mutation_history() const {HERE;
     ost.precision(16);
     std::vector<std::string> xyz{"x", "y", "z"};
     xyz.resize(mutation_coords_.front().size());
-    ost << "size" << sep_ << "effect";
+    ost << "size" << sep_ << "mutant" << sep_ << "effect";
     for (auto x: xyz) {
         ost << sep_ << "origin_" << x;
     }
     ost << "\n";
     for (size_t i=0; i<mutation_coords_.size(); ++i) {
         ost << mutation_stages_[i] << sep_
+            << Gland::MUTANT_IDS()[i] << sep_;
             << Gland::MUTATION_EFFECTS()[i] << sep_;
         wtl::ost_join(ost, mutation_coords_[i], sep_) << "\n";
     }

@@ -22,7 +22,7 @@ class Gland {
   public:
     //! Default constructor
     Gland() = delete;
-    //! Constructor
+    //! Constructor for first cells
     Gland(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor
     Gland(const Gland& other):
@@ -71,6 +71,7 @@ class Gland {
     size_t ancestor() const {return ancestor_;}
     //! Getter
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
+    static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
 
     static std::string header(const size_t dimensions, const std::string& sep);
     std::ostream& write(std::ostream& ost, const std::string& sep) const;
@@ -98,6 +99,7 @@ class Gland {
 
     //! The history of mutation effects
     static std::vector<double> MUTATION_EFFECTS_;
+    static std::vector<size_t> MUTANT_IDS_;
 
     //! Position in a tumor
     std::vector<int> coord_;

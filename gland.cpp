@@ -20,6 +20,7 @@ double Gland::DEATH_RATE_ = 0.0;
 size_t Gland::ID_TAIL_ = 0;
 
 std::vector<double> Gland::MUTATION_EFFECTS_;
+std::vector<size_t> Gland::MUTANT_IDS_;
 
 //! Program options
 /*! @return Program options description
@@ -48,6 +49,7 @@ boost::program_options::options_description& Gland::opt_description() {
 void Gland::mutate() {
     sites_.push_back(MUTATION_EFFECTS_.size());
     MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
+    MUTANT_IDS_.push_back(id());
 }
 
 bool Gland::bernoulli_mutation() {
