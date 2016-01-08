@@ -17,6 +17,7 @@ double Gland::MUTATION_RATE_ = 1e-5;
 double Gland::MUTATION_SIGMA_ = 0.0;
 double Gland::BIRTH_RATE_ = 1.0;
 double Gland::DEATH_RATE_ = 0.0;
+size_t Gland::ID_TAIL_ = 0;
 
 std::vector<double> Gland::MUTATION_EFFECTS_;
 
@@ -45,8 +46,8 @@ boost::program_options::options_description& Gland::opt_description() {
 }
 
 void Gland::mutate() {
-    MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
     sites_.push_back(MUTATION_EFFECTS_.size());
+    MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
 }
 
 bool Gland::bernoulli_mutation() {
@@ -58,17 +59,34 @@ bool Gland::bernoulli_birth() const {
 }
 
 bool Gland::bernoulli_death() const {
-    return wtl::prandom().bernoulli(DEATH_RATE_ / fitness());
+    return wtl::prandom().bernoulli(DEATH_RATE_);
+}
+
+std::string Gland::header(const size_t dimensions, const std::string& sep) {
+    std::ostringstream ost;
+    ost << "id" << sep << "mother" << sep << "ancestor" << sep;
+    std::vector<std::string> axes{"x", "y", "z"};
+    axes.resize(dimensions);
+    wtl::ost_join(ost, axes, sep) << sep << "sites" << sep << "fitness\n";
+    return ost.str();
+}
+
+std::ostream& Gland::write(std::ostream& ost, const std::string& sep) const {
+    ost << id_ << sep << mother_ << sep << ancestor_ << sep;
+    wtl::ost_join(ost, coord(), sep) << sep;
+    wtl::ost_join(ost, sites(), "|") << sep
+        << fitness() << "\n";
+    return ost;
 }
 
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Gland& gland) {
-    return ost << gland.sites_;
+    return gland.write(ost, "\t");
 }
 
 void Gland::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
-    Gland gland;
-    std::cerr << gland << std::endl;
+    Gland gland({1, 2, 3});
+    std::cerr << Gland::header(3, "\t") << "\n" << gland << std::endl;
 }

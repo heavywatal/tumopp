@@ -20,18 +20,22 @@ namespace boost {
 
 class Gland {
   public:
-    //! Constructor
-    Gland(const std::vector<int>& v): coord_(v) {}
     //! Default constructor
-    Gland() = default;
+    Gland() = delete;
+    //! Constructor
+    Gland(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor
-    Gland(const Gland& other) = default;
+    Gland(const Gland& other):
+        coord_(other.coord_), sites_(other.sites_), age_(other.age_),
+        id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {}
     //! Copy assignment operator
     Gland& operator=(const Gland&) = delete;
     //! Move constructor
     Gland(Gland&& other) = default;
     //! Move assignment operator
     Gland& operator=(Gland&&) = default;
+
+    void set_coord(const std::vector<int>& v) {coord_ = v;}
 
     //! Calculate fitness
     double fitness() const {
@@ -56,17 +60,20 @@ class Gland {
     //! Bernoulli trial of death
     bool bernoulli_death() const;
 
-    void set_coord(std::vector<int> v) {coord_.swap(v);}
-
+    //! Getter
+    const std::vector<int>& coord() const {return coord_;}
     //! Getter
     const std::vector<size_t>& sites() const {return sites_;}
     //! Getter
     size_t age() const {return age_;}
-    //! Getter
-    const std::vector<int>& coord() const {return coord_;}
+    size_t id() const {return id_;}
+    size_t mother() const {return mother_;}
+    size_t ancestor() const {return ancestor_;}
     //! Getter
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
 
+    static std::string header(const size_t dimensions, const std::string& sep);
+    std::ostream& write(std::ostream& ost, const std::string& sep) const;
     friend std::ostream& operator<< (std::ostream&, const Gland&);
 
     //! Unit test
@@ -87,15 +94,20 @@ class Gland {
 
     static double DEATH_RATE_;
 
+    static size_t ID_TAIL_;
+
     //! The history of mutation effects
     static std::vector<double> MUTATION_EFFECTS_;
 
+    //! Position in a tumor
+    std::vector<int> coord_;
     //! Mutated sites (infinite-site model)
     std::vector<size_t> sites_;
     //! The age of the last division
     size_t age_ = 0;
-
-    std::vector<int> coord_;
+    size_t id_ = 0;
+    size_t mother_ = 0;
+    size_t ancestor_ = 0;
 };
 
 #endif /* GLAND_H_ */

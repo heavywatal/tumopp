@@ -48,15 +48,12 @@ boost::program_options::options_description& Tissue::opt_description() {
 void Tissue::stain() {HERE;
     assert(tumor_.empty());
     for (const auto& coord: coord_func_->core()) {
-        auto founder = std::make_shared<Gland>(coord);
-        founder->mutate();
-        tumor_.insert(founder);
-        mutation_coords_.push_back(coord);
-        mutation_stages_.push_back(mutation_coords_.size());
+        tumor_.insert(std::make_shared<Gland>(coord));
     }
 }
 
 void Tissue::grow(const size_t max_size) {HERE;
+    assert(!tumor_.empty());
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
     while (tumor_.size() < max_size) {
@@ -161,10 +158,7 @@ bool Tissue::fill_empty(const std::shared_ptr<Gland>& daughter) {
 std::string Tissue::snapshot_header() const {HERE;
     std::ostringstream ost;
     ost.precision(16);
-    ost << "time" << sep_ << "size" << sep_;
-    std::vector<std::string> axes{"x", "y", "z"};
-    axes.resize(DIMENSIONS_);
-    wtl::ost_join(ost, axes, sep_) << sep_ << "sites" << sep_ << "fitness\n";
+    ost << "time" << sep_ << "size" << sep_ << Gland::header(DIMENSIONS_, sep_);
     return ost.str();
 }
 
@@ -173,9 +167,7 @@ std::string Tissue::snapshot() const {
     ost.precision(16);
     for (auto& item: tumor_) {
         ost << evolution_history_.size() << sep_ << tumor_.size() << sep_;
-        wtl::ost_join(ost, item->coord(), sep_) << sep_;
-        wtl::ost_join(ost, item->sites(), "|") << sep_
-            << item->fitness() << "\n";
+        item->write(ost, sep_);
     }
     return ost.str();
 }
@@ -229,6 +221,14 @@ void test_radius() {HERE;
 void Tissue::unit_test() {HERE;
     std::cerr.precision(15);
 
+    Tissue tissue;
+    tissue.stain();
+    tissue.grow(10);
+    std::cerr << tissue << std::endl;
+    std::cerr << tissue.snapshot_header();
+    std::cerr << tissue.snapshot() << std::endl;
+    std::cerr << tissue.mutation_history() << std::endl;
+
     const std::vector<int> v2{3, -2};
     test_coordinate<Neumann>(v2);
     test_coordinate<Moore>(v2);
@@ -241,12 +241,4 @@ void Tissue::unit_test() {HERE;
 
     test_radius<Moore>();
     test_radius<Hexagonal>();
-
-    Tissue tissue;
-    tissue.stain();
-    tissue.grow(10);
-    std::cerr << tissue << std::endl;
-    std::cerr << tissue.snapshot_header();
-    std::cerr << tissue.snapshot() << std::endl;
-    std::cerr << tissue.mutation_history() << std::endl;
 }
