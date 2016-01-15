@@ -49,26 +49,8 @@ class Simulation {
     //! Control execution mode
     int MODE = 0;
 
-    //! Group name of this run such as altered parameter
-    std::string LABEL;
-
-    //! Home directory (c_str)
-    const char* HOME_CHAR = std::getenv("HOME");
-
-    //! Home directory
-    const fs::path HOME_DIR = HOME_CHAR;
-
-    //! Temporary directory
-    const fs::path TMP_DIR = HOME_DIR / "tmp";
-
-    //! Working directory to write out temporal results
-    fs::path WORK_DIR;
-
     //! Target directory to which the contents in WORK_DIR are moved
-    fs::path OUT_DIR = TMP_DIR / wtl::strftime("crc%Y%m%d");
-
-    //! Project directory
-    fs::path PROJECT_DIR;
+    fs::path OUT_DIR;
 };
 
 #endif /* SIMULATION_H_ */

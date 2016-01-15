@@ -33,8 +33,7 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
             ->default_value(VERBOSE)->implicit_value(true), "verbose output")
         ("test", po::value<int>()->default_value(0)->implicit_value(1))
         ("mode", po::value<int>(&MODE)->default_value(MODE))
-        ("label", po::value<std::string>(&LABEL)->default_value("default"))
-        ("top_dir", po::value<std::string>()->default_value(OUT_DIR.string()))
+        ("out_dir,o", po::value<std::string>()->default_value(OUT_DIR.string()))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
     ;
     return description;
@@ -51,6 +50,11 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
     std::cout << wtl::str_join(arguments, " ") << std::endl;
     std::cout << wtl::iso8601datetime() << std::endl;
 
+    std::ostringstream oss;
+    oss << wtl::strftime("tumopp_%Y%m%d_%H%M_")
+        << ::getpid();
+    OUT_DIR = oss.str();
+
     namespace po = boost::program_options;
     po::options_description description;
     description.add(opt_description());
@@ -64,8 +68,6 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
         description.print(std::cout);
         exit(0);
     }
-    PROJECT_DIR = fs::canonical(argv[0]).parent_path();
-    OUT_DIR = fs::path(vm["top_dir"].as<std::string>());
     wtl::sfmt().seed(SEED);
     const std::string CONFIG_STRING = wtl::flags_into_string(description, vm);
     if (VERBOSE) {
@@ -80,15 +82,11 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
       default:
         exit(1);
     }
-    const std::string now(wtl::strftime("%Y%m%d_%H%M%S"));
-    std::ostringstream pid_at_host;
-    pid_at_host << ::getpid() << "@" << wtl::gethostname();
-    WORK_DIR = TMP_DIR / (now + "_" + LABEL + "_" + pid_at_host.str());
-    derr("mkdir && cd to " << WORK_DIR << std::endl);
-    fs::create_directory(WORK_DIR);
-    wtl::cd(WORK_DIR.string());
+    OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
+    OUT_DIR = fs::system_complete(OUT_DIR);
+    derr("mkdir && cd to " << OUT_DIR << std::endl);
     fs::create_directory(OUT_DIR);
-    OUT_DIR /= (LABEL + "_" + now + "_" + pid_at_host.str());
+    wtl::cd(OUT_DIR.string());
     wtl::Fout{"program_options.conf"} << CONFIG_STRING;
 }
 
@@ -100,10 +98,6 @@ void Simulation::run() {HERE;
         tissue.grow(MAX_SIZE);
         break;
       }
-      case 1: {
-        tissue.grow(MAX_SIZE);
-        break;
-      }
       default:
         exit(1);
     }
@@ -112,9 +106,5 @@ void Simulation::run() {HERE;
         << tissue.snapshot_header() << tissue.snapshot();
     wtl::gzip{wtl::Fout{"evolution_history.tsv.gz"}}
         << tissue.snapshot_header() << tissue.evolution_history();
-    auto post = (PROJECT_DIR / "post.R").c_str();
-    if (wtl::exists(post)) {system(post);}
-    derr("mv results to " << OUT_DIR << std::endl);
-    fs::rename(WORK_DIR, OUT_DIR);
     std::cout << wtl::iso8601datetime() << std::endl;
 }

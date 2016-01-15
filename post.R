@@ -9,15 +9,17 @@ library(animation)
 
 (.argv = commandArgs(trailingOnly=FALSE))
 (..file.. = sub('--file=', '', grep('--file=', .argv, value=TRUE)))
+.project = dirname(normalizePath(..file..))
 
 .argv = commandArgs(trailingOnly=TRUE)
 indir = .argv[1]
 indir = ifelse(is.na(indir), '.', indir)
+setwd(indir)
 
-conf = wtl::read.conf(file.path(indir, 'program_options.conf')) %>>% (?.)
-history = read_tsv(file.path(indir, 'mutation_history.tsv.gz')) %>>% (?.)
-population = read_tsv(file.path(indir, 'population.tsv.gz')) %>>% (?.)
-evolution = read_tsv(file.path(indir, 'evolution_history.tsv.gz'),
+conf = wtl::read.conf('program_options.conf') %>>% (?.)
+history = read_tsv('mutation_history.tsv.gz') %>>% (?.)
+population = read_tsv('population.tsv.gz') %>>% (?.)
+evolution = read_tsv('evolution_history.tsv.gz',
                 col_types=list(sites=col_character())) %>>% (?.)
 
 unnested = population %>>%
@@ -32,7 +34,7 @@ unnested_evolution = evolution %>>%
     mutate(sites=strsplit(sites, '\\|')) %>>%
     unnest(sites) %>>% (?.)
 
-source(file.path(dirname(..file..), 'sample.R'))
+source(file.path(.project, 'sample.R'))
 
 #########1#########2#########3#########4#########5#########6#########7#########
 

@@ -6,6 +6,8 @@ import sys
 import os
 import re
 import itertools
+import datetime
+import subprocess
 import multiprocessing
 from collections import OrderedDict
 
@@ -21,11 +23,10 @@ def args_latest():
     params.update(C=['neumann', 'moore', 'hex'])
     params.update(P=['push', 'pushfill', 'walkfill'])
     params.update(S=['random', 'poisson', 'even'])
-    return [const + x + [make_label(x)] for x in product(params)]
+    return [const + x + ['--out_dir=' + make_outdir(x,i)] for i,x in enumerate(product(params))]
 
 
 def sequential(params):
-    ret = []
     for (key, vals) in params.items():
         var_args = []
         for value in vals:
@@ -33,12 +34,10 @@ def sequential(params):
                 var_args.append('--{}={}'.format(key, value))
             else:
                 var_args.append('-{}{}'.format(key, value))
-            ret.append(var_args)
-    return ret
+            yield var_args
 
 
 def product(params):
-    ret = []
     for vals in itertools.product(*params.values()):
         var_args = []
         for (key, value) in zip(params.keys(), vals):
@@ -46,13 +45,15 @@ def product(params):
                 var_args.append('--{}={}'.format(key, value))
             else:
                 var_args.append('-{}{}'.format(key, value))
-        ret.append(var_args)
-    return ret
+        yield var_args
 
 
-def make_label(var_args):
+def make_outdir(var_args=[], i=0):
+    prefix = 'tumopp'
     label = '_'.join([s.lstrip('-') for s in var_args])
-    return '--label=' + re.sub('[^\w\._]+', '_', label)
+    now = datetime.datetime.now().strftime('%Y%m%d-%H%M')
+    pid = '{}-{:04}'.format(os.getpid(), i)
+    return '_'.join([prefix, label, now, pid])
 
 
 #########1#########2#########3#########4#########5#########6#########7#########
@@ -63,34 +64,46 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--dry-run', action='store_true')
     parser.add_argument('-j', '--threads', type=int,
                         default=multiprocessing.cpu_count())
-    parser.add_argument('-Q', '--torque', action='store_true')
-    parser.add_argument('-C', '--directory', default=os.getcwd())
+    parser.add_argument('-B', '--batch', action='store_const', const='batch')
+    parser.add_argument('-Q', '--torque', action='store_const', const='torque', dest='batch')
     parser.add_argument('-q', '--queue',
                         choices=['low', 'batch', 'high'], default='batch')
     parser.add_argument('-r', '--repeat', type=int, default=1)
-    parser.add_argument('outfile', nargs='?', default=sys.stdout)
-    args = parser.parse_args()
+    (args, rest) = parser.parse_known_args()
 
-    program = os.path.join(os.path.dirname(__file__), 'a.out')
+    project = os.path.dirname(__file__)
+    program = os.path.join(project, 'a.out')
+    postproc = os.path.join(project, 'post.R')
     constargs = [program]
-    constargs.append('--top_dir=' + args.directory)
+
+    if not args.batch:
+        outdir = make_outdir(rest)
+        cmd = constargs + rest + ['--out_dir=' + outdir]
+        print(' '.join(cmd))
+        if not args.dry_run:
+            subprocess.call(cmd)
+            subprocess.call([postproc, outdir])
+        exit()
 
     args_list = args_latest()
     commands = [constargs + x for x in args_list] * args.repeat
 
-    if args.torque:
+    rex = re.compile(r'--out_dir=(\S+)')
+    if args.batch == 'torque':
         qargs = dict()
         qargs['-q'] = args.queue
-        rex = re.compile('--label=(\S+)')
         for cmd in commands:
-            qargs['-N'] = rex.search(' '.join(cmd)).group(1)
+            strcmd = ' '.join(cmd)
+            outdir = rex.search(strcmd).group(1)
+            qargs['-N'] = outdir
             torque.qsub(cmd, args.dry_run, ppn=1, **qargs)
-    else:
+    elif args.batch == 'batch':
         pool = execu.Pool(args.threads)
         for cmd in commands:
             strcmd = ' '.join(cmd)
+            outdir = rex.search(strcmd).group(1)
             print(strcmd)
             if not args.dry_run:
-                pool.apply_async(cmd, name=' '.join(cmd))
+                pool.apply_async(cmd, name=outdir)
 
     print('End of ' + __file__)
