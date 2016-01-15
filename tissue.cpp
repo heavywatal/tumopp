@@ -110,8 +110,7 @@ std::string Tissue::evolution_history() const {
 
 void Tissue::push(const std::shared_ptr<Gland>& moving, std::vector<int> direction) {
     if (direction.empty()) {
-        const auto directions = coord_func_->directions();
-        direction = *wtl::prandom().choice(directions.begin(), directions.end());
+        direction = coord_func_->random_direction(wtl::prandom());
     }
     moving->set_coord(moving->coord() + direction);
     const auto result = tumor_.insert(moving);

@@ -61,9 +61,13 @@ class Coord {
         return output;
     }
     template <class RNG> inline
-    std::vector<int> random_neighbor(const std::vector<int>& v, RNG& rng) const {
+    std::vector<int> random_direction(RNG& rng) const {
         std::uniform_int_distribution<ptrdiff_t> uniform(0, max_neighbors_ - 1);
-        return v + directions_[uniform(rng)];
+        return directions_[uniform(rng)];
+    }
+    template <class RNG> inline
+    std::vector<int> random_neighbor(const std::vector<int>& v, RNG& rng) const {
+        return v + random_direction(rng);
     }
     std::vector<int> outward(const std::vector<int>& v) const {
         const auto candidates = neighbors(v);
