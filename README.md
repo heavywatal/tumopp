@@ -1,2 +1,2 @@
-# crcxx
-Simulation of colorectal cancer growth
+# tumopp
+Tumor growth simulation in C++.
