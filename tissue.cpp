@@ -121,7 +121,7 @@ void Tissue::push(const std::shared_ptr<Gland>& moving, const std::vector<int>& 
     }
 }
 
-void Tissue::push_fill(const std::shared_ptr<Gland>& moving, const std::vector<int>& direction) {
+void Tissue::push_fill(const std::shared_ptr<Gland>& moving, std::vector<int> direction) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
@@ -140,16 +140,11 @@ void Tissue::push_fill(const std::shared_ptr<Gland>& moving, const std::vector<i
         tumor_.erase(result.first);
         assert(tumor_.insert(moving).second);
         push_fill(existing);
-    } else if (direction == coord_func_->origin()) {
-        // choose a random direction at first call
-        moving->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
-        const auto result = tumor_.insert(moving);
-        const std::shared_ptr<Gland> existing = *result.first;
-        tumor_.erase(result.first);
-        assert(tumor_.insert(moving).second);
-        push_fill(existing, moving->coord() - present_coord);
     } else {
-        // keep the direction
+        if (direction == coord_func_->origin()) {
+            // choose a random direction at first call
+            direction = coord_func_->random_direction(wtl::prandom());
+        }
         moving->set_coord(present_coord + direction);
         const auto result = tumor_.insert(moving);
         const std::shared_ptr<Gland> existing = *result.first;
