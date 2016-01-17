@@ -80,7 +80,9 @@ void Tissue::grow(const size_t max_size) {HERE;
             if (mother->bernoulli_birth()) {
                 auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
                 bool success = true;
-                if (PACKING_ == "push") {push(daughter);}
+                if (PACKING_ == "push") {
+                    push(daughter, coord_func_->random_direction(wtl::prandom()));
+                }
                 else if (PACKING_ == "pushfill") {push_fill(daughter, coord_func_->origin());}
                 else if (PACKING_ == "walkfill") {push_fill(daughter);}
                 else if (PACKING_ == "empty") {success = fill_empty(daughter);}
@@ -108,43 +110,52 @@ std::string Tissue::evolution_history() const {
     return wtl::str_join(evolution_history_, "");
 }
 
-void Tissue::push(const std::shared_ptr<Gland>& moving, std::vector<int> direction) {
-    if (direction.empty()) {
-        direction = coord_func_->random_direction(wtl::prandom());
-    }
+void Tissue::push(const std::shared_ptr<Gland>& moving, const std::vector<int>& direction) {
     moving->set_coord(moving->coord() + direction);
     const auto result = tumor_.insert(moving);
     if (!result.second) {
         const std::shared_ptr<Gland> existing = *result.first;
         tumor_.erase(result.first);
+        assert(tumor_.insert(moving).second);
         push(existing, direction);
-        tumor_.insert(moving);
     }
 }
 
-void Tissue::push_fill(const std::shared_ptr<Gland>& daughter, const std::vector<int>& direction) {
-    const auto present_coord = daughter->coord();
+void Tissue::push_fill(const std::shared_ptr<Gland>& moving, const std::vector<int>& direction) {
+    const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
     for (auto& x: neighbors) {
-        daughter->set_coord(x);
-        if (tumor_.insert(daughter).second) {
+        moving->set_coord(x);
+        if (tumor_.insert(moving).second) {
             // end if found and filled an empty space
             return;
         }
     }
     if (direction.empty()) {
         // choose a random direction everytime
-        daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
-        push_fill(daughter);
+        moving->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
+        const auto result = tumor_.insert(moving);
+        const std::shared_ptr<Gland> existing = *result.first;
+        tumor_.erase(result.first);
+        assert(tumor_.insert(moving).second);
+        push_fill(existing);
     } else if (direction == coord_func_->origin()) {
         // choose a random direction at first call
-        daughter->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
-        push_fill(daughter, daughter->coord() - present_coord);
+        moving->set_coord(*wtl::prandom().choice(neighbors.begin(), neighbors.end()));
+        const auto result = tumor_.insert(moving);
+        const std::shared_ptr<Gland> existing = *result.first;
+        tumor_.erase(result.first);
+        assert(tumor_.insert(moving).second);
+        push_fill(existing, moving->coord() - present_coord);
     } else {
         // keep the direction
-        daughter->set_coord(present_coord + direction);
-        push_fill(daughter, direction);
+        moving->set_coord(present_coord + direction);
+        const auto result = tumor_.insert(moving);
+        const std::shared_ptr<Gland> existing = *result.first;
+        tumor_.erase(result.first);
+        assert(tumor_.insert(moving).second);
+        push_fill(existing, direction);
     }
 }
 
