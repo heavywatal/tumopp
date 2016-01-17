@@ -103,9 +103,11 @@ class Tissue {
 
     //! Emplace daughter gland and push other glands outward
     void push(const std::shared_ptr<Gland>& moving, const std::vector<int>& direction);
-    //! Push if not exists an empty neighbor
-    void push_fill(const std::shared_ptr<Gland>& moving, std::vector<int> direction={});
-    //! Do not push and fill empty space
+    //! Put new gland and return existing.
+    std::shared_ptr<Gland> push_pop(const std::shared_ptr<Gland>& x);
+    //! Fill empty neighbor or push
+    void fill_push(const std::shared_ptr<Gland>& moving, const std::vector<int>& direction={});
+    //! Fill a random empty neighbor
     bool fill_empty(const std::shared_ptr<Gland>& daughter);
 
     std::unique_ptr<Coord> coord_func_;
