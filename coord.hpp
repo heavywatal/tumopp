@@ -48,7 +48,6 @@ class Coord {
   public:
     // methods
     const std::vector<std::vector<int>>& directions() const {return directions_;}
-    size_t max_neighbors() const {return max_neighbors_;}
 
     std::vector<int> origin() const {
         return std::vector<int>(dimensions);
@@ -62,7 +61,7 @@ class Coord {
     }
     template <class RNG> inline
     std::vector<int> random_direction(RNG& rng) const {
-        std::uniform_int_distribution<ptrdiff_t> uniform(0, max_neighbors_ - 1);
+        std::uniform_int_distribution<ptrdiff_t> uniform(0, directions_.size() - 1);
         return directions_[uniform(rng)];
     }
     template <class RNG> inline
@@ -127,15 +126,13 @@ class Coord {
     }
 
     std::vector<std::vector<int>> directions_;
-    size_t max_neighbors_;
 };
 
 class Neumann final: public Coord {
   public:
     Neumann() = delete;
     explicit Neumann(const size_t d): Coord(d) {
-        max_neighbors_ = 2 * d;
-        directions_.reserve(max_neighbors_);
+        directions_.reserve(2 * d);
         std::vector<int> v(dimensions, 0);
         v.back() += 1;
         do {
@@ -161,8 +158,7 @@ class Moore final: public Coord {
   public:
     Moore() = delete;
     explicit Moore(const size_t d): Coord(d) {
-        max_neighbors_ = std::pow(3, dimensions) - 1;
-        directions_.reserve(max_neighbors_);
+        directions_.reserve(std::pow(3, dimensions) - 1);
         for (const int x: {-1, 0, 1}) {
             for (const int y: {-1, 0, 1}) {
                 if (dimensions == 2) {
@@ -190,9 +186,8 @@ class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;
     explicit Hexagonal(const size_t d): Coord(d) {
-        max_neighbors_ = 6 * (d - 1);
         std::vector<int> v{-1, 0, 1};
-        directions_.reserve(max_neighbors_);
+        directions_.reserve(6 * (d - 1));
         if (dimensions == 2) {
             do {
                 directions_.push_back({v[0], v[1]});
