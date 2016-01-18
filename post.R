@@ -5,7 +5,6 @@ library(tidyr)
 library(plyr)
 library(dplyr)
 library(ggplot2)
-library(animation)
 
 (.argv = commandArgs(trailingOnly=FALSE))
 (..file.. = sub('--file=', '', grep('--file=', .argv, value=TRUE)))
@@ -23,7 +22,7 @@ evolution = read_tsv('evolution_history.tsv.gz',
                 col_types=list(sites=col_character())) %>>% (?.)
 
 unnested = population %>>%
-    mutate(sites=strsplit(sites, '\\|')) %>>%
+    mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>%
     dplyr::select(-size) %>>%
     full_join(history %>>% add_rownames('sites'), by='sites') %>>%
@@ -31,10 +30,10 @@ unnested = population %>>%
     arrange(time, x, y) %>>% (?.)
 
 unnested_evolution = evolution %>>%
-    mutate(sites=strsplit(sites, '\\|')) %>>%
+    mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>% (?.)
 
-source(file.path(.project, 'sample.R'))
+#source(file.path(.project, 'sample.R'))
 
 #########1#########2#########3#########4#########5#########6#########7#########
 
@@ -152,6 +151,7 @@ animation::saveGIF({
 } else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
 
+library(animation)
 library(rgl)
 
 if (conf[['coord']] == 'hex') {

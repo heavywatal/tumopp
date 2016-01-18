@@ -16,7 +16,7 @@ sample_glands = function(popultion) {population %>>%
 }
 
 unnest_ = function(samples) {samples %>>%
-    mutate(site=strsplit(sites, '\\|'), sites=NULL) %>>%
+    mutate(site=strsplit(sites, ':'), sites=NULL) %>>%
     unnest(site) %>>%
     mutate(site=as.integer(site))
 }

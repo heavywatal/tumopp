@@ -76,7 +76,7 @@ std::string Gland::header(const size_t dimensions, const std::string& sep) {
 std::ostream& Gland::write(std::ostream& ost, const std::string& sep) const {
     ost << id_ << sep << mother_ << sep << ancestor_ << sep;
     wtl::ost_join(ost, coord(), sep) << sep;
-    wtl::ost_join(ost, sites(), "|") << sep
+    wtl::ost_join(ost, sites(), ":") << sep
         << fitness() << "\n";
     return ost;
 }
