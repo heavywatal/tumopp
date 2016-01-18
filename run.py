@@ -21,8 +21,8 @@ def args_latest():
     params = OrderedDict()
     params.update(D=[2, 3])
     params.update(C=['neumann', 'moore', 'hex'])
-    params.update(P=['push', 'fillpush', 'fillwalk', 'empty'])
-    params.update(S=['random', 'poisson', 'even'])
+    params.update(P=['push', 'fillpush', 'fillwalk', 'fill', 'empty'])
+    params.update(S=['random', 'even'])
     return [const + x + ['--out_dir=' + make_outdir(x,i)] for i,x in enumerate(product(params))]
 
 

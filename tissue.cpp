@@ -91,7 +91,8 @@ void Tissue::grow(const size_t max_size) {HERE;
                 } else if (PACKING_ == "empty") {
                     success = insert_neighbor(daughter);
                 }
-                if (success && Gland::bernoulli_mutation()) {
+                if (!success) {continue;}
+                if (Gland::bernoulli_mutation()) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
                     mutation_stages_.push_back(tumor_.size());
