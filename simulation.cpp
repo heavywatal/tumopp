@@ -35,6 +35,8 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
         ("mode", po::value<int>(&MODE)->default_value(MODE))
         ("out_dir,o", po::value<std::string>()->default_value(OUT_DIR.string()))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
+        ("nsam", po::value<size_t>(&NSAM)->default_value(NSAM))
+        ("howmany", po::value<size_t>(&HOWMANY)->default_value(HOWMANY))
     ;
     return description;
 }
@@ -47,12 +49,10 @@ inline void test() {HERE;
 
 Simulation::Simulation(int argc, char* argv[]) {HERE;
     std::vector<std::string> arguments(argv, argv + argc);
-    std::cout << wtl::str_join(arguments, " ") << std::endl;
-    std::cout << wtl::iso8601datetime() << std::endl;
+    COMMAND_ARGS = wtl::str_join(arguments, " ") ;
 
     std::ostringstream oss;
-    oss << wtl::strftime("tumopp_%Y%m%d_%H%M_")
-        << ::getpid();
+    oss << wtl::strftime("tumopp_%Y%m%d_%H%M_") << ::getpid();
     OUT_DIR = oss.str();
 
     namespace po = boost::program_options;
@@ -60,8 +60,15 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
     description.add(opt_description());
     description.add(Gland::opt_description());
     description.add(Tissue::opt_description());
+
+    po::positional_options_description positional;
+    positional.add("nsam", 1);
+    positional.add("howmany", 1);
+
     po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, description), vm);
+    po::store(po::command_line_parser(argc, argv).
+              options(description).
+              positional(positional).run(), vm);
     po::notify(vm);
 
     if (vm["help"].as<bool>()) {
@@ -69,9 +76,10 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
         exit(0);
     }
     wtl::sfmt().seed(SEED);
-    const std::string CONFIG_STRING = wtl::flags_into_string(description, vm);
+    CONFIG_STRING = wtl::flags_into_string(description, vm);
     if (VERBOSE) {
-        std::cout << CONFIG_STRING << std::endl;
+        std::cerr << wtl::iso8601datetime() << std::endl;
+        std::cerr << CONFIG_STRING << std::endl;
     }
     switch (vm["test"].as<int>()) {
       case 0:
@@ -84,15 +92,18 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
     }
     OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
     OUT_DIR = fs::system_complete(OUT_DIR);
-    derr("mkdir && cd to " << OUT_DIR << std::endl);
-    fs::create_directory(OUT_DIR);
-    wtl::cd(OUT_DIR.string());
-    wtl::Fout{"program_options.conf"} << CONFIG_STRING;
 }
 
-void Simulation::run() {HERE;
+void Simulation::run() const {HERE;
+    std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
+    for (size_t i=0; i<HOWMANY; ++i) {
+        generate();
+    }
+}
+
+void Simulation::generate() const {HERE;
+    static size_t i = 0;
     Tissue tissue;
-    tissue.stain();
     switch (MODE) {
       case 0: {
         tissue.grow(MAX_SIZE);
@@ -101,10 +112,21 @@ void Simulation::run() {HERE;
       default:
         exit(1);
     }
-    wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
-    wtl::gzip{wtl::Fout{"population.tsv.gz"}}
-        << tissue.snapshot_header() << tissue.snapshot();
-    wtl::gzip{wtl::Fout{"evolution_history.tsv.gz"}}
-        << tissue.snapshot_header() << tissue.evolution_history();
-    std::cout << wtl::iso8601datetime() << std::endl;
+    std::ostringstream oss;
+    tissue.sample(std::cout, NSAM);
+    if (VERBOSE) {
+        auto SUB_DIR = OUT_DIR;
+        SUB_DIR += wtl::strprintf("-%d", i);
+        derr("mkdir && cd to " << SUB_DIR << std::endl);
+        fs::create_directory(SUB_DIR);
+        wtl::cd(SUB_DIR.string());
+        wtl::Fout{"program_options.conf"} << CONFIG_STRING;
+        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
+        wtl::gzip{wtl::Fout{"population.tsv.gz"}}
+            << tissue.snapshot_header() << tissue.snapshot();
+        wtl::gzip{wtl::Fout{"evolution_history.tsv.gz"}}
+            << tissue.snapshot_header() << tissue.evolution_history();
+        std::cerr << wtl::iso8601datetime() << std::endl;
+    }
+    ++i;
 }

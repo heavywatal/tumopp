@@ -62,11 +62,11 @@ class Tissue {
     template <class FuncObj>
     void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
 
-    //! Mark first cells with mutation
-    void stain();
-
     //!
     void grow(const size_t max_size);
+
+    std::ostream& sample(std::ostream&, const size_t) const;
+    std::vector<std::vector<size_t>> sample(const size_t) const;
 
     //! Return tumor state as TSV string
     std::string snapshot() const;
@@ -119,6 +119,7 @@ class Tissue {
     std::unordered_set<std::shared_ptr<Gland>,
         std::hash<std::shared_ptr<Gland>>,
         equal_shptr_gland> tumor_;
+    std::vector<std::shared_ptr<Gland>> samples_;
     //! The coordinates of the past mutations
     std::vector<std::vector<int>> mutation_coords_;
     //! Timing of mutations (tumor size as proxy)

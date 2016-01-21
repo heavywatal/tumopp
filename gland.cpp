@@ -64,6 +64,19 @@ bool Gland::bernoulli_death() const {
     return wtl::prandom().bernoulli(DEATH_RATE_);
 }
 
+std::vector<size_t> Gland::haplotype(std::vector<size_t> segsites) const {
+    size_t i = 0;
+    for (auto& x: segsites) {
+        if (i >= sites_.size() || x < sites_[i]) {
+            x = 0;
+        } else {
+            x = 1;
+            ++i;
+        }
+    }
+    return segsites;
+}
+
 std::string Gland::header(const size_t dimensions, const std::string& sep) {
     std::ostringstream ost;
     ost << "id" << sep << "mother" << sep << "ancestor" << sep;

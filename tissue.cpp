@@ -44,16 +44,14 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-
-void Tissue::stain() {HERE;
-    assert(tumor_.empty());
-    for (const auto& coord: coord_func_->core()) {
-        tumor_.insert(std::make_shared<Gland>(coord));
-    }
-}
-
 void Tissue::grow(const size_t max_size) {HERE;
-    assert(!tumor_.empty());
+    samples_.reserve(max_size);
+    if (tumor_.empty()) {
+        for (const auto& coord: coord_func_->core()) {
+            samples_.push_back(std::make_shared<Gland>(coord));
+            tumor_.insert(samples_.back());
+        }
+    }
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
     while (tumor_.size() < max_size) {
@@ -92,6 +90,7 @@ void Tissue::grow(const size_t max_size) {HERE;
                     success = insert_neighbor(daughter);
                 }
                 if (!success) {continue;}
+                samples_.push_back(daughter);
                 if (Gland::bernoulli_mutation()) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
@@ -122,7 +121,7 @@ void Tissue::push(const std::shared_ptr<Gland> moving, const std::vector<int>& d
     if (!result.second) {
         const std::shared_ptr<Gland> existing = *result.first;
         tumor_.erase(result.first);
-        assert(tumor_.insert(moving).second);
+        tumor_.insert(moving);
         push(existing, direction);
     }
 }
@@ -132,7 +131,7 @@ std::shared_ptr<Gland> Tissue::push_pop(const std::shared_ptr<Gland> x) {
     assert(pos != tumor_.end());
     const std::shared_ptr<Gland> existing = *pos;
     tumor_.erase(pos);
-    assert(tumor_.insert(x).second);
+    tumor_.insert(x);
     return existing;
 }
 
@@ -169,6 +168,41 @@ bool Tissue::insert_neighbor(const std::shared_ptr<Gland> daughter) {
     daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::prandom()));
     const auto result = tumor_.insert(daughter);
     return result.second;
+}
+
+std::ostream& Tissue::sample(std::ostream& ost, const size_t n) const {HERE;
+    const auto samples = sample(n);
+    const size_t segsites = samples.front().size();
+    ost << "\n//\nsegsites: " << segsites << "\n";
+    if (segsites > 0) {
+        ost << "positions: ";
+        wtl::ost_join(ost, std::vector<int>(segsites), " ") << "\n";
+        for (const auto& haplotype: samples) {
+            wtl::ost_join(ost, haplotype, "") << "\n";
+        }
+    } else {ost << "\n";}
+    return ost;
+}
+
+std::vector<std::vector<size_t>> Tissue::sample(const size_t n) const {HERE;
+    std::vector<std::shared_ptr<Gland>> subset;
+    if (tumor_.size() == samples_.size()) {  // death rate == 0
+        subset = wtl::sample(samples_, n, wtl::prandom());
+    } else {
+        subset = wtl::sample(std::vector<std::shared_ptr<Gland>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
+    }
+    std::set<size_t> segsite_set;
+    for (const auto p: subset) {
+        const auto& sites = p->sites();
+        segsite_set.insert(sites.begin(), sites.end());
+    }
+    const std::vector<size_t> segsites(segsite_set.begin(), segsite_set.end());
+    std::vector<std::vector<size_t>> haplotypes;
+    haplotypes.reserve(n);
+    for (const auto p: subset) {
+        haplotypes.push_back(p->haplotype(segsites));
+    }
+    return haplotypes;
 }
 
 std::string Tissue::snapshot_header() const {HERE;
@@ -228,7 +262,6 @@ template <class T> inline
 void test_radius() {HERE;
     Tissue tissue;
     tissue.set_coord<T>();
-    tissue.stain();
     tissue.grow(100);
     std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
     tissue.grow(1000);
@@ -239,7 +272,6 @@ void Tissue::unit_test() {HERE;
     std::cerr.precision(15);
 
     Tissue tissue;
-    tissue.stain();
     tissue.grow(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.snapshot_header();

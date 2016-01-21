@@ -73,6 +73,9 @@ class Gland {
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
     static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
 
+    //! convert site positions to 01 vector
+    std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
+
     static std::string header(const size_t dimensions, const std::string& sep);
     std::ostream& write(std::ostream& ost, const std::string& sep) const;
     friend std::ostream& operator<< (std::ostream&, const Gland&);
