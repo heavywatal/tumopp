@@ -17,7 +17,7 @@
 #include <cxxwtils/algorithm.hpp>
 
 
-size_t Tissue::DIMENSIONS_ = 2;
+size_t Tissue::DIMENSIONS_ = 3;
 std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::SCHEDULE_ = "random";
 std::string Tissue::PACKING_ = "push";
@@ -200,6 +200,15 @@ std::vector<std::shared_ptr<Gland>> Tissue::sample_random(const size_t n) const 
         subset = wtl::sample(stock_, n, wtl::prandom());
     } else {
         subset = wtl::sample(std::vector<std::shared_ptr<Gland>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
+    }
+    return subset;
+}
+
+std::vector<std::shared_ptr<Gland>>
+Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const {HERE;
+    std::vector<std::shared_ptr<Gland>> subset;
+    for (const auto p: tumor_) {
+        if (predicate(p->coord())) {subset.push_back(p);}
     }
     return subset;
 }

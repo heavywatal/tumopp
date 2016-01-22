@@ -96,24 +96,42 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() const {HERE;
     std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
-    for (size_t i=0; i<HOWMANY; ++i) {
-        generate();
-    }
-}
-
-void Simulation::generate() const {HERE;
     static size_t i = 0;
     Tissue tissue;
-    switch (MODE) {
-      case 0: {
+
+    const double expected_cs = tissue.coord_func()->cross_section(MAX_SIZE);
+    derr("predicted section size: " << expected_cs << std::endl);
+    if (NSAM > expected_cs) {
+        std::cout.precision(1);
+        std::cout << "ERROR: NSAM=" << NSAM
+            << " is larger than the expected cross section size "
+            << std::fixed << expected_cs << std::endl;
+        exit(1);
+    }
+
+    switch (Tissue::DIMENSIONS()) {
+      case 2: {
+        tissue.grow(expected_cs);
+        for (size_t i=0; i<HOWMANY; ++i) {
+            tissue.write_segsites(std::cout, tissue.sample_random(NSAM));
+        }
+        break;
+      }
+      case 3: {
         tissue.grow(MAX_SIZE);
+        for (size_t i=0; i<HOWMANY; ++i) {
+            auto section = tissue.sample_if([](const std::vector<int>& coord) {
+                return coord[2] == 0;  // z-axis
+            });
+            section = wtl::sample(section, NSAM, wtl::prandom());
+            tissue.write_segsites(std::cout, section) << std::flush;
+        }
         break;
       }
       default:
         exit(1);
     }
-    std::ostringstream oss;
-    tissue.write_segsites(std::cout, tissue.sample_random(NSAM));
+
     if (VERBOSE) {
         auto SUB_DIR = OUT_DIR;
         SUB_DIR += wtl::strprintf("-%d", i);

@@ -224,8 +224,13 @@ title3d('', '', 'x', 'y', 'z')
     mutate(n = order(order(r))) %>>%
     (?.)
 
+sphere_volume = function(radius) {
+    4 * pi * (radius^3) / 3
+}
+sphere_volume(30)
+
 .curve = data_frame(grid='regular', r=seq_len(100) / 2) %>>%
-    mutate(n=pi * 4 * r^3 / 3) %>>%
+    mutate(n=sphere_volume(r)) %>>%
     bind_rows(mutate(., grid='hex', n= sqrt(2) * n)) %>>%
     (?.)
 

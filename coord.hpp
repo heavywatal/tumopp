@@ -75,23 +75,24 @@ class Coord {
             return euclidean_distance(lhs) < euclidean_distance(rhs);
         });
     }
+    double cross_section(size_t vol) const {
+        return std::pow((9.0 / 16.0) * M_PI * (vol *= vol), 1.0 / 3.0);
+    }
 
     // virtual methods
     virtual size_t graph_distance(const std::vector<int>& v) const = 0;
     virtual double euclidean_distance(const std::vector<int>& v) const {
         return _euclidean_distance(v);
     }
-    virtual double radius(size_t volume) const {
-        double x = volume;
+    virtual double radius(const size_t points) const {
+        double x = points;
         x /= M_PI;
         if (dimensions == 2) {
             // S = pi r^2
             return std::sqrt(x);
         } else {
             // V = 4/3 pi r^3
-            x *= 3.0;
-            x /= 4.0;
-            return std::pow(x, 1.0/3.0);
+            return std::pow(x *= (3.0 / 4.0), 1.0 / 3.0);
         }
     }
     virtual std::vector<std::vector<int>> core() const {
@@ -228,7 +229,7 @@ class Hexagonal final: public Coord {
         }
         return _euclidean_distance(true_pos);
     }
-    virtual double radius(size_t volume) const override {
+    virtual double radius(const size_t volume) const override {
         if (dimensions == 2) {
             return Coord::radius(volume) * std::sqrt(3.0 / 4.0);
         } else {

@@ -36,15 +36,12 @@ class Simulation {
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
-    //! a single simulation
-    void generate() const;
-
     boost::program_options::options_description& opt_description();
 
     //! Max tumor size to stop simulation
     size_t MAX_SIZE = 16384;
 
-    size_t NSAM = 0;
+    size_t NSAM = 20;
 
     size_t HOWMANY = 1;
 

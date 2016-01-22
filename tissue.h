@@ -61,12 +61,14 @@ class Tissue {
     //! Set coordinate function object
     template <class FuncObj>
     void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
+    const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
     //!
     void grow(const size_t max_size);
 
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Gland>>&) const;
     std::vector<std::shared_ptr<Gland>> sample_random(const size_t) const;
+    std::vector<std::shared_ptr<Gland>> sample_if(std::function<bool(const std::vector<int>&)>) const;
 
     //! Return tumor state as TSV string
     std::string snapshot() const;
