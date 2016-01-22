@@ -214,39 +214,39 @@ Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const 
 }
 
 std::string Tissue::snapshot_header() const {HERE;
-    std::ostringstream ost;
-    ost.precision(16);
-    ost << "time" << sep_ << "size" << sep_ << Gland::header(DIMENSIONS_, sep_);
-    return ost.str();
+    std::ostringstream oss;
+    oss.precision(16);
+    oss << "time" << sep_ << "size" << sep_ << Gland::header(DIMENSIONS_, sep_);
+    return oss.str();
 }
 
 std::string Tissue::snapshot() const {
-    std::ostringstream ost;
-    ost.precision(16);
+    std::ostringstream oss;
+    oss.precision(16);
     for (auto& item: tumor_) {
-        ost << evolution_history_.size() << sep_ << tumor_.size() << sep_;
-        item->write(ost, sep_);
+        oss << evolution_history_.size() << sep_ << tumor_.size() << sep_;
+        item->write(oss, sep_);
     }
-    return ost.str();
+    return oss.str();
 }
 
 std::string Tissue::mutation_history() const {HERE;
-    std::ostringstream ost;
-    ost.precision(16);
-    ost << "size" << sep_ << "mutant" << sep_ << "effect";
+    std::ostringstream oss;
+    oss.precision(16);
+    oss << "size" << sep_ << "mutant" << sep_ << "effect";
     std::vector<std::string> xyz{"x", "y", "z"};
     xyz.resize(DIMENSIONS_);
     for (auto x: xyz) {
-        ost << sep_ << "origin_" << x;
+        oss << sep_ << "origin_" << x;
     }
-    ost << "\n";
+    oss << "\n";
     for (size_t i=0; i<mutation_coords_.size(); ++i) {
-        ost << mutation_stages_[i] << sep_
+        oss << mutation_stages_[i] << sep_
             << Gland::MUTANT_IDS()[i] << sep_
             << Gland::MUTATION_EFFECTS()[i] << sep_;
-        wtl::ost_join(ost, mutation_coords_[i], sep_) << "\n";
+        wtl::ost_join(oss, mutation_coords_[i], sep_) << "\n";
     }
-    return ost.str();
+    return oss.str();
 }
 
 //! Stream operator for debug print

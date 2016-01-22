@@ -78,12 +78,12 @@ std::vector<size_t> Gland::haplotype(std::vector<size_t> segsites) const {
 }
 
 std::string Gland::header(const size_t dimensions, const std::string& sep) {
-    std::ostringstream ost;
-    ost << "id" << sep << "mother" << sep << "ancestor" << sep;
+    std::ostringstream oss;
+    oss << "id" << sep << "mother" << sep << "ancestor" << sep;
     std::vector<std::string> axes{"x", "y", "z"};
     axes.resize(dimensions);
-    wtl::ost_join(ost, axes, sep) << sep << "sites" << sep << "fitness\n";
-    return ost.str();
+    wtl::ost_join(oss, axes, sep) << sep << "sites" << sep << "fitness\n";
+    return oss.str();
 }
 
 std::ostream& Gland::write(std::ostream& ost, const std::string& sep) const {
