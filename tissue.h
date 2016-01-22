@@ -65,8 +65,8 @@ class Tissue {
     //!
     void grow(const size_t max_size);
 
-    std::ostream& sample(std::ostream&, const size_t) const;
-    std::vector<std::vector<size_t>> sample(const size_t) const;
+    std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Gland>>&) const;
+    std::vector<std::shared_ptr<Gland>> sample_random(const size_t) const;
 
     //! Return tumor state as TSV string
     std::string snapshot() const;

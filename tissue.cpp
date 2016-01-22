@@ -170,27 +170,7 @@ bool Tissue::insert_neighbor(const std::shared_ptr<Gland> daughter) {
     return result.second;
 }
 
-std::ostream& Tissue::sample(std::ostream& ost, const size_t n) const {HERE;
-    const auto samples = sample(n);
-    const size_t segsites = samples.front().size();
-    ost << "\n//\nsegsites: " << segsites << "\n";
-    if (segsites > 0) {
-        ost << "positions: ";
-        wtl::ost_join(ost, std::vector<int>(segsites), " ") << "\n";
-        for (const auto& haplotype: samples) {
-            wtl::ost_join(ost, haplotype, "") << "\n";
-        }
-    } else {ost << "\n";}
-    return ost;
-}
-
-std::vector<std::vector<size_t>> Tissue::sample(const size_t n) const {HERE;
-    std::vector<std::shared_ptr<Gland>> subset;
-    if (tumor_.size() == samples_.size()) {  // death rate == 0
-        subset = wtl::sample(samples_, n, wtl::prandom());
-    } else {
-        subset = wtl::sample(std::vector<std::shared_ptr<Gland>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
-    }
+std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Gland>>& subset) const {HERE;
     std::set<size_t> segsite_set;
     for (const auto p: subset) {
         const auto& sites = p->sites();
@@ -198,11 +178,30 @@ std::vector<std::vector<size_t>> Tissue::sample(const size_t n) const {HERE;
     }
     const std::vector<size_t> segsites(segsite_set.begin(), segsite_set.end());
     std::vector<std::vector<size_t>> haplotypes;
-    haplotypes.reserve(n);
+    haplotypes.reserve(subset.size());
     for (const auto p: subset) {
         haplotypes.push_back(p->haplotype(segsites));
     }
-    return haplotypes;
+    const size_t s = segsite_set.size();
+    ost << "\n//\nsegsites: " << s << "\n";
+    if (s > 0) {
+        ost << "positions: ";
+        wtl::ost_join(ost, std::vector<int>(s), " ") << "\n";
+        for (const auto& x: haplotypes) {
+            wtl::ost_join(ost, x, "") << "\n";
+        }
+    } else {ost << "\n";}
+    return ost;
+}
+
+std::vector<std::shared_ptr<Gland>> Tissue::sample_random(const size_t n) const {HERE;
+    std::vector<std::shared_ptr<Gland>> subset;
+    if (tumor_.size() == samples_.size()) {  // death rate == 0
+        subset = wtl::sample(samples_, n, wtl::prandom());
+    } else {
+        subset = wtl::sample(std::vector<std::shared_ptr<Gland>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
+    }
+    return subset;
 }
 
 std::string Tissue::snapshot_header() const {HERE;

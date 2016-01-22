@@ -113,7 +113,7 @@ void Simulation::generate() const {HERE;
         exit(1);
     }
     std::ostringstream oss;
-    tissue.sample(std::cout, NSAM);
+    tissue.write_segsites(std::cout, tissue.sample_random(NSAM));
     if (VERBOSE) {
         auto SUB_DIR = OUT_DIR;
         SUB_DIR += wtl::strprintf("-%d", i);
