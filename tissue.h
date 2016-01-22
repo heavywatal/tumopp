@@ -119,7 +119,7 @@ class Tissue {
     std::unordered_set<std::shared_ptr<Gland>,
         std::hash<std::shared_ptr<Gland>>,
         equal_shptr_gland> tumor_;
-    std::vector<std::shared_ptr<Gland>> samples_;
+    std::vector<std::shared_ptr<Gland>> stock_;
     //! The coordinates of the past mutations
     std::vector<std::vector<int>> mutation_coords_;
     //! Timing of mutations (tumor size as proxy)

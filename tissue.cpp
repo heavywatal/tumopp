@@ -45,11 +45,11 @@ boost::program_options::options_description& Tissue::opt_description() {
 }
 
 void Tissue::grow(const size_t max_size) {HERE;
-    samples_.reserve(max_size);
+    stock_.reserve(max_size);
     if (tumor_.empty()) {
         for (const auto& coord: coord_func_->core()) {
-            samples_.push_back(std::make_shared<Gland>(coord));
-            tumor_.insert(samples_.back());
+            stock_.push_back(std::make_shared<Gland>(coord));
+            tumor_.insert(stock_.back());
         }
     }
     evolution_history_.reserve(max_size);
@@ -90,7 +90,7 @@ void Tissue::grow(const size_t max_size) {HERE;
                     success = insert_neighbor(daughter);
                 }
                 if (!success) {continue;}
-                samples_.push_back(daughter);
+                stock_.push_back(daughter);
                 if (Gland::bernoulli_mutation()) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
@@ -196,8 +196,8 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
 
 std::vector<std::shared_ptr<Gland>> Tissue::sample_random(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Gland>> subset;
-    if (tumor_.size() == samples_.size()) {  // death rate == 0
-        subset = wtl::sample(samples_, n, wtl::prandom());
+    if (tumor_.size() == stock_.size()) {  // death rate == 0
+        subset = wtl::sample(stock_, n, wtl::prandom());
     } else {
         subset = wtl::sample(std::vector<std::shared_ptr<Gland>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
     }
