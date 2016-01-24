@@ -46,10 +46,16 @@ boost::program_options::options_description& Tissue::opt_description() {
 
 void Tissue::grow(const size_t max_size) {HERE;
     stock_.reserve(max_size);
+    // unit is generation time under BIRTH_RATE_ == 1.0
+    double time = 0;
+    // sum of birth and death rate, which determines waiting time
+    double event_rate = 0;
     if (tumor_.empty()) {
         for (const auto& coord: coord_func_->core()) {
-            stock_.push_back(std::make_shared<Gland>(coord));
-            tumor_.insert(stock_.back());
+            auto x = std::make_shared<Gland>(coord);
+            stock_.push_back(x);
+            tumor_.insert(x);
+            event_rate += x->instantaneous_event_rate();
         }
     }
     evolution_history_.reserve(max_size);
@@ -59,15 +65,6 @@ void Tissue::grow(const size_t max_size) {HERE;
         if (SCHEDULE_ == "random") {
             auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
             mothers.push_back(*it);
-        } else if (SCHEDULE_ == "poisson") {
-            mothers.reserve(tumor_.size());
-            for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
-                //! @todo fitness
-                const size_t n = wtl::prandom().poisson(1.0);
-                for (size_t i=0; i<n; ++i) {
-                    mothers.push_back(*it);
-                }
-            }
         } else if (SCHEDULE_ == "even") {
             mothers.reserve(tumor_.size());
             for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
@@ -75,36 +72,50 @@ void Tissue::grow(const size_t max_size) {HERE;
             }
         } else {exit(1);}
         for (auto& mother: mothers) {
-            if (mother->bernoulli_birth()) {
+            const bool dying = wtl::prandom().bernoulli(mother->death_rate());
+            bool dividing = wtl::prandom().bernoulli(mother->birth_rate());
+            if (dividing) {
+                time += 1.0 / event_rate;
                 auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
-                bool success = true;
                 if (PACKING_ == "push") {
                     push(daughter, coord_func_->random_direction(wtl::prandom()));
                 } else if (PACKING_ == "fillpush") {
                     fill_push(daughter, coord_func_->random_direction(wtl::prandom()));
                 } else if (PACKING_ == "fillwalk") {
                     fill_walk(daughter);
-                } else if (PACKING_ == "fill") {
-                    success = fill_empty(daughter);
+                } else if (PACKING_ == "fill") {  //! @todo incorrect time scale
+                    dividing = fill_empty(daughter);
                 } else if (PACKING_ == "empty") {
-                    success = insert_neighbor(daughter);
+                    dividing = insert_neighbor(daughter);
                 }
-                if (!success) {continue;}
-                stock_.push_back(daughter);
-                if (Gland::bernoulli_mutation()) {
-                    daughter->mutate();
-                    mutation_coords_.push_back(daughter->coord());
-                    mutation_stages_.push_back(tumor_.size());
+                if (dividing) {
+                    daughter->set_time_of_birth(time);
+                    stock_.push_back(daughter);
+                    if (wtl::prandom().bernoulli(daughter->mutation_rate())) {
+                        daughter->mutate();
+                        mutation_coords_.push_back(daughter->coord());
+                        mutation_stages_.push_back(tumor_.size());
+                    }
+                    if (!dying && wtl::prandom().bernoulli(mother->mutation_rate())) {
+                        event_rate -= mother->instantaneous_event_rate();
+                        mother->mutate();
+                        mutation_coords_.push_back(mother->coord());
+                        mutation_stages_.push_back(tumor_.size());
+                        event_rate += mother->instantaneous_event_rate();
+                    }
                 }
             }
-            if (mother->bernoulli_death()) {
+            if (dying) {
+                time += 1.0 / event_rate;
+                mother->set_time_of_death(time);
                 tumor_.erase(mother);
-            } else if (Gland::bernoulli_mutation()) {
-                mother->mutate();
-                mutation_coords_.push_back(mother->coord());
-                mutation_stages_.push_back(tumor_.size());
+                event_rate -= mother->instantaneous_event_rate();
             }
-            if (tumor_.size() <= 128) {
+            // event_rate should be changed after time increment;
+            if (dividing) {
+                event_rate += stock_.back()->instantaneous_event_rate();
+            }
+            if (tumor_.size() <= 128 && (dividing || dying)) {
                 evolution_history_.push_back(snapshot());
             }
         }
@@ -216,15 +227,15 @@ Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const 
 std::string Tissue::snapshot_header() const {HERE;
     std::ostringstream oss;
     oss.precision(16);
-    oss << "time" << sep_ << "size" << sep_ << Gland::header(DIMENSIONS_, sep_);
+    oss << "size" << sep_ << Gland::header(DIMENSIONS_, sep_);
     return oss.str();
 }
 
 std::string Tissue::snapshot() const {
     std::ostringstream oss;
     oss.precision(16);
-    for (auto& item: tumor_) {
-        oss << evolution_history_.size() << sep_ << tumor_.size() << sep_;
+    for (auto& item: stock_) {
+        oss << tumor_.size() << sep_;
         item->write(oss, sep_);
     }
     return oss.str();

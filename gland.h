@@ -6,6 +6,7 @@
 #ifndef GLAND_H_
 #define GLAND_H_
 
+#include <cmath>
 #include <vector>
 #include <string>
 
@@ -26,7 +27,7 @@ class Gland {
     Gland(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor
     Gland(const Gland& other):
-        coord_(other.coord_), sites_(other.sites_), age_(other.age_),
+        coord_(other.coord_), sites_(other.sites_), fitness_(other.fitness_),
         id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {}
     //! Copy assignment operator
     Gland& operator=(const Gland&) = delete;
@@ -35,46 +36,41 @@ class Gland {
     //! Move assignment operator
     Gland& operator=(Gland&&) = default;
 
-    void set_coord(const std::vector<int>& v) {coord_ = v;}
-
-    //! Calculate fitness
-    double fitness() const {
-        double result = 1.0;
-        for (const auto i: sites_) {
-            result += MUTATION_EFFECTS_[i];
-        }
-        return result;
-        //return std::min(std::max(1.0, result), 5.0);
-    }
-
     //! Mutate and record
     void mutate();
 
-    //! Update age_
-    void stamp(const size_t x) {age_ = x;}
-
-    //! Bernoulli trial of mutation
-    static bool bernoulli_mutation();
-    //! Bernoulli trial of birth
-    bool bernoulli_birth() const;
-    //! Bernoulli trial of death
-    bool bernoulli_death() const;
+    //! Setter
+    void set_coord(const std::vector<int>& v) {coord_ = v;}
+    void set_time_of_birth(const double t) {time_of_birth_ = t;}
+    void set_time_of_death(const double t) {time_of_death_ = t;}
 
     //! Getter
+    //! finite per capita rates
+    double birth_rate() const {return BIRTH_RATE_ * fitness_;}
+    double death_rate() const {return DEATH_RATE_;}
+    double increase_rate() const {return 1.0 + birth_rate() - death_rate();}
+    double mutation_rate() const {return MUTATION_RATE_ * CELLS_PER_GLAND_;}
+    //! instantaneous rate for time increment
+    double instantaneous_event_rate() const {
+        const double lambda = increase_rate();
+        return (birth_rate() + death_rate()) * std::log(lambda) / (lambda - 1.0);
+    }
+
     const std::vector<int>& coord() const {return coord_;}
-    //! Getter
     const std::vector<size_t>& sites() const {return sites_;}
-    //! Getter
-    size_t age() const {return age_;}
     size_t id() const {return id_;}
     size_t mother() const {return mother_;}
     size_t ancestor() const {return ancestor_;}
-    //! Getter
-    static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
-    static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
+    double time_of_birth() const {return time_of_birth_;}
+    double time_of_death() const {return time_of_death_;}
 
     //! convert site positions to 01 vector
     std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
+
+    double fitness() const {return fitness_;}
+
+    static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
+    static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
 
     static std::string header(const size_t dimensions, const std::string& sep);
     std::ostream& write(std::ostream& ost, const std::string& sep) const;
@@ -108,11 +104,15 @@ class Gland {
     std::vector<int> coord_;
     //! Mutated sites (infinite-site model)
     std::vector<size_t> sites_;
-    //! The age of the last division
-    size_t age_ = 0;
+    //! Sum of mutation effects + 1
+    double fitness_ = 1.0;
+
+    //! Extra data
     size_t id_ = 0;
     size_t mother_ = 0;
     size_t ancestor_ = 0;
+    double time_of_birth_ = 0.0;
+    double time_of_death_ = 0.0;
 };
 
 #endif /* GLAND_H_ */

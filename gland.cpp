@@ -50,18 +50,7 @@ void Gland::mutate() {
     sites_.push_back(MUTATION_EFFECTS_.size());
     MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
     MUTANT_IDS_.push_back(id());
-}
-
-bool Gland::bernoulli_mutation() {
-    return wtl::prandom().bernoulli(MUTATION_RATE_ * CELLS_PER_GLAND_);
-}
-
-bool Gland::bernoulli_birth() const {
-    return wtl::prandom().bernoulli(BIRTH_RATE_);
-}
-
-bool Gland::bernoulli_death() const {
-    return wtl::prandom().bernoulli(DEATH_RATE_);
+    fitness_ += MUTATION_EFFECTS_.back();
 }
 
 std::vector<size_t> Gland::haplotype(std::vector<size_t> segsites) const {
@@ -79,7 +68,8 @@ std::vector<size_t> Gland::haplotype(std::vector<size_t> segsites) const {
 
 std::string Gland::header(const size_t dimensions, const std::string& sep) {
     std::ostringstream oss;
-    oss << "id" << sep << "mother" << sep << "ancestor" << sep;
+    oss << "id" << sep << "mother" << sep << "ancestor" << sep
+        << "birth" << sep << "death" << sep;
     std::vector<std::string> axes{"x", "y", "z"};
     axes.resize(dimensions);
     wtl::ost_join(oss, axes, sep) << sep << "sites" << sep << "fitness\n";
@@ -87,7 +77,8 @@ std::string Gland::header(const size_t dimensions, const std::string& sep) {
 }
 
 std::ostream& Gland::write(std::ostream& ost, const std::string& sep) const {
-    ost << id_ << sep << mother_ << sep << ancestor_ << sep;
+    ost << id_ << sep << mother_ << sep << ancestor_ << sep
+        << time_of_birth_ << sep << time_of_death_ << sep;
     wtl::ost_join(ost, coord(), sep) << sep;
     wtl::ost_join(ost, sites(), ":") << sep
         << fitness() << "\n";

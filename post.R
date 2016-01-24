@@ -22,14 +22,16 @@ evolution = read_tsv('evolution_history.tsv.gz',
                 col_types=list(sites=col_character())) %>>% (?.)
 
 unnested = population %>>%
+    dplyr::filter(death == 0) %>>%
     mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>%
     dplyr::select(-size) %>>%
     full_join(history %>>% add_rownames('sites'), by='sites') %>>%
     dplyr::select(-sites) %>>%
-    arrange(time, x, y) %>>% (?.)
+    arrange(birth) %>>% (?.)
 
 unnested_evolution = evolution %>>%
+    dplyr::filter(death == 0) %>>%
     mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>% (?.)
 
@@ -323,3 +325,39 @@ title3d('', '', 'x', 'y', 'z')
 #########1#########2#########3#########4#########5#########6#########7#########
 }  # fi 2D/3D
 #########1#########2#########3#########4#########5#########6#########7#########
+
+if (FALSE) {
+
+population = read_tsv('population.tsv.gz') %>>% (?.)
+demography = population %>>%
+    dplyr::select(birth, death) %>>%
+    gather(event, time, birth, death) %>>%
+    dplyr::filter(event=='birth' | time > 0) %>>%
+    arrange(time) %>>%
+    mutate(dn = ifelse(event == 'birth', 1, -1),
+           size = cumsum(dn)) %>>% (?.)
+
+n0 = sum(demography$time == 0)
+nmax = max(demography$size)
+tmax = log2(nmax / n0)
+
+exponential_growth = function(time, n0=8, r=1) {
+    n0 * exp(r * time)
+}
+
+surface_growth = function(time, n0=8, r=log(2)) {
+    (n0^(1/3) + r * (pi * 4 / 3)^(1/3) * time) ^ 3
+}
+
+demography %>>%
+    sample_frac(0.3) %>>%
+    ggplot(aes(time, size))+
+    geom_line()+
+    stat_function(fun=exponential_growth, args=c(n0, log(2)), colour='#FF0000')+
+    stat_function(fun=exponential_growth, args=c(n0, log(2 - 0.2)), colour='#990000')+
+    stat_function(fun=exponential_growth, args=c(n0, 1.0), colour='#00FF00')+
+    stat_function(fun=surface_growth, args=c(n0, log(2)), colour='blue')+
+    theme_bw()+
+    coord_cartesian(ylim=range(demography$size))
+
+}  # fi FALSE
