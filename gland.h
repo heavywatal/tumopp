@@ -22,7 +22,7 @@ namespace boost {
 class Gland {
   public:
     //! Default constructor
-    Gland() = delete;
+    Gland() = default;
     //! Constructor for first cells
     Gland(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor

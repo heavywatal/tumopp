@@ -181,6 +181,18 @@ bool Tissue::insert_neighbor(const std::shared_ptr<Gland> daughter) {
     return result.second;
 }
 
+std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& coord) const {
+    std::vector<std::vector<int>> output;
+    std::shared_ptr<Gland> nb = std::make_shared<Gland>();
+    for (const auto& d: coord_func_->directions()) {
+        nb->set_coord(coord + d);
+        if (tumor_.find(nb) != tumor_.end()) {
+            output.push_back(nb->coord());
+        }
+    }
+    return output;
+}
+
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Gland>>& subset) const {HERE;
     std::set<size_t> segsite_set;
     for (const auto p: subset) {

@@ -35,7 +35,7 @@ namespace std {
 class equal_shptr_gland {
   public:
     bool operator() (const std::shared_ptr<Gland>& lhs,
-                     const std::shared_ptr<Gland>& rhs) {
+                     const std::shared_ptr<Gland>& rhs) const {
         return lhs->coord() == rhs->coord();
     }
 };
@@ -115,6 +115,8 @@ class Tissue {
     void fill_walk(const std::shared_ptr<Gland> moving);
     //! Try to insert x to a random neighbor
     bool insert_neighbor(const std::shared_ptr<Gland> daughter);
+
+    std::vector<std::vector<int>> empty_neighbors(const std::vector<int>&) const;
 
     std::unique_ptr<Coord> coord_func_;
 
