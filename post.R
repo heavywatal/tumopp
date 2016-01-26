@@ -178,6 +178,10 @@ plot_early_mutations_3d_section = function(.z=0, .data) {.data %>>%
 #    }},
 #    'serial_section.gif', loop=TRUE, interval=0.15, outdir=getwd())
 
+sphere_radius = function(volume) {
+    (volume * 3 / (4 * pi)) ^ (1/3)
+}
+
 #########1#########2#########3#########4#########5#########6#########7#########
 
 if (rgl.cur()) {rgl.close()}
@@ -186,10 +190,13 @@ rgl::clear3d()
 rgl::view3d(-25, 15, 40, zoom=0.9)
 clear3d()
 axes3d()
-with(population %>>% dplyr::filter(sqrt(x^2 + y^2 + z^2)>12), spheres3d(x, y, z,
-                radius=1, col=ancestor, alpha=0.8))
+thres = sphere_radius(nrow(population)) * 0.6
+population %>>%
+    dplyr::filter(sqrt(x^2 + y^2 + z^2) > thres) %>>%
+    with(spheres3d(x, y, z,
+                   radius=1, col=ancestor, alpha=0.8))
 title3d('', '', 'x', 'y', 'z')
-writeWebGL()
+writeWebGL('.', 'rgl.html', snapshot=FALSE, width=600, height=600)
 
 
 if (FALSE) {  # Thinking about hex 3D neighbors
