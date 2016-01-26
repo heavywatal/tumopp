@@ -104,19 +104,20 @@ class Tissue {
     static std::string PACKING_;
 
     //! Emplace daughter gland and push other glands outward
-    void push(const std::shared_ptr<Gland> moving, const std::vector<int>& direction);
-    //! Put new gland and return existing.
-    std::shared_ptr<Gland> push_pop(const std::shared_ptr<Gland> x);
-    //! Insert x if it has an empty neighbor
-    bool fill_empty(const std::shared_ptr<Gland> x);
+    void push(std::shared_ptr<Gland> moving, const std::vector<int>& direction);
+    void pushn_everytime(std::shared_ptr<Gland> moving);
     //! Fill empty neighbor or push to the direction
-    void fill_push(const std::shared_ptr<Gland> moving, const std::vector<int>& direction);
-    //! Fill empty neighbor or push to a random direction
-    void fill_walk(const std::shared_ptr<Gland> moving);
+    void fill_push(std::shared_ptr<Gland> moving, const std::vector<int>& direction);
+    //! Insert x if it has an empty neighbor
+    bool fill_empty(const std::shared_ptr<Gland>& x);
     //! Try to insert x to a random neighbor
-    bool insert_neighbor(const std::shared_ptr<Gland> daughter);
+    bool insert_neighbor(const std::shared_ptr<Gland>& daughter);
 
+    //! Put new gland and return existing.
+    bool swap_existing(std::shared_ptr<Gland>* x);
     std::vector<std::vector<int>> empty_neighbors(const std::vector<int>&) const;
+    size_t steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const;
+    std::vector<int> to_nearest_empty(const std::vector<int>& current, size_t search_max=26) const;
 
     std::unique_ptr<Coord> coord_func_;
 

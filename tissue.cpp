@@ -71,18 +71,20 @@ void Tissue::grow(const size_t max_size) {HERE;
                 mothers.push_back(*it);
             }
         } else {exit(1);}
-        for (auto& mother: mothers) {
+        for (const auto& mother: mothers) {
             const bool dying = wtl::prandom().bernoulli(mother->death_rate());
             bool dividing = wtl::prandom().bernoulli(mother->birth_rate());
             if (dividing) {
                 time += 1.0 / event_rate;
-                auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
+                const auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
                 if (PACKING_ == "push") {
                     push(daughter, coord_func_->random_direction(wtl::prandom()));
+                } else if (PACKING_ == "pushn") {
+                    push(daughter, to_nearest_empty(daughter->coord()));
+                } else if (PACKING_ == "pushne") {
+                    pushn_everytime(daughter);
                 } else if (PACKING_ == "fillpush") {
                     fill_push(daughter, coord_func_->random_direction(wtl::prandom()));
-                } else if (PACKING_ == "fillwalk") {
-                    fill_walk(daughter);
                 } else if (PACKING_ == "fill") {  //! @todo incorrect time scale
                     dividing = fill_empty(daughter);
                 } else if (PACKING_ == "empty") {
@@ -126,27 +128,26 @@ std::string Tissue::evolution_history() const {
     return wtl::str_join(evolution_history_, "");
 }
 
-void Tissue::push(const std::shared_ptr<Gland> moving, const std::vector<int>& direction) {
-    moving->set_coord(moving->coord() + direction);
-    const auto result = tumor_.insert(moving);
-    if (!result.second) {
-        const std::shared_ptr<Gland> existing = *result.first;
-        tumor_.erase(result.first);
-        tumor_.insert(moving);
-        push(existing, direction);
+void Tissue::push(std::shared_ptr<Gland> moving, const std::vector<int>& direction) {
+    do {
+        moving->set_coord(moving->coord() + direction);
+    } while (swap_existing(&moving));
+}
+
+void Tissue::pushn_everytime(std::shared_ptr<Gland> moving) {
+    do {
+        moving->set_coord(moving->coord() + to_nearest_empty(moving->coord()));
+    } while (swap_existing(&moving));
+}
+
+void Tissue::fill_push(std::shared_ptr<Gland> moving, const std::vector<int>& direction) {
+    while (!fill_empty(moving)) {
+        moving->set_coord(moving->coord() + direction);
+        swap_existing(&moving);
     }
 }
 
-std::shared_ptr<Gland> Tissue::push_pop(const std::shared_ptr<Gland> x) {
-    const auto pos = tumor_.find(x);
-    assert(pos != tumor_.end());
-    const std::shared_ptr<Gland> existing = *pos;
-    tumor_.erase(pos);
-    tumor_.insert(x);
-    return existing;
-}
-
-bool Tissue::fill_empty(const std::shared_ptr<Gland> moving) {
+bool Tissue::fill_empty(const std::shared_ptr<Gland>& moving) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
@@ -161,24 +162,46 @@ bool Tissue::fill_empty(const std::shared_ptr<Gland> moving) {
     return false;
 }
 
-void Tissue::fill_push(std::shared_ptr<Gland> moving, const std::vector<int>& direction) {
-    while (!fill_empty(moving)) {
-        moving->set_coord(moving->coord() + direction);
-        moving = push_pop(moving);
-    }
-}
-
-void Tissue::fill_walk(std::shared_ptr<Gland> moving) {
-    while (!fill_empty(moving)) {
-        moving->set_coord(coord_func_->random_neighbor(moving->coord(), wtl::prandom()));
-        moving = push_pop(moving);
-    }
-}
-
-bool Tissue::insert_neighbor(const std::shared_ptr<Gland> daughter) {
+bool Tissue::insert_neighbor(const std::shared_ptr<Gland>& daughter) {
     daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::prandom()));
-    const auto result = tumor_.insert(daughter);
-    return result.second;
+    return tumor_.insert(daughter).second;
+}
+
+bool Tissue::swap_existing(std::shared_ptr<Gland>* x) {
+    auto result = tumor_.insert(*x);
+    if (result.second) {
+        return false;
+    } else {
+        const std::shared_ptr<Gland> existing = *result.first;
+        tumor_.erase(result.first);
+        tumor_.insert(*x);
+        *x = existing;
+        return true;
+    }
+}
+
+size_t Tissue::steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const {
+    size_t steps = 0;
+    const auto key = std::make_shared<Gland>();
+    do {
+        key->set_coord(current += direction);
+        ++steps;
+    } while (tumor_.find(key) != tumor_.end());
+    return steps;
+}
+
+std::vector<int> Tissue::to_nearest_empty(const std::vector<int>& current, size_t search_max) const {
+    search_max = std::min(search_max, coord_func_->directions().size());
+    size_t least_steps = std::numeric_limits<size_t>::max();
+    std::vector<int> best_direction;
+    for (const auto& d: wtl::sample_knuth(coord_func_->directions(), search_max, wtl::prandom())) {
+        auto n = steps_to_empty(current, d);
+        if (n < least_steps) {
+            least_steps = n;
+            best_direction = d;
+        }
+    }
+    return best_direction;
 }
 
 std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& coord) const {
