@@ -4,6 +4,7 @@
 """
 import sys
 import os
+import glob
 import re
 import itertools
 import datetime
@@ -60,7 +61,6 @@ def make_outdir(var_args=[], i=0):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-n', '--dry-run', action='store_true')
     parser.add_argument('-j', '--threads', type=int,
                         default=multiprocessing.cpu_count())
@@ -78,11 +78,12 @@ if __name__ == '__main__':
 
     if not args.batch:
         outdir = make_outdir(rest)
-        cmd = constargs + rest + ['--out_dir=' + outdir]
+        cmd = constargs + rest + ['-v', '--out_dir=' + outdir]
         print(' '.join(cmd))
         if not args.dry_run:
             subprocess.call(cmd)
-            subprocess.call([postproc, outdir])
+            for od in glob.glob(outdir + '*'):
+                subprocess.call([postproc, od])
         exit()
 
     args_list = args_latest()
