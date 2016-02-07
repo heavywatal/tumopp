@@ -1,10 +1,10 @@
 // -*- mode: c++; coding: utf-8 -*-
-/*! @file gland.h
-    @brief Interface of Gland class
+/*! @file cell.h
+    @brief Interface of Cell class
 */
 #pragma once
-#ifndef GLAND_H_
-#define GLAND_H_
+#ifndef CELL_H_
+#define CELL_H_
 
 #include <cmath>
 #include <vector>
@@ -19,22 +19,22 @@ namespace boost {
 }
 
 
-class Gland {
+class Cell {
   public:
     //! Default constructor
-    Gland() = default;
+    Cell() = default;
     //! Constructor for first cells
-    Gland(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
+    Cell(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor
-    Gland(const Gland& other):
+    Cell(const Cell& other):
         coord_(other.coord_), sites_(other.sites_), fitness_(other.fitness_),
         id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {}
     //! Copy assignment operator
-    Gland& operator=(const Gland&) = delete;
+    Cell& operator=(const Cell&) = delete;
     //! Move constructor
-    Gland(Gland&& other) = default;
+    Cell(Cell&& other) = default;
     //! Move assignment operator
-    Gland& operator=(Gland&&) = default;
+    Cell& operator=(Cell&&) = default;
 
     //! Mutate and record
     void mutate();
@@ -49,7 +49,7 @@ class Gland {
     double birth_rate() const {return BIRTH_RATE_ * fitness_;}
     double death_rate() const {return DEATH_RATE_;}
     double increase_rate() const {return 1.0 + birth_rate() - death_rate();}
-    double mutation_rate() const {return MUTATION_RATE_ * CELLS_PER_GLAND_;}
+    double mutation_rate() const {return MUTATION_RATE_;}
     //! instantaneous rate for time increment
     double instantaneous_event_rate() const {
         const double lambda = increase_rate();
@@ -74,17 +74,14 @@ class Gland {
 
     static std::string header(const size_t dimensions, const std::string& sep);
     std::ostream& write(std::ostream& ost, const std::string& sep) const;
-    friend std::ostream& operator<< (std::ostream&, const Gland&);
+    friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Unit test
     static void unit_test();
     static boost::program_options::options_description& opt_description();
 
   private:
-    //! 80 billion cells / 8 million glands = 10000
-    static double CELLS_PER_GLAND_;
-
-    //! per gland per division {1e-8 to 1e-4}
+    //! per cell division
     static double MUTATION_RATE_;
 
     //! {0, 0.2, 0.6}
@@ -115,4 +112,4 @@ class Gland {
     double time_of_death_ = 0.0;
 };
 
-#endif /* GLAND_H_ */
+#endif /* CELL_H_ */

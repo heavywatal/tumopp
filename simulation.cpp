@@ -43,7 +43,7 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
 
 //! Unit test for each class
 inline void test() {HERE;
-    Gland::unit_test();
+    Cell::unit_test();
     Tissue::unit_test();
 }
 
@@ -58,7 +58,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
     namespace po = boost::program_options;
     po::options_description description;
     description.add(opt_description());
-    description.add(Gland::opt_description());
+    description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
 
     po::positional_options_description positional;

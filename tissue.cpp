@@ -52,7 +52,7 @@ void Tissue::grow(const size_t max_size) {HERE;
     double event_rate = 0;
     if (tumor_.empty()) {
         for (const auto& coord: coord_func_->core()) {
-            auto x = std::make_shared<Gland>(coord);
+            auto x = std::make_shared<Cell>(coord);
             stock_.push_back(x);
             tumor_.insert(x);
             event_rate += x->instantaneous_event_rate();
@@ -61,7 +61,7 @@ void Tissue::grow(const size_t max_size) {HERE;
     evolution_history_.reserve(max_size);
     evolution_history_.push_back(snapshot());
     while (tumor_.size() < max_size) {
-        std::vector<std::shared_ptr<Gland>> mothers;
+        std::vector<std::shared_ptr<Cell>> mothers;
         if (SCHEDULE_ == "random") {
             auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
             mothers.push_back(*it);
@@ -76,7 +76,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             bool dividing = wtl::prandom().bernoulli(mother->birth_rate());
             if (dividing) {
                 time += 1.0 / event_rate;
-                const auto daughter = std::make_shared<Gland>(*mother);  // Gland copy ctor
+                const auto daughter = std::make_shared<Cell>(*mother);  // Cell copy ctor
                 if (PACKING_ == "push") {
                     push(daughter, coord_func_->random_direction(wtl::prandom()));
                 } else if (PACKING_ == "pushn") {
@@ -128,26 +128,26 @@ std::string Tissue::evolution_history() const {
     return wtl::str_join(evolution_history_, "");
 }
 
-void Tissue::push(std::shared_ptr<Gland> moving, const std::vector<int>& direction) {
+void Tissue::push(std::shared_ptr<Cell> moving, const std::vector<int>& direction) {
     do {
         moving->set_coord(moving->coord() + direction);
     } while (swap_existing(&moving));
 }
 
-void Tissue::pushn_everytime(std::shared_ptr<Gland> moving) {
+void Tissue::pushn_everytime(std::shared_ptr<Cell> moving) {
     do {
         moving->set_coord(moving->coord() + to_nearest_empty(moving->coord()));
     } while (swap_existing(&moving));
 }
 
-void Tissue::fill_push(std::shared_ptr<Gland> moving, const std::vector<int>& direction) {
+void Tissue::fill_push(std::shared_ptr<Cell> moving, const std::vector<int>& direction) {
     while (!fill_empty(moving)) {
         moving->set_coord(moving->coord() + direction);
         swap_existing(&moving);
     }
 }
 
-bool Tissue::fill_empty(const std::shared_ptr<Gland>& moving) {
+bool Tissue::fill_empty(const std::shared_ptr<Cell>& moving) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
@@ -162,17 +162,17 @@ bool Tissue::fill_empty(const std::shared_ptr<Gland>& moving) {
     return false;
 }
 
-bool Tissue::insert_neighbor(const std::shared_ptr<Gland>& daughter) {
+bool Tissue::insert_neighbor(const std::shared_ptr<Cell>& daughter) {
     daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::prandom()));
     return tumor_.insert(daughter).second;
 }
 
-bool Tissue::swap_existing(std::shared_ptr<Gland>* x) {
+bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
     auto result = tumor_.insert(*x);
     if (result.second) {
         return false;
     } else {
-        const std::shared_ptr<Gland> existing = *result.first;
+        const std::shared_ptr<Cell> existing = *result.first;
         tumor_.erase(result.first);
         tumor_.insert(*x);
         *x = existing;
@@ -182,7 +182,7 @@ bool Tissue::swap_existing(std::shared_ptr<Gland>* x) {
 
 size_t Tissue::steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const {
     size_t steps = 0;
-    const auto key = std::make_shared<Gland>();
+    const auto key = std::make_shared<Cell>();
     do {
         key->set_coord(current += direction);
         ++steps;
@@ -206,7 +206,7 @@ std::vector<int> Tissue::to_nearest_empty(const std::vector<int>& current, size_
 
 std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& coord) const {
     std::vector<std::vector<int>> output;
-    std::shared_ptr<Gland> nb = std::make_shared<Gland>();
+    std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
         nb->set_coord(coord + d);
         if (tumor_.find(nb) != tumor_.end()) {
@@ -216,7 +216,7 @@ std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& co
     return output;
 }
 
-std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Gland>>& subset) const {HERE;
+std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& subset) const {HERE;
     std::set<size_t> segsite_set;
     for (const auto p: subset) {
         const auto& sites = p->sites();
@@ -240,19 +240,19 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
     return ost;
 }
 
-std::vector<std::shared_ptr<Gland>> Tissue::sample_random(const size_t n) const {HERE;
-    std::vector<std::shared_ptr<Gland>> subset;
+std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
+    std::vector<std::shared_ptr<Cell>> subset;
     if (tumor_.size() == stock_.size()) {  // death rate == 0
         subset = wtl::sample(stock_, n, wtl::prandom());
     } else {
-        subset = wtl::sample(std::vector<std::shared_ptr<Gland>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
+        subset = wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
     }
     return subset;
 }
 
-std::vector<std::shared_ptr<Gland>>
+std::vector<std::shared_ptr<Cell>>
 Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const {HERE;
-    std::vector<std::shared_ptr<Gland>> subset;
+    std::vector<std::shared_ptr<Cell>> subset;
     for (const auto p: tumor_) {
         if (predicate(p->coord())) {subset.push_back(p);}
     }
@@ -262,7 +262,7 @@ Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const 
 std::string Tissue::snapshot_header() const {HERE;
     std::ostringstream oss;
     oss.precision(16);
-    oss << "size" << sep_ << Gland::header(DIMENSIONS_, sep_);
+    oss << "size" << sep_ << Cell::header(DIMENSIONS_, sep_);
     return oss.str();
 }
 
@@ -288,8 +288,8 @@ std::string Tissue::mutation_history() const {HERE;
     oss << "\n";
     for (size_t i=0; i<mutation_coords_.size(); ++i) {
         oss << mutation_stages_[i] << sep_
-            << Gland::MUTANT_IDS()[i] << sep_
-            << Gland::MUTATION_EFFECTS()[i] << sep_;
+            << Cell::MUTANT_IDS()[i] << sep_
+            << Cell::MUTATION_EFFECTS()[i] << sep_;
         wtl::ost_join(oss, mutation_coords_[i], sep_) << "\n";
     }
     return oss.str();
