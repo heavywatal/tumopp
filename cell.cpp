@@ -2,7 +2,7 @@
 /*! @file cell.cpp
     @brief Implementation of Cell class
 */
-#include "gland.h"
+#include "cell.h"
 
 #include <iostream>
 #include <sstream>

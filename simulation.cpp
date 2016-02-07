@@ -11,7 +11,7 @@
 #include <cxxwtils/gz.hpp>
 
 #include "tissue.h"
-#include "gland.h"
+#include "cell.h"
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 // functions

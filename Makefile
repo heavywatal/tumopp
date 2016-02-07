@@ -89,8 +89,9 @@ Depend:
 .PHONY: open
 
 mainsrcs := $(addprefix ${SRCDIR}/,\
-gland.h \
-gland.cpp \
+coord.hpp \
+cell.h \
+cell.cpp \
 coord.hpp \
 tissue.h \
 tissue.cpp \
