@@ -44,7 +44,52 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
+void Tissue::queue_push(double t, const std::shared_ptr<Cell>& x) {
+    queue_.insert(queue_.end(), std::make_pair(t, x));
+}
+
 void Tissue::grow(const size_t max_size) {HERE;
+    stock_.reserve(max_size);
+    if (tumor_.empty()) {
+        for (const auto& coord: coord_func_->core()) {
+            auto x = std::make_shared<Cell>(coord);
+            stock_.push_back(x);
+            tumor_.insert(x);
+            queue_push(x->delta_time(), x);
+        }
+    }
+    evolution_history_.reserve(max_size);
+    evolution_history_.push_back(snapshot());
+    while (tumor_.size() < max_size) {
+        auto it = queue_.begin();
+        const auto mother = it->second;
+        if (wtl::prandom().bernoulli(it->second->birth_given_event())) {
+            const auto daughter = std::make_shared<Cell>(*mother);
+            insert(daughter);
+            daughter->set_time_of_birth(it->first);
+            stock_.push_back(daughter);
+            if (wtl::prandom().bernoulli(daughter->mutation_rate())) {
+                daughter->mutate();
+                mutation_coords_.push_back(daughter->coord());
+                mutation_stages_.push_back(tumor_.size());
+            }
+            if (wtl::prandom().bernoulli(mother->mutation_rate())) {
+                mother->mutate();
+                mutation_coords_.push_back(mother->coord());
+                mutation_stages_.push_back(tumor_.size());
+            }
+            queue_push(it->first + daughter->delta_time(), daughter);
+            queue_push(it->first + mother->delta_time(), mother);
+        } else {
+            it->second->set_time_of_death(it->first);
+            tumor_.erase(it->second);
+        }
+        queue_.erase(it);
+    }
+}
+
+
+void Tissue::grow_old(const size_t max_size) {HERE;
     stock_.reserve(max_size);
     // unit is generation time under BIRTH_RATE_ == 1.0
     double time = 0;
@@ -77,19 +122,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             if (dividing) {
                 time += 1.0 / event_rate;
                 const auto daughter = std::make_shared<Cell>(*mother);  // Cell copy ctor
-                if (PACKING_ == "push") {
-                    push(daughter, coord_func_->random_direction(wtl::prandom()));
-                } else if (PACKING_ == "pushn") {
-                    push(daughter, to_nearest_empty(daughter->coord()));
-                } else if (PACKING_ == "pushne") {
-                    pushn_everytime(daughter);
-                } else if (PACKING_ == "fillpush") {
-                    fill_push(daughter, coord_func_->random_direction(wtl::prandom()));
-                } else if (PACKING_ == "fill") {  //! @todo incorrect time scale
-                    dividing = fill_empty(daughter);
-                } else if (PACKING_ == "empty") {
-                    dividing = insert_neighbor(daughter);
-                }
+                dividing = insert(daughter);
                 if (dividing) {
                     daughter->set_time_of_birth(time);
                     stock_.push_back(daughter);
@@ -124,8 +157,21 @@ void Tissue::grow(const size_t max_size) {HERE;
     }
 }
 
-std::string Tissue::evolution_history() const {
-    return wtl::str_join(evolution_history_, "");
+bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
+    if (PACKING_ == "push") {
+        push(daughter, coord_func_->random_direction(wtl::prandom()));
+    } else if (PACKING_ == "pushn") {
+        push(daughter, to_nearest_empty(daughter->coord()));
+    } else if (PACKING_ == "pushne") {
+        pushn_everytime(daughter);
+    } else if (PACKING_ == "fillpush") {
+        fill_push(daughter, coord_func_->random_direction(wtl::prandom()));
+    } else if (PACKING_ == "fill") {  //! @todo incorrect time scale
+        return fill_empty(daughter);
+    } else if (PACKING_ == "empty") {
+        return insert_neighbor(daughter);
+    }
+    return true;
 }
 
 void Tissue::push(std::shared_ptr<Cell> moving, const std::vector<int>& direction) {
@@ -293,6 +339,10 @@ std::string Tissue::mutation_history() const {HERE;
         wtl::ost_join(oss, mutation_coords_[i], sep_) << "\n";
     }
     return oss.str();
+}
+
+std::string Tissue::evolution_history() const {
+    return wtl::str_join(evolution_history_, "");
 }
 
 //! Stream operator for debug print

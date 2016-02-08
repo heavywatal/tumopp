@@ -63,8 +63,9 @@ class Tissue {
     void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
     const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
-    //!
+    //! main function
     void grow(const size_t max_size);
+    void grow_old(const size_t max_size);
 
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
@@ -103,6 +104,8 @@ class Tissue {
     //! packing method: push, push_fill, walk_fill
     static std::string PACKING_;
 
+    bool insert(const std::shared_ptr<Cell>&);
+
     //! Emplace daughter cell and push other cells outward
     void push(std::shared_ptr<Cell> moving, const std::vector<int>& direction);
     void pushn_everytime(std::shared_ptr<Cell> moving);
@@ -119,14 +122,23 @@ class Tissue {
     size_t steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const;
     std::vector<int> to_nearest_empty(const std::vector<int>& current, size_t search_max=26) const;
 
+    void queue_push(double t, const std::shared_ptr<Cell>&);
+
     std::unique_ptr<Coord> coord_func_;
 
     std::unordered_set<std::shared_ptr<Cell>,
         std::hash<std::shared_ptr<Cell>>,
         equal_shptr_cell> tumor_;
+
+    //! all existed cells
     std::vector<std::shared_ptr<Cell>> stock_;
+
+    //! event queue
+    std::multimap<double, std::shared_ptr<Cell>> queue_;
+
     //! The coordinates of the past mutations
     std::vector<std::vector<int>> mutation_coords_;
+
     //! Timing of mutations (tumor size as proxy)
     std::vector<size_t> mutation_stages_;
     std::vector<std::string> evolution_history_;

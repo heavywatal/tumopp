@@ -16,6 +16,7 @@ double Cell::MUTATION_RATE_ = 1e-1;
 double Cell::MUTATION_SIGMA_ = 0.0;
 double Cell::BIRTH_RATE_ = 1.0;
 double Cell::DEATH_RATE_ = 0.0;
+double Cell::GAMMA_SHAPE_ = 1.0;
 size_t Cell::ID_TAIL_ = 0;
 
 std::vector<double> Cell::MUTATION_EFFECTS_;
@@ -28,8 +29,9 @@ std::vector<size_t> Cell::MUTANT_IDS_;
     --------------------| ------------ | -------------------------
     `-u,--mutation`     | \f$\mu\f$    | Cell::MUTATION_RATE_
     `-s,--sigma`        | \f$\sigma\f$ | Cell::MUTATION_SIGMA_
-    `-b,--birth`        | \f$\b\f$     | Cell::BIRTH_RATE_
-    `-d,--death`        | \f$\d\f$     | Cell::DEATH_RATE_
+    `-b,--birth`        | \f$b\f$     | Cell::BIRTH_RATE_
+    `-d,--death`        | \f$d\f$     | Cell::DEATH_RATE_
+    `-k,--shape`        | \f$k\f$     | Cell::GAMMA_SHAPE_
 */
 boost::program_options::options_description& Cell::opt_description() {
     namespace po = boost::program_options;
@@ -39,6 +41,7 @@ boost::program_options::options_description& Cell::opt_description() {
         ("sigma,s", po::value<double>(&MUTATION_SIGMA_)->default_value(MUTATION_SIGMA_))
         ("birth,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
         ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
+        ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
     ;
     return desc;
 }
@@ -48,6 +51,16 @@ void Cell::mutate() {
     MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
     MUTANT_IDS_.push_back(id());
     fitness_ += MUTATION_EFFECTS_.back();
+}
+
+double Cell::delta_time() const {
+    double theta = 1.0;
+//    theta /= instantaneous_event_rate();
+    theta /= (birth_rate() + death_rate());
+    theta /= GAMMA_SHAPE_;
+    std::gamma_distribution<double> dist(GAMMA_SHAPE_, theta);
+    return dist(wtl::sfmt());
+    // return 1.0 / (birth_rate() + death_rate());
 }
 
 std::vector<size_t> Cell::haplotype(std::vector<size_t> segsites) const {

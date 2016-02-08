@@ -48,6 +48,7 @@ class Cell {
     //! finite per capita rates
     double birth_rate() const {return BIRTH_RATE_ * fitness_;}
     double death_rate() const {return DEATH_RATE_;}
+    double birth_given_event() const {return birth_rate() / (birth_rate() + death_rate());}
     double increase_rate() const {return 1.0 + birth_rate() - death_rate();}
     double mutation_rate() const {return MUTATION_RATE_;}
     //! instantaneous rate for time increment
@@ -55,6 +56,7 @@ class Cell {
         const double lambda = increase_rate();
         return (birth_rate() + death_rate()) * std::log(lambda) / (lambda - 1.0);
     }
+    double delta_time() const;
 
     const std::vector<int>& coord() const {return coord_;}
     const std::vector<size_t>& sites() const {return sites_;}
@@ -90,6 +92,9 @@ class Cell {
     static double BIRTH_RATE_;
 
     static double DEATH_RATE_;
+
+    //! k
+    static double GAMMA_SHAPE_;
 
     static size_t ID_TAIL_;
 
