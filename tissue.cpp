@@ -65,21 +65,24 @@ void Tissue::grow(const size_t max_size) {HERE;
         const auto mother = it->second;
         if (wtl::prandom().bernoulli(it->second->birth_given_event())) {
             const auto daughter = std::make_shared<Cell>(*mother);
-            insert(daughter);
-            daughter->set_time_of_birth(it->first);
-            stock_.push_back(daughter);
-            if (wtl::prandom().bernoulli(daughter->mutation_rate())) {
-                daughter->mutate();
-                mutation_coords_.push_back(daughter->coord());
-                mutation_stages_.push_back(tumor_.size());
+            if (insert(daughter)) {
+                daughter->set_time_of_birth(it->first);
+                stock_.push_back(daughter);
+                if (wtl::prandom().bernoulli(daughter->mutation_rate())) {
+                    daughter->mutate();
+                    mutation_coords_.push_back(daughter->coord());
+                    mutation_stages_.push_back(tumor_.size());
+                }
+                if (wtl::prandom().bernoulli(mother->mutation_rate())) {
+                    mother->mutate();
+                    mutation_coords_.push_back(mother->coord());
+                    mutation_stages_.push_back(tumor_.size());
+                }
+                queue_push(it->first + mother->delta_time(), mother);
+                queue_push(it->first + daughter->delta_time(), daughter);
+            } else {
+                queue_push(it->first + mother->delta_time(), mother);
             }
-            if (wtl::prandom().bernoulli(mother->mutation_rate())) {
-                mother->mutate();
-                mutation_coords_.push_back(mother->coord());
-                mutation_stages_.push_back(tumor_.size());
-            }
-            queue_push(it->first + daughter->delta_time(), daughter);
-            queue_push(it->first + mother->delta_time(), mother);
         } else {
             it->second->set_time_of_death(it->first);
             tumor_.erase(it->second);
@@ -218,10 +221,10 @@ bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
     if (result.second) {
         return false;
     } else {
-        const std::shared_ptr<Cell> existing = *result.first;
+        std::shared_ptr<Cell> existing = std::move(*result.first);
         tumor_.erase(result.first);
-        tumor_.insert(*x);
-        *x = existing;
+        tumor_.insert(std::move(*x));
+        x->swap(existing);
         return true;
     }
 }
