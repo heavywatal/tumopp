@@ -20,7 +20,6 @@
 
 size_t Tissue::DIMENSIONS_ = 3;
 std::string Tissue::COORDINATE_ = "moore";
-std::string Tissue::SCHEDULE_ = "random";
 std::string Tissue::PACKING_ = "push";
 
 //! Program options
@@ -30,7 +29,6 @@ std::string Tissue::PACKING_ = "push";
     --------------------| ------ | -------------------------
     `-D,--dimensions`   | -      | Tissue::DIMENSIONS_
     `-C,--coord`        | -      | Tissue::COORDINATE_
-    `-S,--schedule`     | -      | Tissue::SCHEDULE_
     `-P,--packing`      | -      | Tissue::PACKING_
 */
 boost::program_options::options_description& Tissue::opt_description() {
@@ -39,7 +37,6 @@ boost::program_options::options_description& Tissue::opt_description() {
     desc.add_options()
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
         ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
-        ("schedule,S", po::value<std::string>(&SCHEDULE_)->default_value(SCHEDULE_))
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
     ;
     return desc;
@@ -89,75 +86,6 @@ void Tissue::grow(const size_t max_size) {HERE;
             tumor_.erase(it->second);
         }
         queue_.erase(it);
-    }
-}
-
-
-void Tissue::grow_old(const size_t max_size) {HERE;
-    stock_.reserve(max_size);
-    // unit is generation time under BIRTH_RATE_ == 1.0
-    double time = 0;
-    // sum of birth and death rate, which determines waiting time
-    double event_rate = 0;
-    if (tumor_.empty()) {
-        for (const auto& coord: coord_func_->core()) {
-            auto x = std::make_shared<Cell>(coord);
-            stock_.push_back(x);
-            tumor_.insert(x);
-            event_rate += x->instantaneous_event_rate();
-        }
-    }
-    evolution_history_.reserve(max_size);
-    evolution_history_.push_back(snapshot());
-    while (tumor_.size() < max_size) {
-        std::vector<std::shared_ptr<Cell>> mothers;
-        if (SCHEDULE_ == "random") {
-            auto it = std::next(tumor_.begin(), wtl::prandom().randrange(tumor_.size()));
-            mothers.push_back(*it);
-        } else if (SCHEDULE_ == "even") {
-            mothers.reserve(tumor_.size());
-            for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
-                mothers.push_back(*it);
-            }
-        } else {std::abort();}
-        for (const auto& mother: mothers) {
-            const bool dying = wtl::prandom().bernoulli(mother->death_rate());
-            bool dividing = wtl::prandom().bernoulli(mother->birth_rate());
-            if (dividing) {
-                time += 1.0 / event_rate;
-                const auto daughter = std::make_shared<Cell>(*mother);  // Cell copy ctor
-                dividing = insert(daughter);
-                if (dividing) {
-                    daughter->set_time_of_birth(time);
-                    stock_.push_back(daughter);
-                    if (wtl::prandom().bernoulli(daughter->mutation_rate())) {
-                        daughter->mutate();
-                        mutation_coords_.push_back(daughter->coord());
-                        mutation_stages_.push_back(tumor_.size());
-                    }
-                    if (!dying && wtl::prandom().bernoulli(mother->mutation_rate())) {
-                        event_rate -= mother->instantaneous_event_rate();
-                        mother->mutate();
-                        mutation_coords_.push_back(mother->coord());
-                        mutation_stages_.push_back(tumor_.size());
-                        event_rate += mother->instantaneous_event_rate();
-                    }
-                }
-            }
-            if (dying) {
-                time += 1.0 / event_rate;
-                mother->set_time_of_death(time);
-                tumor_.erase(mother);
-                event_rate -= mother->instantaneous_event_rate();
-            }
-            // event_rate should be changed after time increment;
-            if (dividing) {
-                event_rate += stock_.back()->instantaneous_event_rate();
-            }
-            if (tumor_.size() <= 128 && (dividing || dying)) {
-                evolution_history_.push_back(snapshot());
-            }
-        }
     }
 }
 

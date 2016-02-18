@@ -65,7 +65,6 @@ class Tissue {
 
     //! main function
     void grow(const size_t max_size);
-    void grow_old(const size_t max_size);
 
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
@@ -97,9 +96,6 @@ class Tissue {
 
     //! Coordinate system
     static std::string COORDINATE_;
-
-    //! replication schedule: random, poisson, even
-    static std::string SCHEDULE_;
 
     //! packing method: push, push_fill, walk_fill
     static std::string PACKING_;
