@@ -4,6 +4,7 @@
 */
 #include "tissue.h"
 
+#include <cstdlib>
 #include <cassert>
 #include <iostream>
 #include <sstream>
@@ -173,6 +174,11 @@ bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
         return fill_empty(daughter);
     } else if (PACKING_ == "empty") {
         return insert_neighbor(daughter);
+    } else {
+        std::cout << FILE_LINE_PRETTY
+            << "\nERROR: unknown option value --packing=" << PACKING_
+            << std::endl;
+        std::abort();
     }
     return true;
 }
