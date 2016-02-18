@@ -4,6 +4,8 @@
 */
 #include "simulation.h"
 
+#include <cstdlib>
+
 #include <cxxwtils/iostr.hpp>
 #include <cxxwtils/getopt.hpp>
 #include <cxxwtils/prandom.hpp>
@@ -73,7 +75,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
     if (vm["help"].as<bool>()) {
         description.print(std::cout);
-        exit(0);
+        std::exit(EXIT_SUCCESS);
     }
     wtl::sfmt().seed(SEED);
     CONFIG_STRING = wtl::flags_into_string(description, vm);
@@ -86,9 +88,9 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
         break;
       case 1:
         test();
-        exit(0);
+        std::exit(EXIT_SUCCESS);
       default:
-        exit(1);
+        std::abort();
     }
     OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
     OUT_DIR = fs::system_complete(OUT_DIR);
@@ -103,10 +105,11 @@ void Simulation::run() const {HERE;
     derr("predicted section size: " << expected_cs << std::endl);
     if (NSAM > expected_cs) {
         std::cout.precision(1);
-        std::cout << "ERROR: NSAM=" << NSAM
+        std::cout << FILE_LINE_PRETTY
+            << "ERROR: NSAM=" << NSAM
             << " is larger than the expected cross section size "
             << std::fixed << expected_cs << std::endl;
-        exit(1);
+        std::abort();
     }
 
     switch (Tissue::DIMENSIONS()) {
@@ -129,7 +132,10 @@ void Simulation::run() const {HERE;
         break;
       }
       default:
-        exit(1);
+        std::cout << FILE_LINE_PRETTY
+            << "ERROR: invalid option value --dimensions="
+            << Tissue::DIMENSIONS() << std::endl;
+        std::abort();
     }
 
     if (VERBOSE) {

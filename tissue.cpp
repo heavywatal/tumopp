@@ -119,7 +119,7 @@ void Tissue::grow_old(const size_t max_size) {HERE;
             for (auto it=tumor_.begin(); it!=tumor_.end(); ++it) {
                 mothers.push_back(*it);
             }
-        } else {exit(1);}
+        } else {std::abort();}
         for (const auto& mother: mothers) {
             const bool dying = wtl::prandom().bernoulli(mother->death_rate());
             bool dividing = wtl::prandom().bernoulli(mother->birth_rate());
