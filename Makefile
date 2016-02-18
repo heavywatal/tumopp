@@ -51,14 +51,14 @@ ${PROGRAM}: ${OBJS}
 clean:
 	${RM} ${OBJS} ${PROGRAM}
 
-run:
-	@./${PROGRAM}
+run: ${PROGRAM}
+	@./$<
 
-test:
-	./${PROGRAM} --test
+test: ${PROGRAM}
+	./$< --test
 
-help:
-	./${PROGRAM} --help
+help: ${PROGRAM}
+	./$< --help
 
 
 .PHONY: debug release instruments
@@ -68,9 +68,8 @@ debug:
 release:
 	${MAKE} CPPDBG="-DNDEBUG" all
 
-instruments: release
-	@echo $(shell gdate +%F_%T)
-	instruments -t "/Applications/Xcode.app/Contents/Applications/Instruments.app/Contents/Resources/templates/Time Profiler.tracetemplate" -D ~/tmp/profile$(shell gdate +%F_%T) ${PROGRAM} --mode 1 -N 50000
+instruments: ${PROGRAM}
+	instruments -t "Time Profiler" -D profile$$(date +%Y%m%d) ${PROGRAM}
 
 ${OBJDIR}/%.o: | ${OBJDIR}
 	$(COMPILE.cpp) ${OUTPUT_OPTION} $<
@@ -84,21 +83,3 @@ ${OBJDIR}:
 .PHONY: Depend
 Depend:
 	${CXX} -MM ${CPPFLAGS} ${CXXFLAGS} ${TARGET_ARCH} ${SRCS} | sed 's|\(\w*\.o:\)|${OBJDIR}/\1|' > Dependfile
-
-## misc.
-.PHONY: open
-
-mainsrcs := $(addprefix ${SRCDIR}/,\
-coord.hpp \
-cell.h \
-cell.cpp \
-coord.hpp \
-tissue.h \
-tissue.cpp \
-simulation.h \
-simulation.cpp \
-main.cpp \
-)
-
-open:
-	open -a mi ${mainsrcs}

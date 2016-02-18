@@ -1,4 +1,7 @@
 *.out
+*.png
+*.pdf
+*.trace
 build/
 html/
 Dependfile
