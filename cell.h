@@ -29,6 +29,8 @@ class Cell {
     Cell(const Cell& other):
         coord_(other.coord_), sites_(other.sites_), fitness_(other.fitness_),
         id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {}
+    //! Destructor
+    ~Cell() {--ID_TAIL_;}
     //! Copy assignment operator
     Cell& operator=(const Cell&) = delete;
     //! Move constructor
