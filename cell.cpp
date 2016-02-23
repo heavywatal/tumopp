@@ -49,13 +49,15 @@ boost::program_options::options_description& Cell::opt_description() {
 }
 
 void Cell::mutate() {
+    static std::bernoulli_distribution bernoulli_driver(DRIVER_FRACTION_);
+    static std::normal_distribution<double> normal_sigma(0.0, MUTATION_SIGMA_);
     double effect = 0.0;
     if (DRIVER_FRACTION_ > 0.0) {
-        if (wtl::prandom().bernoulli(DRIVER_FRACTION_)) {
+        if (bernoulli_driver(wtl::sfmt())) {
             effect = MUTATION_SIGMA_;
         }
     } else {
-        effect = wtl::prandom().gauss(0.0, MUTATION_SIGMA_);
+        effect = normal_sigma(wtl::sfmt());
     }
     sites_.push_back(MUTATION_EFFECTS_.size());
     MUTATION_EFFECTS_.push_back(effect);

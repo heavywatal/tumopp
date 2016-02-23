@@ -61,17 +61,17 @@ void Tissue::grow(const size_t max_size) {HERE;
     while (tumor_.size() < max_size) {
         auto it = queue_.begin();
         const auto mother = it->second;
-        if (wtl::prandom().bernoulli(it->second->birth_given_event())) {
+        if (std::bernoulli_distribution(it->second->birth_given_event())(wtl::sfmt())) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
                 daughter->set_time_of_birth(it->first);
                 stock_.push_back(daughter);
-                if (wtl::prandom().bernoulli(daughter->mutation_rate())) {
+                if (std::bernoulli_distribution(daughter->mutation_rate())(wtl::sfmt())) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
                     mutation_stages_.push_back(tumor_.size());
                 }
-                if (wtl::prandom().bernoulli(mother->mutation_rate())) {
+                if (std::bernoulli_distribution(mother->mutation_rate())(wtl::sfmt())) {
                     mother->mutate();
                     mutation_coords_.push_back(mother->coord());
                     mutation_stages_.push_back(tumor_.size());
@@ -91,13 +91,13 @@ void Tissue::grow(const size_t max_size) {HERE;
 
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
     if (PACKING_ == "push") {
-        push(daughter, coord_func_->random_direction(wtl::prandom()));
+        push(daughter, coord_func_->random_direction(wtl::sfmt()));
     } else if (PACKING_ == "pushn") {
         push(daughter, to_nearest_empty(daughter->coord()));
     } else if (PACKING_ == "pushne") {
         pushn_everytime(daughter);
     } else if (PACKING_ == "fillpush") {
-        fill_push(daughter, coord_func_->random_direction(wtl::prandom()));
+        fill_push(daughter, coord_func_->random_direction(wtl::sfmt()));
     } else if (PACKING_ == "fill") {  //! @todo incorrect time scale
         return fill_empty(daughter);
     } else if (PACKING_ == "empty") {
@@ -133,7 +133,7 @@ void Tissue::fill_push(std::shared_ptr<Cell> moving, const std::vector<int>& dir
 bool Tissue::fill_empty(const std::shared_ptr<Cell>& moving) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
-    std::shuffle(neighbors.begin(), neighbors.end(), wtl::prandom());
+    std::shuffle(neighbors.begin(), neighbors.end(), wtl::sfmt());
     for (auto& x: neighbors) {
         moving->set_coord(x);
         if (tumor_.insert(moving).second) {
@@ -146,7 +146,7 @@ bool Tissue::fill_empty(const std::shared_ptr<Cell>& moving) {
 }
 
 bool Tissue::insert_neighbor(const std::shared_ptr<Cell>& daughter) {
-    daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::prandom()));
+    daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
     return tumor_.insert(daughter).second;
 }
 
@@ -177,7 +177,7 @@ std::vector<int> Tissue::to_nearest_empty(const std::vector<int>& current, size_
     search_max = std::min(search_max, coord_func_->directions().size());
     size_t least_steps = std::numeric_limits<size_t>::max();
     std::vector<int> best_direction;
-    for (const auto& d: wtl::sample_knuth(coord_func_->directions(), search_max, wtl::prandom())) {
+    for (const auto& d: wtl::sample_knuth(coord_func_->directions(), search_max, wtl::sfmt())) {
         auto n = steps_to_empty(current, d);
         if (n < least_steps) {
             least_steps = n;
@@ -226,9 +226,9 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
 std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Cell>> subset;
     if (tumor_.size() == stock_.size()) {  // death rate == 0
-        subset = wtl::sample(stock_, n, wtl::prandom());
+        subset = wtl::sample(stock_, n, wtl::sfmt());
     } else {
-        subset = wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::prandom());
+        subset = wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt());
     }
     return subset;
 }

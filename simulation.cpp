@@ -126,7 +126,7 @@ void Simulation::run() const {HERE;
             auto section = tissue.sample_if([](const std::vector<int>& coord) {
                 return coord[2] == 0;  // z-axis
             });
-            section = wtl::sample(section, NSAM, wtl::prandom());
+            section = wtl::sample(section, NSAM, wtl::sfmt());
             tissue.write_segsites(std::cout, section) << std::flush;
         }
         break;
