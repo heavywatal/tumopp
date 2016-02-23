@@ -14,6 +14,7 @@
 
 double Cell::MUTATION_RATE_ = 1e-1;
 double Cell::MUTATION_SIGMA_ = 0.0;
+double Cell::DRIVER_FRACTION_ = 0.0;
 double Cell::BIRTH_RATE_ = 1.0;
 double Cell::DEATH_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
@@ -39,6 +40,7 @@ boost::program_options::options_description& Cell::opt_description() {
     desc.add_options()
         ("mutation,u", po::value<double>(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
         ("sigma,s", po::value<double>(&MUTATION_SIGMA_)->default_value(MUTATION_SIGMA_))
+        ("driver,f", po::value<double>(&DRIVER_FRACTION_)->default_value(DRIVER_FRACTION_))
         ("birth,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
         ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
         ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
@@ -47,10 +49,18 @@ boost::program_options::options_description& Cell::opt_description() {
 }
 
 void Cell::mutate() {
+    double effect = 0.0;
+    if (DRIVER_FRACTION_ > 0.0) {
+        if (wtl::prandom().bernoulli(DRIVER_FRACTION_)) {
+            effect = MUTATION_SIGMA_;
+        }
+    } else {
+        effect = wtl::prandom().gauss(0.0, MUTATION_SIGMA_);
+    }
     sites_.push_back(MUTATION_EFFECTS_.size());
-    MUTATION_EFFECTS_.push_back(wtl::prandom().gauss(0.0, MUTATION_SIGMA_));
+    MUTATION_EFFECTS_.push_back(effect);
     MUTANT_IDS_.push_back(id());
-    fitness_ += MUTATION_EFFECTS_.back();
+    fitness_ *= (effect += 1.0);
 }
 
 double Cell::delta_time() const {

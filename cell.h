@@ -88,8 +88,9 @@ class Cell {
     //! per cell division
     static double MUTATION_RATE_;
 
-    //! {0, 0.2, 0.6}
     static double MUTATION_SIGMA_;
+
+    static double DRIVER_FRACTION_;
 
     static double BIRTH_RATE_;
 
