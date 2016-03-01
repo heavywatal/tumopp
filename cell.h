@@ -106,6 +106,7 @@ class Cell {
 
     static double DEATH_RATE_;
 
+    static double MIGRATION_RATE_;
     //! k
     static double GAMMA_SHAPE_;
 

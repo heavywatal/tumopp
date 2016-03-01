@@ -81,9 +81,11 @@ void Tissue::grow(const size_t max_size) {HERE;
             } else {
                 queue_push(it->first + mother->delta_time(), mother);
             }
+        } else if (mother->is_dying()) {
+            mother->set_time_of_death(it->first);
+            tumor_.erase(mother);
         } else {
-            it->second->set_time_of_death(it->first);
-            tumor_.erase(it->second);
+            migrate(mother);
         }
         queue_.erase(it);
     }
@@ -151,6 +153,7 @@ bool Tissue::insert_neighbor(const std::shared_ptr<Cell>& daughter) {
 }
 
 bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
+    // The cell must not be in tumor_.
     auto result = tumor_.insert(*x);
     if (result.second) {
         return false;
@@ -160,6 +163,20 @@ bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
         tumor_.insert(std::move(*x));
         x->swap(existing);
         return true;
+    }
+}
+
+void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
+    tumor_.erase(moving);
+    const auto orig_pos = moving->coord();
+    moving->set_coord(coord_func_->random_neighbor(moving->coord(), wtl::sfmt()));
+    auto result = tumor_.insert(moving);
+    if (!result.second) {
+        std::shared_ptr<Cell> existing = std::move(*result.first);
+        tumor_.erase(result.first);
+        tumor_.insert(std::move(moving));
+        existing->set_coord(orig_pos);
+        tumor_.insert(existing);
     }
 }
 

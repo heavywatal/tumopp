@@ -102,6 +102,9 @@ class Tissue {
 
     bool insert(const std::shared_ptr<Cell>&);
 
+    //! Swap with a random neighbor
+    void migrate(const std::shared_ptr<Cell>&);
+
     //! Emplace daughter cell and push other cells outward
     void push(std::shared_ptr<Cell> moving, const std::vector<int>& direction);
     void pushn_everytime(std::shared_ptr<Cell> moving);

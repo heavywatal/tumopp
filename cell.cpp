@@ -17,6 +17,7 @@ double Cell::MUTATION_SIGMA_ = 0.0;
 double Cell::DRIVER_FRACTION_ = 0.0;
 double Cell::BIRTH_RATE_ = 1.0;
 double Cell::DEATH_RATE_ = 0.0;
+double Cell::MIGRATION_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
 size_t Cell::ID_TAIL_ = 0;
 
@@ -30,9 +31,10 @@ std::vector<size_t> Cell::MUTANT_IDS_;
     --------------------| ------------ | -------------------------
     `-u,--mutation`     | \f$\mu\f$    | Cell::MUTATION_RATE_
     `-s,--sigma`        | \f$\sigma\f$ | Cell::MUTATION_SIGMA_
-    `-b,--birth`        | \f$b\f$     | Cell::BIRTH_RATE_
-    `-d,--death`        | \f$d\f$     | Cell::DEATH_RATE_
-    `-k,--shape`        | \f$k\f$     | Cell::GAMMA_SHAPE_
+    `-b,--birth`        | \f$b\f$      | Cell::BIRTH_RATE_
+    `-d,--death`        | \f$d\f$      | Cell::DEATH_RATE_
+    `-m,--migration`    | \f$m\f$      | Cell::MIGRATION_RATE_
+    `-k,--shape`        | \f$k\f$      | Cell::GAMMA_SHAPE_
 */
 boost::program_options::options_description& Cell::opt_description() {
     namespace po = boost::program_options;
@@ -43,6 +45,7 @@ boost::program_options::options_description& Cell::opt_description() {
         ("driver,f", po::value<double>(&DRIVER_FRACTION_)->default_value(DRIVER_FRACTION_))
         ("birth,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
         ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
+        ("migration,m", po::value<double>(&MIGRATION_RATE_)->default_value(MIGRATION_RATE_))
         ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
     ;
     return desc;
@@ -66,6 +69,7 @@ void Cell::mutate() {
 }
 
 double Cell::delta_time() {
+    static std::exponential_distribution<double> exponential_migra(MIGRATION_RATE_);
     double theta = 1.0;
     theta /= birth_rate();
     theta /= GAMMA_SHAPE_;
@@ -73,12 +77,17 @@ double Cell::delta_time() {
     const double t_birth = gamma(wtl::sfmt());
     std::exponential_distribution<double> exponential(death_rate());
     const double t_death = exponential(wtl::sfmt());
-    if (t_birth < t_death) {
+    const double t_migra = exponential_migra(wtl::sfmt());
+
+    if (t_birth < t_death && t_birth < t_migra) {
         next_event_ = Event::birth;
         return t_birth;
-    } else {
+    } else if (t_death < t_migra) {
         next_event_ = Event::death;
         return t_death;
+    } else {
+        next_event_ = Event::migration;
+        return t_migra;
     }
 }
 
