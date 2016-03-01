@@ -61,7 +61,7 @@ void Tissue::grow(const size_t max_size) {HERE;
     while (tumor_.size() < max_size) {
         auto it = queue_.begin();
         const auto mother = it->second;
-        if (std::bernoulli_distribution(it->second->birth_given_event())(wtl::sfmt())) {
+        if (mother->is_dividing()) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
                 daughter->set_time_of_birth(it->first);

@@ -65,14 +65,21 @@ void Cell::mutate() {
     fitness_ *= (effect += 1.0);
 }
 
-double Cell::delta_time() const {
+double Cell::delta_time() {
     double theta = 1.0;
-//    theta /= instantaneous_event_rate();
-    theta /= (birth_rate() + death_rate());
+    theta /= birth_rate();
     theta /= GAMMA_SHAPE_;
-    std::gamma_distribution<double> dist(GAMMA_SHAPE_, theta);
-    return dist(wtl::sfmt());
-    // return 1.0 / (birth_rate() + death_rate());
+    std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
+    const double t_birth = gamma(wtl::sfmt());
+    std::exponential_distribution<double> exponential(death_rate());
+    const double t_death = exponential(wtl::sfmt());
+    if (t_birth < t_death) {
+        next_event_ = Event::birth;
+        return t_birth;
+    } else {
+        next_event_ = Event::death;
+        return t_death;
+    }
 }
 
 std::vector<size_t> Cell::haplotype(std::vector<size_t> segsites) const {

@@ -19,6 +19,13 @@ namespace boost {
 }
 
 
+enum class Event: int {
+   death     = -1,
+   migration =  0,
+   birth     =  1,
+};
+
+
 class Cell {
   public:
     //! Default constructor
@@ -47,18 +54,11 @@ class Cell {
     void set_time_of_death(const double t) {time_of_death_ = t;}
 
     //! Getter
-    //! finite per capita rates
-    double birth_rate() const {return BIRTH_RATE_ * fitness_;}
-    double death_rate() const {return DEATH_RATE_;}
-    double birth_given_event() const {return birth_rate() / (birth_rate() + death_rate());}
-    double increase_rate() const {return 1.0 + birth_rate() - death_rate();}
+    bool is_dividing() const {return next_event_ == Event::birth;}
+    bool is_dying() const {return next_event_ == Event::death;}
+    bool is_migrating() const {return next_event_ == Event::migration;}
     double mutation_rate() const {return MUTATION_RATE_;}
-    //! instantaneous rate for time increment
-    double instantaneous_event_rate() const {
-        const double lambda = increase_rate();
-        return (birth_rate() + death_rate()) * std::log(lambda) / (lambda - 1.0);
-    }
-    double delta_time() const;
+    double delta_time();
 
     const std::vector<int>& coord() const {return coord_;}
     const std::vector<size_t>& sites() const {return sites_;}
@@ -85,6 +85,16 @@ class Cell {
     static boost::program_options::options_description& opt_description();
 
   private:
+    //! finite per capita rates
+    double birth_rate() const {return BIRTH_RATE_ * fitness_;}
+    double death_rate() const {return DEATH_RATE_;}
+    double growth_rate() const {return 1.0 + birth_rate() - death_rate();}
+    //! instantaneous rate for time increment
+    double instantaneous_event_rate() const {
+        const double lambda = growth_rate();
+        return (birth_rate() + death_rate()) * std::log(lambda) / (lambda - 1.0);
+    }
+
     //! per cell division
     static double MUTATION_RATE_;
 
@@ -118,6 +128,7 @@ class Cell {
     size_t ancestor_ = 0;
     double time_of_birth_ = 0.0;
     double time_of_death_ = 0.0;
+    Event next_event_ = Event::birth;
 };
 
 #endif /* CELL_H_ */
