@@ -34,7 +34,8 @@ class Cell {
     Cell(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor
     Cell(const Cell& other):
-        coord_(other.coord_), sites_(other.sites_), fitness_(other.fitness_),
+        coord_(other.coord_), sites_(other.sites_),
+        birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
         id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {}
     //! Destructor
     ~Cell() {--ID_TAIL_;}
@@ -71,8 +72,6 @@ class Cell {
     //! convert site positions to 01 vector
     std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
 
-    double fitness() const {return fitness_;}
-
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
     static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
 
@@ -86,9 +85,9 @@ class Cell {
 
   private:
     //! finite per capita rates
-    double birth_rate() const {return BIRTH_RATE_ * fitness_;}
-    double death_rate() const {return DEATH_RATE_;}
-    double growth_rate() const {return 1.0 + birth_rate() - death_rate();}
+    double birth_rate() const {return birth_rate_;}
+    double death_rate() const {return death_rate_;}
+    double growth_rate() const {return 1.0 + birth_rate_ - death_rate_;}
     //! instantaneous rate for time increment
     double instantaneous_event_rate() const {
         const double lambda = growth_rate();
@@ -99,6 +98,9 @@ class Cell {
     static double MUTATION_RATE_;
 
     static double MUTATION_SIGMA_;
+
+    //! 1: birth, 2: death, 3: both
+    static int DRIVER_EFFECTS_;
 
     static double DRIVER_FRACTION_;
 
@@ -120,8 +122,9 @@ class Cell {
     std::vector<int> coord_;
     //! Mutated sites (infinite-site model)
     std::vector<size_t> sites_;
-    //! Sum of mutation effects + 1
-    double fitness_ = 1.0;
+
+    double birth_rate_ = BIRTH_RATE_;
+    double death_rate_ = DEATH_RATE_;
 
     //! Extra data
     size_t id_ = 0;
