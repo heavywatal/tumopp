@@ -59,7 +59,7 @@ class Cell {
     bool is_dying() const {return next_event_ == Event::death;}
     bool is_migrating() const {return next_event_ == Event::migration;}
     double mutation_rate() const {return MUTATION_RATE_;}
-    double delta_time();
+    double delta_time(const double positional_value);
 
     const std::vector<int>& coord() const {return coord_;}
     const std::vector<size_t>& sites() const {return sites_;}

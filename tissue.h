@@ -100,6 +100,9 @@ class Tissue {
     //! packing method: push, push_fill, walk_fill
     static std::string PACKING_;
 
+    //! 0: flat, +: peripheral growth
+    static double GLOBAL_ENV_COEF_;
+
     bool insert(const std::shared_ptr<Cell>&);
 
     //! Swap with a random neighbor
@@ -122,6 +125,8 @@ class Tissue {
     std::vector<int> to_nearest_empty(const std::vector<int>& current, size_t search_max=26) const;
 
     void queue_push(double t, const std::shared_ptr<Cell>&);
+
+    double positional_value(const std::vector<int>&) const;
 
     std::unique_ptr<Coord> coord_func_;
 

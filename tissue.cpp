@@ -21,6 +21,7 @@
 size_t Tissue::DIMENSIONS_ = 3;
 std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::PACKING_ = "push";
+double Tissue::GLOBAL_ENV_COEF_ = 0.0;
 
 //! Program options
 /*! @return Program options description
@@ -30,6 +31,7 @@ std::string Tissue::PACKING_ = "push";
     `-D,--dimensions`   | -      | Tissue::DIMENSIONS_
     `-C,--coord`        | -      | Tissue::COORDINATE_
     `-P,--packing`      | -      | Tissue::PACKING_
+    `-p,--peripheral`   | -      | Tissue::GLOBAL_ENV_COEF_
 */
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
@@ -38,6 +40,7 @@ boost::program_options::options_description& Tissue::opt_description() {
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
         ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
+        ("peripheral,p", po::value<double>(&GLOBAL_ENV_COEF_)->default_value(GLOBAL_ENV_COEF_))
     ;
     return desc;
 }
@@ -53,7 +56,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             auto x = std::make_shared<Cell>(coord);
             stock_.push_back(x);
             tumor_.insert(x);
-            queue_push(x->delta_time(), x);
+            queue_push(x->delta_time(positional_value(x->coord())), x);
         }
     }
     evolution_history_.reserve(max_size);
@@ -76,16 +79,17 @@ void Tissue::grow(const size_t max_size) {HERE;
                     mutation_coords_.push_back(mother->coord());
                     mutation_stages_.push_back(tumor_.size());
                 }
-                queue_push(it->first + mother->delta_time(), mother);
-                queue_push(it->first + daughter->delta_time(), daughter);
+                queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
+                queue_push(it->first + daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
-                queue_push(it->first + mother->delta_time(), mother);
+                queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
             }
         } else if (mother->is_dying()) {
             mother->set_time_of_death(it->first);
             tumor_.erase(mother);
         } else {
             migrate(mother);
+            queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
         }
         queue_.erase(it);
     }
@@ -214,6 +218,14 @@ std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& co
         }
     }
     return output;
+}
+
+double Tissue::positional_value(const std::vector<int>& coord) const {
+    if (GLOBAL_ENV_COEF_ == 0.0) return 1.0;
+    double exponent = GLOBAL_ENV_COEF_;
+    exponent *= wtl::pow(std::min(1.0, coord_func_->euclidean_distance(coord)
+                                     / coord_func_->radius(tumor_.size())) - 1.0, 2);
+    return std::exp(-exponent);
 }
 
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& subset) const {HERE;

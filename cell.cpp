@@ -77,10 +77,11 @@ void Cell::mutate() {
     }
 }
 
-double Cell::delta_time() {
+double Cell::delta_time(const double positional_value) {
     static std::exponential_distribution<double> exponential_migra(MIGRATION_RATE_);
     double theta = 1.0;
     theta /= birth_rate();
+    theta /= positional_value;
     theta /= GAMMA_SHAPE_;
     std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
     const double t_birth = gamma(wtl::sfmt());
