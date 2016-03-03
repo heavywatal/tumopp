@@ -20,6 +20,8 @@ double Cell::BIRTH_RATE_ = 1.0;
 double Cell::DEATH_RATE_ = 0.0;
 double Cell::MIGRATION_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
+double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
+size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
 size_t Cell::ID_TAIL_ = 0;
 
 std::vector<double> Cell::MUTATION_EFFECTS_;
@@ -28,16 +30,18 @@ std::vector<size_t> Cell::MUTANT_IDS_;
 //! Program options
 /*! @return Program options description
 
-    Command line option | Symbol         | Variable
-    --------------------| -------------- | -------------------------
-    `-u,--mutation`     | \f$\mu\f$      | Cell::MUTATION_RATE_
-    `-s,--sigma`        | \f$\sigma\f$   | Cell::MUTATION_SIGMA_
-    `-e,--effect`       |                | Cell::DRIVER_EFFECTS_
-    `-f,--fraction`     |                | Cell::DRIVER_FRACTION_
-    `-b,--birth`        | \f$\beta_0\f$  | Cell::BIRTH_RATE_
-    `-d,--death`        | \f$\delta_0\f$ | Cell::DEATH_RATE_
-    `-m,--migration`    | \f$m\f$        | Cell::MIGRATION_RATE_
-    `-k,--shape`        | \f$k\f$        | Cell::GAMMA_SHAPE_
+    Command line option | Symbol                  | Variable
+    --------------------| ----------------------- | -------------------------
+    `-u,--mutation`     | \f$\mu\f$               | Cell::MUTATION_RATE_
+    `-s,--sigma`        | \f$\sigma\f$            | Cell::MUTATION_SIGMA_
+    `-e,--effect`       |                         | Cell::DRIVER_EFFECTS_
+    `-f,--fraction`     |                         | Cell::DRIVER_FRACTION_
+    `-b,--birth`        | \f$\beta_0\f$           | Cell::BIRTH_RATE_
+    `-d,--death`        | \f$\delta_0\f$          | Cell::DEATH_RATE_
+    `-m,--migration`    | \f$m\f$                 | Cell::MIGRATION_RATE_
+    `-p,--symmetric`    | \f$p_s\f$               | Cell::PROB_SYMMETRIC_DIVISION_
+    `-r,--prolif`       | \f$\rho_\mathrm{max}\f$ | Cell::PROB_SYMMETRIC_DIVISION_
+    `-k,--shape`        | \f$k\f$                 | Cell::GAMMA_SHAPE_
 */
 boost::program_options::options_description& Cell::opt_description() {
     namespace po = boost::program_options;
@@ -51,8 +55,22 @@ boost::program_options::options_description& Cell::opt_description() {
         ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
         ("migration,m", po::value<double>(&MIGRATION_RATE_)->default_value(MIGRATION_RATE_))
         ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
+        ("symmetric,p", po::value<double>(&PROB_SYMMETRIC_DIVISION_)->default_value(PROB_SYMMETRIC_DIVISION_))
+        ("prolif,r", po::value<size_t>(&MAX_PROLIFERATION_CAPACITY_)->default_value(MAX_PROLIFERATION_CAPACITY_))
     ;
     return desc;
+}
+
+Cell::Cell(const Cell& other):
+    coord_(other.coord_), sites_(other.sites_),
+    birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
+    type_(other.type_), proliferation_capacity_(other.proliferation_capacity_),
+    id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {
+    if (type_ == CellType::stem) {
+        if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt())) {
+            type_ = CellType::nonstem;
+        }
+    }
 }
 
 void Cell::mutate() {
@@ -79,12 +97,15 @@ void Cell::mutate() {
 
 double Cell::delta_time(const double positional_value) {
     static std::exponential_distribution<double> exponential_migra(MIGRATION_RATE_);
-    double theta = 1.0;
-    theta /= birth_rate();
-    theta /= positional_value;
-    theta /= GAMMA_SHAPE_;
-    std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
-    const double t_birth = gamma(wtl::sfmt());
+    double t_birth = std::numeric_limits<double>::max();
+    if (proliferation_capacity_ > 0) {
+        double theta = 1.0;
+        theta /= birth_rate();
+        theta /= positional_value;
+        theta /= GAMMA_SHAPE_;
+        std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
+        t_birth = gamma(wtl::sfmt());
+    }
     std::exponential_distribution<double> exponential(death_rate());
     const double t_death = exponential(wtl::sfmt());
     const double t_migra = exponential_migra(wtl::sfmt());

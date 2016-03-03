@@ -18,6 +18,10 @@ namespace boost {
     }
 }
 
+enum class CellType: int {
+   stem,
+   nonstem,
+};
 
 enum class Event: int {
    death     = -1,
@@ -33,10 +37,7 @@ class Cell {
     //! Constructor for first cells
     Cell(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
     //! Copy constructor
-    Cell(const Cell& other):
-        coord_(other.coord_), sites_(other.sites_),
-        birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
-        id_(++ID_TAIL_), mother_(other.id_), ancestor_(other.ancestor_) {}
+    Cell(const Cell& other);
     //! Destructor
     ~Cell() {--ID_TAIL_;}
     //! Copy assignment operator
@@ -53,6 +54,10 @@ class Cell {
     void set_coord(const std::vector<int>& v) {coord_ = v;}
     void set_time_of_birth(const double t) {time_of_birth_ = t;}
     void set_time_of_death(const double t) {time_of_death_ = t;}
+    Cell& operator--() {
+       if (type_ == CellType::nonstem) {--proliferation_capacity_;}
+       return *this;
+    }
 
     //! Getter
     bool is_dividing() const {return next_event_ == Event::birth;}
@@ -112,6 +117,9 @@ class Cell {
     //! k
     static double GAMMA_SHAPE_;
 
+    static double PROB_SYMMETRIC_DIVISION_;
+    static size_t MAX_PROLIFERATION_CAPACITY_;
+
     static size_t ID_TAIL_;
 
     //! The history of mutation effects
@@ -125,6 +133,9 @@ class Cell {
 
     double birth_rate_ = BIRTH_RATE_;
     double death_rate_ = DEATH_RATE_;
+
+    CellType type_ = CellType::stem;
+    size_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
 
     //! Extra data
     size_t id_ = 0;

@@ -31,7 +31,7 @@ double Tissue::GLOBAL_ENV_COEF_ = 0.0;
     `-D,--dimensions`   | -      | Tissue::DIMENSIONS_
     `-C,--coord`        | -      | Tissue::COORDINATE_
     `-P,--packing`      | -      | Tissue::PACKING_
-    `-p,--peripheral`   | -      | Tissue::GLOBAL_ENV_COEF_
+    `-g,--peripheral`   | -      | Tissue::GLOBAL_ENV_COEF_
 */
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
@@ -40,7 +40,7 @@ boost::program_options::options_description& Tissue::opt_description() {
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
         ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
-        ("peripheral,p", po::value<double>(&GLOBAL_ENV_COEF_)->default_value(GLOBAL_ENV_COEF_))
+        ("peripheral,g", po::value<double>(&GLOBAL_ENV_COEF_)->default_value(GLOBAL_ENV_COEF_))
     ;
     return desc;
 }
@@ -79,6 +79,8 @@ void Tissue::grow(const size_t max_size) {HERE;
                     mutation_coords_.push_back(mother->coord());
                     mutation_stages_.push_back(tumor_.size());
                 }
+                --(*mother);
+                --(*daughter);
                 queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
                 queue_push(it->first + daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
