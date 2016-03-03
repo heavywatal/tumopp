@@ -151,7 +151,7 @@ std::ostream& Cell::write(std::ostream& ost, const std::string& sep) const {
         << time_of_birth_ << sep << time_of_death_ << sep;
     wtl::ost_join(ost, coord(), sep) << sep;
     wtl::ost_join(ost, sites(), ":") << sep
-        << birth_rate_ << death_rate_ << "\n";
+        << birth_rate_ << sep << death_rate_ << "\n";
     return ost;
 }
 

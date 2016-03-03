@@ -63,6 +63,7 @@ void Tissue::grow(const size_t max_size) {HERE;
     evolution_history_.push_back(snapshot());
     while (tumor_.size() < max_size) {
         auto it = queue_.begin();
+        const double time = it->first;
         const auto mother = it->second;
         if (mother->is_dividing()) {
             const auto daughter = std::make_shared<Cell>(*mother);
@@ -81,10 +82,10 @@ void Tissue::grow(const size_t max_size) {HERE;
                 }
                 --(*mother);
                 --(*daughter);
-                queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
-                queue_push(it->first + daughter->delta_time(positional_value(daughter->coord())), daughter);
+                queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
+                queue_push(time + daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
-                queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
+                queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
             }
         } else if (mother->is_dying()) {
             mother->set_time_of_death(it->first);
@@ -94,6 +95,9 @@ void Tissue::grow(const size_t max_size) {HERE;
             queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
         }
         queue_.erase(it);
+        if (time < 3.0) {
+            evolution_history_.push_back(snapshot(time));
+        }
     }
 }
 
@@ -276,16 +280,15 @@ Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const 
 std::string Tissue::snapshot_header() const {HERE;
     std::ostringstream oss;
     oss.precision(16);
-    oss << "size" << sep_ << Cell::header(DIMENSIONS_, sep_);
+    oss << "time" << sep_ << Cell::header(DIMENSIONS_, sep_);
     return oss.str();
 }
 
-std::string Tissue::snapshot() const {
+std::string Tissue::snapshot(const double time) const {
     std::ostringstream oss;
     oss.precision(16);
     for (auto& item: stock_) {
-        oss << tumor_.size() << sep_;
-        item->write(oss, sep_);
+        item->write(oss << time << sep_, sep_);
     }
     return oss.str();
 }

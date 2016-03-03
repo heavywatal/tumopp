@@ -71,7 +71,7 @@ class Tissue {
     std::vector<std::shared_ptr<Cell>> sample_if(std::function<bool(const std::vector<int>&)>) const;
 
     //! Return tumor state as TSV string
-    std::string snapshot() const;
+    std::string snapshot(const double time=0.0) const;
     //! Return mutation_coords_ as TSV string
     std::string mutation_history() const;
 

@@ -25,7 +25,6 @@ unnested = population %>>%
     dplyr::filter(death == 0) %>>%
     mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>%
-    dplyr::select(-size) %>>%
     full_join(history %>>% add_rownames('sites'), by='sites') %>>%
     dplyr::select(-sites) %>>%
     arrange(birth) %>>% (?.)
@@ -124,7 +123,21 @@ plot_mutation_history_2d = function(.data) {
 ggsave('gradient.png', .p, width=7, height=7)
 
 
-maxabs = with(evolution %>>% dplyr::filter(size <= 256), max(abs(c(x, y)))) %>>% (?.)
+maxabs = with(evolution, max(abs(c(x, y)))) %>>% (?.)
+
+time_plot = unnested_evolution %>>%
+    group_by(time) %>>%
+    do(plt={gglattice2D(., ~as.factor(ancestor), 10)+
+        coord_cartesian(x=c(-maxabs, maxabs), y=c(-maxabs, maxabs))+
+        labs(title=paste0('t = ', .$time[1], ', N = ', nrow(.)))+
+        theme2D+
+        theme(legend.position='none')
+    })
+#time_plot$plt
+
+# grob = gridExtra::arrangeGrob(grobs=time_plot$plt, nrow=1)
+# ggsave('earlysteps.png', grob, width=54, height=1, scale=3, limitsize=FALSE)
+
 
 plot_early_evolution_2d = function(.time) {
     .data = unnested_evolution %>>%
