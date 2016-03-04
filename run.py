@@ -18,6 +18,10 @@ import torque
 
 
 def args_latest():
+    return args_k()
+
+
+def args_all():
     const = ['-N16384']
     params = OrderedDict()
     params.update(D=[2, 3])
@@ -27,15 +31,22 @@ def args_latest():
     return [const + x + ['--out_dir=' + make_outdir(x,i)] for i,x in enumerate(product(params))]
 
 
+def args_k():
+    const = ['-v']
+    params = OrderedDict()
+    params['k'] = [10 ** x for x in range(6)]
+    print(params)
+#    return sequential(params)
+    return [const + [x, '--out_dir=' + make_outdir([x])] for x in sequential(params)]
+
+
 def sequential(params):
     for (key, vals) in params.items():
-        var_args = []
         for value in vals:
             if len(key) > 1:
-                var_args.append('--{}={}'.format(key, value))
+                yield '--{}={}'.format(key, value)
             else:
-                var_args.append('-{}{}'.format(key, value))
-            yield var_args
+                yield '-{}{}'.format(key, value)
 
 
 def product(params):
