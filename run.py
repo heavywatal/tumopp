@@ -17,8 +17,8 @@ import torque
 #########1#########2#########3#########4#########5#########6#########7#########
 
 
-def args_latest():
-    return args_k()
+def args_latest(repeat=1):
+    return args_k(repeat)
 
 
 def args_all():
@@ -31,13 +31,13 @@ def args_all():
     return [const + x + ['--out_dir=' + make_outdir(x,i)] for i,x in enumerate(product(params))]
 
 
-def args_k():
+def args_k(repeat):
     const = ['-v']
     params = OrderedDict()
     params['k'] = [10 ** x for x in range(6)]
     print(params)
-#    return sequential(params)
-    return [const + [x, '--out_dir=' + make_outdir([x])] for x in sequential(params)]
+    args = list(sequential(params)) * repeat
+    return [const + [x, '--out_dir=' + make_outdir([x], i)] for i,x in enumerate(args)]
 
 
 def sequential(params):
@@ -64,7 +64,7 @@ def make_outdir(var_args=[], i=0):
     prefix = 'tumopp'
     label = '_'.join([s.lstrip('-') for s in var_args])
     now = datetime.datetime.now().strftime('%Y%m%d-%H%M')
-    pid = '{}-{:04}'.format(os.getpid(), i)
+    pid = '{}-{}'.format(os.getpid(), i)
     return '_'.join([prefix, label, now, pid])
 
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     parser.add_argument('-Q', '--torque', action='store_const', const='torque', dest='batch')
     parser.add_argument('-q', '--queue',
                         choices=['low', 'batch', 'high'], default='batch')
-    parser.add_argument('-r', '--repeat', type=int, default=1)
+    parser.add_argument('-R', '--repeat', type=int, default=1)
     (args, rest) = parser.parse_known_args()
 
     project = os.path.dirname(__file__)
@@ -97,8 +97,7 @@ if __name__ == '__main__':
                 subprocess.call([postproc, od])
         exit()
 
-    args_list = args_latest()
-    commands = [constargs + x for x in args_list] * args.repeat
+    commands = [constargs + x for x in args_latest(args.repeat)]
 
     rex = re.compile(r'--out_dir=(\S+)')
     if args.batch == 'torque':
