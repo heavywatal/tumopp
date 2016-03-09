@@ -75,7 +75,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
         std::exit(EXIT_SUCCESS);
     }
     wtl::sfmt().seed(SEED);
-    CONFIG_STRING = wtl::flags_into_string(description, vm);
+    CONFIG_STRING = wtl::flags_into_string(vm);
     if (VERBOSE) {
         std::cerr << wtl::iso8601datetime() << std::endl;
         std::cerr << CONFIG_STRING << std::endl;
