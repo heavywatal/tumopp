@@ -5,7 +5,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-library(RcppTOML)
+library(wtl)
 #########1#########2#########3#########4#########5#########6#########7#########
 
 (.argv = commandArgs(trailingOnly=TRUE))
@@ -17,14 +17,14 @@ indirs = .argv
 stopifnot(length(indirs) > 0)
 #########1#########2#########3#########4#########5#########6#########7#########
 
-read_toml = function(infiles) {
+read_conf = function(infiles) {
     data_frame(.path=infiles) %>%
         group_by(.path) %>% do({
-            parseTOML(.$.path) %>% as.data.frame()
+            wtl::read.conf(.$.path) %>% as.data.frame()
         }) %>% ungroup()
 }
 
-conf = read_toml(file.path(indirs, 'program_options.conf')) %>>%
+conf = read_conf(file.path(indirs, 'program_options.conf')) %>>%
     dplyr::rename(indir=.path) %>>%
     mutate(indir=dirname(indir)) %>>% (?.)
 
