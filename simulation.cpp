@@ -98,7 +98,6 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 
 void Simulation::run() const {HERE;
     std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
-    static size_t i = 0;
     Tissue tissue;
 
     const double expected_cs = tissue.coord_func()->cross_section(MAX_SIZE);
@@ -139,11 +138,9 @@ void Simulation::run() const {HERE;
     }
 
     if (VERBOSE) {
-        auto SUB_DIR = OUT_DIR;
-        SUB_DIR += wtl::strprintf("-%d", i);
-        derr("mkdir && cd to " << SUB_DIR << std::endl);
-        fs::create_directory(SUB_DIR);
-        wtl::cd(SUB_DIR.string());
+        derr("mkdir && cd to " << OUT_DIR << std::endl);
+        fs::create_directory(OUT_DIR);
+        wtl::cd(OUT_DIR.string());
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
         wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
         wtl::gzip{wtl::Fout{"population.tsv.gz"}}
@@ -152,5 +149,4 @@ void Simulation::run() const {HERE;
             << tissue.snapshot_header() << tissue.evolution_history();
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
-    ++i;
 }
