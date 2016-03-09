@@ -10,7 +10,7 @@
 int main(int argc, char* argv[]) {
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
-    std::cout.precision(16);
+    std::cout.precision(std::numeric_limits<double>::max_digits10);
     std::cerr.precision(6);
 
     Simulation simulation(argc, argv);

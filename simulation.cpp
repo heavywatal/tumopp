@@ -52,10 +52,7 @@ inline void test() {HERE;
 Simulation::Simulation(int argc, char* argv[]) {HERE;
     std::vector<std::string> arguments(argv, argv + argc);
     COMMAND_ARGS = wtl::str_join(arguments, " ") ;
-
-    std::ostringstream oss;
-    oss << wtl::strftime("tumopp_%Y%m%d_%H%M_") << ::getpid();
-    OUT_DIR = oss.str();
+    OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
 
     namespace po = boost::program_options;
     po::options_description description;

@@ -279,14 +279,14 @@ Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const 
 
 std::string Tissue::snapshot_header() const {HERE;
     std::ostringstream oss;
-    oss.precision(16);
+    oss.precision(std::numeric_limits<double>::max_digits10);
     oss << "time" << sep_ << Cell::header(DIMENSIONS_, sep_);
     return oss.str();
 }
 
 std::string Tissue::snapshot(const double time) const {
     std::ostringstream oss;
-    oss.precision(16);
+    oss.precision(std::numeric_limits<double>::max_digits10);
     for (auto& item: stock_) {
         item->write(oss << time << sep_, sep_);
     }
@@ -295,7 +295,7 @@ std::string Tissue::snapshot(const double time) const {
 
 std::string Tissue::mutation_history() const {HERE;
     std::ostringstream oss;
-    oss.precision(16);
+    oss.precision(std::numeric_limits<double>::max_digits10);
     oss << "size" << sep_ << "mutant" << sep_ << "effect";
     std::vector<std::string> xyz{"x", "y", "z"};
     xyz.resize(DIMENSIONS_);
