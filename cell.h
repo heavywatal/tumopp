@@ -35,7 +35,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_), ancestor_(id_) {}
+    Cell(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_) {}
     //! Copy constructor
     Cell(const Cell& other);
     //! Destructor
@@ -70,7 +70,6 @@ class Cell {
     const std::vector<size_t>& sites() const {return sites_;}
     size_t id() const {return id_;}
     size_t mother() const {return mother_;}
-    size_t ancestor() const {return ancestor_;}
     double time_of_birth() const {return time_of_birth_;}
     double time_of_death() const {return time_of_death_;}
 
@@ -140,7 +139,6 @@ class Cell {
     //! Extra data
     size_t id_ = 0;
     size_t mother_ = 0;
-    size_t ancestor_ = 0;
     double time_of_birth_ = 0.0;
     double time_of_death_ = 0.0;
     Event next_event_ = Event::birth;
