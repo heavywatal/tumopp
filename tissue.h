@@ -56,6 +56,8 @@ class Tissue {
         if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
         else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
         else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
+        specimens_.precision(std::numeric_limits<double>::max_digits10);
+        snapshots_.precision(std::numeric_limits<double>::max_digits10);
     }
 
     //! Set coordinate function object
@@ -70,13 +72,14 @@ class Tissue {
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
     std::vector<std::shared_ptr<Cell>> sample_if(std::function<bool(const std::vector<int>&)>) const;
 
-    //! Return tumor state as TSV string
-    std::string snapshot(const double time=0.0) const;
+    void collect(std::ostream&, const Cell&, const double time);
+    void snap(std::ostream&, const double time);
+
     //! Return mutation_coords_ as TSV string
     std::string mutation_history() const;
-
-    std::string snapshot_header() const;
-    std::string evolution_history() const;
+    std::string specimens() const {return specimens_.str();}
+    std::string snapshots() const {return snapshots_.str();}
+    std::string header() const;
 
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
@@ -134,9 +137,6 @@ class Tissue {
         std::hash<std::shared_ptr<Cell>>,
         equal_shptr_cell> tumor_;
 
-    //! all existed cells
-    std::vector<std::shared_ptr<Cell>> stock_;
-
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;
 
@@ -145,7 +145,9 @@ class Tissue {
 
     //! Timing of mutations (tumor size as proxy)
     std::vector<size_t> mutation_stages_;
-    std::vector<std::string> evolution_history_;
+    // std::vector<std::string> evolution_history_;
+    std::ostringstream specimens_;
+    std::ostringstream snapshots_;
 
     const std::string sep_ = "\t";
 };

@@ -141,9 +141,9 @@ void Simulation::run() const {HERE;
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
         wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
         wtl::gzip{wtl::Fout{"population.tsv.gz"}}
-            << tissue.snapshot_header() << tissue.snapshot();
-        wtl::gzip{wtl::Fout{"evolution_history.tsv.gz"}}
-            << tissue.snapshot_header() << tissue.evolution_history();
+            << tissue.header() << tissue.specimens();
+        wtl::gzip{wtl::Fout{"snapshots.tsv.gz"}}
+            << tissue.header() << tissue.snapshots();
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
 }

@@ -50,26 +50,25 @@ void Tissue::queue_push(double t, const std::shared_ptr<Cell>& x) {
 }
 
 void Tissue::grow(const size_t max_size) {HERE;
-    stock_.reserve(max_size);
     if (tumor_.empty()) {
         for (const auto& coord: coord_func_->core()) {
             auto x = std::make_shared<Cell>(coord);
-            stock_.push_back(x);
             tumor_.insert(x);
             queue_push(x->delta_time(positional_value(x->coord())), x);
         }
     }
-    evolution_history_.reserve(max_size);
-    evolution_history_.push_back(snapshot());
+    double time = 0.0;
+    snap(snapshots_, time);
     while (tumor_.size() < max_size) {
         auto it = queue_.begin();
-        const double time = it->first;
+        time = it->first;
         const auto mother = it->second;
         if (mother->is_dividing()) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
-                daughter->set_time_of_birth(it->first);
-                stock_.push_back(daughter);
+                collect(specimens_, *mother, time);
+                mother->daughterize(it->first);
+                daughter->daughterize(it->first);
                 if (std::bernoulli_distribution(daughter->mutation_rate())(wtl::sfmt())) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
@@ -89,6 +88,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             }
         } else if (mother->is_dying()) {
             mother->set_time_of_death(it->first);
+            collect(specimens_, *mother, time);
             tumor_.erase(mother);
         } else {
             migrate(mother);
@@ -96,9 +96,10 @@ void Tissue::grow(const size_t max_size) {HERE;
         }
         queue_.erase(it);
         if (time < 3.0) {
-            evolution_history_.push_back(snapshot(time));
+            snap(snapshots_, time);
         }
     }
+    snap(specimens_, time += 1.0);
 }
 
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
@@ -259,13 +260,7 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
 }
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
-    std::vector<std::shared_ptr<Cell>> subset;
-    if (tumor_.size() == stock_.size()) {  // death rate == 0
-        subset = wtl::sample(stock_, n, wtl::sfmt());
-    } else {
-        subset = wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt());
-    }
-    return subset;
+    return wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt());
 }
 
 std::vector<std::shared_ptr<Cell>>
@@ -277,20 +272,21 @@ Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const 
     return subset;
 }
 
-std::string Tissue::snapshot_header() const {HERE;
+std::string Tissue::header() const {HERE;
     std::ostringstream oss;
     oss.precision(std::numeric_limits<double>::max_digits10);
     oss << "time" << sep_ << Cell::header(DIMENSIONS_, sep_);
     return oss.str();
 }
 
-std::string Tissue::snapshot(const double time) const {
-    std::ostringstream oss;
-    oss.precision(std::numeric_limits<double>::max_digits10);
-    for (auto& item: stock_) {
-        item->write(oss << time << sep_, sep_);
+void Tissue::collect(std::ostream& ost, const Cell& cell, const double time) {
+    cell.write(ost << time << sep_, sep_) << "\n";
+}
+
+void Tissue::snap(std::ostream& ost, const double time) {
+    for (const auto& p: tumor_) {
+        collect(ost, *p, time);
     }
-    return oss.str();
 }
 
 std::string Tissue::mutation_history() const {HERE;
@@ -312,13 +308,12 @@ std::string Tissue::mutation_history() const {HERE;
     return oss.str();
 }
 
-std::string Tissue::evolution_history() const {
-    return wtl::str_join(evolution_history_, "");
-}
-
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
-    return ost << tissue.tumor_;
+    for (const auto& p: tissue.tumor_) {
+        ost << *p << "\n";
+    }
+    return ost;
 }
 
 template <class T> inline
@@ -349,8 +344,8 @@ void Tissue::unit_test() {HERE;
     Tissue tissue;
     tissue.grow(10);
     std::cerr << tissue << std::endl;
-    std::cerr << tissue.snapshot_header();
-    std::cerr << tissue.snapshot() << std::endl;
+    std::cerr << tissue.header();
+    tissue.snap(std::cerr, 0.0);
     std::cerr << tissue.mutation_history() << std::endl;
 
     const std::vector<int> v2{3, -2};
