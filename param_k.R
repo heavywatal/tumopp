@@ -40,7 +40,7 @@ demography = conf %>>%
            size = cumsum(dn)) %>>% (?.)
 
 .breaks = c(1, 10, 1000, 100000)
-.labels = c(expression(10^0), expression(10^1), expression(10^3), expression(10^5))
+.labels = c(1, 10, 1000, expression(infinity))
 
 font_size = 20
 theme_set(theme_bw(font_size, 'sans'))
