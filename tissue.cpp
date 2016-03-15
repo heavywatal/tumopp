@@ -66,9 +66,9 @@ void Tissue::grow(const size_t max_size) {HERE;
         if (mother->is_dividing()) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
+                daughter->set_time_of_birth(time);
                 collect(specimens_, *mother, time);
-                mother->daughterize(it->first);
-                daughter->daughterize(it->first);
+                mother->daughterize(time);
                 if (std::bernoulli_distribution(daughter->mutation_rate())(wtl::sfmt())) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
@@ -87,12 +87,12 @@ void Tissue::grow(const size_t max_size) {HERE;
                 queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
             }
         } else if (mother->is_dying()) {
-            mother->set_time_of_death(it->first);
+            mother->set_time_of_death(time);
             collect(specimens_, *mother, time);
             tumor_.erase(mother);
         } else {
             migrate(mother);
-            queue_push(it->first + mother->delta_time(positional_value(mother->coord())), mother);
+            queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
         }
         queue_.erase(it);
         if (time < 3.0) {

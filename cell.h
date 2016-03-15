@@ -58,6 +58,7 @@ class Cell {
 
     //! Setter
     void set_coord(const std::vector<int>& v) {coord_ = v;}
+    void set_time_of_birth(const double t) {time_of_birth_ = t;}
     void set_time_of_death(const double t) {time_of_death_ = t;}
     Cell& operator--() {
        if (type_ == CellType::nonstem) {--proliferation_capacity_;}

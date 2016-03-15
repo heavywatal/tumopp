@@ -18,19 +18,18 @@ setwd(indir)
 conf = wtl::read.conf('program_options.conf') %>>% (?.)
 history = read_tsv('mutation_history.tsv.gz') %>>% (?.)
 population = read_tsv('population.tsv.gz') %>>% (?.)
-evolution = read_tsv('evolution_history.tsv.gz',
+snapshots = read_tsv('snapshots.tsv.gz',
                 col_types=list(sites=col_character())) %>>% (?.)
 
 unnested = population %>>%
-    dplyr::filter(death == 0) %>>%
+    dplyr::filter(death == 0, time==max(time)) %>>%
     mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>%
     full_join(history %>>% add_rownames('sites'), by='sites') %>>%
     dplyr::select(-sites) %>>%
     arrange(birth) %>>% (?.)
 
-unnested_evolution = evolution %>>%
-    dplyr::filter(death == 0) %>>%
+unnested_evolution = snapshots %>>%
     mutate(sites=strsplit(sites, ':')) %>>%
     unnest(sites) %>>% (?.)
 
@@ -81,7 +80,7 @@ if (conf[['dimensions']] == 2) {
 if (conf[['coord']] == 'hex') {
 
 population = trans_coord_hex(population)
-evolution = trans_coord_hex(evolution)
+snapshots = trans_coord_hex(snapshots)
 unnested = trans_coord_hex(unnested)
 unnested_evolution = trans_coord_hex(unnested_evolution)
 
