@@ -49,7 +49,7 @@ class Cell {
 
     void daughterize(const double t) {
         time_of_birth_ = t;
-        mother_ = id_;
+        ancestors_.push_back(id_);
         id_ = ++ID_TAIL_;
     }
 
@@ -75,7 +75,6 @@ class Cell {
     const std::vector<int>& coord() const {return coord_;}
     const std::vector<size_t>& sites() const {return sites_;}
     size_t id() const {return id_;}
-    size_t mother() const {return mother_;}
     double time_of_birth() const {return time_of_birth_;}
     double time_of_death() const {return time_of_death_;}
 
@@ -144,7 +143,7 @@ class Cell {
 
     //! Extra data
     size_t id_ = 0;
-    size_t mother_ = 0;
+    std::vector<size_t> ancestors_;
     double time_of_birth_ = 0.0;
     double time_of_death_ = 0.0;
     Event next_event_ = Event::birth;
