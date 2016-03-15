@@ -136,24 +136,29 @@ std::vector<size_t> Cell::haplotype(std::vector<size_t> segsites) const {
     return segsites;
 }
 
-std::string Cell::header(const size_t dimensions, const std::string& sep) {
-    std::ostringstream oss;
-    oss << "id" << sep << "ancestors" << sep
-        << "birth" << sep << "death" << sep;
+std::string Cell::header(const size_t dimensions, const char* sep) {
     std::vector<std::string> axes{"x", "y", "z"};
     axes.resize(dimensions);
-    wtl::ost_join(oss, axes, sep) << sep << "sites" << sep
+    std::ostringstream oss;
+    oss << "id" << sep << "ancestors" << sep
+        << "birth" << sep << "death" << sep
+        << wtl::join(axes, sep) << sep << "sites" << sep
         << "beta" << sep << "delta\n";
     return oss.str();
 }
 
-std::ostream& Cell::write(std::ostream& ost, const std::string& sep) const {
-    wtl::ost_join(ost << id_ << sep, ancestors_, ":") << sep
-        << time_of_birth_ << sep << time_of_death_ << sep;
-    wtl::ost_join(ost, coord(), sep) << sep;
-    wtl::ost_join(ost, sites(), ":") << sep
+std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
+    return ost << id_ << sep << wtl::join(ancestors_, ":") << sep
+        << time_of_birth_ << sep << time_of_death_ << sep
+        << wtl::join(coord(), sep) << sep
+        << wtl::join(sites(), ":") << sep
         << birth_rate_ << sep << death_rate_ << "\n";
-    return ost;
+}
+
+std::string Cell::str(const char* sep) const {
+    std::ostringstream oss;
+    write(oss, sep);
+    return oss.str();
 }
 
 //! Stream operator for debug print

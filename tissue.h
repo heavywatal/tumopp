@@ -149,7 +149,7 @@ class Tissue {
     std::ostringstream specimens_;
     std::ostringstream snapshots_;
 
-    const std::string sep_ = "\t";
+    const char* sep_ = "\t";
 };
 
 #endif /* TISSUE_H_ */

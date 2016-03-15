@@ -84,8 +84,9 @@ class Cell {
     static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
     static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
 
-    static std::string header(const size_t dimensions, const std::string& sep);
-    std::ostream& write(std::ostream& ost, const std::string& sep) const;
+    static std::string header(const size_t dimensions, const char* sep);
+    std::ostream& write(std::ostream& ost, const char* sep) const;
+    std::string str(const char* sep) const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Unit test

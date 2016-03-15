@@ -250,10 +250,10 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
     const size_t s = segsite_set.size();
     ost << "\n//\nsegsites: " << s << "\n";
     if (s > 0) {
-        ost << "positions: ";
-        wtl::ost_join(ost, std::vector<int>(s), " ") << "\n";
+        ost << "positions: "
+            << wtl::join(std::vector<int>(s), " ") << "\n";
         for (const auto& x: haplotypes) {
-            wtl::ost_join(ost, x, "") << "\n";
+            ost << wtl::join(x, "") << "\n";
         }
     } else {ost << "\n";}
     return ost;
@@ -302,8 +302,8 @@ std::string Tissue::mutation_history() const {HERE;
     for (size_t i=0; i<mutation_coords_.size(); ++i) {
         oss << mutation_stages_[i] << sep_
             << Cell::MUTANT_IDS()[i] << sep_
-            << Cell::MUTATION_EFFECTS()[i] << sep_;
-        wtl::ost_join(oss, mutation_coords_[i], sep_) << "\n";
+            << Cell::MUTATION_EFFECTS()[i] << sep_
+            << wtl::join(mutation_coords_[i], sep_) << "\n";
     }
     return oss.str();
 }
