@@ -280,7 +280,7 @@ std::string Tissue::header() const {HERE;
 }
 
 void Tissue::collect(std::ostream& ost, const Cell& cell, const double time) {
-    cell.write(ost << time << sep_, sep_) << "\n";
+    cell.write(ost << time << sep_, sep_);
 }
 
 void Tissue::snap(std::ostream& ost, const double time) {
