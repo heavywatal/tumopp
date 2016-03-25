@@ -1,4 +1,9 @@
 #!/usr/bin/env Rscript
+(.argv = commandArgs(trailingOnly=FALSE))
+(..file.. = sub('^--file=', '', grep('^--file=', .argv, value=TRUE)))
+(.argv = grep('^[^-]', .argv[-1], value=TRUE))
+.project = dirname(normalizePath(..file..))
+
 library(pipeR)
 library(readr)
 library(tidyr)
@@ -8,13 +13,9 @@ library(ggplot2)
 library(wtl)
 #########1#########2#########3#########4#########5#########6#########7#########
 
-(.argv = commandArgs(trailingOnly=TRUE))
-(..file.. = sub('--file=', '', grep('--file=', .argv, value=TRUE)))
-.project = dirname(normalizePath(..file..))
-
-indirs = .argv
-(indirs = if (length(indirs) == 0) {list.files(pattern='tumopp_k*')} else {indirs})
+indirs = if (length(.argv) > 0) {indirs} else {list.files(pattern='tumopp_k*')}
 stopifnot(length(indirs) > 0)
+print(indirs)
 #########1#########2#########3#########4#########5#########6#########7#########
 
 read_conf = function(infiles) {

@@ -1,18 +1,19 @@
 #!/usr/bin/env Rscript
+(.argv = commandArgs(trailingOnly=FALSE))
+(..file.. = sub('^--file=', '', grep('^--file=', .argv, value=TRUE)))
+(.argv = grep('^[^-]', .argv[-1], value=TRUE))
+.project = dirname(normalizePath(..file..))
+
 library(pipeR)
 library(readr)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-.argv_all = commandArgs(trailingOnly=FALSE)
-..file.. = sub('--file=', '', grep('--file=', .argv_all, value=TRUE))
-.project = dirname(normalizePath(..file..))
-
-(.argv = commandArgs(trailingOnly=TRUE))
 indir = .argv[1]
-indir = ifelse(is.na(indir), '.', indir)
-setwd(indir)
+if (!is.na(indir)) {
+    setwd(indir)
+}
 
 population = read_tsv('population.tsv.gz') %>>% (?.)
 demography = population %>>%
@@ -50,6 +51,6 @@ surface_growth = function(time, n0=8, r=log(2)) {
     stat_function(fun=surface_growth, args=c(n0, log(2)), colour='blue')+
     theme_bw()+
     coord_cartesian(ylim=range(demography$size))
-.p
+#.p
 
 ggsave('demography.png', .p, width=7, height=7)
