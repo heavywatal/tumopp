@@ -49,6 +49,7 @@ class Cell {
 
     void daughterize(const double t) {
         time_of_birth_ = t;
+        time_of_death_ = 0.0;
         ancestors_.push_back(id_);
         id_ = ++ID_TAIL_;
     }

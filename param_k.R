@@ -34,10 +34,13 @@ demography = conf %>>%
     }) %>>%
     dplyr::select(birth, death) %>>%
     gather(event, time, birth, death) %>>%
-    dplyr::filter(event=='birth' | time > 0) %>>%
-    arrange(time) %>>%
+    dplyr::filter(!(time == 0 & event == 'death')) %>>%  # alive
+    mutate(event= factor(event, levels=c('death', 'birth'))) %>>%
+    arrange(time, event) %>>%
     mutate(dn = ifelse(event == 'birth', 1, -1),
-           size = cumsum(dn)) %>>% (?.)
+           size = cumsum(dn)) %>>%
+    group_by(time) %>>%
+    summarise(size=last(size)) %>>% (?.)
 
 .breaks = c(1, 10, 1000, 100000)
 .labels = c(1, 10, 1000, expression(infinity))

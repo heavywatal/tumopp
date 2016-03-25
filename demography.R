@@ -18,12 +18,15 @@ population = read_tsv('population.tsv.gz') %>>% (?.)
 demography = population %>>%
     dplyr::select(birth, death) %>>%
     gather(event, time, birth, death) %>>%
-    dplyr::filter(event=='birth' | time > 0) %>>%
-    arrange(time) %>>%
+    dplyr::filter(!(time == 0 & event == 'death')) %>>%  # alive
+    mutate(event= factor(event, levels=c('death', 'birth'))) %>>%
+    arrange(time, event) %>>%
     mutate(dn = ifelse(event == 'birth', 1, -1),
-           size = cumsum(dn)) %>>% (?.)
+           size = cumsum(dn)) %>>%
+    group_by(time) %>>%
+    summarise(size=last(size)) %>>% (?.)
 
-n0 = sum(demography$time == 0)
+n0 = min(demography$size)
 nmax = max(demography$size)
 tmax = log2(nmax / n0)
 
@@ -47,5 +50,6 @@ surface_growth = function(time, n0=8, r=log(2)) {
     stat_function(fun=surface_growth, args=c(n0, log(2)), colour='blue')+
     theme_bw()+
     coord_cartesian(ylim=range(demography$size))
+.p
 
 ggsave('demography.png', .p, width=7, height=7)

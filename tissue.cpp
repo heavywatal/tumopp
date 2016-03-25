@@ -67,6 +67,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
                 daughter->set_time_of_birth(time);
+                mother->set_time_of_death(time);
                 collect(specimens_, *mother, time);
                 mother->daughterize(time);
                 if (std::bernoulli_distribution(daughter->mutation_rate())(wtl::sfmt())) {
@@ -99,7 +100,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             snap(snapshots_, time);
         }
     }
-    snap(specimens_, time += 1.0);
+    snap(specimens_, time);
 }
 
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
