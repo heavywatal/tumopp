@@ -1,0 +1,18 @@
+Package: tumorr
+Title: R interface of tumopp
+Version: 0.0.0.9000
+Authors@R: person('Watal M.', 'Iwasaki', email='heavy.watal@gmail.com', role=c('aut', 'cre'))
+Description: R interface of tumopp.
+Depends:
+    R (>= 3.2.3)
+License: MIT + file LICENSE
+LazyData: true
+Imports:
+    pipeR,
+    readr,
+    stringr,
+    dplyr,
+    ggplot2
+URL: https://github.com/heavywatal/tumorr
+BugReports: https://github.com/heavywatal/tumorr/issues
+RoxygenNote: 5.0.1
