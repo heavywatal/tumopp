@@ -7,7 +7,7 @@
 maxabs(mtrx)
 }
 \arguments{
-\item{mtrx}{data.framw with (x, y, z) columns}
+\item{mtrx}{data.frame with (x, y, z) columns}
 }
 \value{
 max(abs(x, y, z))
@@ -16,6 +16,6 @@ max(abs(x, y, z))
 get max value for plot limits
 }
 \examples{
-maxabs(population)
+maxabs(data.frame(x=2, y=-3, z=4))
 }
 

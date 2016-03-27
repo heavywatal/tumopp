@@ -21,11 +21,11 @@ sphere_volume = function(radius) {
 }
 
 #' get max value for plot limits
-#' @param mtrx data.framw with (x, y, z) columns
+#' @param mtrx data.frame with (x, y, z) columns
 #' @return max(abs(x, y, z))
 #' @export
 #' @examples
-#' maxabs(population)
+#' maxabs(data.frame(x=2, y=-3, z=4))
 maxabs = function(mtrx) {
     max(abs(c(mtrx$x, mtrx$y, mtrx$z)))
 }
@@ -45,11 +45,10 @@ trans_coord_hex = function(mtrx) {mtrx %>>%
 #' @return transformed matrix
 #' @rdname hex
 #' @export
-#
 trans_coord_hcc = function(mtrx) {
     trans_coord_hex(mtrx) %>>%
-    mutate(x= x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>>%
-    mutate(z= z * sqrt(2.0 / 3.0))
+    dplyr::mutate(x= x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>>%
+    dplyr::mutate(z= z * sqrt(2.0 / 3.0))
 }
 
 #' 3D transformation (face centered cubic, cubic close packed)
@@ -59,6 +58,6 @@ trans_coord_hcc = function(mtrx) {
 #' @export
 trans_coord_fcc = function(mtrx) {
     trans_coord_hex(mtrx) %>>%
-    mutate(x= x + z / sqrt(3.0)) %>>%
-    mutate(z= z * sqrt(2.0 / 3.0))
+    dplyr::mutate(x= x + z / sqrt(3.0)) %>>%
+    dplyr::mutate(z= z * sqrt(2.0 / 3.0))
 }
