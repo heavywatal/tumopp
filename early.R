@@ -23,10 +23,12 @@ if (!is.na(indir)) {
     setwd(indir)
 }
 
-snapshots = read_tsv('snapshots.tsv.gz',
-                col_types=list(sites=col_character())) %>>%
+raw = read_tsv('snapshots.tsv.gz') %>>% (?.)
+nzero = raw %>>% dplyr::filter(time == 0) %>>% nrow()
+
+snapshots = raw %>>%
     mutate(ancestors= ifelse(is.na(ancestors), id, ancestors),
-           ancestors= tumorr::first_ancestors(ancestors, sum(id==ancestors)),
+           ancestors= tumorr::first_ancestors(ancestors, nzero),
            ancestors= as.factor(ancestors)) %>>% (?.)
 
 theme2D =
