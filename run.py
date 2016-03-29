@@ -18,7 +18,7 @@ import torque
 
 
 def args_latest(repeat=1):
-    return args_k(repeat)
+    return args_P(repeat)
 
 
 def args_all():
@@ -35,6 +35,15 @@ def args_k(repeat):
     const = ['-v']
     params = OrderedDict()
     params['k'] = [10 ** x for x in range(6)]
+    print(params)
+    args = list(sequential(params)) * repeat
+    return [const + [x, '--out_dir=' + make_outdir([x], i)] for i,x in enumerate(args)]
+
+
+def args_P(repeat):
+    const = ['-v', '-k', '1000', '-d', '0.2']
+    params = OrderedDict()
+    params['P'] = ['push', 'pushne', 'fillpush', 'fill', 'empty']
     print(params)
     args = list(sequential(params)) * repeat
     return [const + [x, '--out_dir=' + make_outdir([x], i)] for i,x in enumerate(args)]
