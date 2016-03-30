@@ -22,6 +22,7 @@ size_t Tissue::DIMENSIONS_ = 3;
 std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::PACKING_ = "push";
 double Tissue::GLOBAL_ENV_COEF_ = 0.0;
+size_t Tissue::INITIAL_SIZE_ = 1;
 
 //! Program options
 /*! @return Program options description
@@ -41,6 +42,7 @@ boost::program_options::options_description& Tissue::opt_description() {
         ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
         ("peripheral,g", po::value<double>(&GLOBAL_ENV_COEF_)->default_value(GLOBAL_ENV_COEF_))
+        ("origin,O", po::value<size_t>(&INITIAL_SIZE_)->default_value(INITIAL_SIZE_))
     ;
     return desc;
 }
@@ -51,7 +53,9 @@ void Tissue::queue_push(double t, const std::shared_ptr<Cell>& x) {
 
 void Tissue::grow(const size_t max_size) {HERE;
     if (tumor_.empty()) {
-        for (const auto& coord: coord_func_->core()) {
+        auto core = coord_func_->core();
+        if (INITIAL_SIZE_ < core.size()) {core.resize(INITIAL_SIZE_);}
+        for (const auto& coord: core) {
             auto x = std::make_shared<Cell>(coord);
             tumor_.insert(x);
             queue_push(x->delta_time(positional_value(x->coord())), x);

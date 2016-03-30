@@ -106,6 +106,9 @@ class Tissue {
     //! 0: flat, +: peripheral growth
     static double GLOBAL_ENV_COEF_;
 
+    //! initial population size
+    static size_t INITIAL_SIZE_;
+
     bool insert(const std::shared_ptr<Cell>&);
 
     //! Swap with a random neighbor
