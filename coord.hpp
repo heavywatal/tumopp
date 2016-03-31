@@ -109,6 +109,43 @@ class Coord {
         }
         return output;
     }
+    // sphere coordinates with inside-out direction
+    std::vector<std::vector<int>> sphere(const size_t n) const {
+        std::vector<std::vector<int>> output;
+        if (dimensions == 2) {
+            const int lim = 9;
+            // radius 9: regular: 253, hex: 281
+            output.reserve(281);
+            for (int x=-lim; x<=lim; ++x) {
+                for (int y=-lim; y<=lim; ++y) {
+                    std::vector<int> v = {x, y};
+                    if (euclidean_distance(v) <= lim) {
+                        output.push_back(v);
+                    }
+                }
+            }
+        } else {
+            const int lim = 4;
+            // radius 4: regular: 257, hex: 357
+            output.reserve(357);
+            for (int x=-lim; x<=lim; ++x) {
+                for (int y=-lim; y<=lim; ++y) {
+                    for (int z=-lim; z<=lim; ++z) {
+                        std::vector<int> v = {x, y, z};
+                        if (euclidean_distance(v) <= lim) {
+                            output.push_back(v);
+                        }
+                    }
+                }
+            }
+        }
+        std::sort(output.begin(), output.end(),
+            [this](const std::vector<int>& lhs, const std::vector<int>& rhs){
+                return euclidean_distance(lhs) < euclidean_distance(rhs);
+        });
+        output.resize(n);
+        return output;
+    }
 
     virtual ~Coord() = default;
 

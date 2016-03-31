@@ -52,17 +52,15 @@ void Tissue::queue_push(double t, const std::shared_ptr<Cell>& x) {
 }
 
 void Tissue::grow(const size_t max_size) {HERE;
-    if (tumor_.empty()) {
-        auto core = coord_func_->core();
-        if (INITIAL_SIZE_ < core.size()) {core.resize(INITIAL_SIZE_);}
-        for (const auto& coord: core) {
-            auto x = std::make_shared<Cell>(coord);
-            tumor_.insert(x);
-            queue_push(x->delta_time(positional_value(x->coord())), x);
-        }
+    assert(tumor_.empty());
+    for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
+        auto x = std::make_shared<Cell>(coord);
+        tumor_.insert(x);
+        queue_push(x->delta_time(positional_value(x->coord())), x);
     }
     double time = 0.0;
     snap(snapshots_, time);
+    bool taking_snapshots = true;
     while (tumor_.size() < max_size) {
         auto it = queue_.begin();
         time = it->first;
@@ -100,8 +98,10 @@ void Tissue::grow(const size_t max_size) {HERE;
             queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
         }
         queue_.erase(it);
-        if (time < 3.0) {
+        if (taking_snapshots && tumor_.size() < 128) {
             snap(snapshots_, time);
+        } else {
+            taking_snapshots = false;  // prevent restart by cell death
         }
     }
     snap(specimens_, time);
@@ -325,6 +325,7 @@ template <class T> inline
 void test_coordinate(const std::vector<int>& v) {HERE;
     T coord(v.size());
     std::cerr << coord.core() << std::endl;
+    std::cerr << coord.sphere(20) << std::endl;
     for (auto x: coord.directions()) {
         std::cerr << x  << ": " << coord.euclidean_distance(x) << std::endl;
     }
