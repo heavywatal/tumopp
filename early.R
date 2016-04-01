@@ -17,61 +17,44 @@ library(ggplot2)
 library(animation)
 
 library(tumorr)
+#load_all('~/git/tumorr')
 
 indir = args$args[1]
 if (!is.na(indir)) {
     setwd(indir)
 }
 
-raw = read_tsv('snapshots.tsv.gz') %>>% (?.)
-nzero = raw %>>% dplyr::filter(time == 0) %>>% nrow()
+conf = tumorr::read_conf() %>>% (?.)
+snapshots = tumorr::read_snapshots(conf)
+nzero = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
+anc_colours = max(4, nzero)
+anc_ids = exclusive_ancestors(raw, anc_colours)
 
-snapshots = raw %>>%
-    mutate(ancestors= ifelse(is.na(ancestors), id, ancestors),
-           ancestors= tumorr::first_ancestors(ancestors, nzero),
-           ancestors= as.factor(ancestors)) %>>% (?.)
+snapshots = tumorr::filter_ancestors(snapshots, anc_ids)
 
-theme2D =
-    theme(panel.background=element_rect(fill='grey90'))+
-    theme(panel.grid=element_blank())+
-    theme(axis.title=element_blank())
+.lim = maxabs(snapshots)
 
-
-gglattice2D = function(.data, .colour=~ancestors, .size=1.6, hex=FALSE) {
-    .p = ggplot(.data, aes(x, y))
-    .p = if (hex) {.p+
-        geom_point(aes_(colour=.colour), alpha=0.66, size=.size)+
-        scale_colour_hue(na.value='white')
-    } else {.p+
-        geom_raster(aes_(fill=.colour), alpha=0.66)+
-        scale_fill_hue(na.value='white')
-    }
-    .p + theme2D
-}
-
-.lim = rep(maxabs(snapshots)) * c(-1, 1)
-
-plot_snapshot = function(.data, .lim) {
+plot_snapshot = function(.data) {
     .t = .data$time[1]
     .N = nrow(.data)
-    gglattice2D(.data, .colour= ~ancestors)+
-    coord_cartesian(x=.lim, y=.lim)+
+    gglattice2D(.data, 'ancestors', .lim)+
     labs(title=sprintf('t = %.5f, N =%4d', .t, .N))+
     theme(legend.position='none')
 }
 
 if (FALSE) {
     snapshots %>>%
-    dplyr::filter(time==0) %>>%
-    plot_snapshot(.lim)
+    dplyr::filter(time==sample(unique(time), 1)) %>>%
+    plot_snapshot()
 }
 
 time_plots = snapshots %>>%
     group_by(time) %>>%
     do(plt={plot_snapshot(., .lim)})
 
-animation::saveGIF({for (.p in time_plots) {print(.p)}},
-    'earlysteps.gif', loop=1, interval=0.1, outdir=getwd(), ani.width=400, ani.height=400)
+animation::saveGIF({for (.p in time_plots$plt) {print(.p)}},
+    'earlysteps.gif',
+    , outdir=getwd(), interval=0.15, ani.width=400, ani.height=400, loop=TRUE, autobrowse=FALSE)
 
 if (FALSE) {
     grob = gridExtra::arrangeGrob(grobs=time_plots$plt, nrow=1)

@@ -16,70 +16,59 @@ library(dplyr)
 library(ggplot2)
 
 library(tumorr)
+#load_all('~/git/tumorr')
 
 indir = args$args[1]
 if (!is.na(indir)) {
     setwd(indir)
 }
 
-conf = wtl::read.conf('program_options.conf') %>>% (?.)
-population = read_tsv('population.tsv.gz') %>>% (?.)
-is_hex = conf[['coord']] == 'hex'
+conf = tumorr::read_conf() %>>% (?.)
+snapshots = tumorr::read_snapshots(conf)
+nzero = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
+anc_colours = max(4, nzero)
+anc_ids = exclusive_ancestors(raw, anc_colours)
 
-(n0 = sum(is.na(population$ancestors)))
+population = tumorr::read_population(conf) %>>% (?.)
+#nzero = sum(is.na(population$ancestors))
 
 final_cells = population %>>%
     dplyr::filter(death == 0) %>>%
-    mutate(ancestors= ifelse(is.na(ancestors), id, ancestors),
-           ancestors= tumorr::first_ancestors(ancestors, n0),
-           ancestors= as.factor(ancestors)) %>>% (?.)
+    tumorr::filter_ancestors(anc_ids) %>>% (?.)
 
 
 #########1#########2#########3#########4#########5#########6#########7#########
 if (conf[['dimensions']] == 2) {
 
-if (is_hex) {
-    population = trans_coord_hex(population, hex=is_hex)
-}  # fi hex
-
-.p = final_cells %>>% gglattice2D(~ancestors) + theme2D
-#.p
-ggsave('early_mutations.png', .p, width=7, height=7)
+.p = final_cells %>>%
+    gglattice2D('ancestors')
+.p
+ggsave('ancestors.png', .p, width=8, height=7)
 
 #########1#########2#########3#########4#########5#########6#########7#########
 } else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
 
 library(animation)
-library(rgl)
 
-if (is_hex) {
-    population = trans_coord_fcc(final_cells)
-}
-
-.lim = rep(maxabs(final_cells)) * c(-1, 1)
-
-plot_section = function(.data) {.data %>>%
-    gglattice2D(~ancestors, 5, hex=is_hex)+
-    geom_hline(yintercept=.data$z[1])+
-    coord_cartesian(x=.lim, y=.lim)+
-    theme2D+
-    theme(legend.position='right')
-}
-plot_section(final_cells %>>% dplyr::filter(z == 0))
+.lim = maxabs(final_cells)
 
 section_plots = final_cells %>>%
     group_by(z) %>>%
-    do(plt={plot_section(.)})
+    do(plt={
+        tumorr::gglattice2D(., limit=.lim)+
+        geom_hline(yintercept=.$z[1])
+    })
 
 animation::saveGIF({
-   for (p in section_plots) {
+   for (p in section_plots$plt) {
        print(p)
    }},
-   'serial_section.gif', loop=TRUE, interval=0.15, outdir=getwd())
+   'serial_section.gif', outdir=getwd(), interval=0.15, ani.width=720, ani.height=640, loop=TRUE, autobrowse=FALSE)
 
 #########1#########2#########3#########4#########5#########6#########7#########
 
+library(rgl)
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
 rgl::clear3d()
