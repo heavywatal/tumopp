@@ -27,7 +27,7 @@ conf = tumorr::read_conf() %>>% (?.)
 snapshots = tumorr::read_snapshots(conf)
 nzero = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
 anc_colours = max(4, nzero)
-anc_ids = exclusive_ancestors(raw, anc_colours)
+anc_ids = exclusive_ancestors(snapshots, anc_colours)
 
 population = tumorr::read_population(conf) %>>% (?.)
 #nzero = sum(is.na(population$ancestors))
