@@ -48,6 +48,7 @@ if (altered == 'shape') {
             guide=guide_legend(reverse=TRUE, title=expression(italic(k)),
                 override.aes=list(size=3)))+
         geom_line(size=1, alpha=0.7)+
+        scale_y_log10()+
         labs(x='Time', y='Number of tumor cells')+
         theme(legend.position=c(0.02, 0.98), legend.justification=c(0, 1),
               legend.key=element_blank())
@@ -57,8 +58,9 @@ if (altered == 'shape') {
     .p = demography %>>%
         ggplot(aes(time, size, group=packing, colour=packing))+
         geom_line(size=1, alpha=0.7)+
+        scale_y_log10()+
         labs(x='Time', y='Number of tumor cells')+
-        theme(legend.position=c(0.02, 0.98), legend.justification=c(0, 1),
+        theme(legend.position=c(0.98, 0.02), legend.justification=c(1, 0),
               legend.key=element_blank())
 
 #########1#########2#########3#########4#########5#########6#########7#########
@@ -87,4 +89,4 @@ if (altered == 'shape') {
 }
 #########1#########2#########3#########4#########5#########6#########7#########
 #.p
-ggsave(sprintf('demography_%s.pdf', altered), .p, width=5, height=5)
+ggsave(sprintf('demography_%s.png', altered), .p, width=5, height=5)

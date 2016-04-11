@@ -41,9 +41,9 @@ def args_k(repeat):
 
 
 def args_P(repeat):
-    const = ['-v', '-k', '1000', '-d', '0.2']
+    const = ['-v', '-Chex', '-k1', '-d0']
     params = OrderedDict()
-    params['P'] = ['push', 'pushne', 'fillpush', 'fill', 'empty']
+    params['P'] = ['push', 'fill', 'empty']
     print(params)
     args = list(sequential(params)) * repeat
     return [const + [x, '--out_dir=' + make_outdir([x], i)] for i,x in enumerate(args)]
