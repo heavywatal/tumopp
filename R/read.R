@@ -108,12 +108,12 @@ exclusive_ancestors = function(snapshots, size) {
 #' @examples
 #' first_ancestors(c('1:2:9', '1:2:4:6'), c(2, 5, 6))
 first_ancestors = function(string, anc_ids) {
-    suppressWarnings(
+    x = suppressWarnings(
     sapply(stringr::str_split(string, ':', max(anc_ids)), function(x) {
         x = as.integer(x)
         max(x[x %in% anc_ids])
-    })) %>%
-    pmax(min(anc_ids))
+    }))
+    pmax(x, min(anc_ids))
 }
 
 #' filter first ancesters for coloring
