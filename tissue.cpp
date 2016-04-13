@@ -21,18 +21,18 @@
 size_t Tissue::DIMENSIONS_ = 3;
 std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::PACKING_ = "push";
-double Tissue::GLOBAL_ENV_COEF_ = 0.0;
+double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
 size_t Tissue::INITIAL_SIZE_ = 1;
 
 //! Program options
 /*! @return Program options description
 
-    Command line option | Symbol | Variable
-    --------------------| ------ | -------------------------
-    `-D,--dimensions`   | -      | Tissue::DIMENSIONS_
-    `-C,--coord`        | -      | Tissue::COORDINATE_
-    `-P,--packing`      | -      | Tissue::PACKING_
-    `-g,--peripheral`   | -      | Tissue::GLOBAL_ENV_COEF_
+    Command line option | Symbol         | Variable
+    --------------------| -------------- | -------------------------
+    `-D,--dimensions`   | -              | Tissue::DIMENSIONS_
+    `-C,--coord`        | -              | Tissue::COORDINATE_
+    `-P,--packing`      | -              | Tissue::PACKING_
+    `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
 */
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
@@ -41,7 +41,7 @@ boost::program_options::options_description& Tissue::opt_description() {
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
         ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
-        ("peripheral,g", po::value<double>(&GLOBAL_ENV_COEF_)->default_value(GLOBAL_ENV_COEF_))
+        ("peripheral,g", po::value<double>(&SIGMA_E_)->default_value(SIGMA_E_))
         ("origin,O", po::value<size_t>(&INITIAL_SIZE_)->default_value(INITIAL_SIZE_))
     ;
     return desc;
@@ -239,10 +239,11 @@ std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& co
 }
 
 double Tissue::positional_value(const std::vector<int>& coord) const {
-    if (GLOBAL_ENV_COEF_ == 0.0) return 1.0;
-    double exponent = GLOBAL_ENV_COEF_;
-    exponent *= wtl::pow(std::min(1.0, coord_func_->euclidean_distance(coord)
-                                     / coord_func_->radius(tumor_.size())) - 1.0, 2);
+    if (SIGMA_E_ > 1e9 | tumor_.size() <= 8) return 1.0;
+    double rel_d = coord_func_->euclidean_distance(coord)
+                   / coord_func_->radius(tumor_.size());
+    double exponent = wtl::pow(std::max(0.0, 1.0 - rel_d), 2);
+    exponent /= SIGMA_E_;
     return std::exp(-exponent);
 }
 

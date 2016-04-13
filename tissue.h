@@ -98,7 +98,7 @@ class Tissue {
     static std::string PACKING_;
 
     //! 0: flat, +: peripheral growth
-    static double GLOBAL_ENV_COEF_;
+    static double SIGMA_E_;
 
     //! initial population size
     static size_t INITIAL_SIZE_;
