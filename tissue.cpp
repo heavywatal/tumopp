@@ -47,31 +47,33 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-void Tissue::queue_push(double t, const std::shared_ptr<Cell>& x) {
-    queue_.insert(queue_.end(), std::make_pair(t, x));
-}
-
-void Tissue::grow(const size_t max_size) {HERE;
-    assert(tumor_.empty());
+Tissue::Tissue() {
+    if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
+    else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
+    else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
+    specimens_.precision(std::numeric_limits<double>::max_digits10);
+    snapshots_.precision(std::numeric_limits<double>::max_digits10);
     for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
         auto x = std::make_shared<Cell>(coord);
         tumor_.insert(x);
         queue_push(x->delta_time(positional_value(x->coord())), x);
     }
-    double time = 0.0;
-    snap(snapshots_, time);
+}
+
+void Tissue::grow(const size_t max_size) {HERE;
+    snap(snapshots_);
     bool taking_snapshots = true;
     while (tumor_.size() < max_size) {
         auto it = queue_.begin();
-        time = it->first;
+        time_ = it->first;
         const auto mother = it->second;
         if (mother->is_dividing()) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
-                daughter->set_time_of_birth(time);
-                mother->set_time_of_death(time);
-                collect(specimens_, *mother, time);
-                mother->daughterize(time);
+                daughter->set_time_of_birth(time_);
+                mother->set_time_of_death(time_);
+                collect(specimens_, *mother);
+                mother->daughterize(time_);
                 if (std::bernoulli_distribution(daughter->mutation_rate())(wtl::sfmt())) {
                     daughter->mutate();
                     mutation_coords_.push_back(daughter->coord());
@@ -84,27 +86,31 @@ void Tissue::grow(const size_t max_size) {HERE;
                 }
                 --(*mother);
                 --(*daughter);
-                queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
-                queue_push(time + daughter->delta_time(positional_value(daughter->coord())), daughter);
+                queue_push(mother->delta_time(positional_value(mother->coord())), mother);
+                queue_push(daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
-                queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
+                queue_push(mother->delta_time(positional_value(mother->coord())), mother);
             }
         } else if (mother->is_dying()) {
-            mother->set_time_of_death(time);
-            collect(specimens_, *mother, time);
+            mother->set_time_of_death(time_);
+            collect(specimens_, *mother);
             tumor_.erase(mother);
         } else {
             migrate(mother);
-            queue_push(time + mother->delta_time(positional_value(mother->coord())), mother);
+            queue_push(mother->delta_time(positional_value(mother->coord())), mother);
         }
         queue_.erase(it);
         if (taking_snapshots && tumor_.size() < 128) {
-            snap(snapshots_, time);
+            snap(snapshots_);
         } else {
             taking_snapshots = false;  // prevent restart by cell death
         }
     }
-    snap(specimens_, time);
+    snap(specimens_);
+}
+
+void Tissue::queue_push(double delta_t, const std::shared_ptr<Cell>& x) {
+    queue_.insert(queue_.end(), std::make_pair(delta_t += time_, x));
 }
 
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
@@ -284,13 +290,13 @@ std::string Tissue::header() const {HERE;
     return oss.str();
 }
 
-void Tissue::collect(std::ostream& ost, const Cell& cell, const double time) {
-    cell.write(ost << time << sep_, sep_);
+void Tissue::collect(std::ostream& ost, const Cell& cell) {
+    cell.write(ost << time_ << sep_, sep_);
 }
 
-void Tissue::snap(std::ostream& ost, const double time) {
+void Tissue::snap(std::ostream& ost) {
     for (const auto& p: tumor_) {
-        collect(ost, *p, time);
+        collect(ost, *p);
     }
 }
 
@@ -351,7 +357,7 @@ void Tissue::unit_test() {HERE;
     tissue.grow(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.header();
-    tissue.snap(std::cerr, 0.0);
+    tissue.snap(std::cerr);
     std::cerr << tissue.mutation_history() << std::endl;
 
     const std::vector<int> v2{3, -2};

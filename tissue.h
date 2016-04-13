@@ -52,18 +52,7 @@ class Tissue {
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue() {
-        if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
-        else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
-        else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
-        specimens_.precision(std::numeric_limits<double>::max_digits10);
-        snapshots_.precision(std::numeric_limits<double>::max_digits10);
-    }
-
-    //! Set coordinate function object
-    template <class FuncObj>
-    void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
-    const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
+    Tissue();
 
     //! main function
     void grow(const size_t max_size);
@@ -72,8 +61,8 @@ class Tissue {
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
     std::vector<std::shared_ptr<Cell>> sample_if(std::function<bool(const std::vector<int>&)>) const;
 
-    void collect(std::ostream&, const Cell&, const double time);
-    void snap(std::ostream&, const double time);
+    void collect(std::ostream&, const Cell&);
+    void snap(std::ostream&);
 
     //! Return mutation_coords_ as TSV string
     std::string mutation_history() const;
@@ -88,6 +77,11 @@ class Tissue {
     double relative_pos(std::shared_ptr<Cell> x) const {
         return coord_func_->euclidean_distance(x->coord()) / radius();
     }
+
+    //! Set coordinate function object
+    template <class FuncObj>
+    void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
+    const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
     //! Unit test
     static void unit_test();
@@ -130,7 +124,7 @@ class Tissue {
     size_t steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const;
     std::vector<int> to_nearest_empty(const std::vector<int>& current, size_t search_max=26) const;
 
-    void queue_push(double t, const std::shared_ptr<Cell>&);
+    void queue_push(double delta_t, const std::shared_ptr<Cell>&);
 
     double positional_value(const std::vector<int>&) const;
 
@@ -152,6 +146,7 @@ class Tissue {
     std::ostringstream specimens_;
     std::ostringstream snapshots_;
 
+    double time_ = 0.0;
     const char* sep_ = "\t";
 };
 
