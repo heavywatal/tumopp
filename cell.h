@@ -96,13 +96,11 @@ class Cell {
 
   private:
     //! finite per capita rates
-    double birth_rate() const {return birth_rate_;}
-    double death_rate() const {return death_rate_;}
     double growth_rate() const {return 1.0 + birth_rate_ - death_rate_;}
     //! instantaneous rate for time increment
     double instantaneous_event_rate() const {
         const double lambda = growth_rate();
-        return (birth_rate() + death_rate()) * std::log(lambda) / (lambda - 1.0);
+        return (birth_rate_ + death_rate_) * std::log(lambda) / (lambda - 1.0);
     }
 
     //! per cell division
@@ -110,7 +108,7 @@ class Cell {
 
     static double MUTATION_SIGMA_;
 
-    //! 1: birth, 2: death, 3: both
+    //! 1: birth, 2: death, 4: migration
     static int DRIVER_EFFECTS_;
 
     static double DRIVER_FRACTION_;
@@ -139,6 +137,7 @@ class Cell {
 
     double birth_rate_ = BIRTH_RATE_;
     double death_rate_ = DEATH_RATE_;
+    double migra_rate_ = MIGRATION_RATE_;
 
     CellType type_ = CellType::stem;
     size_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;

@@ -64,6 +64,7 @@ boost::program_options::options_description& Cell::opt_description() {
 Cell::Cell(const Cell& other):
     coord_(other.coord_), sites_(other.sites_),
     birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
+    migra_rate_(other.migra_rate_),
     type_(other.type_), proliferation_capacity_(other.proliferation_capacity_),
     id_(++ID_TAIL_), ancestors_(other.ancestors_) {
     ancestors_.push_back(other.id_);
@@ -88,27 +89,30 @@ void Cell::mutate() {
     sites_.push_back(MUTATION_EFFECTS_.size());
     MUTATION_EFFECTS_.push_back(effect);
     MUTANT_IDS_.push_back(id());
-    if (DRIVER_EFFECTS_ & 0b01) {
-        birth_rate_ *= (effect += 1.0);
+    if (DRIVER_EFFECTS_ & 0b001) {
+        birth_rate_ *= (1.0 + effect);
     }
-    if (DRIVER_EFFECTS_ & 0b10) {
+    if (DRIVER_EFFECTS_ & 0b010) {
         death_rate_ *= (1.0 - effect);
+    }
+    if (DRIVER_EFFECTS_ & 0b100) {
+        migra_rate_ *= (1.0 + effect);
     }
 }
 
 double Cell::delta_time(const double positional_value) {
-    static std::exponential_distribution<double> exponential_migra(MIGRATION_RATE_);
     double t_birth = std::numeric_limits<double>::max();
     if (proliferation_capacity_ > 0) {
         double theta = 1.0;
-        theta /= birth_rate();
+        theta /= birth_rate_;
         theta /= positional_value;
         theta /= GAMMA_SHAPE_;
         std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
         t_birth = gamma(wtl::sfmt());
     }
-    std::exponential_distribution<double> exponential(death_rate());
-    const double t_death = exponential(wtl::sfmt());
+    std::exponential_distribution<double> exponential_death(death_rate_);
+    std::exponential_distribution<double> exponential_migra(migra_rate_);
+    const double t_death = exponential_death(wtl::sfmt());
     const double t_migra = exponential_migra(wtl::sfmt());
 
     if (t_birth < t_death && t_birth < t_migra) {
@@ -143,7 +147,7 @@ std::string Cell::header(const size_t dimensions, const char* sep) {
     oss << "id" << sep << "ancestors" << sep
         << "birth" << sep << "death" << sep
         << wtl::join(axes, sep) << sep << "sites" << sep
-        << "beta" << sep << "delta\n";
+        << "beta" << sep << "delta" << sep << "rho\n";
     return oss.str();
 }
 
@@ -152,7 +156,9 @@ std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
         << time_of_birth_ << sep << time_of_death_ << sep
         << wtl::join(coord(), sep) << sep
         << wtl::join(sites(), ":") << sep
-        << birth_rate_ << sep << death_rate_ << "\n";
+        << birth_rate_ << sep
+        << death_rate_ << sep
+        << migra_rate_ << "\n";
 }
 
 std::string Cell::str(const char* sep) const {
