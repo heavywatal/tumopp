@@ -101,7 +101,7 @@ void Cell::mutate() {
 }
 
 double Cell::delta_time(const double positional_value) {
-    double t_birth = std::numeric_limits<double>::max();
+    double t_birth = std::numeric_limits<double>::infinity();
     if (proliferation_capacity_ > 0) {
         double theta = 1.0;
         theta /= birth_rate_;
