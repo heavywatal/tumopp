@@ -3,15 +3,10 @@
 #' @return a data.frame
 #' @rdname read
 .read_conf = function(filename) {
-    dict = list()
-    for (line in scan(filename, what=character(), sep="\n", quiet=TRUE)) {
-        if (substr(line, 1, 1) == "#") {next}
-        pair = unlist(strsplit(line, " = "))
-        dict[pair[1]] = if (grepl('[^[:digit:].-]', pair[2])) {
-            gsub("^'|'$", '', gsub('^"|"$', '', pair[2]))
-        } else {as.numeric(pair[2])}
-    }
-    data.frame(dict, stringsAsFactors=FALSE)
+    readr::read_delim(filename, '=', col_names=c('key', 'val'), comment='#') %>%
+    dplyr::summarise_each(funs(paste0(., collapse='\t'))) %>%
+    {paste(.$key, .$val, sep='\n')} %>%
+    readr::read_tsv()
 }
 
 #' read config files
