@@ -33,14 +33,14 @@ std::vector<size_t> Cell::MUTANT_IDS_;
     Command line option | Symbol                  | Variable
     --------------------| ----------------------- | -------------------------
     `-u,--mutation`     | \f$\mu\f$               | Cell::MUTATION_RATE_
-    `-s,--sigma`        | \f$\sigma\f$            | Cell::MUTATION_SIGMA_
+    `-s,--sigma`        | \f$\sigma_s\f$          | Cell::MUTATION_SIGMA_
     `-e,--effect`       |                         | Cell::DRIVER_EFFECTS_
     `-f,--fraction`     |                         | Cell::DRIVER_FRACTION_
     `-b,--birth`        | \f$\beta_0\f$           | Cell::BIRTH_RATE_
     `-d,--death`        | \f$\delta_0\f$          | Cell::DEATH_RATE_
-    `-m,--migration`    | \f$m\f$                 | Cell::MIGRATION_RATE_
+    `-m,--migration`    | \f$\rho_0\f$            | Cell::MIGRATION_RATE_
     `-p,--symmetric`    | \f$p_s\f$               | Cell::PROB_SYMMETRIC_DIVISION_
-    `-r,--prolif`       | \f$\rho_\mathrm{max}\f$ | Cell::PROB_SYMMETRIC_DIVISION_
+    `-r,--prolif`       | \f$\omega_\text{max}\f$ | Cell::PROB_SYMMETRIC_DIVISION_
     `-k,--shape`        | \f$k\f$                 | Cell::GAMMA_SHAPE_
 */
 boost::program_options::options_description& Cell::opt_description() {
