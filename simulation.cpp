@@ -34,7 +34,6 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
         ("verbose,v", po::value<bool>(&VERBOSE)
             ->default_value(VERBOSE)->implicit_value(true), "verbose output")
         ("test", po::value<int>()->default_value(0)->implicit_value(1))
-        ("mode", po::value<int>(&MODE)->default_value(MODE))
         ("out_dir,o", po::value<std::string>()->default_value(OUT_DIR.string()))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
         ("nsam", po::value<size_t>(&NSAM)->default_value(NSAM))

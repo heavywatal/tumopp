@@ -51,9 +51,6 @@ class Simulation {
     //! Seed for random number generator
     unsigned int SEED = std::random_device{}();
 
-    //! Control execution mode
-    int MODE = 0;
-
     //! Target directory to which the contents in WORK_DIR are moved
     fs::path OUT_DIR;
 

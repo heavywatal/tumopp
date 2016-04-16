@@ -33,6 +33,7 @@ size_t Tissue::INITIAL_SIZE_ = 1;
     `-C,--coord`        | -              | Tissue::COORDINATE_
     `-P,--packing`      | -              | Tissue::PACKING_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
+    `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
 */
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
