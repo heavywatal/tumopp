@@ -2,9 +2,13 @@
 % Please edit documentation in R/plot.R
 \name{gglattice2D}
 \alias{gglattice2D}
+\alias{save_serial_section}
 \title{ggplot for 2D lattice}
 \usage{
 gglattice2D(.data, colour = "ancestors", limit = maxabs(.data))
+
+save_serial_section(filename = "serial_section.gif", .data, width = 720,
+  height = 640)
 }
 \arguments{
 \item{.data}{a data.frame}
@@ -12,8 +16,18 @@ gglattice2D(.data, colour = "ancestors", limit = maxabs(.data))
 \item{colour}{a column name for colour}
 
 \item{limit}{for value range}
+
+\item{filename}{a string}
+
+\item{width}{an integer}
+
+\item{height}{an integer}
+
+\item{.data}{a data.frame}
 }
 \description{
 ggplot for 2D lattice
+
+Write animation GIF for serial sections of 3D tumor
 }
 

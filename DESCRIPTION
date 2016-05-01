@@ -14,7 +14,8 @@ Imports:
     dplyr,
     tidyr,
     ggplot2,
-    rgl
+    rgl,
+    animation
 URL: https://github.com/heavywatal/tumorr
 BugReports: https://github.com/heavywatal/tumorr/issues
 RoxygenNote: 5.0.1
