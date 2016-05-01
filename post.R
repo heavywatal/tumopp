@@ -49,25 +49,6 @@ ggsave('ancestors.png', .p, width=8, height=7)
 } else {  # 3D
 #########1#########2#########3#########4#########5#########6#########7#########
 
-library(animation)
-
-.lim = maxabs(final_cells)
-
-section_plots = final_cells %>>%
-    group_by(z) %>>%
-    do(plt={
-        tumorr::gglattice2D(., limit=.lim)+
-        geom_hline(yintercept=.$z[1])
-    })
-
-animation::saveGIF({
-   for (p in section_plots$plt) {
-       print(p)
-   }},
-   'serial_section.gif', outdir=getwd(), interval=0.15, ani.width=720, ani.height=640, loop=TRUE, autobrowse=FALSE)
-
-#########1#########2#########3#########4#########5#########6#########7#########
-
 library(rgl)
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
