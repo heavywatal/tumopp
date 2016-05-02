@@ -56,13 +56,14 @@ rgl::clear3d()
 rgl::view3d(-25, 15, 40, zoom=0.9)
 clear3d()
 axes3d()
-thres = sphere_radius(nrow(final_cells)) * 0.6
+thres = sphere_radius(nrow(final_cells)) * 0.8
 final_cells %>>%
     dplyr::filter(sqrt(x^2 + y^2 + z^2) > thres) %>>%
     with(spheres3d(x, y, z,
                    radius=1, col=ancestors, alpha=0.8))
 title3d('', '', 'x', 'y', 'z')
 writeWebGL('.', 'rgl.html', snapshot=FALSE, width=600, height=600)
+rgl::snapshot3d('snapshot3d.png')
 
 
 #########1#########2#########3#########4#########5#########6#########7#########
