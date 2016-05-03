@@ -3,8 +3,8 @@
     @brief Interface of Tissue class
 */
 #pragma once
-#ifndef TISSUE_H_
-#define TISSUE_H_
+#ifndef TISSUE_HPP_
+#define TISSUE_HPP_
 
 #include <iostream>
 #include <vector>
@@ -150,4 +150,4 @@ class Tissue {
     const char* sep_ = "\t";
 };
 
-#endif /* TISSUE_H_ */
+#endif /* TISSUE_HPP_ */

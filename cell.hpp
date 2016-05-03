@@ -3,8 +3,8 @@
     @brief Interface of Cell class
 */
 #pragma once
-#ifndef CELL_H_
-#define CELL_H_
+#ifndef CELL_HPP_
+#define CELL_HPP_
 
 #include <cmath>
 #include <vector>
@@ -150,4 +150,4 @@ class Cell {
     Event next_event_ = Event::birth;
 };
 
-#endif /* CELL_H_ */
+#endif /* CELL_HPP_ */

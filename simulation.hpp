@@ -3,8 +3,8 @@
     @brief Interface of Simulation class
 */
 #pragma once
-#ifndef SIMULATION_H_
-#define SIMULATION_H_
+#ifndef SIMULATION_HPP_
+#define SIMULATION_HPP_
 
 #include <iostream>
 #include <sstream>
@@ -58,4 +58,4 @@ class Simulation {
     std::string CONFIG_STRING;
 };
 
-#endif /* SIMULATION_H_ */
+#endif /* SIMULATION_HPP_ */
