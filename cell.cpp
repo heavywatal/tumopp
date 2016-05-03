@@ -2,7 +2,7 @@
 /*! @file cell.cpp
     @brief Implementation of Cell class
 */
-#include "cell.h"
+#include "cell.hpp"
 
 #include <iostream>
 #include <sstream>

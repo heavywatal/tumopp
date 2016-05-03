@@ -14,7 +14,7 @@
 
 #include <boost/functional/hash.hpp>
 
-#include "cell.h"
+#include "cell.hpp"
 #include "coord.hpp"
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////

@@ -2,7 +2,7 @@
 /*! @file simulation.cpp
     @brief Inplementation of Simulation class
 */
-#include "simulation.h"
+#include "simulation.hpp"
 
 #include <cstdlib>
 
@@ -12,8 +12,8 @@
 #include <cxxwtils/os.hpp>
 #include <cxxwtils/gz.hpp>
 
-#include "tissue.h"
-#include "cell.h"
+#include "tissue.hpp"
+#include "cell.hpp"
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 // functions

@@ -2,7 +2,7 @@
 /*! @file tissue.cpp
     @brief Implementation of Tissue class
 */
-#include "tissue.h"
+#include "tissue.hpp"
 
 #include <cstdlib>
 #include <cassert>

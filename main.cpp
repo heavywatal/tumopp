@@ -4,7 +4,7 @@
 */
 #include <iostream>
 
-#include "simulation.h"
+#include "simulation.hpp"
 
 //! Just instantiate and run Simulation
 int main(int argc, char* argv[]) {
