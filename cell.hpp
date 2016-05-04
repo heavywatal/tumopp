@@ -82,7 +82,6 @@ class Cell {
     //! convert site positions to 01 vector
     std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
 
-    static const std::vector<double>& MUTATION_EFFECTS() {return MUTATION_EFFECTS_;}
     static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
 
     static std::string header(const size_t dimensions, const char* sep);
@@ -106,12 +105,15 @@ class Cell {
     //! per cell division
     static double MUTATION_RATE_;
 
-    static double MUTATION_SIGMA_;
-
-    //! 1: birth, 2: death, 4: migration
-    static int DRIVER_EFFECTS_;
-
-    static double DRIVER_FRACTION_;
+    static double DRIVER_RATE_BIRTH_;
+    static double DRIVER_RATE_DEATH_;
+    static double DRIVER_RATE_MIGRA_;
+    static double DRIVER_MEAN_BIRTH_;
+    static double DRIVER_MEAN_DEATH_;
+    static double DRIVER_MEAN_MIGRA_;
+    static double DRIVER_SD_BIRTH_;
+    static double DRIVER_SD_DEATH_;
+    static double DRIVER_SD_MIGRA_;
 
     static double BIRTH_RATE_;
 
@@ -126,8 +128,7 @@ class Cell {
 
     static size_t ID_TAIL_;
 
-    //! The history of mutation effects
-    static std::vector<double> MUTATION_EFFECTS_;
+    //! The history of neutral mutations
     static std::vector<size_t> MUTANT_IDS_;
 
     //! Position in a tumor

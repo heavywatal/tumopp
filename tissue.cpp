@@ -305,7 +305,7 @@ void Tissue::snap(std::ostream& ost) {
 std::string Tissue::mutation_history() const {HERE;
     std::ostringstream oss;
     oss.precision(std::numeric_limits<double>::max_digits10);
-    oss << "size" << sep_ << "mutant" << sep_ << "effect";
+    oss << "size" << sep_ << "mutant";
     std::vector<std::string> xyz{"x", "y", "z"};
     xyz.resize(DIMENSIONS_);
     for (auto x: xyz) {
@@ -315,7 +315,6 @@ std::string Tissue::mutation_history() const {HERE;
     for (size_t i=0; i<mutation_coords_.size(); ++i) {
         oss << mutation_stages_[i] << sep_
             << Cell::MUTANT_IDS()[i] << sep_
-            << Cell::MUTATION_EFFECTS()[i] << sep_
             << wtl::join(mutation_coords_[i], sep_) << "\n";
     }
     return oss.str();

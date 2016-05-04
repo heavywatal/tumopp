@@ -13,9 +13,15 @@
 #include <cxxwtils/iostr.hpp>
 
 double Cell::MUTATION_RATE_ = 1e-1;
-double Cell::MUTATION_SIGMA_ = 0.0;
-int Cell::DRIVER_EFFECTS_ = 1;
-double Cell::DRIVER_FRACTION_ = 0.0;
+double Cell::DRIVER_RATE_BIRTH_ = 0.0;
+double Cell::DRIVER_RATE_DEATH_ = 0.0;
+double Cell::DRIVER_RATE_MIGRA_ = 0.0;
+double Cell::DRIVER_MEAN_BIRTH_ = 0.0;
+double Cell::DRIVER_MEAN_DEATH_ = 0.0;
+double Cell::DRIVER_MEAN_MIGRA_ = 0.0;
+double Cell::DRIVER_SD_BIRTH_ = 0.0;
+double Cell::DRIVER_SD_DEATH_ = 0.0;
+double Cell::DRIVER_SD_MIGRA_ = 0.0;
 double Cell::BIRTH_RATE_ = 1.0;
 double Cell::DEATH_RATE_ = 0.0;
 double Cell::MIGRATION_RATE_ = 0.0;
@@ -24,7 +30,6 @@ double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
 size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
 size_t Cell::ID_TAIL_ = 0;
 
-std::vector<double> Cell::MUTATION_EFFECTS_;
 std::vector<size_t> Cell::MUTANT_IDS_;
 
 //! Program options
@@ -33,9 +38,6 @@ std::vector<size_t> Cell::MUTANT_IDS_;
     Command line option | Symbol                  | Variable
     --------------------| ----------------------- | -------------------------
     `-u,--mutation`     | \f$\mu\f$               | Cell::MUTATION_RATE_
-    `-s,--sigma`        | \f$\sigma_s\f$          | Cell::MUTATION_SIGMA_
-    `-e,--effect`       |                         | Cell::DRIVER_EFFECTS_
-    `-f,--fraction`     |                         | Cell::DRIVER_FRACTION_
     `-b,--birth`        | \f$\beta_0\f$           | Cell::BIRTH_RATE_
     `-d,--death`        | \f$\delta_0\f$          | Cell::DEATH_RATE_
     `-m,--migration`    | \f$\rho_0\f$            | Cell::MIGRATION_RATE_
@@ -48,9 +50,15 @@ boost::program_options::options_description& Cell::opt_description() {
     static po::options_description desc{"Cell"};
     desc.add_options()
         ("mutation,u", po::value<double>(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
-        ("sigma,s", po::value<double>(&MUTATION_SIGMA_)->default_value(MUTATION_SIGMA_))
-        ("effect,e", po::value<int>(&DRIVER_EFFECTS_)->default_value(DRIVER_EFFECTS_))
-        ("fraction,f", po::value<double>(&DRIVER_FRACTION_)->default_value(DRIVER_FRACTION_))
+        ("ub", po::value<double>(&DRIVER_RATE_BIRTH_)->default_value(DRIVER_RATE_BIRTH_))
+        ("ud", po::value<double>(&DRIVER_RATE_DEATH_)->default_value(DRIVER_RATE_DEATH_))
+        ("um", po::value<double>(&DRIVER_RATE_MIGRA_)->default_value(DRIVER_RATE_MIGRA_))
+        ("mb", po::value<double>(&DRIVER_MEAN_BIRTH_)->default_value(DRIVER_MEAN_BIRTH_))
+        ("md", po::value<double>(&DRIVER_MEAN_DEATH_)->default_value(DRIVER_MEAN_DEATH_))
+        ("mm", po::value<double>(&DRIVER_MEAN_MIGRA_)->default_value(DRIVER_MEAN_MIGRA_))
+        ("sb", po::value<double>(&DRIVER_SD_BIRTH_)->default_value(DRIVER_SD_BIRTH_))
+        ("sd", po::value<double>(&DRIVER_SD_DEATH_)->default_value(DRIVER_SD_DEATH_))
+        ("sm", po::value<double>(&DRIVER_SD_MIGRA_)->default_value(DRIVER_SD_MIGRA_))
         ("birth,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
         ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
         ("migration,m", po::value<double>(&MIGRATION_RATE_)->default_value(MIGRATION_RATE_))
@@ -76,28 +84,8 @@ Cell::Cell(const Cell& other):
 }
 
 void Cell::mutate() {
-    static std::bernoulli_distribution bernoulli_driver(DRIVER_FRACTION_);
-    static std::normal_distribution<double> normal_sigma(0.0, MUTATION_SIGMA_);
-    double effect = 0.0;
-    if (DRIVER_FRACTION_ > 0.0) {
-        if (bernoulli_driver(wtl::sfmt())) {
-            effect = MUTATION_SIGMA_;
-        }
-    } else {
-        effect = normal_sigma(wtl::sfmt());
-    }
-    sites_.push_back(MUTATION_EFFECTS_.size());
-    MUTATION_EFFECTS_.push_back(effect);
+    sites_.push_back(MUTANT_IDS_.size());
     MUTANT_IDS_.push_back(id());
-    if (DRIVER_EFFECTS_ & 0b001) {
-        birth_rate_ *= (1.0 + effect);
-    }
-    if (DRIVER_EFFECTS_ & 0b010) {
-        death_rate_ *= (1.0 - effect);
-    }
-    if (DRIVER_EFFECTS_ & 0b100) {
-        migra_rate_ *= (1.0 + effect);
-    }
 }
 
 double Cell::delta_time(const double positional_value) {
