@@ -39,7 +39,7 @@ class Cell {
     //! Copy constructor
     Cell(const Cell& other);
     //! Destructor
-    ~Cell() {--ID_TAIL_;}
+    ~Cell() = default;
     //! Copy assignment operator
     Cell& operator=(const Cell&) = delete;
     //! Move constructor
@@ -47,23 +47,24 @@ class Cell {
     //! Move assignment operator
     Cell& operator=(Cell&&) = default;
 
-    void daughterize(const double t) {
-        time_of_birth_ = t;
-        time_of_death_ = 0.0;
-        ancestors_.push_back(id_);
-        id_ = ++ID_TAIL_;
-    }
-
     //! Mutate and record
     void mutate();
 
     //! Setter
     void set_coord(const std::vector<int>& v) {coord_ = v;}
-    void set_time_of_birth(const double t) {time_of_birth_ = t;}
+    void set_time_of_birth(const double t) {
+        time_of_birth_ = t;
+        id_ = ++ID_TAIL_;
+    }
     void set_time_of_death(const double t) {time_of_death_ = t;}
     Cell& operator--() {
        if (type_ == CellType::nonstem) {--proliferation_capacity_;}
        return *this;
+    }
+    void daughterize(const double t) {
+        time_of_death_ = 0.0;
+        ancestors_.push_back(id_);
+        set_time_of_birth(t);
     }
 
     //! Getter

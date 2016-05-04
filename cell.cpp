@@ -74,7 +74,7 @@ Cell::Cell(const Cell& other):
     birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
     migra_rate_(other.migra_rate_),
     type_(other.type_), proliferation_capacity_(other.proliferation_capacity_),
-    id_(++ID_TAIL_), ancestors_(other.ancestors_) {
+    ancestors_(other.ancestors_) {
     ancestors_.push_back(other.id_);
     if (type_ == CellType::stem) {
         if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt())) {
