@@ -96,6 +96,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             mother->set_time_of_death(time_);
             collect(specimens_, *mother);
             tumor_.erase(mother);
+            assert(tumor_.size() > 0);
         } else {
             migrate(mother);
             queue_push(mother->delta_time(positional_value(mother->coord())), mother);
