@@ -138,7 +138,6 @@ void Simulation::run() const {HERE;
         fs::create_directory(OUT_DIR);
         wtl::cd(OUT_DIR.string());
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
-        wtl::gzip{wtl::Fout{"mutation_history.tsv.gz"}} << tissue.mutation_history();
         wtl::gzip{wtl::Fout{"population.tsv.gz"}}
             << tissue.header() << tissue.specimens();
         wtl::gzip{wtl::Fout{"snapshots.tsv.gz"}}

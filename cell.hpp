@@ -47,7 +47,7 @@ class Cell {
     //! Move assignment operator
     Cell& operator=(Cell&&) = default;
 
-    //! Mutate and record
+    //! driver mutation
     void mutate();
 
     //! Setter
@@ -71,7 +71,6 @@ class Cell {
     bool is_dividing() const {return next_event_ == Event::birth;}
     bool is_dying() const {return next_event_ == Event::death;}
     bool is_migrating() const {return next_event_ == Event::migration;}
-    double mutation_rate() const {return MUTATION_RATE_;}
     double delta_time(const double positional_value);
 
     const std::vector<int>& coord() const {return coord_;}
@@ -80,10 +79,12 @@ class Cell {
     double time_of_birth() const {return time_of_birth_;}
     double time_of_death() const {return time_of_death_;}
 
+    std::vector<int> is_descendant_of(const std::vector<size_t>&);
+
     //! convert site positions to 01 vector
     std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
 
-    static const std::vector<size_t>& MUTANT_IDS() {return MUTANT_IDS_;}
+    static std::vector<size_t> GENERATE_NEUTRAL_MUTATIONS();
 
     static std::string header(const size_t dimensions, const char* sep);
     std::ostream& write(std::ostream& ost, const char* sep) const;
@@ -128,9 +129,6 @@ class Cell {
     static size_t MAX_PROLIFERATION_CAPACITY_;
 
     static size_t ID_TAIL_;
-
-    //! The history of neutral mutations
-    static std::vector<size_t> MUTANT_IDS_;
 
     //! Position in a tumor
     std::vector<int> coord_;

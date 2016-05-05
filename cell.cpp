@@ -30,8 +30,6 @@ double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
 size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
 size_t Cell::ID_TAIL_ = 0;
 
-std::vector<size_t> Cell::MUTANT_IDS_;
-
 //! Program options
 /*! @return Program options description
 
@@ -84,8 +82,7 @@ Cell::Cell(const Cell& other):
 }
 
 void Cell::mutate() {
-    sites_.push_back(MUTANT_IDS_.size());
-    MUTANT_IDS_.push_back(id());
+    // TODO
 }
 
 double Cell::delta_time(const double positional_value) {
@@ -126,6 +123,31 @@ std::vector<size_t> Cell::haplotype(std::vector<size_t> segsites) const {
         }
     }
     return segsites;
+}
+
+std::vector<int> Cell::is_descendant_of(const std::vector<size_t>& mutants) {
+    std::vector<int> genotype;
+    genotype.reserve(mutants.size());
+    for (const size_t mut: mutants) {
+        if (std::find(ancestors_.begin(), ancestors_.end(), mut) != ancestors_.end()) {
+            genotype.push_back(1);
+        } else {
+            genotype.push_back(0);
+        }
+    }
+    return genotype;
+}
+
+std::vector<size_t> Cell::GENERATE_NEUTRAL_MUTATIONS() {
+    std::poisson_distribution<size_t> poisson(MUTATION_RATE_ * ID_TAIL_);
+    const size_t num_mutants = poisson(wtl::sfmt());
+    std::uniform_int_distribution<size_t> uniform(0, ID_TAIL_);
+    std::vector<size_t> mutants;
+    mutants.reserve(num_mutants);
+    for (size_t i=0; i<num_mutants; ++i) {
+        mutants.push_back(uniform(wtl::sfmt()));
+    }
+    return mutants;
 }
 
 std::string Cell::header(const size_t dimensions, const char* sep) {

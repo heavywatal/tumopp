@@ -65,7 +65,6 @@ class Tissue {
     void snap(std::ostream&);
 
     //! Return mutation_coords_ as TSV string
-    std::string mutation_history() const;
     std::string specimens() const {return specimens_.str();}
     std::string snapshots() const {return snapshots_.str();}
     std::string header() const;
@@ -137,11 +136,6 @@ class Tissue {
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;
 
-    //! The coordinates of the past mutations
-    std::vector<std::vector<int>> mutation_coords_;
-
-    //! Timing of mutations (tumor size as proxy)
-    std::vector<size_t> mutation_stages_;
     // std::vector<std::string> evolution_history_;
     std::ostringstream specimens_;
     std::ostringstream snapshots_;

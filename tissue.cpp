@@ -75,16 +75,8 @@ void Tissue::grow(const size_t max_size) {HERE;
                 mother->set_time_of_death(time_);
                 collect(specimens_, *mother);
                 mother->daughterize(time_);
-                if (std::bernoulli_distribution(daughter->mutation_rate())(wtl::sfmt())) {
-                    daughter->mutate();
-                    mutation_coords_.push_back(daughter->coord());
-                    mutation_stages_.push_back(tumor_.size());
-                }
-                if (std::bernoulli_distribution(mother->mutation_rate())(wtl::sfmt())) {
-                    mother->mutate();
-                    mutation_coords_.push_back(mother->coord());
-                    mutation_stages_.push_back(tumor_.size());
-                }
+                daughter->mutate();
+                mother->mutate();
                 --(*mother);
                 --(*daughter);
                 queue_push(mother->delta_time(positional_value(mother->coord())), mother);
@@ -249,24 +241,26 @@ double Tissue::positional_value(const std::vector<int>& coord) const {
     return std::exp(-exponent);
 }
 
-std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& subset) const {HERE;
-    std::set<size_t> segsite_set;
-    for (const auto p: subset) {
-        const auto& sites = p->sites();
-        segsite_set.insert(sites.begin(), sites.end());
+std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
+    const auto mutants = Cell::GENERATE_NEUTRAL_MUTATIONS();
+    std::vector<std::vector<int>> flags;
+    flags.reserve(samples.size());
+    for (const auto& cell: samples) {
+        flags.push_back(cell->is_descendant_of(mutants));
     }
-    const std::vector<size_t> segsites(segsite_set.begin(), segsite_set.end());
-    std::vector<std::vector<size_t>> haplotypes;
-    haplotypes.reserve(subset.size());
-    for (const auto p: subset) {
-        haplotypes.push_back(p->haplotype(segsites));
+    wtl::transpose(&flags);
+    std::vector<std::vector<int>> segsites;
+    segsites.reserve(flags.size());
+    for (size_t i=0; i<flags.size(); ++i) {
+        if (wtl::sum(flags[i]) > 0) segsites.push_back(flags[i]);
     }
-    const size_t s = segsite_set.size();
+    const size_t s = segsites.size();
+    wtl::transpose(&segsites);
     ost << "\n//\nsegsites: " << s << "\n";
     if (s > 0) {
         ost << "positions: "
             << wtl::join(std::vector<int>(s), " ") << "\n";
-        for (const auto& x: haplotypes) {
+        for (const auto& x: segsites) {
             ost << wtl::join(x, "") << "\n";
         }
     } else {ost << "\n";}
@@ -301,24 +295,6 @@ void Tissue::snap(std::ostream& ost) {
     for (const auto& p: tumor_) {
         collect(ost, *p);
     }
-}
-
-std::string Tissue::mutation_history() const {HERE;
-    std::ostringstream oss;
-    oss.precision(std::numeric_limits<double>::max_digits10);
-    oss << "size" << sep_ << "mutant";
-    std::vector<std::string> xyz{"x", "y", "z"};
-    xyz.resize(DIMENSIONS_);
-    for (auto x: xyz) {
-        oss << sep_ << "origin_" << x;
-    }
-    oss << "\n";
-    for (size_t i=0; i<mutation_coords_.size(); ++i) {
-        oss << mutation_stages_[i] << sep_
-            << Cell::MUTANT_IDS()[i] << sep_
-            << wtl::join(mutation_coords_[i], sep_) << "\n";
-    }
-    return oss.str();
 }
 
 //! Stream operator for debug print
@@ -360,7 +336,6 @@ void Tissue::unit_test() {HERE;
     std::cerr << tissue << std::endl;
     std::cerr << tissue.header();
     tissue.snap(std::cerr);
-    std::cerr << tissue.mutation_history() << std::endl;
 
     const std::vector<int> v2{3, -2};
     test_coordinate<Neumann>(v2);
