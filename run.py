@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 """
-import sys
 import os
 import glob
 import re
@@ -18,35 +17,18 @@ import torque
 
 
 def args_latest(repeat=1):
-    return args_P(repeat)
+    return args_all(repeat)
 
 
-def args_all():
+def args_all(repeat):
     const = ['-N16384']
     params = OrderedDict()
     params.update(D=[2, 3])
     params.update(C=['neumann', 'moore', 'hex'])
     params.update(P=['push', 'pushn', 'pushne', 'fillpush', 'fill', 'empty'])
     params.update(S=['random', 'even'])
-    return [const + x + ['--out_dir=' + make_outdir(x,i)] for i,x in enumerate(product(params))]
-
-
-def args_k(repeat):
-    const = ['-v']
-    params = OrderedDict()
-    params['k'] = [10 ** x for x in range(6)]
-    print(params)
-    args = list(sequential(params)) * repeat
-    return [const + [x, '--out_dir=' + make_outdir([x], i)] for i,x in enumerate(args)]
-
-
-def args_P(repeat):
-    const = ['-v', '-Chex', '-k1', '-d0']
-    params = OrderedDict()
-    params['P'] = ['push', 'fill', 'empty']
-    print(params)
-    args = list(sequential(params)) * repeat
-    return [const + [x, '--out_dir=' + make_outdir([x], i)] for i,x in enumerate(args)]
+    return [const + x + ['--out_dir=' + make_outdir(x, i)]
+            for i, x in enumerate(product(params, repeat))]
 
 
 def sequential(params):
@@ -58,7 +40,7 @@ def sequential(params):
                 yield '-{}{}'.format(key, value)
 
 
-def product(params):
+def product(params, repeat):
     for vals in itertools.product(*params.values()):
         var_args = []
         for (key, value) in zip(params.keys(), vals):
@@ -66,7 +48,8 @@ def product(params):
                 var_args.append('--{}={}'.format(key, value))
             else:
                 var_args.append('-{}{}'.format(key, value))
-        yield var_args
+        for i in range(repeat):
+            yield var_args
 
 
 def make_outdir(var_args=[], i=0):
@@ -85,7 +68,8 @@ if __name__ == '__main__':
     parser.add_argument('-j', '--threads', type=int,
                         default=multiprocessing.cpu_count())
     parser.add_argument('-B', '--batch', action='store_const', const='batch')
-    parser.add_argument('-Q', '--torque', action='store_const', const='torque', dest='batch')
+    parser.add_argument('-Q', '--torque', action='store_const', const='torque',
+                        dest='batch')
     parser.add_argument('-q', '--queue',
                         choices=['low', 'batch', 'high'], default='batch')
     parser.add_argument('-R', '--repeat', type=int, default=1)
