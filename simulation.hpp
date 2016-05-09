@@ -38,9 +38,6 @@ class Simulation {
   private:
     boost::program_options::options_description& opt_description();
 
-    //! Max tumor size to stop simulation
-    size_t MAX_SIZE = 16384;
-
     size_t NSAM = 20;
 
     size_t HOWMANY = 1;

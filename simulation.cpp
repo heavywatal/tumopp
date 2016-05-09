@@ -18,18 +18,10 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 // functions
 
-//! Program options
-/*! @return Program options description
-
-    Command line option | Symbol | Variable
-    --------------------| ------ | -------------------------
-    `-N,--max`          | -      | Simulation::MAX_SIZE
-*/
 boost::program_options::options_description& Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
     static po::options_description description("Simulation");
     description.add_options()
-        ("max,N", po::value<size_t>(&MAX_SIZE)->default_value(MAX_SIZE))
         ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "produce help")
         ("verbose,v", po::value<bool>(&VERBOSE)
             ->default_value(VERBOSE)->implicit_value(true), "verbose output")
@@ -88,6 +80,14 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
       default:
         std::abort();
     }
+    if (NSAM > vm["max"].as<size_t>()) {
+        std::cout.precision(1);
+        std::cout
+            << "\nERROR: NSAM=" << NSAM
+            << " is larger than tumor size "
+            << std::fixed << vm["max"].as<size_t>() << std::endl;
+        std::abort();
+    }
     OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
     OUT_DIR = fs::system_complete(OUT_DIR);
 }
@@ -95,28 +95,16 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 void Simulation::run() const {HERE;
     std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
     Tissue tissue;
-
-    const double expected_cs = tissue.coord_func()->cross_section(MAX_SIZE);
-    derr("predicted section size: " << expected_cs << std::endl);
-    if (NSAM > expected_cs) {
-        std::cout.precision(1);
-        std::cout << FILE_LINE_PRETTY
-            << "ERROR: NSAM=" << NSAM
-            << " is larger than the expected cross section size "
-            << std::fixed << expected_cs << std::endl;
-        std::abort();
-    }
+    tissue.grow();
 
     switch (Tissue::DIMENSIONS()) {
       case 2: {
-        tissue.grow(expected_cs);
         for (size_t i=0; i<HOWMANY; ++i) {
             tissue.write_segsites(std::cout, tissue.sample_random(NSAM));
         }
         break;
       }
       case 3: {
-        tissue.grow(MAX_SIZE);
         for (size_t i=0; i<HOWMANY; ++i) {
             auto section = tissue.sample_if([](const std::vector<int>& coord) {
                 return coord[2] == 0;  // z-axis
@@ -126,11 +114,6 @@ void Simulation::run() const {HERE;
         }
         break;
       }
-      default:
-        std::cout << FILE_LINE_PRETTY
-            << "ERROR: invalid option value --dimensions="
-            << Tissue::DIMENSIONS() << std::endl;
-        std::abort();
     }
 
     if (VERBOSE) {

@@ -154,7 +154,9 @@ class Coord {
 
   protected:
     Coord() = delete;
-    explicit Coord(const size_t d): dimensions(d) {}
+    explicit Coord(const size_t d): dimensions(d) {
+        assert(d == 2 || d == 3);
+    }
 
     template <class T> inline
     double _euclidean_distance(const std::vector<T>& v) const {

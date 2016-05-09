@@ -23,6 +23,7 @@ std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::PACKING_ = "push";
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
 size_t Tissue::INITIAL_SIZE_ = 1;
+size_t Tissue::MAX_SIZE_ = 16384;
 
 //! Program options
 /*! @return Program options description
@@ -34,6 +35,7 @@ size_t Tissue::INITIAL_SIZE_ = 1;
     `-P,--packing`      | -              | Tissue::PACKING_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
+    `-N,--max`          | -              | Simulation::MAX_SIZE
 */
 boost::program_options::options_description& Tissue::opt_description() {
     namespace po = boost::program_options;
@@ -44,6 +46,7 @@ boost::program_options::options_description& Tissue::opt_description() {
         ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
         ("peripheral,g", po::value<double>(&SIGMA_E_)->default_value(SIGMA_E_))
         ("origin,O", po::value<size_t>(&INITIAL_SIZE_)->default_value(INITIAL_SIZE_))
+        ("max,N", po::value<size_t>(&MAX_SIZE_)->default_value(MAX_SIZE_))
     ;
     return desc;
 }
