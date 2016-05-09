@@ -123,3 +123,16 @@ filter_ancestors = function(mtrx, anc_ids) {
         ancestors= first_ancestors(ancestors, anc_ids),
         ancestors= as.factor(ancestors))
 }
+
+#' get commandline arguments
+#' @return a list
+#' @rdname extract
+#' @export
+command_args = function() {
+    .argv = commandArgs(trailingOnly=FALSE)
+    l = list()
+    l$file = sub('^--file=', '', grep('^--file=', .argv, value=TRUE))
+    l$srcdir = dirname(normalizePath(l$file))
+    l$args = grep('^[^-]', .argv[-1], value=TRUE)
+    return(l)
+}

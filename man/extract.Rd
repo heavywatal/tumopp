@@ -2,6 +2,7 @@
 % Please edit documentation in R/read.R
 \name{extract_demography}
 \alias{altered_params}
+\alias{command_args}
 \alias{exclusive_ancestors}
 \alias{extract_demography}
 \alias{filter_ancestors}
@@ -17,6 +18,8 @@ exclusive_ancestors(snapshots, size)
 first_ancestors(string, anc_ids)
 
 filter_ancestors(mtrx, anc_ids)
+
+command_args()
 }
 \arguments{
 \item{grouped_df}{a grouped_df}
@@ -45,6 +48,8 @@ an integer vector
 an integer vector
 
 a modified data.frame
+
+a list
 }
 \description{
 extract demography from population data
@@ -56,6 +61,8 @@ cell ids at the size
 split ancestor string and extract an integer
 
 filter first ancesters for coloring
+
+get commandline arguments
 }
 \examples{
 first_ancestors(c('1:2:9', '1:2:4:6'), c(2, 5, 6))
