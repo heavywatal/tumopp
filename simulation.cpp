@@ -95,7 +95,9 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 void Simulation::run() const {HERE;
     std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
     Tissue tissue;
-    tissue.grow();
+    while (!tissue.grow()) {
+        tissue = Tissue();
+    }
 
     if (Tissue::DIMENSIONS() == 3) {
         for (size_t i=0; i<HOWMANY; ++i) {

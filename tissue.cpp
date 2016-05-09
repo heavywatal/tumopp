@@ -64,7 +64,7 @@ Tissue::Tissue() {
     }
 }
 
-void Tissue::grow(const size_t max_size) {HERE;
+bool Tissue::grow(const size_t max_size) {HERE;
     snap(snapshots_);
     bool taking_snapshots = true;
     while (tumor_.size() < max_size) {
@@ -92,7 +92,7 @@ void Tissue::grow(const size_t max_size) {HERE;
             mother->set_time_of_death(time_);
             collect(specimens_, *mother);
             tumor_.erase(mother);
-            assert(tumor_.size() > 0);
+            if (tumor_.empty()) return false;
         } else {
             migrate(mother);
             queue_push(mother->delta_time(positional_value(mother->coord())), mother);
@@ -104,6 +104,7 @@ void Tissue::grow(const size_t max_size) {HERE;
         }
     }
     snap(specimens_);
+    return true;
 }
 
 void Tissue::queue_push(double delta_t, const std::shared_ptr<Cell>& x) {
