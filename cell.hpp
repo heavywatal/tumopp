@@ -55,12 +55,9 @@ class Cell {
     void set_time_of_birth(const double t) {
         time_of_birth_ = t;
         id_ = ++ID_TAIL_;
+        if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
     void set_time_of_death(const double t) {time_of_death_ = t;}
-    Cell& operator--() {
-       if (type_ == CellType::nonstem) {--proliferation_capacity_;}
-       return *this;
-    }
     void daughterize(const double t) {
         time_of_death_ = 0.0;
         ancestors_.push_back(id_);

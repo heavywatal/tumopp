@@ -81,8 +81,6 @@ void Tissue::grow(const size_t max_size) {HERE;
                 mother->daughterize(time_);
                 daughter->mutate();
                 mother->mutate();
-                --(*mother);
-                --(*daughter);
                 queue_push(mother->delta_time(positional_value(mother->coord())), mother);
                 queue_push(daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
