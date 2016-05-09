@@ -28,7 +28,6 @@ double Cell::MIGRATION_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
 double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
 size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
-size_t Cell::ID_TAIL_ = 0;
 
 //! Program options
 /*! @return Program options description
@@ -136,18 +135,6 @@ std::vector<int> Cell::is_descendant_of(const std::vector<size_t>& mutants) {
         }
     }
     return genotype;
-}
-
-std::vector<size_t> Cell::GENERATE_NEUTRAL_MUTATIONS() {
-    std::poisson_distribution<size_t> poisson(MUTATION_RATE_ * ID_TAIL_);
-    const size_t num_mutants = poisson(wtl::sfmt());
-    std::uniform_int_distribution<size_t> uniform(0, ID_TAIL_);
-    std::vector<size_t> mutants;
-    mutants.reserve(num_mutants);
-    for (size_t i=0; i<num_mutants; ++i) {
-        mutants.push_back(uniform(wtl::sfmt()));
-    }
-    return mutants;
 }
 
 std::string Cell::header(const size_t dimensions, const char* sep) {

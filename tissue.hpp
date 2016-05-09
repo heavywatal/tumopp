@@ -130,6 +130,8 @@ class Tissue {
 
     double positional_value(const std::vector<int>&) const;
 
+    std::vector<size_t> generate_neutral_mutations() const;
+
     std::unique_ptr<Coord> coord_func_;
 
     std::unordered_set<std::shared_ptr<Cell>,
@@ -144,6 +146,7 @@ class Tissue {
     std::ostringstream snapshots_;
 
     double time_ = 0.0;
+    size_t id_tail_ = 0;
     const char* sep_ = "\t";
 };
 

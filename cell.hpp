@@ -35,7 +35,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::vector<int>& v): coord_(v), id_(++ID_TAIL_) {}
+    Cell(const std::vector<int>& v, const size_t i=0): coord_(v), id_(i) {}
     //! Copy constructor
     Cell(const Cell& other);
     //! Destructor
@@ -52,16 +52,15 @@ class Cell {
 
     //! Setter
     void set_coord(const std::vector<int>& v) {coord_ = v;}
-    void set_time_of_birth(const double t) {
+    void set_time_of_birth(const double t, const size_t i) {
         time_of_birth_ = t;
-        id_ = ++ID_TAIL_;
+        id_ = i;
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
     void set_time_of_death(const double t) {time_of_death_ = t;}
-    void daughterize(const double t) {
+    void daughterize() {
         time_of_death_ = 0.0;
         ancestors_.push_back(id_);
-        set_time_of_birth(t);
     }
 
     //! Getter
@@ -81,7 +80,7 @@ class Cell {
     //! convert site positions to 01 vector
     std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
 
-    static std::vector<size_t> GENERATE_NEUTRAL_MUTATIONS();
+    static double MUTATION_RATE() {return MUTATION_RATE_;}
 
     static std::string header(const size_t dimensions, const char* sep);
     std::ostream& write(std::ostream& ost, const char* sep) const;
@@ -124,8 +123,6 @@ class Cell {
 
     static double PROB_SYMMETRIC_DIVISION_;
     static size_t MAX_PROLIFERATION_CAPACITY_;
-
-    static size_t ID_TAIL_;
 
     //! Position in a tumor
     std::vector<int> coord_;

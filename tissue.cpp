@@ -58,7 +58,7 @@ Tissue::Tissue() {
     specimens_.precision(std::numeric_limits<double>::max_digits10);
     snapshots_.precision(std::numeric_limits<double>::max_digits10);
     for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
-        auto x = std::make_shared<Cell>(coord);
+        auto x = std::make_shared<Cell>(coord, ++id_tail_);
         tumor_.insert(x);
         queue_push(x->delta_time(positional_value(x->coord())), x);
     }
@@ -75,12 +75,13 @@ void Tissue::grow(const size_t max_size) {HERE;
         if (mother->is_dividing()) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
-                daughter->set_time_of_birth(time_);
                 mother->set_time_of_death(time_);
                 collect(specimens_, *mother);
-                mother->daughterize(time_);
-                daughter->mutate();
+                mother->daughterize();
+                mother->set_time_of_birth(time_, ++id_tail_);
+                daughter->set_time_of_birth(time_, ++id_tail_);
                 mother->mutate();
+                daughter->mutate();
                 queue_push(mother->delta_time(positional_value(mother->coord())), mother);
                 queue_push(daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
@@ -243,8 +244,20 @@ double Tissue::positional_value(const std::vector<int>& coord) const {
     return std::exp(-exponent);
 }
 
+std::vector<size_t> Tissue::generate_neutral_mutations() const {
+    std::poisson_distribution<size_t> poisson(Cell::MUTATION_RATE() * id_tail_);
+    const size_t num_mutants = poisson(wtl::sfmt());
+    std::uniform_int_distribution<size_t> uniform(0, id_tail_);
+    std::vector<size_t> mutants;
+    mutants.reserve(num_mutants);
+    for (size_t i=0; i<num_mutants; ++i) {
+        mutants.push_back(uniform(wtl::sfmt()));
+    }
+    return mutants;
+}
+
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
-    const auto mutants = Cell::GENERATE_NEUTRAL_MUTATIONS();
+    const auto mutants = generate_neutral_mutations();
     std::vector<std::vector<int>> flags;
     flags.reserve(samples.size());
     for (const auto& cell: samples) {
