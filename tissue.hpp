@@ -59,7 +59,7 @@ class Tissue {
 
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
-    std::vector<std::shared_ptr<Cell>> sample_if(std::function<bool(const std::vector<int>&)>) const;
+    std::vector<std::shared_ptr<Cell>> sample_section(const size_t) const;
 
     void collect(std::ostream&, const Cell&);
     void snap(std::ostream&);

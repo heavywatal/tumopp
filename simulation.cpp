@@ -97,23 +97,14 @@ void Simulation::run() const {HERE;
     Tissue tissue;
     tissue.grow();
 
-    switch (Tissue::DIMENSIONS()) {
-      case 2: {
+    if (Tissue::DIMENSIONS() == 3) {
+        for (size_t i=0; i<HOWMANY; ++i) {
+            tissue.write_segsites(std::cout, tissue.sample_section(NSAM));
+        }
+    } else {
         for (size_t i=0; i<HOWMANY; ++i) {
             tissue.write_segsites(std::cout, tissue.sample_random(NSAM));
         }
-        break;
-      }
-      case 3: {
-        for (size_t i=0; i<HOWMANY; ++i) {
-            auto section = tissue.sample_if([](const std::vector<int>& coord) {
-                return coord[2] == 0;  // z-axis
-            });
-            section = wtl::sample(section, NSAM, wtl::sfmt());
-            tissue.write_segsites(std::cout, section) << std::flush;
-        }
-        break;
-      }
     }
 
     if (VERBOSE) {

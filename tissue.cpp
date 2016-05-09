@@ -275,13 +275,13 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {
     return wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt());
 }
 
-std::vector<std::shared_ptr<Cell>>
-Tissue::sample_if(std::function<bool(const std::vector<int>&)> predicate) const {HERE;
-    std::vector<std::shared_ptr<Cell>> subset;
-    for (const auto p: tumor_) {
-        if (predicate(p->coord())) {subset.push_back(p);}
+std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const {HERE;
+    std::vector<std::shared_ptr<Cell>> section;
+    section.reserve(coord_func_->cross_section(MAX_SIZE_));
+    for (const auto& p: tumor_) {
+        if (p->coord()[2] == 0) {section.push_back(p);}
     }
-    return subset;
+    return wtl::sample(section, n, wtl::sfmt());
 }
 
 std::string Tissue::header() const {HERE;
