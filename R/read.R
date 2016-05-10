@@ -4,7 +4,7 @@
 #' @rdname read
 .read_conf = function(filename) {
     readr::read_delim(filename, '=', col_names=c('key', 'val'), comment='#') %>%
-    dplyr::summarise_each(funs(paste0(., collapse='\t'))) %>%
+    dplyr::summarise_each(dplyr::funs(paste0(., collapse='\t'))) %>%
     {paste(.$key, .$val, sep='\n')} %>%
     readr::read_tsv()
 }
@@ -79,7 +79,7 @@ extract_demography = function(grouped_df) {grouped_df %>%
 #' @export
 altered_params = function(conf) {
     dplyr::select(conf, -path, -out_dir, -seed) %>%
-    dplyr::summarise_each(funs(length(unique(.)))) %>%
+    dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>%
     unlist() %>>% (.[. > 1]) %>% names()
 }
 

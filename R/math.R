@@ -34,9 +34,9 @@ maxabs = function(mtrx) {
 #' @param mtrx 2D matrix
 #' @return transformed matrix
 #' @rdname hex
-trans_coord_hex_xy = function(mtrx) {mtrx %>%
-    mutate(y= y + x * 0.5) %>%
-    mutate(x= x * sqrt(3.0 / 4.0))
+trans_coord_hex_xy = function(mtrx) {
+    dplyr::mutate(mtrx, y= y + x * 0.5) %>%
+    dplyr::mutate(x= x * sqrt(3.0 / 4.0))
 }
 
 #' 3D transformation (hexagonal close packed)
