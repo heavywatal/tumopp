@@ -77,9 +77,6 @@ class Cell {
 
     std::vector<int> is_descendant_of(const std::vector<size_t>&);
 
-    //! convert site positions to 01 vector
-    std::vector<size_t> haplotype(std::vector<size_t> segsites) const;
-
     static double MUTATION_RATE() {return MUTATION_RATE_;}
 
     static std::string header(const size_t dimensions, const char* sep);

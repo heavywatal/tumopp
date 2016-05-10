@@ -111,19 +111,6 @@ double Cell::delta_time(const double positional_value) {
     }
 }
 
-std::vector<size_t> Cell::haplotype(std::vector<size_t> segsites) const {
-    size_t i = 0;
-    for (auto& x: segsites) {
-        if (i >= sites_.size() || x < sites_[i]) {
-            x = 0;
-        } else {
-            x = 1;
-            ++i;
-        }
-    }
-    return segsites;
-}
-
 std::vector<int> Cell::is_descendant_of(const std::vector<size_t>& mutants) {
     std::vector<int> genotype;
     genotype.reserve(mutants.size());
