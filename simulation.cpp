@@ -5,6 +5,7 @@
 #include "simulation.hpp"
 
 #include <cstdlib>
+#include <algorithm>
 
 #include <cxxwtils/iostr.hpp>
 #include <cxxwtils/getopt.hpp>
@@ -118,6 +119,8 @@ void Simulation::run() const {HERE;
             << tissue.header() << tissue.specimens();
         wtl::gzip{wtl::Fout{"snapshots.tsv.gz"}}
             << tissue.header() << tissue.snapshots();
+        wtl::gzip{wtl::Fout{"distance.tsv.gz"}}
+            << tissue.pairwise_distance(std::min(200UL, tissue.size()));
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
 }

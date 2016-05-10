@@ -64,10 +64,10 @@ class Tissue {
     void collect(std::ostream&, const Cell&);
     void snap(std::ostream&);
 
-    //! Return mutation_coords_ as TSV string
     std::string specimens() const {return specimens_.str();}
     std::string snapshots() const {return snapshots_.str();}
     std::string header() const;
+    std::string pairwise_distance(const size_t) const;
 
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 

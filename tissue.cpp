@@ -290,6 +290,23 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
     return wtl::sample(section, n, wtl::sfmt());
 }
 
+std::string Tissue::pairwise_distance(const size_t n) const {HERE;
+    std::ostringstream oss = wtl::make_oss(6);
+    oss << "genealogy" << sep_ << "graph" << sep_ << "euclidean\n";
+    const auto samples = sample_random(n);
+    const auto end = samples.end();
+    for (auto it=samples.cbegin(); it!=end; ++it) {
+        const auto& p = *it;
+        for (auto jt=std::next(it); jt!=end; ++jt) {
+            const auto diff = p->coord() - (*jt)->coord();
+            oss << *p - *(*jt) << sep_
+                << coord_func()->graph_distance(diff) << sep_
+                << coord_func()->euclidean_distance(diff) << "\n";
+        }
+    }
+    return oss.str();
+}
+
 std::string Tissue::header() const {HERE;
     std::ostringstream oss;
     oss.precision(std::numeric_limits<double>::max_digits10);
