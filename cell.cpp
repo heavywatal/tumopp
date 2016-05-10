@@ -71,8 +71,7 @@ Cell::Cell(const Cell& other):
     birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
     migra_rate_(other.migra_rate_),
     type_(other.type_), proliferation_capacity_(other.proliferation_capacity_),
-    ancestors_(other.ancestors_) {
-    ancestors_.push_back(other.id_);
+    genealogy_(other.genealogy_) {
     if (type_ == CellType::stem) {
         if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt())) {
             type_ = CellType::nonstem;
@@ -111,11 +110,11 @@ double Cell::delta_time(const double positional_value) {
     }
 }
 
-std::vector<int> Cell::is_descendant_of(const std::vector<size_t>& mutants) {
+std::vector<int> Cell::has_mutations_of(const std::vector<size_t>& mutants) {
     std::vector<int> genotype;
     genotype.reserve(mutants.size());
     for (const size_t mut: mutants) {
-        if (std::find(ancestors_.begin(), ancestors_.end(), mut) != ancestors_.end()) {
+        if (std::find(genealogy_.begin(), genealogy_.end(), mut) != genealogy_.end()) {
             genotype.push_back(1);
         } else {
             genotype.push_back(0);
@@ -124,11 +123,23 @@ std::vector<int> Cell::is_descendant_of(const std::vector<size_t>& mutants) {
     return genotype;
 }
 
+size_t Cell::operator-(const Cell& other) const {
+    const size_t this_len = genealogy_.size();
+    const size_t other_len = other.genealogy_.size();
+    const size_t shorter = std::min(this_len, other_len);
+    size_t branch = this_len + other_len;
+    for (size_t i=0; i<shorter; ++i) {
+        if (genealogy_[i] != other.genealogy_[i]) break;
+        branch -= 2;
+    }
+    return branch;
+}
+
 std::string Cell::header(const size_t dimensions, const char* sep) {
     std::vector<std::string> axes{"x", "y", "z"};
     axes.resize(dimensions);
     std::ostringstream oss;
-    oss << "id" << sep << "ancestors" << sep
+    oss << "genealogy" << sep
         << "birth" << sep << "death" << sep
         << wtl::join(axes, sep) << sep << "sites" << sep
         << "beta" << sep << "delta" << sep << "rho\n";
@@ -136,7 +147,7 @@ std::string Cell::header(const size_t dimensions, const char* sep) {
 }
 
 std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
-    return ost << id_ << sep << wtl::join(ancestors_, ":") << sep
+    return ost << wtl::join(genealogy_, ":") << sep
         << time_of_birth_ << sep << time_of_death_ << sep
         << wtl::join(coord(), sep) << sep
         << wtl::join(sites(), ":") << sep

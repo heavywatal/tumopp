@@ -77,7 +77,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
             if (insert(daughter)) {
                 mother->set_time_of_death(time_);
                 collect(specimens_, *mother);
-                mother->daughterize();
+                mother->set_time_of_death(0.0);
                 mother->set_time_of_birth(time_, ++id_tail_);
                 daughter->set_time_of_birth(time_, ++id_tail_);
                 mother->mutate();
@@ -262,7 +262,7 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
     std::vector<std::vector<int>> flags;
     flags.reserve(samples.size());
     for (const auto& cell: samples) {
-        flags.push_back(cell->is_descendant_of(mutants));
+        flags.push_back(cell->has_mutations_of(mutants));
     }
     wtl::transpose(&flags);
     std::vector<std::vector<int>> segsites;

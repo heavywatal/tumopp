@@ -35,7 +35,9 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::vector<int>& v, const size_t i=0): coord_(v), id_(i) {}
+    Cell(const std::vector<int>& v, const size_t i=0): coord_(v) {
+        genealogy_.push_back(i);
+    }
     //! Copy constructor
     Cell(const Cell& other);
     //! Destructor
@@ -54,14 +56,10 @@ class Cell {
     void set_coord(const std::vector<int>& v) {coord_ = v;}
     void set_time_of_birth(const double t, const size_t i) {
         time_of_birth_ = t;
-        id_ = i;
+        genealogy_.push_back(i);
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
     void set_time_of_death(const double t) {time_of_death_ = t;}
-    void daughterize() {
-        time_of_death_ = 0.0;
-        ancestors_.push_back(id_);
-    }
 
     //! Getter
     bool is_dividing() const {return next_event_ == Event::birth;}
@@ -71,11 +69,13 @@ class Cell {
 
     const std::vector<int>& coord() const {return coord_;}
     const std::vector<size_t>& sites() const {return sites_;}
-    size_t id() const {return id_;}
     double time_of_birth() const {return time_of_birth_;}
     double time_of_death() const {return time_of_death_;}
 
-    std::vector<int> is_descendant_of(const std::vector<size_t>&);
+    std::vector<int> has_mutations_of(const std::vector<size_t>&);
+
+    //! Branch length (# of divisions) between two cells
+    size_t operator-(const Cell&) const;
 
     static double MUTATION_RATE() {return MUTATION_RATE_;}
 
@@ -134,8 +134,7 @@ class Cell {
     size_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
 
     //! Extra data
-    size_t id_ = 0;
-    std::vector<size_t> ancestors_;
+    std::vector<size_t> genealogy_;
     double time_of_birth_ = 0.0;
     double time_of_death_ = 0.0;
     Event next_event_ = Event::birth;
