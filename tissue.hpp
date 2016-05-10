@@ -117,14 +117,12 @@ class Tissue {
     void fill_push(std::shared_ptr<Cell> moving, const std::vector<int>& direction);
     //! Insert x if it has an empty neighbor
     bool fill_empty(const std::shared_ptr<Cell>& x);
-    //! Try to insert x to a random neighbor
-    bool insert_neighbor(const std::shared_ptr<Cell>& daughter);
-
     //! Put new cell and return existing.
     bool swap_existing(std::shared_ptr<Cell>* x);
-    std::vector<std::vector<int>> empty_neighbors(const std::vector<int>&) const;
     size_t steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const;
     std::vector<int> to_nearest_empty(const std::vector<int>& current, size_t search_max=26) const;
+
+    size_t num_empty_neighbors(const std::vector<int>&) const;
 
     void queue_push(double delta_t, const std::shared_ptr<Cell>&);
 

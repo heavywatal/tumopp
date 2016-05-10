@@ -142,7 +142,7 @@ std::string Cell::header(const size_t dimensions, const char* sep) {
     oss << "genealogy" << sep
         << "birth" << sep << "death" << sep
         << wtl::join(axes, sep) << sep << "sites" << sep
-        << "beta" << sep << "delta" << sep << "rho\n";
+        << "beta" << sep << "delta" << sep << "rho";
     return oss.str();
 }
 
@@ -153,7 +153,7 @@ std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
         << wtl::join(sites(), ":") << sep
         << birth_rate_ << sep
         << death_rate_ << sep
-        << migra_rate_ << "\n";
+        << migra_rate_;
 }
 
 std::string Cell::str(const char* sep) const {

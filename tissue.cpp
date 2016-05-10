@@ -120,10 +120,11 @@ bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
         pushn_everytime(daughter);
     } else if (PACKING_ == "fillpush") {
         fill_push(daughter, coord_func_->random_direction(wtl::sfmt()));
-    } else if (PACKING_ == "fill") {  //! @todo incorrect time scale
+    } else if (PACKING_ == "fill") {
         return fill_empty(daughter);
     } else if (PACKING_ == "empty") {
-        return insert_neighbor(daughter);
+        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
+        return tumor_.insert(daughter).second;
     } else {
         std::cout << FILE_LINE_PRETTY
             << "\nERROR: unknown option value --packing=" << PACKING_
@@ -165,11 +166,6 @@ bool Tissue::fill_empty(const std::shared_ptr<Cell>& moving) {
     }
     moving->set_coord(present_coord);
     return false;
-}
-
-bool Tissue::insert_neighbor(const std::shared_ptr<Cell>& daughter) {
-    daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
-    return tumor_.insert(daughter).second;
 }
 
 bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
@@ -224,16 +220,14 @@ std::vector<int> Tissue::to_nearest_empty(const std::vector<int>& current, size_
     return best_direction;
 }
 
-std::vector<std::vector<int>> Tissue::empty_neighbors(const std::vector<int>& coord) const {
-    std::vector<std::vector<int>> output;
+size_t Tissue::num_empty_neighbors(const std::vector<int>& coord) const {
+    size_t cnt = 0;
     std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
         nb->set_coord(coord + d);
-        if (tumor_.find(nb) != tumor_.end()) {
-            output.push_back(nb->coord());
-        }
+        if (tumor_.find(nb) == tumor_.end()) {++cnt;}
     }
-    return output;
+    return cnt;
 }
 
 double Tissue::positional_value(const std::vector<int>& coord) const {
@@ -299,12 +293,12 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
 std::string Tissue::header() const {HERE;
     std::ostringstream oss;
     oss.precision(std::numeric_limits<double>::max_digits10);
-    oss << "time" << sep_ << Cell::header(DIMENSIONS_, sep_);
+    oss << "time" << sep_ << Cell::header(DIMENSIONS_, sep_) << "\n";
     return oss.str();
 }
 
 void Tissue::collect(std::ostream& ost, const Cell& cell) {
-    cell.write(ost << time_ << sep_, sep_);
+    cell.write(ost << time_ << sep_, sep_) << "\n";
 }
 
 void Tissue::snap(std::ostream& ost) {
