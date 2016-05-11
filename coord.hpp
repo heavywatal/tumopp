@@ -143,7 +143,7 @@ class Neumann final: public Coord {
     Neumann() = delete;
     explicit Neumann(const size_t d): Coord(d) {
         directions_.reserve(2 * dimensions);
-        std::valarray<int> v(dimensions, 0);
+        std::valarray<int> v(dimensions);
         v[v.size() - 1] += 1;
         do {
             directions_.push_back(v);
@@ -220,7 +220,7 @@ class Hexagonal final: public Coord {
         return d;
     }
     virtual double euclidean_distance(const std::valarray<int>& v) const override {
-        std::valarray<double> true_pos(dimensions, 0.0);
+        std::valarray<double> true_pos(dimensions);
         true_pos += v;
         true_pos[1] += true_pos[0] * 0.5;
         true_pos[0] *= std::sqrt(3.0 / 4.0);
