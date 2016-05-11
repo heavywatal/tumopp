@@ -252,9 +252,10 @@ std::vector<size_t> Tissue::generate_neutral_mutations() const {
 }
 
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
+    const size_t sample_size = samples.size();
     const auto mutants = generate_neutral_mutations();
     std::vector<std::vector<int>> flags;
-    flags.reserve(samples.size());
+    flags.reserve(sample_size);
     for (const auto& cell: samples) {
         flags.push_back(cell->has_mutations_of(mutants));
     }
@@ -262,12 +263,13 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
     std::vector<std::vector<int>> segsites;
     segsites.reserve(flags.size());
     for (size_t i=0; i<flags.size(); ++i) {
-        if (wtl::sum(flags[i]) > 0) segsites.push_back(flags[i]);
+        const size_t daf = wtl::sum(flags[i]);
+        if (0 < daf && daf < sample_size) segsites.push_back(flags[i]);
     }
     const size_t s = segsites.size();
-    wtl::transpose(&segsites);
     ost << "\n//\nsegsites: " << s << "\n";
     if (s > 0) {
+        wtl::transpose(&segsites);
         ost << "positions: "
             << wtl::join(std::vector<int>(s), " ") << "\n";
         for (const auto& x: segsites) {
