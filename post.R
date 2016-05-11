@@ -1,14 +1,4 @@
 #!/usr/bin/env Rscript
-command_args = function() {
-    .argv = commandArgs(trailingOnly=FALSE)
-    l = list()
-    l$file = sub('^--file=', '', grep('^--file=', .argv, value=TRUE))
-    l$srcdir = dirname(normalizePath(l$file))
-    l$args = grep('^[^-]', .argv[-1], value=TRUE)
-    return(l)
-}
-(args = command_args())
-
 library(pipeR)
 library(readr)
 library(tidyr)
@@ -18,7 +8,9 @@ library(ggplot2)
 library(tumorr)
 #load_all('~/git/tumorr')
 
-indir = args$args[1]
+.args = command_args()
+
+indir = .args$args[1]
 if (!is.na(indir)) {
     setwd(indir)
 }
