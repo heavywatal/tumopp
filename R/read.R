@@ -91,7 +91,9 @@ altered_params = function(conf) {
 #' @export
 exclusive_ancestors = function(snapshots, size) {
     dplyr::group_by(snapshots, time) %>>%
-    dplyr::filter(n()==size) %>>% (id)
+    dplyr::filter(n()==size) %>>%
+    (strsplit(.$genealogy, ':')) %>>%
+    sapply(last)
 }
 
 #' split ancestor string and extract an integer
@@ -119,8 +121,7 @@ first_ancestors = function(string, anc_ids) {
 #' @export
 filter_ancestors = function(mtrx, anc_ids) {
     dplyr::mutate(mtrx,
-        ancestors= ifelse(is.na(ancestors), id, ancestors),
-        ancestors= first_ancestors(ancestors, anc_ids),
+        ancestors= first_ancestors(genealogy, anc_ids),
         ancestors= as.factor(ancestors))
 }
 
