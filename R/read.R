@@ -3,9 +3,9 @@
 #' @return a data.frame
 #' @rdname read
 .read_conf = function(filename) {
-    readr::read_delim(filename, '=', col_names=c('key', 'val'), comment='#') %>%
-    dplyr::summarise_each(dplyr::funs(paste0(., collapse='\t'))) %>%
-    {paste(.$key, .$val, sep='\n')} %>%
+    readr::read_delim(filename, '=', col_names=c('key', 'val'), comment='#') %>>%
+    dplyr::summarise_each(dplyr::funs(paste0(., collapse='\t'))) %>>%
+    {paste(.$key, .$val, sep='\n')} %>>%
     readr::read_tsv()
 }
 
@@ -15,10 +15,10 @@
 #' @rdname read
 #' @export
 read_conf = function(indir='.') {
-    dplyr::data_frame(path=indir) %>%
-    dplyr::group_by(path) %>% dplyr::do({
+    dplyr::data_frame(path=indir) %>>%
+    dplyr::group_by(path) %>>% dplyr::do({
         .read_conf(file.path(.$path, 'program_options.conf'))
-    }) %>%
+    }) %>>%
     dplyr::ungroup()
 }
 
@@ -28,7 +28,7 @@ read_conf = function(indir='.') {
 #' @rdname read
 #' @export
 read_snapshots = function(conf) {
-    dplyr::group_by_(conf, .dots=c('path')) %>%
+    dplyr::group_by_(conf, .dots=c('path')) %>>%
     dplyr::do({
         x = readr::read_tsv(file.path(.$path, 'snapshots.tsv.gz'))
         if (.$coord == 'hex') {
@@ -45,7 +45,7 @@ read_snapshots = function(conf) {
 #' @rdname read
 #' @export
 read_population = function(conf, params=NULL) {
-    dplyr::group_by_(conf, .dots=c('path', params)) %>%
+    dplyr::group_by_(conf, .dots=c('path', params)) %>>%
     dplyr::do({
         x = readr::read_tsv(file.path(.$path, 'population.tsv.gz'))
         if (.$coord == 'hex') {
@@ -60,15 +60,15 @@ read_population = function(conf, params=NULL) {
 #' @return a grouped data.frame
 #' @rdname extract
 #' @export
-extract_demography = function(grouped_df) {grouped_df %>%
-    dplyr::select(birth, death) %>%
-    tidyr::gather(event, time, birth, death) %>%
-    dplyr::filter(!(time == 0 & event == 'death')) %>%  # alive
-    dplyr::mutate(event= factor(event, levels=c('death', 'birth'))) %>%
-    dplyr::arrange(time, event) %>%
+extract_demography = function(grouped_df) {grouped_df %>>%
+    dplyr::select(birth, death) %>>%
+    tidyr::gather(event, time, birth, death) %>>%
+    dplyr::filter(!(time == 0 & event == 'death')) %>>%  # alive
+    dplyr::mutate(event= factor(event, levels=c('death', 'birth'))) %>>%
+    dplyr::arrange(time, event) %>>%
     dplyr::mutate(dn = ifelse(event == 'birth', 1, -1),
-           size = cumsum(dn)) %>%
-    dplyr::group_by(time, add=TRUE) %>%
+           size = cumsum(dn)) %>>%
+    dplyr::group_by(time, add=TRUE) %>>%
     dplyr::summarise(size=last(size))
 }
 
@@ -78,9 +78,9 @@ extract_demography = function(grouped_df) {grouped_df %>%
 #' @rdname extract
 #' @export
 altered_params = function(conf) {
-    dplyr::select(conf, -path, -out_dir, -seed) %>%
-    dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>%
-    unlist() %>>% (.[. > 1]) %>% names()
+    dplyr::select(conf, -path, -out_dir, -seed) %>>%
+    dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>>%
+    unlist() %>>% (.[. > 1]) %>>% names()
 }
 
 #' cell ids at the size

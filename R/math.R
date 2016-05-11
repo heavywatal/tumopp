@@ -35,7 +35,7 @@ maxabs = function(mtrx) {
 #' @return transformed matrix
 #' @rdname hex
 trans_coord_hex_xy = function(mtrx) {
-    dplyr::mutate(mtrx, y= y + x * 0.5) %>%
+    dplyr::mutate(mtrx, y= y + x * 0.5) %>>%
     dplyr::mutate(x= x * sqrt(3.0 / 4.0))
 }
 
@@ -44,8 +44,8 @@ trans_coord_hex_xy = function(mtrx) {
 #' @return transformed matrix
 #' @rdname hex
 trans_coord_hcc = function(mtrx) {
-    trans_coord_hex_xy(mtrx) %>%
-    dplyr::mutate(x= x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>%
+    trans_coord_hex_xy(mtrx) %>>%
+    dplyr::mutate(x= x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>>%
     dplyr::mutate(z= z * sqrt(2.0 / 3.0))
 }
 
@@ -54,8 +54,8 @@ trans_coord_hcc = function(mtrx) {
 #' @return transformed matrix
 #' @rdname hex
 trans_coord_fcc = function(mtrx) {
-    trans_coord_hex_xy(mtrx) %>%
-    dplyr::mutate(x= x + z / sqrt(3.0)) %>%
+    trans_coord_hex_xy(mtrx) %>>%
+    dplyr::mutate(x= x + z / sqrt(3.0)) %>>%
     dplyr::mutate(z= z * sqrt(2.0 / 3.0))
 }
 

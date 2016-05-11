@@ -5,8 +5,8 @@
 #' @rdname plot
 #' @export
 gglattice2D = function(.data, colour='ancestors', limit=maxabs(.data)) {
-    ggplot2::ggplot(.data, aes(x, y))+
-    ggplot2::geom_point(aes_string(colour=colour), alpha=0.66, size=80/limit)+
+    ggplot2::ggplot(.data, ggplot2::aes(x, y))+
+    ggplot2::geom_point(ggplot2::aes_string(colour=colour), alpha=0.66, size=80/limit)+
     ggplot2::scale_colour_hue(na.value='white', drop=FALSE)+
     ggplot2::expand_limits(x=limit * c(-1, 1), y=limit * c(-1, 1))+
     ggplot2::theme_grey()+
@@ -24,7 +24,7 @@ gglattice2D = function(.data, colour='ancestors', limit=maxabs(.data)) {
 #' @export
 save_serial_section = function(filename='serial_section.gif', .data, width=720, height=640) {
     .lim = maxabs(.data)
-    section_plots = dplyr::group_by(.data, z) %>%
+    section_plots = dplyr::group_by(.data, z) %>>%
         dplyr::do(plt={
             gglattice2D(., limit=.lim)+
             ggplot2::geom_hline(yintercept=.$z[1])
