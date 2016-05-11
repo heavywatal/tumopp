@@ -134,7 +134,7 @@ bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
     return true;
 }
 
-void Tissue::push(std::shared_ptr<Cell> moving, const std::vector<int>& direction) {
+void Tissue::push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {
     do {
         moving->set_coord(moving->coord() + direction);
     } while (swap_existing(&moving));
@@ -146,7 +146,7 @@ void Tissue::pushn_everytime(std::shared_ptr<Cell> moving) {
     } while (swap_existing(&moving));
 }
 
-void Tissue::fill_push(std::shared_ptr<Cell> moving, const std::vector<int>& direction) {
+void Tissue::fill_push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {
     while (!fill_empty(moving)) {
         moving->set_coord(moving->coord() + direction);
         swap_existing(&moving);
@@ -196,7 +196,7 @@ void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
     }
 }
 
-size_t Tissue::steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const {
+size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const {
     size_t steps = 0;
     const auto key = std::make_shared<Cell>();
     do {
@@ -206,10 +206,10 @@ size_t Tissue::steps_to_empty(std::vector<int> current, const std::vector<int>& 
     return steps;
 }
 
-std::vector<int> Tissue::to_nearest_empty(const std::vector<int>& current, size_t search_max) const {
+std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, size_t search_max) const {
     search_max = std::min(search_max, coord_func_->directions().size());
     size_t least_steps = std::numeric_limits<size_t>::max();
-    std::vector<int> best_direction;
+    std::valarray<int> best_direction;
     for (const auto& d: wtl::sample_knuth(coord_func_->directions(), search_max, wtl::sfmt())) {
         auto n = steps_to_empty(current, d);
         if (n < least_steps) {
@@ -220,7 +220,7 @@ std::vector<int> Tissue::to_nearest_empty(const std::vector<int>& current, size_
     return best_direction;
 }
 
-size_t Tissue::num_empty_neighbors(const std::vector<int>& coord) const {
+size_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
     size_t cnt = 0;
     std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
@@ -230,7 +230,7 @@ size_t Tissue::num_empty_neighbors(const std::vector<int>& coord) const {
     return cnt;
 }
 
-double Tissue::positional_value(const std::vector<int>& coord) const {
+double Tissue::positional_value(const std::valarray<int>& coord) const {
     if (SIGMA_E_ > 1e9 | tumor_.size() <= 8) return 1.0;
     double rel_d = coord_func_->euclidean_distance(coord)
                    / coord_func_->radius(tumor_.size());
@@ -333,7 +333,7 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
 }
 
 template <class T> inline
-void test_coordinate(const std::vector<int>& v) {HERE;
+void test_coordinate(const std::valarray<int>& v) {HERE;
     T coord(v.size());
     std::cerr << coord.core() << std::endl;
     std::cerr << coord.sphere(20) << std::endl;
@@ -364,12 +364,12 @@ void Tissue::unit_test() {HERE;
     std::cerr << tissue.header();
     tissue.snap(std::cerr);
 
-    const std::vector<int> v2{3, -2};
+    const std::valarray<int> v2{3, -2};
     test_coordinate<Neumann>(v2);
     test_coordinate<Moore>(v2);
     test_coordinate<Hexagonal>(v2);
 
-    const std::vector<int> v3{3, -2, 1};
+    const std::valarray<int> v3{3, -2, 1};
     test_coordinate<Neumann>(v3);
     test_coordinate<Moore>(v3);
     test_coordinate<Hexagonal>(v3);

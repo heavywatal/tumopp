@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <valarray>
 #include <unordered_set>
 #include <memory>
 #include <string>
@@ -20,23 +21,27 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
 namespace std {
-  template <> struct hash<std::vector<int>> {
-    size_t operator() (const std::vector<int>& v) const {
-        return boost::hash_range(v.begin(), v.end());
+  template <> struct hash<std::valarray<int>> {
+    size_t operator() (const std::valarray<int>& v) const {
+        return boost::hash_range(std::begin(v), std::end(v));
     }
   };
   template <> struct hash<std::shared_ptr<Cell>> {
     size_t operator() (const std::shared_ptr<Cell>& x) const {
-        return std::hash<std::vector<int>>()(x->coord());
+        return std::hash<std::valarray<int>>()(x->coord());
     }
   };
+}
+
+inline bool all(const std::valarray<bool>& v) {
+    return std::all_of(std::begin(v), std::end(v), [](bool x){return x;});
 }
 
 class equal_shptr_cell {
   public:
     bool operator() (const std::shared_ptr<Cell>& lhs,
                      const std::shared_ptr<Cell>& rhs) const {
-        return lhs->coord() == rhs->coord();
+        return all(lhs->coord() == rhs->coord());
     }
 };
 
@@ -111,22 +116,22 @@ class Tissue {
     void migrate(const std::shared_ptr<Cell>&);
 
     //! Emplace daughter cell and push other cells outward
-    void push(std::shared_ptr<Cell> moving, const std::vector<int>& direction);
+    void push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
     void pushn_everytime(std::shared_ptr<Cell> moving);
     //! Fill empty neighbor or push to the direction
-    void fill_push(std::shared_ptr<Cell> moving, const std::vector<int>& direction);
+    void fill_push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
     //! Insert x if it has an empty neighbor
     bool fill_empty(const std::shared_ptr<Cell>& x);
     //! Put new cell and return existing.
     bool swap_existing(std::shared_ptr<Cell>* x);
-    size_t steps_to_empty(std::vector<int> current, const std::vector<int>& direction) const;
-    std::vector<int> to_nearest_empty(const std::vector<int>& current, size_t search_max=26) const;
+    size_t steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const;
+    std::valarray<int> to_nearest_empty(const std::valarray<int>& current, size_t search_max=26) const;
 
-    size_t num_empty_neighbors(const std::vector<int>&) const;
+    size_t num_empty_neighbors(const std::valarray<int>&) const;
 
     void queue_push(double delta_t, const std::shared_ptr<Cell>&);
 
-    double positional_value(const std::vector<int>&) const;
+    double positional_value(const std::valarray<int>&) const;
 
     std::vector<size_t> generate_neutral_mutations() const;
 

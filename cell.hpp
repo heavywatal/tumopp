@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <vector>
+#include <valarray>
 #include <string>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
@@ -35,7 +36,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::vector<int>& v, const size_t i=0): coord_(v) {
+    Cell(const std::valarray<int>& v, const size_t i=0): coord_(v) {
         genealogy_.push_back(i);
     }
     //! Copy constructor
@@ -53,7 +54,7 @@ class Cell {
     void mutate();
 
     //! Setter
-    void set_coord(const std::vector<int>& v) {coord_ = v;}
+    void set_coord(const std::valarray<int>& v) {coord_ = v;}
     void set_time_of_birth(const double t, const size_t i) {
         time_of_birth_ = t;
         genealogy_.push_back(i);
@@ -67,7 +68,7 @@ class Cell {
     bool is_migrating() const {return next_event_ == Event::migration;}
     double delta_time(const double positional_value);
 
-    const std::vector<int>& coord() const {return coord_;}
+    const std::valarray<int>& coord() const {return coord_;}
     const std::vector<size_t>& sites() const {return sites_;}
     double time_of_birth() const {return time_of_birth_;}
     double time_of_death() const {return time_of_death_;}
@@ -122,7 +123,7 @@ class Cell {
     static size_t MAX_PROLIFERATION_CAPACITY_;
 
     //! Position in a tumor
-    std::vector<int> coord_;
+    std::valarray<int> coord_;
     //! Mutated sites (infinite-site model)
     std::vector<size_t> sites_;
 
