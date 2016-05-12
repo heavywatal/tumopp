@@ -312,12 +312,15 @@ std::string Tissue::pairwise_distance(const size_t n) const {HERE;
 std::string Tissue::header() const {HERE;
     std::ostringstream oss;
     oss.precision(std::numeric_limits<double>::max_digits10);
-    oss << "time" << sep_ << Cell::header(DIMENSIONS_, sep_) << "\n";
+    oss << "time" << sep_
+        << Cell::header(DIMENSIONS_, sep_) << sep_
+        << "phi\n";
     return oss.str();
 }
 
 void Tissue::collect(std::ostream& ost, const Cell& cell) {
-    cell.write(ost << time_ << sep_, sep_) << "\n";
+    cell.write(ost << time_ << sep_, sep_) << sep_
+       << num_empty_neighbors(cell.coord()) << "\n";
 }
 
 void Tissue::snap(std::ostream& ost) {
