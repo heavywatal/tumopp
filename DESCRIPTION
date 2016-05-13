@@ -15,6 +15,7 @@ Imports:
     tidyr,
     ggplot2,
     rgl,
+    RColorBrewer,
     animation
 URL: https://github.com/heavywatal/tumorr
 BugReports: https://github.com/heavywatal/tumorr/issues

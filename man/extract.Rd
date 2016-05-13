@@ -2,6 +2,7 @@
 % Please edit documentation in R/read.R
 \name{extract_demography}
 \alias{altered_params}
+\alias{colorcode_survivors}
 \alias{command_args}
 \alias{exclusive_ancestors}
 \alias{exclusive_ancestors_ss}
@@ -19,6 +20,8 @@ exclusive_ancestors_ss(snapshots, size)
 
 extract_ancestor(genealogy, ids)
 
+colorcode_survivors(raw_population, n = 4)
+
 command_args()
 }
 \arguments{
@@ -34,11 +37,15 @@ command_args()
 
 \item{snapshots}{a data.frame}
 
+\item{genealogy}{a string vector of colon-separated ancestors}
+
+\item{ids}{a string vector of exclusive ancestor ids}
+
+\item{raw_population}{a data.frame including ancestors}
+
+\item{n}{an integer number of exclusive ancestors}
+
 \item{size}{an integer}
-
-\item{string}{ancestors column}
-
-\item{anc_ids}{exclusive ancestor ids}
 }
 \value{
 a grouped data.frame
@@ -49,7 +56,9 @@ an integer vector
 
 an integer vector
 
-an integer vector
+a string vector of extracted ancestors
+
+a data.frame
 
 a list
 }
@@ -58,11 +67,13 @@ extract demography from population data
 
 extract param names from conf
 
-cell ids at the size
+cell ids that existed at the specified tumor size
 
-cell ids at the size (from snapshots)
+cell ids that existed at the specified tumor size (from snapshots)
 
 split ancestor string and extract one matched
+
+E ancestor column
 
 get commandline arguments
 }

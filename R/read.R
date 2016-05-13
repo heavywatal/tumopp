@@ -83,7 +83,7 @@ altered_params = function(conf) {
     unlist() %>>% (.[. > 1]) %>>% names()
 }
 
-#' cell ids at the size
+#' cell ids that existed at the specified tumor size
 #' @param population a raw data.frame
 #' @param size an integer
 #' @param origin an integer
@@ -99,7 +99,7 @@ exclusive_ancestors = function(population, size, origin=1) {
     seq(length(mothers) + size) %>>% setdiff(mothers)
 }
 
-#' cell ids at the size (from snapshots)
+#' cell ids that existed at the specified tumor size (from snapshots)
 #' @param snapshots a data.frame
 #' @param size an integer
 #' @return an integer vector
@@ -113,9 +113,9 @@ exclusive_ancestors_ss = function(snapshots, size) {
 }
 
 #' split ancestor string and extract one matched
-#' @param string ancestors column
-#' @param anc_ids exclusive ancestor ids
-#' @return an integer vector
+#' @param genealogy a string vector of colon-separated ancestors
+#' @param ids a string vector of exclusive ancestor ids
+#' @return a string vector of extracted ancestors
 #' @rdname extract
 #' @export
 #' @examples
@@ -124,6 +124,20 @@ extract_ancestor = function(genealogy, ids) {
     sapply(stringr::str_split(genealogy, ':', length(ids) + 1), function(x) {
         dplyr::last(x[x %in% ids])
     })
+}
+
+#' E ancestor column
+#' @param raw_population a data.frame including ancestors
+#' @param n an integer number of exclusive ancestors
+#' @return a data.frame
+#' @rdname extract
+#' @export
+colorcode_survivors = function(raw_population, n=4) {
+    num_founders = length(grep(':', raw_population$genealogy, invert=TRUE))
+    anc_ids = exclusive_ancestors(raw_population, n, num_founders)
+    raw_population %>>%
+        dplyr::filter(death == 0) %>>%
+        dplyr::mutate(ancestor= extract_ancestor(genealogy, anc_ids))
 }
 
 #' get commandline arguments
