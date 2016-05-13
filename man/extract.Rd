@@ -4,20 +4,20 @@
 \alias{altered_params}
 \alias{command_args}
 \alias{exclusive_ancestors}
+\alias{exclusive_ancestors_ss}
+\alias{extract_ancestor}
 \alias{extract_demography}
-\alias{filter_ancestors}
-\alias{first_ancestors}
 \title{extract demography from population data}
 \usage{
 extract_demography(grouped_df)
 
 altered_params(conf)
 
-exclusive_ancestors(snapshots, size)
+exclusive_ancestors(population, size, origin = 1)
 
-first_ancestors(string, anc_ids)
+exclusive_ancestors_ss(snapshots, size)
 
-filter_ancestors(mtrx, anc_ids)
+extract_ancestor(genealogy, ids)
 
 command_args()
 }
@@ -26,17 +26,19 @@ command_args()
 
 \item{conf}{a data.frame}
 
+\item{population}{a raw data.frame}
+
+\item{size}{an integer}
+
+\item{origin}{an integer}
+
 \item{snapshots}{a data.frame}
 
 \item{size}{an integer}
 
 \item{string}{ancestors column}
 
-\item{anc_ids}{an integer vector}
-
-\item{mtrx}{a data.frame}
-
-\item{anc_ids}{an integer vector}
+\item{anc_ids}{exclusive ancestor ids}
 }
 \value{
 a grouped data.frame
@@ -47,7 +49,7 @@ an integer vector
 
 an integer vector
 
-a modified data.frame
+an integer vector
 
 a list
 }
@@ -58,13 +60,13 @@ extract param names from conf
 
 cell ids at the size
 
-split ancestor string and extract an integer
+cell ids at the size (from snapshots)
 
-filter first ancesters for coloring
+split ancestor string and extract one matched
 
 get commandline arguments
 }
 \examples{
-first_ancestors(c('1:2:9', '1:2:4:6'), c(2, 5, 6))
+extract_ancestor(c('1:2:9', '1:2:4:6'), c('2', '5', '6'))
 }
 

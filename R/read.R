@@ -69,7 +69,7 @@ extract_demography = function(grouped_df) {grouped_df %>>%
     dplyr::mutate(dn = ifelse(event == 'birth', 1, -1),
            size = cumsum(dn)) %>>%
     dplyr::group_by(time, add=TRUE) %>>%
-    dplyr::summarise(size=last(size))
+    dplyr::summarise(size=dplyr::last(size))
 }
 
 #' extract param names from conf
@@ -84,45 +84,46 @@ altered_params = function(conf) {
 }
 
 #' cell ids at the size
+#' @param population a raw data.frame
+#' @param size an integer
+#' @param origin an integer
+#' @return an integer vector
+#' @rdname extract
+#' @export
+exclusive_ancestors = function(population, size, origin=1) {
+    mothers = population %>>%
+        head(size - origin) %>>%
+        (genealogy) %>>%
+        strsplit(':') %>>%
+        sapply(dplyr::last)
+    seq(length(mothers) + size) %>>% setdiff(mothers)
+}
+
+#' cell ids at the size (from snapshots)
 #' @param snapshots a data.frame
 #' @param size an integer
 #' @return an integer vector
 #' @rdname extract
 #' @export
-exclusive_ancestors = function(snapshots, size) {
+exclusive_ancestors_ss = function(snapshots, size) {
     dplyr::group_by(snapshots, time) %>>%
     dplyr::filter(n()==size) %>>%
     (strsplit(.$genealogy, ':')) %>>%
-    sapply(last)
+    sapply(dplyr::last)
 }
 
-#' split ancestor string and extract an integer
+#' split ancestor string and extract one matched
 #' @param string ancestors column
-#' @param anc_ids an integer vector
+#' @param anc_ids exclusive ancestor ids
 #' @return an integer vector
 #' @rdname extract
 #' @export
 #' @examples
-#' first_ancestors(c('1:2:9', '1:2:4:6'), c(2, 5, 6))
-first_ancestors = function(string, anc_ids) {
-    x = suppressWarnings(
-    sapply(stringr::str_split(string, ':', max(anc_ids)), function(x) {
-        x = as.integer(x)
-        max(x[x %in% anc_ids])
-    }))
-    pmax(x, min(anc_ids))
-}
-
-#' filter first ancesters for coloring
-#' @param mtrx a data.frame
-#' @param anc_ids an integer vector
-#' @return a modified data.frame
-#' @rdname extract
-#' @export
-filter_ancestors = function(mtrx, anc_ids) {
-    dplyr::mutate(mtrx,
-        ancestors= first_ancestors(genealogy, anc_ids),
-        ancestors= as.factor(ancestors))
+#' extract_ancestor(c('1:2:9', '1:2:4:6'), c('2', '5', '6'))
+extract_ancestor = function(genealogy, ids) {
+    sapply(stringr::str_split(genealogy, ':', length(ids) + 1), function(x) {
+        dplyr::last(x[x %in% ids])
+    })
 }
 
 #' get commandline arguments

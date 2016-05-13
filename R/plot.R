@@ -10,9 +10,9 @@ gglattice2D = function(.data, colour='ancestors', limit=maxabs(.data)) {
     ggplot2::scale_colour_hue(na.value='white', drop=FALSE)+
     ggplot2::expand_limits(x=limit * c(-1, 1), y=limit * c(-1, 1))+
     ggplot2::theme_grey()+
-    ggplot2::theme(panel.background=element_rect(fill='grey90'))+
-    ggplot2::theme(panel.grid=element_blank())+
-    ggplot2::theme(axis.title=element_blank())
+    ggplot2::theme(panel.background=ggplot2::element_rect(fill='grey90'))+
+    ggplot2::theme(panel.grid=ggplot2::element_blank())+
+    ggplot2::theme(axis.title=ggplot2::element_blank())
 }
 
 #' Write animation GIF for serial sections of 3D tumor
