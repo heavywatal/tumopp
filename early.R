@@ -1,14 +1,4 @@
 #!/usr/bin/env Rscript
-command_args = function() {
-    .argv = commandArgs(trailingOnly=FALSE)
-    l = list()
-    l$file = sub('^--file=', '', grep('^--file=', .argv, value=TRUE))
-    l$srcdir = dirname(normalizePath(l$file))
-    l$args = grep('^[^-]', .argv[-1], value=TRUE)
-    return(l)
-}
-(args = command_args())
-
 library(pipeR)
 library(readr)
 library(tidyr)
@@ -18,8 +8,10 @@ library(animation)
 
 library(tumorr)
 #load_all('~/git/tumorr')
+(.args = command_args())
+#########1#########2#########3#########4#########5#########6#########7#########
 
-indir = args$args[1]
+indir = .args$args[1]
 if (!is.na(indir)) {
     setwd(indir)
 }
@@ -28,29 +20,29 @@ conf = tumorr::read_conf() %>>% (?.)
 snapshots = tumorr::read_snapshots(conf)
 nzero = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
 anc_colours = max(4, nzero)
-anc_ids = exclusive_ancestors(raw, anc_colours)
-
-snapshots = tumorr::filter_ancestors(snapshots, anc_ids)
+anc_ids = exclusive_ancestors_ss(snapshots, anc_colours)
+.data = snapshots %>>%
+    dplyr::mutate(ancestor= extract_ancestor(genealogy, anc_ids))
 
 .lim = maxabs(snapshots)
 
 plot_snapshot = function(.data) {
     .t = .data$time[1]
     .N = nrow(.data)
-    gglattice2D(.data, 'ancestors', .lim)+
+    gglattice2d(.data, 'ancestor', limit=.lim)+
     labs(title=sprintf('t = %.5f, N =%4d', .t, .N))+
     theme(legend.position='none')
 }
 
 if (FALSE) {
-    snapshots %>>%
+    .data %>>%
     dplyr::filter(time==sample(unique(time), 1)) %>>%
     plot_snapshot()
 }
 
-time_plots = snapshots %>>%
+time_plots = .data %>>%
     group_by(time) %>>%
-    do(plt={plot_snapshot(., .lim)})
+    do(plt={plot_snapshot(.)})
 
 animation::saveGIF({for (.p in time_plots$plt) {print(.p)}},
     'earlysteps.gif',
