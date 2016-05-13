@@ -6,17 +6,20 @@
 \alias{save_serial_section}
 \title{ggplot for 2D lattice}
 \usage{
-gglattice2d(.data, colour = "ancestors", limit = maxabs(.data))
+gglattice2d(.data, .color = "ancestor", .palette = "Spectral",
+  limit = maxabs(.data))
 
 save_serial_section(filename = "serial_section.gif", .data, width = 720,
   height = 640)
 
-plot_tumor3d(survivors, .color = "ancestor", .palette = "Spectral")
+plot_tumor3d(.data, .color = "ancestor", .palette = "Spectral")
 }
 \arguments{
 \item{.data}{a data.frame}
 
-\item{colour}{a column name for colour}
+\item{.color}{a column name to colorcode}
+
+\item{.palette}{name for RColorBrewer::brewer.pal()}
 
 \item{limit}{for value range}
 
@@ -26,13 +29,13 @@ plot_tumor3d(survivors, .color = "ancestor", .palette = "Spectral")
 
 \item{height}{an integer}
 
-\item{survivors}{a data.frame}
+\item{.data}{a data.frame}
+
+\item{.data}{a data.frame}
 
 \item{.color}{column name to colorcode}
 
 \item{.palette}{name for RColorBrewer::brewer.pal()}
-
-\item{.data}{a data.frame}
 }
 \description{
 ggplot for 2D lattice

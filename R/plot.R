@@ -1,13 +1,14 @@
 #' ggplot for 2D lattice
 #' @param .data a data.frame
-#' @param colour a column name for colour
+#' @param .color a column name to colorcode
+#' @param .palette name for RColorBrewer::brewer.pal()
 #' @param limit for value range
 #' @rdname plot
 #' @export
-gglattice2d = function(.data, colour='ancestors', limit=maxabs(.data)) {
+gglattice2d = function(.data, .color='ancestor', .palette='Spectral', limit=maxabs(.data)) {
     ggplot2::ggplot(.data, ggplot2::aes(x, y))+
-    ggplot2::geom_point(ggplot2::aes_string(colour=colour), alpha=0.66, size=80/limit)+
-    ggplot2::scale_colour_hue(na.value='white', drop=FALSE)+
+    ggplot2::geom_point(ggplot2::aes_string(colour=.color), alpha=0.66, size=80/limit)+
+    ggplot2::scale_colour_brewer(palette=.palette)+
     ggplot2::expand_limits(x=limit * c(-1, 1), y=limit * c(-1, 1))+
     ggplot2::theme_grey()+
     ggplot2::theme(panel.background=ggplot2::element_rect(fill='grey90'))+
@@ -35,17 +36,17 @@ save_serial_section = function(filename='serial_section.gif', .data, width=720, 
 }
 
 #' plot tumor in 3d with rgl
-#' @param survivors a data.frame
+#' @param .data a data.frame
 #' @param .color column name to colorcode
 #' @param .palette name for RColorBrewer::brewer.pal()
 #' @rdname plot
 #' @export
-plot_tumor3d = function(survivors, .color='ancestor', .palette='Spectral') {
-    survivors[.color] = as.factor(survivors[[.color]])
-    num_colors = length(levels(survivors[[.color]]))
+plot_tumor3d = function(.data, .color='ancestor', .palette='Spectral') {
+    .data[.color] = as.factor(.data[[.color]])
+    num_colors = length(levels(.data[[.color]]))
     .palette = RColorBrewer::brewer.pal(num_colors, .palette)
-    thres = sphere_radius(nrow(survivors)) * 0.6
-    survivors %>>%
+    thres = sphere_radius(nrow(.data)) * 0.6
+    .data %>>%
         dplyr::filter(sqrt(x^2 + y^2 + z^2) > thres) %>>%
         with(rgl::spheres3d(x, y, z, color=.palette[.[[.color]]],
                             radius=1, alpha=1))
