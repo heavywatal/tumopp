@@ -136,20 +136,22 @@ size_t Cell::operator-(const Cell& other) const {
 }
 
 std::string Cell::header(const size_t dimensions, const char* sep) {
-    std::vector<std::string> axes{"x", "y", "z"};
-    axes.resize(dimensions);
     std::ostringstream oss;
-    oss << "genealogy" << sep
+    oss << "x" << sep << "y" << sep << "z" << sep
+        << "genealogy" << sep
         << "birth" << sep << "death" << sep
-        << wtl::join(axes, sep) << sep << "sites" << sep
+        << "sites" << sep
         << "beta" << sep << "delta" << sep << "rho";
     return oss.str();
 }
 
 std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
-    return ost << wtl::join(genealogy_, ":") << sep
+    int z = 0;
+    if (coord_.size() > 2) {z = coord_[2];}
+    return ost
+        << coord_[0] << sep << coord_[1] << sep << z << sep
+        << wtl::join(genealogy_, ":") << sep
         << time_of_birth_ << sep << time_of_death_ << sep
-        << wtl::join(std::begin(coord_), std::end(coord_), sep) << sep
         << wtl::join(sites(), ":") << sep
         << birth_rate_ << sep
         << death_rate_ << sep
