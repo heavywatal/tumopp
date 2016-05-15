@@ -30,7 +30,8 @@ read_conf = function(indir='.') {
 read_population = function(conf, params=NULL) {
     dplyr::group_by_(conf, .dots=c('path', params)) %>>%
     dplyr::do({
-        x = readr::read_tsv(file.path(.$path, 'population.tsv.gz'))
+        x = readr::read_tsv(file.path(.$path, 'population.tsv.gz')) %>>%
+            dplyr::mutate_(surface=~ genealogy %in% extract_surface(.))
         if (.$coord == 'hex') {
             x = trans_coord_hex(x)
         }

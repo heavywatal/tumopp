@@ -41,9 +41,7 @@ plot_tumor3d = function(.data, .color='ancestor', .palette='Spectral') {
     .data[.color] = as.factor(.data[[.color]])
     num_colors = length(levels(.data[[.color]]))
     .palette = RColorBrewer::brewer.pal(num_colors, .palette)
-    thres = sphere_radius(nrow(.data)) * 0.6
     .data %>>%
-        dplyr::filter_(~sqrt(x^2 + y^2 + z^2) > thres) %>>%
         {rgl::spheres3d(.$x, .$y, .$z, color=.palette[.[[.color]]],
                         radius=1, alpha=1)}
     rgl::box3d()

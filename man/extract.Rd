@@ -7,9 +7,12 @@
 \alias{exclusive_ancestors_ss}
 \alias{extract_ancestor}
 \alias{extract_demography}
+\alias{extract_surface}
 \title{extract param names from conf}
 \usage{
 altered_params(conf)
+
+extract_surface(mtrx)
 
 extract_demography(grouped_df)
 
@@ -23,6 +26,8 @@ colorcode_survivors(raw_population, n = 4)
 }
 \arguments{
 \item{conf}{a data.frame}
+
+\item{mtrx}{a data.frame with (x, y, z) columns}
 
 \item{grouped_df}{a grouped_df}
 
@@ -45,6 +50,8 @@ colorcode_survivors(raw_population, n = 4)
 \value{
 a string vector
 
+a string vector
+
 a grouped data.frame
 
 an integer vector
@@ -57,6 +64,8 @@ a data.frame
 }
 \description{
 extract param names from conf
+
+extract cells on suface
 
 extract demography from population data
 

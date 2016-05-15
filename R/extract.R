@@ -9,6 +9,26 @@ altered_params = function(conf) {
     unlist() %>>% (.[. > 1]) %>>% names()
 }
 
+#' subfunction
+.extract_surface = function(mtrx, plane=c('x', 'y'), axis='z') {
+    tmpl = 'genealogy[which.%s(%s)]'
+    dplyr::group_by_(mtrx, .dots=plane) %>>%
+    dplyr::summarise_(min=sprintf(tmpl, 'min', axis),
+                      max=sprintf(tmpl, 'max', axis)) %>>%
+    {union(.$min, .$max)}
+}
+
+#' extract cells on suface
+#' @param mtrx a data.frame with (x, y, z) columns
+#' @return a string vector
+#' @rdname extract
+#' @export
+extract_surface = function(mtrx) {
+          .extract_surface(mtrx, c('x', 'y'), 'z') %>>%
+    union(.extract_surface(mtrx, c('y', 'z'), 'x')) %>>%
+    union(.extract_surface(mtrx, c('z', 'x'), 'y'))
+}
+
 #' extract demography from population data
 #' @param grouped_df a grouped_df
 #' @return a grouped data.frame
