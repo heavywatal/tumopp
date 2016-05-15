@@ -1,7 +1,6 @@
 #' read a config file
 #' @param filename a string
 #' @return a data.frame
-#' @rdname read
 .read_conf = function(filename) {
     readr::read_delim(filename, '=', col_names=c('key', 'val'), comment='#') %>>%
     dplyr::summarise_each(dplyr::funs(paste0(., collapse='\t'))) %>>%
@@ -22,22 +21,6 @@ read_conf = function(indir='.') {
     dplyr::ungroup()
 }
 
-#' read snapshots
-#' @param conf a data.frame
-#' @return a grouped data.frame
-#' @rdname read
-#' @export
-read_snapshots = function(conf) {
-    dplyr::group_by_(conf, .dots=c('path')) %>>%
-    dplyr::do({
-        x = readr::read_tsv(file.path(.$path, 'snapshots.tsv.gz'))
-        if (.$coord == 'hex') {
-            x = trans_coord_hex(x)
-        }
-        x
-    })
-}
-
 #' read population
 #' @param conf a data.frame
 #' @param params a string vector; columns to be preserved
@@ -55,6 +38,32 @@ read_population = function(conf, params=NULL) {
     })
 }
 
+#' read snapshots
+#' @return a grouped data.frame
+#' @rdname read
+#' @export
+read_snapshots = function(conf) {
+    dplyr::group_by_(conf, .dots=c('path')) %>>%
+    dplyr::do({
+        x = readr::read_tsv(file.path(.$path, 'snapshots.tsv.gz'))
+        if (.$coord == 'hex') {
+            x = trans_coord_hex(x)
+        }
+        x
+    })
+}
+
+#' extract param names from conf
+#' @param conf a data.frame
+#' @return a string vector
+#' @rdname extract
+#' @export
+altered_params = function(conf) {
+    dplyr::select(conf, -path, -out_dir, -seed) %>>%
+    dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>>%
+    unlist() %>>% (.[. > 1]) %>>% names()
+}
+
 #' extract demography from population data
 #' @param grouped_df a grouped_df
 #' @return a grouped data.frame
@@ -70,17 +79,6 @@ extract_demography = function(grouped_df) {grouped_df %>>%
            size = cumsum(dn)) %>>%
     dplyr::group_by(time, add=TRUE) %>>%
     dplyr::summarise(size=dplyr::last(size))
-}
-
-#' extract param names from conf
-#' @param conf a data.frame
-#' @return a string vector
-#' @rdname extract
-#' @export
-altered_params = function(conf) {
-    dplyr::select(conf, -path, -out_dir, -seed) %>>%
-    dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>>%
-    unlist() %>>% (.[. > 1]) %>>% names()
 }
 
 #' cell ids that existed at the specified tumor size
@@ -101,7 +99,6 @@ exclusive_ancestors = function(population, size, origin=1) {
 
 #' cell ids that existed at the specified tumor size (from snapshots)
 #' @param snapshots a data.frame
-#' @param size an integer
 #' @return an integer vector
 #' @rdname extract
 #' @export

@@ -28,14 +28,6 @@ plot_tumor3d(.data, .color = "ancestor", .palette = "Spectral")
 \item{width}{an integer}
 
 \item{height}{an integer}
-
-\item{.data}{a data.frame}
-
-\item{.data}{a data.frame}
-
-\item{.color}{column name to colorcode}
-
-\item{.palette}{name for RColorBrewer::brewer.pal()}
 }
 \description{
 ggplot for 2D lattice

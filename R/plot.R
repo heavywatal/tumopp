@@ -18,7 +18,6 @@ gglattice2d = function(.data, .color='ancestor', .palette='Spectral', limit=maxa
 
 #' Write animation GIF for serial sections of 3D tumor
 #' @param filename a string
-#' @param .data a data.frame
 #' @param width an integer
 #' @param height an integer
 #' @rdname plot
@@ -36,9 +35,6 @@ save_serial_section = function(filename='serial_section.gif', .data, width=720, 
 }
 
 #' plot tumor in 3d with rgl
-#' @param .data a data.frame
-#' @param .color column name to colorcode
-#' @param .palette name for RColorBrewer::brewer.pal()
 #' @rdname plot
 #' @export
 plot_tumor3d = function(.data, .color='ancestor', .palette='Spectral') {
