@@ -39,7 +39,9 @@ population %>>%
 library(rgl)
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
-plot_tumor3d(population)
+population %>>%
+    dplyr::filter(surface) %>>%
+    plot_tumor3d()
 title3d('', '', 'x', 'y', 'z')
 writeWebGL('.', 'rgl.html', snapshot=FALSE, width=600, height=600)
 rgl::snapshot3d('colorcode3d.png')
