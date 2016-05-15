@@ -58,7 +58,7 @@ an integer vector
 
 an integer vector
 
-a string vector of extracted ancestors
+a factor vector of extracted ancestors
 
 a data.frame
 }

@@ -77,7 +77,7 @@ exclusive_ancestors_ss = function(snapshots, size) {
 #' split ancestor string and extract one matched
 #' @param genealogy a string vector of colon-separated ancestors
 #' @param ids a string vector of exclusive ancestor ids
-#' @return a string vector of extracted ancestors
+#' @return a factor vector of extracted ancestors
 #' @rdname extract
 #' @export
 #' @examples
@@ -85,7 +85,8 @@ exclusive_ancestors_ss = function(snapshots, size) {
 extract_ancestor = function(genealogy, ids) {
     sapply(stringr::str_split(genealogy, ':', length(ids) + 1), function(x) {
         dplyr::last(x[x %in% ids])
-    })
+    }) %>>%
+    factor(levels=ids)
 }
 
 #' E ancestor column
