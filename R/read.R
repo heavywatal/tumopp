@@ -15,7 +15,7 @@
 #' @export
 read_conf = function(indir='.') {
     dplyr::data_frame(path=indir) %>>%
-    dplyr::group_by(path) %>>% dplyr::do({
+    dplyr::group_by_(~path) %>>% dplyr::do({
         .read_conf(file.path(.$path, 'program_options.conf'))
     }) %>>%
     dplyr::ungroup()
@@ -43,7 +43,7 @@ read_population = function(conf, params=NULL) {
 #' @rdname read
 #' @export
 read_snapshots = function(conf) {
-    dplyr::group_by_(conf, .dots=c('path')) %>>%
+    dplyr::group_by_(conf, ~path) %>>%
     dplyr::do({
         x = readr::read_tsv(file.path(.$path, 'snapshots.tsv.gz'))
         if (.$coord == 'hex') {
@@ -59,7 +59,7 @@ read_snapshots = function(conf) {
 #' @rdname extract
 #' @export
 altered_params = function(conf) {
-    dplyr::select(conf, -path, -out_dir, -seed) %>>%
+    dplyr::select_(~conf, ~-path, ~-out_dir, ~-seed) %>>%
     dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>>%
     unlist() %>>% (.[. > 1]) %>>% names()
 }
@@ -70,15 +70,15 @@ altered_params = function(conf) {
 #' @rdname extract
 #' @export
 extract_demography = function(grouped_df) {grouped_df %>>%
-    dplyr::select(birth, death) %>>%
-    tidyr::gather(event, time, birth, death) %>>%
-    dplyr::filter(!(time == 0 & event == 'death')) %>>%  # alive
-    dplyr::mutate(event= factor(event, levels=c('death', 'birth'))) %>>%
-    dplyr::arrange(time, event) %>>%
-    dplyr::mutate(dn = ifelse(event == 'birth', 1, -1),
-           size = cumsum(dn)) %>>%
-    dplyr::group_by(time, add=TRUE) %>>%
-    dplyr::summarise(size=dplyr::last(size))
+    dplyr::select_(~birth, ~death) %>>%
+    tidyr::gather_(~event, ~time, ~birth, ~death) %>>%
+    dplyr::filter_(~!(time == 0 & event == 'death')) %>>%  # alive
+    dplyr::mutate_(event=~ factor(event, levels=c('death', 'birth'))) %>>%
+    dplyr::arrange_(~time, ~event) %>>%
+    dplyr::mutate_(dn =~ ifelse(event == 'birth', 1, -1),
+           size =~ cumsum(dn)) %>>%
+    dplyr::group_by_(~time, add=TRUE) %>>%
+    dplyr::summarise_(size=~ dplyr::last(size))
 }
 
 #' cell ids that existed at the specified tumor size
@@ -91,7 +91,7 @@ extract_demography = function(grouped_df) {grouped_df %>>%
 exclusive_ancestors = function(population, size, origin=1) {
     mothers = population %>>%
         head(size - origin) %>>%
-        (genealogy) %>>%
+        `[[`('genealogy') %>>%
         strsplit(':') %>>%
         sapply(dplyr::last)
     seq(length(mothers) + size) %>>% setdiff(mothers)
@@ -103,8 +103,8 @@ exclusive_ancestors = function(population, size, origin=1) {
 #' @rdname extract
 #' @export
 exclusive_ancestors_ss = function(snapshots, size) {
-    dplyr::group_by(snapshots, time) %>>%
-    dplyr::filter(n()==size) %>>%
+    dplyr::group_by_(~snapshots, ~time) %>>%
+    dplyr::filter_(~ n() == size) %>>%
     (strsplit(.$genealogy, ':')) %>>%
     sapply(dplyr::last)
 }
@@ -133,8 +133,8 @@ colorcode_survivors = function(raw_population, n=4) {
     num_founders = length(grep(':', raw_population$genealogy, invert=TRUE))
     anc_ids = exclusive_ancestors(raw_population, n, num_founders)
     raw_population %>>%
-        dplyr::filter(death == 0) %>>%
-        dplyr::mutate(ancestor= extract_ancestor(genealogy, anc_ids))
+        dplyr::filter_(~ death == 0) %>>%
+        dplyr::mutate_(ancestor=~ extract_ancestor(genealogy, anc_ids))
 }
 
 #' get commandline arguments
