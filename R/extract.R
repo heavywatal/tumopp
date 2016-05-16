@@ -4,7 +4,7 @@
 #' @rdname extract
 #' @export
 altered_params = function(conf) {
-    dplyr::select_(~conf, ~-path, ~-out_dir, ~-seed) %>>%
+    dplyr::select_(conf, ~-path, ~-out_dir, ~-seed) %>>%
     dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>>%
     unlist() %>>% (.[. > 1]) %>>% names()
 }
