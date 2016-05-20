@@ -46,3 +46,31 @@ trans_coord_hex = function(mtrx) {
         trans_coord_hex_xy(mtrx)
     }
 }
+
+#' Rotate
+#' @param theta radian angle
+#' @param axis a string
+#' @return modified data.frame
+#' @rdname coord
+#' @export
+rotate = function(mtrx, theta, axis=c('z', 'x', 'y')) {
+    axis = match.arg(axis)
+    .x = mtrx[['x']]
+    .y = mtrx[['y']]
+    .z = mtrx[['z']]
+    .sin = sin(theta)
+    .cos = cos(theta)
+    if (axis == 'z') {
+        dplyr::mutate(mtrx,
+            x= .x * .cos - .y * .sin,
+            y= .x * .sin + .y * .cos)
+    } else if (axis == 'x') {
+        dplyr::mutate(mtrx,
+            y= .y * .cos - .z * .sin,
+            z= .y * .sin + .z * .cos)
+    } else {  # y
+        dplyr::mutate(mtrx,
+            x= .x * .cos + .z * .sin,
+            z= - .x * .sin + .z * .cos)
+    }
+}

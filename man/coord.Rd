@@ -2,6 +2,7 @@
 % Please edit documentation in R/coord.R
 \name{maxabs}
 \alias{maxabs}
+\alias{rotate}
 \alias{trans_coord_fcc}
 \alias{trans_coord_hcc}
 \alias{trans_coord_hex}
@@ -17,9 +18,15 @@ trans_coord_hcc(mtrx)
 trans_coord_fcc(mtrx)
 
 trans_coord_hex(mtrx)
+
+rotate(mtrx, theta, axis = c("z", "x", "y"))
 }
 \arguments{
 \item{mtrx}{a data.frame with (x, y, z) columns}
+
+\item{theta}{radian angle}
+
+\item{axis}{a string}
 }
 \value{
 max(abs(x, y, z))
@@ -31,6 +38,8 @@ transformed matrix
 transformed matrix
 
 transformed matrix
+
+modified data.frame
 }
 \description{
 get max value for plot limits
@@ -42,6 +51,8 @@ get max value for plot limits
 3D transformation (face centered cubic, cubic close packed)
 
 coordinate transformation
+
+Rotate
 }
 \examples{
 maxabs(data.frame(x=2, y=-3, z=4))
