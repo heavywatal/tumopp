@@ -123,3 +123,50 @@ axes3d()
     trans_coord_hcc %>>%
 with(spheres3d(x, y, z, color='#009999', radius=0.51, alpha=0.6))
 title3d('', '', 'x', 'y', 'z')
+
+
+
+if (FALSE) {  # SURFACE
+
+nodes3d = data_frame(x=c(-1, 0, 1), y=x, z=x) %>>%
+    expand(x, y, z) %>>%
+    mutate(neumann=abs(x) + abs(y) + abs(z) < 2) %>>%
+    (?.)
+
+hex3d = trans_coord_hex(nodes3d) %>>% dplyr::filter(x^2 + y^2 + z^2 < 1.1)
+
+plot_neighbor3D = function(.data, .title='') {
+    with(.data, spheres3d(x, y, z, color='#999999', radius=0.50, alpha=0.6))
+    spheres3d(0, 0, 0, color='dodgerblue', radius=0.50, alpha=1)
+    #axes3d(xlen=0, ylen=0, zlen=0)
+    box3d()
+    title3d('', '', 'x', 'y', 'z')
+    bgplot3d({plot.new(); title(.title, adj=0, cex.main=4, family='sans', font.main=1)})
+    rgl::view3d(15, 15, 15, 1)
+}
+clear3d()
+plot_neighbor3D(nodes3d)
+clear3d()
+plot_neighbor3D(nodes3d %>>% rotate(pi/4, 'x'))
+clear3d()
+plot_neighbor3D(nodes3d %>>% rotate(pi/4, 'x') %>>% rotate(pi/4, 'y'))
+
+
+extract_surface()
+
+extract_surface_moore = function(mtrx) {
+    theta = pi / 4
+    .diag = rotate(mtrx, theta, 'x') %>>%
+        rotate(theta, 'y') %>>%
+        dplyr::mutate(x= round(x, 3), y= round(y, 3), z= round(z, 3))
+          .extract_surface(mtrx, c('x', 'y'), 'z') %>>%
+    union(.extract_surface(mtrx, c('y', 'z'), 'x')) %>>%
+    union(.extract_surface(mtrx, c('z', 'x'), 'y')) %>>%
+    union(.extract_surface(.diag, c('x', 'y'), 'z')) %>>%
+    union(.extract_surface(.diag, c('y', 'z'), 'x')) %>>%
+    union(.extract_surface(.diag, c('z', 'x'), 'y'))
+}
+
+rotate(population, pi / 4)
+
+}
