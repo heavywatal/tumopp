@@ -135,7 +135,7 @@ size_t Cell::operator-(const Cell& other) const {
     return branch;
 }
 
-std::string Cell::header(const size_t dimensions, const char* sep) {
+std::string Cell::header(const char* sep) {
     std::ostringstream oss;
     oss << "x" << sep << "y" << sep << "z" << sep
         << "genealogy" << sep
@@ -173,5 +173,5 @@ void Cell::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
     Cell cell({1, 2, 3});
-    std::cerr << Cell::header(3, "\t") << "\n" << cell << std::endl;
+    std::cerr << Cell::header("\t") << "\n" << cell << std::endl;
 }

@@ -313,7 +313,7 @@ std::string Tissue::header() const {HERE;
     std::ostringstream oss;
     oss.precision(std::numeric_limits<double>::max_digits10);
     oss << "time" << sep_
-        << Cell::header(DIMENSIONS_, sep_) << sep_
+        << Cell::header(sep_) << sep_
         << "phi\n";
     return oss.str();
 }

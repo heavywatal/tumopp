@@ -80,7 +80,7 @@ class Cell {
 
     static double MUTATION_RATE() {return MUTATION_RATE_;}
 
-    static std::string header(const size_t dimensions, const char* sep);
+    static std::string header(const char* sep);
     std::ostream& write(std::ostream& ost, const char* sep) const;
     std::string str(const char* sep) const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
