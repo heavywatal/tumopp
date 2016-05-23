@@ -98,9 +98,21 @@ class Cell {
         return (birth_rate_ + death_rate_) * std::log(lambda) / (lambda - 1.0);
     }
 
-    //! per cell division
-    static double MUTATION_RATE_;
+    //! \f$\beta_0\f$
+    static double BIRTH_RATE_;
+    //! \f$\delta_0\f$
+    static double DEATH_RATE_;
+    //! \f$\rho_0\f$
+    static double MIGRATION_RATE_;
+    //! \f$k\f$
+    static double GAMMA_SHAPE_;
+    //! \f$p_s\f$
+    static double PROB_SYMMETRIC_DIVISION_;
+    //! \f$\omega_\text{max}\f$
+    static size_t MAX_PROLIFERATION_CAPACITY_;
 
+    //! mutation rate per cell division
+    static double MUTATION_RATE_;
     static double DRIVER_RATE_BIRTH_;
     static double DRIVER_RATE_DEATH_;
     static double DRIVER_RATE_MIGRA_;
@@ -110,17 +122,6 @@ class Cell {
     static double DRIVER_SD_BIRTH_;
     static double DRIVER_SD_DEATH_;
     static double DRIVER_SD_MIGRA_;
-
-    static double BIRTH_RATE_;
-
-    static double DEATH_RATE_;
-
-    static double MIGRATION_RATE_;
-    //! k
-    static double GAMMA_SHAPE_;
-
-    static double PROB_SYMMETRIC_DIVISION_;
-    static size_t MAX_PROLIFERATION_CAPACITY_;
 
     //! Position in a tumor
     std::valarray<int> coord_;
