@@ -116,9 +116,11 @@ void Simulation::run() const {HERE;
         wtl::cd(OUT_DIR.string());
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
         wtl::gzip{wtl::Fout{"population.tsv.gz"}}
-            << tissue.header() << tissue.specimens();
+            << tissue.specimens();
         wtl::gzip{wtl::Fout{"snapshots.tsv.gz"}}
-            << tissue.header() << tissue.snapshots();
+            << tissue.snapshots();
+        wtl::gzip{wtl::Fout{"drivers.tsv.gz"}}
+            << tissue.drivers();
         wtl::gzip{wtl::Fout{"distance.tsv.gz"}}
             << tissue.pairwise_distance(std::min(200UL, tissue.size()));
         std::cerr << wtl::iso8601datetime() << std::endl;

@@ -51,7 +51,7 @@ class Cell {
     Cell& operator=(Cell&&) = default;
 
     //! driver mutation
-    void mutate();
+    std::string mutate();
 
     //! Setter
     void set_coord(const std::valarray<int>& v) {coord_ = v;}

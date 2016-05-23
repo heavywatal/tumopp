@@ -71,7 +71,7 @@ class Tissue {
 
     std::string specimens() const {return specimens_.str();}
     std::string snapshots() const {return snapshots_.str();}
-    std::string header() const;
+    std::string drivers() const {return drivers_.str();}
     std::string pairwise_distance(const size_t) const;
 
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
@@ -135,6 +135,8 @@ class Tissue {
 
     std::vector<size_t> generate_neutral_mutations() const;
 
+    std::string header() const;
+
     std::unique_ptr<Coord> coord_func_;
 
     std::unordered_set<std::shared_ptr<Cell>,
@@ -147,6 +149,7 @@ class Tissue {
     // std::vector<std::string> evolution_history_;
     std::ostringstream specimens_;
     std::ostringstream snapshots_;
+    std::ostringstream drivers_;
 
     double time_ = 0.0;
     size_t id_tail_ = 0;

@@ -55,8 +55,9 @@ Tissue::Tissue() {
     if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
     else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
     else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
-    specimens_.precision(std::numeric_limits<double>::max_digits10);
-    snapshots_.precision(std::numeric_limits<double>::max_digits10);
+    specimens_ = wtl::make_oss() << header();
+    snapshots_ = wtl::make_oss() << header();
+    drivers_ = wtl::make_oss() << "id\ttype\tcoef\n";
     for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
         auto x = std::make_shared<Cell>(coord, ++id_tail_);
         tumor_.insert(x);
@@ -80,8 +81,8 @@ bool Tissue::grow(const size_t max_size) {HERE;
                 mother->set_time_of_death(0.0);
                 mother->set_time_of_birth(time_, ++id_tail_);
                 daughter->set_time_of_birth(time_, ++id_tail_);
-                mother->mutate();
-                daughter->mutate();
+                drivers_ << mother->mutate();
+                drivers_ << daughter->mutate();
                 queue_push(mother->delta_time(positional_value(mother->coord())), mother);
                 queue_push(daughter->delta_time(positional_value(daughter->coord())), daughter);
             } else {
@@ -293,7 +294,7 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
 }
 
 std::string Tissue::pairwise_distance(const size_t n) const {HERE;
-    std::ostringstream oss = wtl::make_oss(6);
+    auto oss = wtl::make_oss(6);
     oss << "genealogy" << sep_ << "graph" << sep_ << "euclidean\n";
     const auto samples = sample_random(n);
     const auto end = samples.end();
@@ -310,8 +311,7 @@ std::string Tissue::pairwise_distance(const size_t n) const {HERE;
 }
 
 std::string Tissue::header() const {HERE;
-    std::ostringstream oss;
-    oss.precision(std::numeric_limits<double>::max_digits10);
+    auto oss = wtl::make_oss();
     oss << "time" << sep_
         << Cell::header(sep_) << sep_
         << "phi\n";

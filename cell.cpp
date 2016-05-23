@@ -79,8 +79,30 @@ Cell::Cell(const Cell& other):
     }
 }
 
-void Cell::mutate() {
-    // TODO
+std::string Cell::mutate() {
+    static std::bernoulli_distribution bern_birth(DRIVER_RATE_BIRTH_);
+    static std::bernoulli_distribution bern_death(DRIVER_RATE_DEATH_);
+    static std::bernoulli_distribution bern_migra(DRIVER_RATE_MIGRA_);
+    static std::normal_distribution<> gauss_birth(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_);
+    static std::normal_distribution<> gauss_death(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_);
+    static std::normal_distribution<> gauss_migra(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_);
+    auto oss = wtl::make_oss();
+    if (bern_birth(wtl::sfmt())) {
+        auto s = gauss_birth(wtl::sfmt());
+        oss << genealogy_.back() << "\tbirth\t" << s << "\n";
+        birth_rate_ *= (s += 1.0);
+    }
+    if (bern_death(wtl::sfmt())) {
+        auto s = gauss_death(wtl::sfmt());
+        oss << genealogy_.back() << "\tdeath\t" << s << "\n";
+        death_rate_ *= (s += 1.0);
+    }
+    if (bern_migra(wtl::sfmt())) {
+        auto s = gauss_migra(wtl::sfmt());
+        oss << genealogy_.back() << "\tmigra\t" << s << "\n";
+        migra_rate_ *= (s += 1.0);
+    }
+    return oss.str();
 }
 
 double Cell::delta_time(const double positional_value) {
@@ -159,7 +181,7 @@ std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
 }
 
 std::string Cell::str(const char* sep) const {
-    std::ostringstream oss;
+    auto oss = wtl::make_oss();
     write(oss, sep);
     return oss.str();
 }
