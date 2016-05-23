@@ -55,6 +55,7 @@ def product(params, repeat):
 def make_outdir(var_args=[], i=0):
     prefix = 'tumopp'
     label = '_'.join([s.lstrip('-') for s in var_args])
+    label = label.replace('=', '_')
     now = datetime.datetime.now().strftime('%Y%m%d-%H%M')
     pid = '{}-{}'.format(os.getpid(), i)
     return '_'.join([prefix, label, now, pid])
