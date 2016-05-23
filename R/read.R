@@ -28,9 +28,15 @@ read_conf = function(indir='.') {
 #' @rdname read
 #' @export
 read_population = function(conf, params=NULL) {
+    .types = list(
+        beta= readr::col_double(),
+        delta= readr::col_double(),
+        rho= readr::col_double()
+    )
     dplyr::group_by_(conf, .dots=c('path', params)) %>>%
     dplyr::do({
-        x = readr::read_tsv(file.path(.$path, 'population.tsv.gz')) %>>%
+        x = readr::read_tsv(file.path(.$path, 'population.tsv.gz'),
+                            col_types=.types) %>>%
             dplyr::mutate_(surface=~ genealogy %in% extract_surface(.))
         if (.$coord == 'hex') {
             x = trans_coord_hex(x)
