@@ -36,6 +36,12 @@ population %>>%
     gglattice2d('ancestor') %>>%
     (ggsave('section_z0.png', ., width=8, height=7))
 
+population %>>%
+    dplyr::filter(z == 0) %>>%
+    dplyr::filter(surface) %>>%
+    gglattice2d('ancestor') %>>%
+    (ggsave('section_z0_surface.png', ., width=8, height=7))
+
 library(rgl)
 if (rgl.cur()) {rgl.close()}
 rgl::open3d(windowRect=c(0, 0, 600, 600))
