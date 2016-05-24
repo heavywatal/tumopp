@@ -35,9 +35,10 @@ read_population = function(conf, params=NULL) {
     )
     dplyr::group_by_(conf, .dots=c('path', params)) %>>%
     dplyr::do({
+        se = get_se(.$coord, .$dimensions)
         x = readr::read_tsv(file.path(.$path, 'population.tsv.gz'),
                             col_types=.types) %>>%
-            dplyr::mutate_(surface=~ genealogy %in% extract_surface(.))
+            detect_surface(se)
         if (.$coord == 'hex') {
             x = trans_coord_hex(x)
         }
