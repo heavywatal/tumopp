@@ -53,6 +53,14 @@ class Cell {
     //! driver mutation
     std::string mutate();
 
+    //! Calc dt and set next_event_
+    double delta_time(const double positional_value);
+
+    std::vector<int> has_mutations_of(const std::vector<size_t>&);
+
+    //! Branch length (# of divisions) between two cells
+    size_t operator-(const Cell&) const;
+
     //! Setter
     void set_coord(const std::valarray<int>& v) {coord_ = v;}
     void set_time_of_birth(const double t, const size_t i) {
@@ -63,20 +71,11 @@ class Cell {
     void set_time_of_death(const double t) {time_of_death_ = t;}
 
     //! Getter
-    bool is_dividing() const {return next_event_ == Event::birth;}
-    bool is_dying() const {return next_event_ == Event::death;}
-    bool is_migrating() const {return next_event_ == Event::migration;}
-    double delta_time(const double positional_value);
-
+    Event next_event() const {return next_event_;}
     const std::valarray<int>& coord() const {return coord_;}
-
-    std::vector<int> has_mutations_of(const std::vector<size_t>&);
-
-    //! Branch length (# of divisions) between two cells
-    size_t operator-(const Cell&) const;
-
     static double MUTATION_RATE() {return MUTATION_RATE_;}
 
+    //! Print
     static std::string header(const char* sep);
     std::ostream& write(std::ostream& ost, const char* sep) const;
     std::string str(const char* sep) const;
@@ -122,11 +121,12 @@ class Cell {
     CellType type_ = CellType::stem;
     size_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
 
+    Event next_event_ = Event::birth;
+
     //! Extra data
     std::vector<size_t> genealogy_;
     double time_of_birth_ = 0.0;
     double time_of_death_ = 0.0;
-    Event next_event_ = Event::birth;
 };
 
 #endif /* CELL_HPP_ */

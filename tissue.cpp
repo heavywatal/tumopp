@@ -73,7 +73,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
         time_ = it->first;
         const auto mother = it->second;
         queue_.erase(it);
-        if (mother->is_dividing()) {
+        if (mother->next_event() == Event::birth) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
                 mother->set_time_of_death(time_);
@@ -89,7 +89,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
                 queue_push(mother->delta_time(positional_value(mother->coord())), mother);
                 continue;  // skip snap()
             }
-        } else if (mother->is_dying()) {
+        } else if (mother->next_event() == Event::death) {
             mother->set_time_of_death(time_);
             collect(specimens_, *mother);
             tumor_.erase(mother);
