@@ -69,9 +69,6 @@ class Cell {
     double delta_time(const double positional_value);
 
     const std::valarray<int>& coord() const {return coord_;}
-    const std::vector<size_t>& sites() const {return sites_;}
-    double time_of_birth() const {return time_of_birth_;}
-    double time_of_death() const {return time_of_death_;}
 
     std::vector<int> has_mutations_of(const std::vector<size_t>&);
 
@@ -90,14 +87,6 @@ class Cell {
     static boost::program_options::options_description& opt_description();
 
   private:
-    //! finite per capita rates
-    double growth_rate() const {return 1.0 + birth_rate_ - death_rate_;}
-    //! instantaneous rate for time increment
-    double instantaneous_event_rate() const {
-        const double lambda = growth_rate();
-        return (birth_rate_ + death_rate_) * std::log(lambda) / (lambda - 1.0);
-    }
-
     //! \f$\beta_0\f$
     static double BIRTH_RATE_;
     //! \f$\delta_0\f$
@@ -125,8 +114,6 @@ class Cell {
 
     //! Position in a tumor
     std::valarray<int> coord_;
-    //! Mutated sites (infinite-site model)
-    std::vector<size_t> sites_;
 
     double birth_rate_ = BIRTH_RATE_;
     double death_rate_ = DEATH_RATE_;

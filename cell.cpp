@@ -67,10 +67,12 @@ boost::program_options::options_description& Cell::opt_description() {
 }
 
 Cell::Cell(const Cell& other):
-    coord_(other.coord_), sites_(other.sites_),
-    birth_rate_(other.birth_rate_), death_rate_(other.death_rate_),
+    coord_(other.coord_),
+    birth_rate_(other.birth_rate_),
+    death_rate_(other.death_rate_),
     migra_rate_(other.migra_rate_),
-    type_(other.type_), proliferation_capacity_(other.proliferation_capacity_),
+    type_(other.type_),
+    proliferation_capacity_(other.proliferation_capacity_),
     genealogy_(other.genealogy_) {
     if (type_ == CellType::stem) {
         if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt())) {
@@ -162,7 +164,6 @@ std::string Cell::header(const char* sep) {
     oss << "x" << sep << "y" << sep << "z" << sep
         << "genealogy" << sep
         << "birth" << sep << "death" << sep
-        << "sites" << sep
         << "beta" << sep << "delta" << sep << "rho";
     return oss.str();
 }
@@ -174,7 +175,6 @@ std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
         << coord_[0] << sep << coord_[1] << sep << z << sep
         << wtl::join(genealogy_, ":") << sep
         << time_of_birth_ << sep << time_of_death_ << sep
-        << wtl::join(sites(), ":") << sep
         << birth_rate_ << sep
         << death_rate_ << sep
         << migra_rate_;
