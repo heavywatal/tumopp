@@ -232,7 +232,7 @@ size_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
 }
 
 double Tissue::positional_value(const std::valarray<int>& coord) const {
-    if (SIGMA_E_ > 1e9 | tumor_.size() <= 8) return 1.0;
+    if ((SIGMA_E_ > 1e9) | (tumor_.size() <= 8)) return 1.0;
     double rel_d = coord_func_->euclidean_distance(coord)
                    / coord_func_->radius(tumor_.size());
     double exponent = wtl::pow(std::max(0.0, 1.0 - rel_d), 2);
