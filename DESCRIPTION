@@ -8,17 +8,18 @@ Depends:
 License: MIT + file LICENSE
 LazyData: true
 Imports:
+    dplyr,
+    ggplot2,
+    imager,
     pipeR,
     readr,
-    stringr,
-    dplyr,
-    tidyr,
-    ggplot2,
     reshape2,
-    imager,
-    rgl,
-    RColorBrewer,
-    animation
+    stringr,
+    tidyr,
+    RColorBrewer
+Suggests:
+    animation,
+    rgl
 URL: https://github.com/heavywatal/tumorr
 BugReports: https://github.com/heavywatal/tumorr/issues
 RoxygenNote: 5.0.1

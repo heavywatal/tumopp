@@ -23,6 +23,9 @@ gglattice2d = function(.data, .color='ancestor', .palette='Spectral', limit=maxa
 #' @rdname plot
 #' @export
 save_serial_section = function(filename='serial_section.gif', .data, width=720, height=640) {
+    if (!requireNamespace('animation', quietly=TRUE)) {
+        stop('ERROR: animation is not installed')
+    }
     .lim = maxabs(.data)
     section_plots = dplyr::group_by_(.data, ~z) %>>%
         dplyr::do(plt={
@@ -38,6 +41,9 @@ save_serial_section = function(filename='serial_section.gif', .data, width=720, 
 #' @rdname plot
 #' @export
 plot_tumor3d = function(.data, .color='ancestor', .palette='Spectral') {
+    if (!requireNamespace('rgl', quietly=TRUE)) {
+        stop('ERROR: rgl is not installed')
+    }
     .data[.color] = as.factor(.data[[.color]])
     num_colors = length(levels(.data[[.color]]))
     .palette = RColorBrewer::brewer.pal(num_colors, .palette)
