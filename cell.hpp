@@ -114,6 +114,9 @@ class Cell {
     //! Position in a tumor
     std::valarray<int> coord_;
 
+    //! between birth and migration
+    double elapsed_ = 0.0;
+
     double birth_rate_ = BIRTH_RATE_;
     double death_rate_ = DEATH_RATE_;
     double migra_rate_ = MIGRATION_RATE_;

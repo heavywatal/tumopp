@@ -110,10 +110,11 @@ std::string Cell::mutate() {
 double Cell::delta_time(const double positional_value) {
     double t_birth = std::numeric_limits<double>::infinity();
     if (proliferation_capacity_ > 0) {
-        double theta = 1.0;
-        theta /= birth_rate_;
-        theta /= positional_value;
-        theta /= GAMMA_SHAPE_;
+        double mu = 1.0;
+        mu /= birth_rate_;
+        mu /= positional_value;
+        mu -= elapsed_;
+        double theta = std::max(mu / GAMMA_SHAPE_, 0.0);
         std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
         t_birth = gamma(wtl::sfmt());
     }
@@ -130,6 +131,7 @@ double Cell::delta_time(const double positional_value) {
         return t_death;
     } else {
         next_event_ = Event::migration;
+        elapsed_ = t_birth - t_migra;
         return t_migra;
     }
 }
