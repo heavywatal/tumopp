@@ -125,6 +125,7 @@ double Cell::delta_time(const double positional_value) {
 
     if (t_birth < t_death && t_birth < t_migra) {
         next_event_ = Event::birth;
+        elapsed_ = 0.0;
         return t_birth;
     } else if (t_death < t_migra) {
         next_event_ = Event::death;
