@@ -68,7 +68,9 @@ Tissue::Tissue() {
 bool Tissue::grow(const size_t max_size) {HERE;
     snap(snapshots_);
     bool taking_snapshots = true;
+    size_t i = 0;
     while (tumor_.size() < max_size) {
+        if ((++i % 256) == 0) {derr("  " << tumor_.size() << "\r");}
         auto it = queue_.begin();
         time_ = it->first;
         const auto mother = it->second;
