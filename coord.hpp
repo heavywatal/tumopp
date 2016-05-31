@@ -221,10 +221,12 @@ class Hexagonal final: public Coord {
     }
     virtual double euclidean_distance(const std::valarray<int>& v) const override {
         std::valarray<double> true_pos(dimensions);
-        true_pos += v;
+        true_pos[0] += static_cast<double>(v[0]);
+        true_pos[1] += static_cast<double>(v[1]);
         true_pos[1] += true_pos[0] * 0.5;
         true_pos[0] *= std::sqrt(3.0 / 4.0);
         if (dimensions > 2) {
+            true_pos[2] += static_cast<double>(v[2]);
             true_pos[0] += true_pos[2] / sqrt(3.0);
             true_pos[2] *= std::sqrt(2.0 / 3.0);
         }

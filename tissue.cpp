@@ -55,9 +55,12 @@ Tissue::Tissue() {
     if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
     else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
     else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
-    specimens_ = wtl::make_oss() << header();
-    snapshots_ = wtl::make_oss() << header();
-    drivers_ = wtl::make_oss() << "id\ttype\tcoef\n";
+    specimens_ = wtl::make_oss();
+    snapshots_ = wtl::make_oss();
+    drivers_ = wtl::make_oss();
+    specimens_ << header();
+    snapshots_ << header();
+    drivers_ << "id\ttype\tcoef\n";
     for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
         auto x = std::make_shared<Cell>(coord, ++id_tail_);
         tumor_.insert(x);

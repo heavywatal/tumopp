@@ -146,7 +146,6 @@ class Tissue {
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;
 
-    // std::vector<std::string> evolution_history_;
     std::ostringstream specimens_;
     std::ostringstream snapshots_;
     std::ostringstream drivers_;
