@@ -7,7 +7,7 @@
 \alias{read_snapshots}
 \title{read config files}
 \usage{
-read_conf(indir = ".")
+read_conf(indirs = ".")
 
 read_population(conf, params = NULL)
 
@@ -16,7 +16,7 @@ read_snapshots(conf)
 command_args()
 }
 \arguments{
-\item{indir}{a string vector}
+\item{indirs}{a string vector}
 
 \item{conf}{a data.frame}
 

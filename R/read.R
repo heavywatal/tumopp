@@ -9,16 +9,14 @@
 }
 
 #' read config files
-#' @param indir a string vector
+#' @param indirs a string vector
 #' @return a data.frame
 #' @rdname read
 #' @export
-read_conf = function(indir='.') {
-    dplyr::data_frame(path=indir) %>>%
-    dplyr::group_by_(~path) %>>% dplyr::do({
-        .read_conf(file.path(.$path, 'program_options.conf'))
-    }) %>>%
-    dplyr::ungroup()
+read_conf = function(indirs='.') {
+    stats::setNames(,indirs) %>>%
+    purrr::map_df(~.read_conf(file.path(., 'program_options.conf')),
+                  .id='path')
 }
 
 #' read population

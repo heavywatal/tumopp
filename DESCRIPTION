@@ -12,6 +12,7 @@ Imports:
     ggplot2,
     imager,
     pipeR,
+    purrr,
     readr,
     reshape2,
     stringr,
