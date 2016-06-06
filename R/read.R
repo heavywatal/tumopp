@@ -47,11 +47,11 @@ read_conf = function(indirs='.') {
 #' @rdname read
 #' @export
 read_population = function(conf, params=NULL) {
-    x = purrr::by_row(conf, .read_population)
+    x = purrr::by_row(conf, .read_population, .to='population')
     if (is.null(params)) {
         x
     } else {
-        x[c('path', params, '.out')]
+        x[c('path', params, 'population')]
     }
 }
 
