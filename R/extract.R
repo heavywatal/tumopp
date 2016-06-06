@@ -34,12 +34,11 @@ extract_demography = function(grouped_df) {grouped_df %>>%
 #' @rdname extract
 #' @export
 exclusive_ancestors = function(population, size, origin=1) {
-    mothers = population %>>%
-        head(size - origin) %>>%
-        `[[`('genealogy') %>>%
+    stopifnot(size >= origin)
+    mothers = head(population, size - origin)$genealogy %>>%
         strsplit(':') %>>%
-        sapply(dplyr::last)
-    seq(length(mothers) + size) %>>% setdiff(mothers)
+        purrr::map_chr(`[`, length(.))
+    seq_len(length(mothers) + size) %>>% setdiff(mothers)
 }
 
 #' cell ids that existed at the specified tumor size (from snapshots)
@@ -63,9 +62,8 @@ exclusive_ancestors_ss = function(snapshots, size) {
 #' @examples
 #' extract_ancestor(c('1:2:9', '1:2:4:6'), c('2', '5', '6'))
 extract_ancestor = function(genealogy, ids) {
-    sapply(stringr::str_split(genealogy, ':', length(ids) + 1), function(x) {
-        dplyr::last(x[x %in% ids])
-    }) %>>%
+    stringr::str_split(genealogy, ':', length(ids) + 1) %>>%
+    purrr::map_chr(~ max(.[. %in% ids])) %>>%
     factor(levels=ids)
 }
 
