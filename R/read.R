@@ -22,9 +22,12 @@ read_conf = function(indirs='.') {
 
 
 #' read a population
+#' @param conf a data.frame
 #' @return a data.frame
 #' @rdname read
-.read_population = function(conf) {
+#' @export
+read_population = function(conf) {
+    stopifnot(nrow(conf) == 1L)
     .types = list(
         beta= readr::col_double(),
         delta= readr::col_double(),
@@ -38,21 +41,6 @@ read_conf = function(indirs='.') {
         x = trans_coord_hex(x)
     }
     x
-}
-
-#' read populations
-#' @param conf a data.frame
-#' @param params a string vector; columns to be preserved
-#' @return a nested data.frame
-#' @rdname read
-#' @export
-read_population = function(conf, params=NULL) {
-    x = purrr::by_row(conf, .read_population, .to='population')
-    if (is.null(params)) {
-        x
-    } else {
-        x[c('path', params, 'population')]
-    }
 }
 
 #' read snapshots

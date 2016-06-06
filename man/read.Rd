@@ -2,7 +2,6 @@
 % Please edit documentation in R/read.R
 \name{.read_conf}
 \alias{.read_conf}
-\alias{.read_population}
 \alias{command_args}
 \alias{read_conf}
 \alias{read_population}
@@ -13,9 +12,7 @@
 
 read_conf(indirs = ".")
 
-.read_population(conf)
-
-read_population(conf, params = NULL)
+read_population(conf)
 
 read_snapshots(conf)
 
@@ -27,8 +24,6 @@ command_args()
 \item{indirs}{a string vector}
 
 \item{conf}{a data.frame}
-
-\item{params}{a string vector; columns to be preserved}
 }
 \value{
 a data.frame
@@ -36,8 +31,6 @@ a data.frame
 a data.frame
 
 a data.frame
-
-a nested data.frame
 
 a grouped data.frame
 
@@ -49,8 +42,6 @@ read a config file
 read config files
 
 read a population
-
-read populations
 
 read snapshots
 
