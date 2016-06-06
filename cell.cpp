@@ -34,9 +34,9 @@ size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
 
     Command line option | Symbol                  | Variable
     --------------------| ----------------------- | -------------------------
-    `-b,--birth`        | \f$\beta_0\f$           | Cell::BIRTH_RATE_
-    `-d,--death`        | \f$\delta_0\f$          | Cell::DEATH_RATE_
-    `-m,--migration`    | \f$\rho_0\f$            | Cell::MIGRATION_RATE_
+    `-b,--beta0`        | \f$\beta_0\f$           | Cell::BIRTH_RATE_
+    `-d,--delta0`       | \f$\delta_0\f$          | Cell::DEATH_RATE_
+    `-m,--rho0`         | \f$\rho_0\f$            | Cell::MIGRATION_RATE_
     `-k,--shape`        | \f$k\f$                 | Cell::GAMMA_SHAPE_
     `-p,--symmetric`    | \f$p_s\f$               | Cell::PROB_SYMMETRIC_DIVISION_
     `-r,--prolif`       | \f$\omega_\text{max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
@@ -46,9 +46,9 @@ boost::program_options::options_description& Cell::opt_description() {
     namespace po = boost::program_options;
     static po::options_description desc{"Cell"};
     desc.add_options()
-        ("birth,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
-        ("death,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
-        ("migration,m", po::value<double>(&MIGRATION_RATE_)->default_value(MIGRATION_RATE_))
+        ("beta0,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
+        ("delta0,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
+        ("rho0,m", po::value<double>(&MIGRATION_RATE_)->default_value(MIGRATION_RATE_))
         ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
         ("symmetric,p", po::value<double>(&PROB_SYMMETRIC_DIVISION_)->default_value(PROB_SYMMETRIC_DIVISION_))
         ("prolif,r", po::value<size_t>(&MAX_PROLIFERATION_CAPACITY_)->default_value(MAX_PROLIFERATION_CAPACITY_))
