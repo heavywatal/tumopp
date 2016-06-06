@@ -44,7 +44,9 @@ plot_tumor3d = function(.data, .color='ancestor', .palette='Spectral') {
     if (!requireNamespace('rgl', quietly=TRUE)) {
         stop('ERROR: rgl is not installed')
     }
-    .data[.color] = as.factor(.data[[.color]])
+    if (!is.factor(.data[[.color]])) {
+        .data[.color] = as.factor(.data[[.color]])
+    }
     num_colors = length(levels(.data[[.color]]))
     .palette = RColorBrewer::brewer.pal(num_colors, .palette)
     .data %>>%
