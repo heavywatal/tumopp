@@ -5,17 +5,16 @@
 #' @export
 df2img = function(mtrx) {
     vars = c('x', 'y', 'z')
-    mtrx = mtrx %>>% dplyr::select_(.dots=vars)
+    mtrx = mtrx[vars]
     .grid = dplyr::summarise_each_(mtrx, dplyr::funs(min, max), vars=vars) %>>%
         {expand.grid(x= seq(.$x_min, .$x_max),
                      y= seq(.$y_min, .$y_max),
                      z= seq(.$z_min, .$z_max))} %>>% dplyr::tbl_df()
-    .grid %>>%
-    dplyr::left_join(mtrx %>>% dplyr::mutate(v=1), by=vars) %>>%
-    tidyr::replace_na(list(v=0)) %>>%
-    reshape2::acast(x ~ y ~ z, dplyr::first, value.var='v', fill=0) %>>%
-    {dim(.) = c(dim(.), 1); .} %>>%
-    imager::as.cimg()
+    joined = dplyr::left_join(.grid, mtrx %>>% dplyr::mutate(v=1), by=vars)
+    joined = tidyr::replace_na(joined, list(v=0))
+    arr = reshape2::acast(joined, x ~ y ~ z, `[`, 1, value.var='v', fill=0)
+    dim(arr) = c(dim(arr), 1)
+    imager::as.cimg(arr)
 }
 
 #' Convert cimg to data.frame
@@ -69,10 +68,8 @@ filter_surface = function(img, se) {
 detect_surface = function(mtrx, se) {
     axes = c('x', 'y', 'z')
     mins = dplyr::summarise_each_(mtrx, dplyr::funs(min), vars=axes)
-    product = df2img(mtrx) %>>%
-        filter_surface(se) %>>%
-        img2df() %>>%
-        dplyr::transmute_(
+    img = df2img(mtrx) %>>% filter_surface(se)
+    product = img2df(img) %>>% dplyr::transmute_(
         x=~ x + mins$x - 1,
         y=~ y + mins$y - 1,
         z=~ z + mins$z - 1,
