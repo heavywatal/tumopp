@@ -36,9 +36,17 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
 }
 
 //! Unit test for each class
-inline void test() {HERE;
-    Cell::unit_test();
-    Tissue::unit_test();
+inline void test(const int flg) {HERE;
+    switch (flg) {
+      case 0:
+        break;
+      case 1:
+        Cell::unit_test();
+        Tissue::unit_test();
+        std::exit(EXIT_SUCCESS);
+      default:
+        std::abort();
+    }
 }
 
 Simulation::Simulation(int argc, char* argv[]) {HERE;
@@ -72,15 +80,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
         std::cerr << wtl::iso8601datetime() << std::endl;
         std::cerr << CONFIG_STRING << std::endl;
     }
-    switch (vm["test"].as<int>()) {
-      case 0:
-        break;
-      case 1:
-        test();
-        std::exit(EXIT_SUCCESS);
-      default:
-        std::abort();
-    }
+    test(vm["test"].as<int>());
     if (NSAM > vm["max"].as<size_t>()) {
         std::cout.precision(1);
         std::cout
@@ -94,6 +94,11 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
 }
 
 void Simulation::run() const {HERE;
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+    std::cout.precision(15);
+    std::cerr.precision(6);
+
     std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
     Tissue tissue;
     while (!tissue.grow()) {
