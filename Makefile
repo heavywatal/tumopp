@@ -14,7 +14,7 @@ vpath %.cpp ${SRCDIR}
 
 
 ## Options
-GXX := $(notdir $(firstword $(foreach x,g++-5 g++,$(shell which $x))))
+GXX := $(notdir $(firstword $(foreach x,g++-6 g++-5 g++,$(shell which $x))))
 CXX := $(notdir $(firstword $(foreach x,clang++ ${GXX},$(shell which $x 2>/dev/null))))
 CC := $(CXX)
 CPPFLAGS := -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing ${INCLUDEDIR} ${CPPDBG} -ftemplate-depth=512
