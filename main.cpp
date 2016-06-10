@@ -2,7 +2,7 @@
 /*! @file main.cpp
     @brief Only defines tiny main()
 */
-#include "src/simulation.hpp"
+#include <tumopp/simulation.hpp>
 
 //! Just instantiate and run Simulation
 int main(int argc, char* argv[]) {

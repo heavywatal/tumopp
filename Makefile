@@ -2,13 +2,15 @@
 PACKAGE := $(notdir ${CURDIR})
 SRCDIR := src
 OBJDIR := build
+DESTDIR := ${HOME}/local
 INCLUDEDIR := -isystem ${HOME}/local/include
 ARCHIVE := lib${PACKAGE}.a
 PROGRAM := a.out
-
+INSTALL := install -p -D
 
 ## Directories and Files
 SRCS := $(wildcard ${SRCDIR}/*.cpp)
+HEADERS := $(wildcard ${SRCDIR}/*.hpp)
 OBJS := $(notdir $(SRCS:.cpp=.o))
 OBJS := $(addprefix ${OBJDIR}/,${OBJS})
 vpath %.cpp ${SRCDIR}
@@ -46,11 +48,16 @@ all:
 	${MAKE} -j3 ${PROGRAM}
 
 ${PROGRAM}: main.cpp ${ARCHIVE}
-	${LINK.cpp} ${OUTPUT_OPTION} $< -L. -l${PACKAGE} ${LDFLAGS} ${LOADLIBES} ${LDLIBS}
+	${MAKE} install
+	${LINK.cpp} ${OUTPUT_OPTION} $< -l${PACKAGE} ${LDFLAGS} ${LOADLIBES} ${LDLIBS}
 
 ${ARCHIVE}: ${OBJS}
-	ar -rcs $@ $^
+	$(AR) -rcs $@ $^
 	ranlib $@
+
+install: ${ARCHIVE}
+	$(INSTALL) -m 644 -t ${DESTDIR}/include/${PACKAGE} ${HEADERS}
+	$(INSTALL) -t ${DESTDIR}/lib $^
 
 clean:
 	${RM} ${OBJS} ${ARCHIVE} ${PROGRAM}
