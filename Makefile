@@ -46,14 +46,14 @@ all:
 	${MAKE} -j3 ${PROGRAM}
 
 ${PROGRAM}: main.cpp ${ARCHIVE}
-	${LINK.cpp} ${OUTPUT_OPTION} $< ${LDFLAGS} ${LOADLIBES} ${LDLIBS} -L. -l${PACKAGE}
+	${LINK.cpp} ${OUTPUT_OPTION} $< -L. -l${PACKAGE} ${LDFLAGS} ${LOADLIBES} ${LDLIBS}
 
 ${ARCHIVE}: ${OBJS}
 	ar -rcs $@ $^
 	ranlib $@
 
 clean:
-	${RM} ${OBJS} ${PROGRAM}
+	${RM} ${OBJS} ${ARCHIVE} ${PROGRAM}
 
 run: ${PROGRAM}
 	@./$<
