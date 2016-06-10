@@ -12,6 +12,8 @@
 #include <cxxwtils/prandom.hpp>
 #include <cxxwtils/iostr.hpp>
 
+namespace tumopp {
+
 double Cell::MUTATION_RATE_ = 1e-1;
 double Cell::DRIVER_RATE_BIRTH_ = 0.0;
 double Cell::DRIVER_RATE_DEATH_ = 0.0;
@@ -200,3 +202,5 @@ void Cell::unit_test() {
     Cell cell({1, 2, 3});
     std::cerr << Cell::header("\t") << "\n" << cell << std::endl;
 }
+
+} // namespace tumopp

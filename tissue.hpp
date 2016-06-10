@@ -20,18 +20,28 @@
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
+namespace boost {
+    namespace program_options {
+        class options_description;
+    }
+}
+
 namespace std {
   template <> struct hash<std::valarray<int>> {
     size_t operator() (const std::valarray<int>& v) const {
         return boost::hash_range(std::begin(v), std::end(v));
     }
   };
-  template <> struct hash<std::shared_ptr<Cell>> {
-    size_t operator() (const std::shared_ptr<Cell>& x) const {
+  template <> struct hash<std::shared_ptr<tumopp::Cell>> {
+    size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
         return std::hash<std::valarray<int>>()(x->coord());
     }
   };
 }
+
+/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+
+namespace tumopp {
 
 inline bool all(const std::valarray<bool>& v) {
     return std::all_of(std::begin(v), std::end(v), [](bool x){return x;});
@@ -39,18 +49,11 @@ inline bool all(const std::valarray<bool>& v) {
 
 class equal_shptr_cell {
   public:
-    bool operator() (const std::shared_ptr<Cell>& lhs,
-                     const std::shared_ptr<Cell>& rhs) const {
+    bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
+                     const std::shared_ptr<tumopp::Cell>& rhs) const {
         return all(lhs->coord() == rhs->coord());
     }
 };
-
-namespace boost {
-    namespace program_options {
-        class options_description;
-    }
-}
-
 
 class Tissue {
   public:
@@ -154,5 +157,7 @@ class Tissue {
     size_t id_tail_ = 0;
     const char* sep_ = "\t";
 };
+
+} // namespace tumopp
 
 #endif /* TISSUE_HPP_ */

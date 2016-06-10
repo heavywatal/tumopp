@@ -22,6 +22,8 @@ namespace boost {
     }
 }
 
+namespace tumopp {
+
 class Tissue;
 
 /*! @brief Represents single run
@@ -54,5 +56,7 @@ class Simulation {
     std::string COMMAND_ARGS;
     std::string CONFIG_STRING;
 };
+
+} // namespace tumopp
 
 #endif /* SIMULATION_HPP_ */

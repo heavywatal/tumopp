@@ -16,8 +16,7 @@
 #include "tissue.hpp"
 #include "cell.hpp"
 
-/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
-// functions
+namespace tumopp {
 
 boost::program_options::options_description& Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
@@ -131,3 +130,5 @@ void Simulation::run() const {HERE;
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
 }
+
+} // namespace tumopp

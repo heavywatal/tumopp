@@ -17,6 +17,7 @@
 #include <cxxwtils/debug.hpp>
 #include <cxxwtils/algorithm.hpp>
 
+namespace tumopp {
 
 size_t Tissue::DIMENSIONS_ = 3;
 std::string Tissue::COORDINATE_ = "moore";
@@ -384,3 +385,5 @@ void Tissue::unit_test() {HERE;
     test_radius<Moore>();
     test_radius<Hexagonal>();
 }
+
+} // namespace tumopp

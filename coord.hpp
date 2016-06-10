@@ -15,6 +15,7 @@
 #include <random>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+namespace tumopp {
 
 class Coord {
   public:
@@ -249,6 +250,6 @@ class Hexagonal final: public Coord {
     }
 };
 
-
+} // namespace tumopp
 
 #endif /* COORD_HPP_ */

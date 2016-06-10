@@ -19,6 +19,8 @@ namespace boost {
     }
 }
 
+namespace tumopp {
+
 enum class CellType: int {
    stem,
    nonstem,
@@ -131,5 +133,7 @@ class Cell {
     double time_of_birth_ = 0.0;
     double time_of_death_ = 0.0;
 };
+
+} // namespace tumopp
 
 #endif /* CELL_HPP_ */
