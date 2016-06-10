@@ -2,6 +2,7 @@
 *.png
 *.pdf
 *.trace
+lib*.a
 build/
 html/
 Dependfile

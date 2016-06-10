@@ -1,8 +1,9 @@
 ## Directories and Files
 PACKAGE := $(notdir ${CURDIR})
-SRCDIR := .
+SRCDIR := src
 OBJDIR := build
 INCLUDEDIR := -isystem ${HOME}/local/include
+ARCHIVE := lib${PACKAGE}.a
 PROGRAM := a.out
 
 
@@ -44,8 +45,12 @@ export CXX CC TARGET_ARCH
 all:
 	${MAKE} -j3 ${PROGRAM}
 
-${PROGRAM}: ${OBJS}
-	${LINK.cpp} ${OUTPUT_OPTION} $^ ${LOADLIBES} ${LDLIBS}
+${PROGRAM}: main.cpp ${ARCHIVE}
+	${LINK.cpp} ${OUTPUT_OPTION} $< ${LDFLAGS} ${LOADLIBES} ${LDLIBS} -L. -l${PACKAGE}
+
+${ARCHIVE}: ${OBJS}
+	ar -rcs $@ $^
+	ranlib $@
 
 clean:
 	${RM} ${OBJS} ${PROGRAM}

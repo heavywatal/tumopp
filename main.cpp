@@ -2,7 +2,7 @@
 /*! @file main.cpp
     @brief Only defines tiny main()
 */
-#include "simulation.hpp"
+#include "src/simulation.hpp"
 
 //! Just instantiate and run Simulation
 int main(int argc, char* argv[]) {
