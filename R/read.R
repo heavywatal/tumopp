@@ -46,16 +46,3 @@ read_snapshots = function(conf) {
         x
     })
 }
-
-#' get commandline arguments
-#' @return a list
-#' @rdname read
-#' @export
-command_args = function() {
-    .argv = commandArgs(trailingOnly=FALSE)
-    l = list()
-    l$file = sub('^--file=', '', grep('^--file=', .argv, value=TRUE))
-    l$srcdir = dirname(normalizePath(l$file))
-    l$args = grep('^[^-]', .argv[-1], value=TRUE)
-    return(l)
-}

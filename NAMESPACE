@@ -2,10 +2,8 @@
 
 export(altered_params)
 export(colorcode_survivors)
-export(command_args)
 export(detect_surface)
 export(df2img)
-export(evenness)
 export(exclusive_ancestors)
 export(exclusive_ancestors_ss)
 export(extract_ancestor)
