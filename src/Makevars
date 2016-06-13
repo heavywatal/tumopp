@@ -1,0 +1,3 @@
+PKG_CXXFLAGS = -std=c++14
+PKG_CPPFLAGS = -isystem ${HOME}/local/include
+PKG_LIBS = -L${HOME}/local/lib -L${HOME}/local/boost-clang/lib -ltumopp -lsfmt -lboost_filesystem -lboost_system -lboost_iostreams -lboost_program_options -lz

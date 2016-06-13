@@ -17,10 +17,12 @@ Imports:
     reshape2,
     stringr,
     tidyr,
-    RColorBrewer
+    RColorBrewer,
+    Rcpp
 Suggests:
     animation,
     rgl
 URL: https://github.com/heavywatal/tumorr
 BugReports: https://github.com/heavywatal/tumorr/issues
 RoxygenNote: 5.0.1
+LinkingTo: Rcpp
