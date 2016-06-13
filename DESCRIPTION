@@ -18,7 +18,8 @@ Imports:
     stringr,
     tidyr,
     RColorBrewer,
-    Rcpp
+    Rcpp,
+    wtl
 Suggests:
     animation,
     rgl
@@ -26,3 +27,5 @@ URL: https://github.com/heavywatal/tumorr
 BugReports: https://github.com/heavywatal/tumorr/issues
 RoxygenNote: 5.0.1
 LinkingTo: Rcpp
+Remotes:
+    heavywatal/rwtl

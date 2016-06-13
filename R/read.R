@@ -1,14 +1,3 @@
-#' read a config file
-#' @param filename a string
-#' @rdname read
-#' @return a data.frame
-.read_conf = function(filename) {
-    readr::read_delim(filename, '=', col_names=c('key', 'val'), comment='#') %>>%
-    dplyr::summarise_each(dplyr::funs(paste0(., collapse='\t'))) %>>%
-    {paste(.$key, .$val, sep='\n')} %>>%
-    readr::read_tsv()
-}
-
 #' read config files
 #' @param indirs a string vector
 #' @return a data.frame
@@ -16,7 +5,7 @@
 #' @export
 read_conf = function(indirs='.') {
     stats::setNames(,indirs) %>>%
-    purrr::map_df(~.read_conf(file.path(., 'program_options.conf')),
+    purrr::map_df(~wtl::read_boost_ini(file.path(., 'program_options.conf')),
                   .id='path')
 }
 
