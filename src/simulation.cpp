@@ -48,8 +48,7 @@ inline void test(const int flg) {HERE;
     }
 }
 
-Simulation::Simulation(int argc, char* argv[]) {HERE;
-    std::vector<std::string> arguments(argv, argv + argc);
+Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     COMMAND_ARGS = wtl::str_join(arguments, " ") ;
     OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
 
@@ -64,7 +63,7 @@ Simulation::Simulation(int argc, char* argv[]) {HERE;
     positional.add("howmany", 1);
 
     po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv).
+    po::store(po::command_line_parser(arguments).
               options(description).
               positional(positional).run(), vm);
     po::notify(vm);

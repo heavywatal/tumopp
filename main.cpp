@@ -6,7 +6,8 @@
 
 //! Just instantiate and run Simulation
 int main(int argc, char* argv[]) {
-    tumopp::Simulation simulation(argc, argv);
+    std::vector<std::string> arguments(argv + 1, argv + argc);
+    tumopp::Simulation simulation(arguments);
     simulation.run();
     return 0;
 }

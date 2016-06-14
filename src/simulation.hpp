@@ -31,7 +31,7 @@ class Tissue;
 class Simulation {
   public:
     //! Parse command arguments
-    Simulation(int argc, char* argv[]);
+    Simulation(const std::vector<std::string>& args);
 
     //! Top level function that should be called once from main()
     void run() const;
