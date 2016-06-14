@@ -6,13 +6,13 @@
 using namespace Rcpp;
 
 // tumopp_test
-Rcpp::NumericVector tumopp_test(Rcpp::NumericVector x);
-RcppExport SEXP tumorr_tumopp_test(SEXP xSEXP) {
+Rcpp::CharacterVector tumopp_test(Rcpp::CharacterVector args);
+RcppExport SEXP tumorr_tumopp_test(SEXP argsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
-    __result = Rcpp::wrap(tumopp_test(x));
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type args(argsSEXP);
+    __result = Rcpp::wrap(tumopp_test(args));
     return __result;
 END_RCPP
 }

@@ -4,10 +4,10 @@
 \alias{tumopp_test}
 \title{First example}
 \usage{
-tumopp_test(x)
+tumopp_test(args = as.character(c()))
 }
 \arguments{
-\item{x}{numeric vector}
+\item{args}{numeric vector}
 }
 \value{
 numeric vector

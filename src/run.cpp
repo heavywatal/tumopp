@@ -3,12 +3,13 @@
 #include <tumopp/simulation.hpp>
 
 //' First example
-//' @param x numeric vector
+//' @param args numeric vector
 //' @return numeric vector
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector tumopp_test(Rcpp::NumericVector x) {
-    tumopp::Simulation sim(0, {});
+Rcpp::CharacterVector tumopp_test(Rcpp::CharacterVector args=Rcpp::CharacterVector::create()) {
+    auto vs_args = Rcpp::as<std::vector<std::string>>(args);
+    tumopp::Simulation sim(vs_args);
     sim.run();
-    return x;
+    return args;
 }
