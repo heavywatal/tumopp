@@ -1,3 +1,9 @@
-PKG_CXXFLAGS = -std=c++14
+# ~/.R/Makevars
+# CXX1XSTD = -std=c++14
+# LDFLAGS = -L/path/to/libs
+
+CXX_STD = CXX11
 PKG_CPPFLAGS = -isystem ${HOME}/local/include
-PKG_LIBS = -L${HOME}/local/lib -L${HOME}/local/boost-clang/lib -ltumopp -lsfmt -lboost_filesystem -lboost_system -lboost_iostreams -lboost_program_options -lz
+LDFLAGS = `$(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()"`
+LDLIBS = -ltumopp -lsfmt -lboost_filesystem -lboost_system -lboost_iostreams -lboost_program_options -lz
+PKG_LIBS = ${LDFLAGS} ${LDLIBS}
