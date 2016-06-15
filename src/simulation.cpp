@@ -13,7 +13,6 @@
 #include <cxxwtils/os.hpp>
 #include <cxxwtils/gz.hpp>
 
-#include "tissue.hpp"
 #include "cell.hpp"
 
 namespace tumopp {
@@ -91,25 +90,24 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     OUT_DIR = fs::system_complete(OUT_DIR);
 }
 
-void Simulation::run() const {HERE;
+void Simulation::run() {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(15);
     std::cerr.precision(6);
+    while (!tissue_.grow()) {;}
+}
 
+void Simulation::write() const {HERE;
     std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
-    Tissue tissue;
-    while (!tissue.grow()) {
-        tissue = Tissue();
-    }
 
     if (Tissue::DIMENSIONS() == 3) {
         for (size_t i=0; i<HOWMANY; ++i) {
-            tissue.write_segsites(std::cout, tissue.sample_section(NSAM));
+            tissue_.write_segsites(std::cout, tissue_.sample_section(NSAM));
         }
     } else {
         for (size_t i=0; i<HOWMANY; ++i) {
-            tissue.write_segsites(std::cout, tissue.sample_random(NSAM));
+            tissue_.write_segsites(std::cout, tissue_.sample_random(NSAM));
         }
     }
 
@@ -119,13 +117,13 @@ void Simulation::run() const {HERE;
         wtl::cd(OUT_DIR.string());
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
         wtl::gzip{wtl::Fout{"population.tsv.gz"}}
-            << tissue.specimens();
+            << tissue_.specimens();
         wtl::gzip{wtl::Fout{"snapshots.tsv.gz"}}
-            << tissue.snapshots();
+            << tissue_.snapshots();
         wtl::gzip{wtl::Fout{"drivers.tsv.gz"}}
-            << tissue.drivers();
+            << tissue_.drivers();
         wtl::gzip{wtl::Fout{"distance.tsv.gz"}}
-            << tissue.pairwise_distance(std::min(200UL, tissue.size()));
+            << tissue_.pairwise_distance(std::min(200UL, tissue_.size()));
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
 }

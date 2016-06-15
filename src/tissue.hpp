@@ -60,7 +60,7 @@ class Tissue {
     static size_t DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
-    Tissue();
+    Tissue() = default;
 
     //! main function
     bool grow(const size_t max_size=MAX_SIZE_);
@@ -113,6 +113,8 @@ class Tissue {
     //! Max tumor size to stop simulation
     static size_t MAX_SIZE_;
 
+    void init();
+
     bool insert(const std::shared_ptr<Cell>&);
 
     //! Swap with a random neighbor
@@ -140,21 +142,26 @@ class Tissue {
 
     std::string header() const;
 
-    std::unique_ptr<Coord> coord_func_;
+    /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+    // Data member
 
-    std::unordered_set<std::shared_ptr<Cell>,
+    //! cells
+    std::unordered_set<
+        std::shared_ptr<Cell>,
         std::hash<std::shared_ptr<Cell>>,
         equal_shptr_cell> tumor_;
 
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;
 
+    double time_ = 0.0;
+    size_t id_tail_ = 0;
+
+    std::unique_ptr<Coord> coord_func_;
+
     std::ostringstream specimens_;
     std::ostringstream snapshots_;
     std::ostringstream drivers_;
-
-    double time_ = 0.0;
-    size_t id_tail_ = 0;
     const char* sep_ = "\t";
 };
 

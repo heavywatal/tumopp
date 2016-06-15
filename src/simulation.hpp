@@ -11,9 +11,11 @@
 #include <vector>
 #include <random>
 
+#include <boost/filesystem.hpp>
 #include <cxxwtils/iostr.hpp>
 
-#include <boost/filesystem.hpp>
+#include "tissue.hpp"
+
 namespace fs = boost::filesystem;
 
 namespace boost {
@@ -34,11 +36,17 @@ class Simulation {
     Simulation(const std::vector<std::string>& args);
 
     //! Top level function that should be called once from main()
-    void run() const;
+    void run();
+
+    void write() const;
+
+    const Tissue& tissue() const {return tissue_;}
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
     boost::program_options::options_description& opt_description();
+
+    Tissue tissue_;
 
     size_t NSAM = 20;
 

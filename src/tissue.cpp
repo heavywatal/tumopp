@@ -52,7 +52,11 @@ boost::program_options::options_description& Tissue::opt_description() {
     return desc;
 }
 
-Tissue::Tissue() {
+void Tissue::init() {
+    tumor_.clear();
+    queue_.clear();
+    time_ = 0.0;
+    id_tail_ = 0;
     if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
     else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
     else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
@@ -67,6 +71,7 @@ Tissue::Tissue() {
 }
 
 bool Tissue::grow(const size_t max_size) {HERE;
+    init();
     snap(snapshots_);
     bool taking_snapshots = true;
     size_t i = 0;
@@ -107,6 +112,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
             taking_snapshots = false;  // prevent restart by cell death
         }
     }
+    derr(std::endl);
     snap(specimens_);
     return true;
 }
