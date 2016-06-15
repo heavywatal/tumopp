@@ -21,7 +21,7 @@ GXX := $(notdir $(firstword $(foreach x,g++-6 g++-5 g++,$(shell which $x))))
 CXX := $(notdir $(firstword $(foreach x,clang++ ${GXX},$(shell which $x 2>/dev/null))))
 CC := $(CXX)
 CPPFLAGS := -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing ${INCLUDEDIR} ${CPPDBG} -ftemplate-depth=512
-CXXFLAGS := -std=c++14 -O3 ${CXXDBG}
+CXXFLAGS := -std=c++14 -O2 ${CXXDBG}
 LDFLAGS := -L${HOME}/local/lib
 LDLIBS := -lsfmt -lboost_program_options -lboost_filesystem -lboost_system -lboost_iostreams -lz
 TARGET_ARCH := -m64 -msse -msse2 -msse3
@@ -49,7 +49,7 @@ all:
 
 ${PROGRAM}: main.cpp ${ARCHIVE}
 	${MAKE} install
-	${LINK.cpp} ${OUTPUT_OPTION} $< -l${PACKAGE} ${LDFLAGS} ${LOADLIBES} ${LDLIBS}
+	${LINK.cpp} ${OUTPUT_OPTION} $^ ${LDLIBS}
 
 ${ARCHIVE}: ${OBJS}
 	$(AR) -rcs $@ $^
