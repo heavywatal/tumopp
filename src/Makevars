@@ -4,6 +4,4 @@
 
 CXX_STD = CXX11
 PKG_CPPFLAGS = -isystem ${HOME}/local/include
-LDFLAGS = `$(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()"`
-LDLIBS = -ltumopp -lsfmt -lboost_filesystem -lboost_system -lboost_iostreams -lboost_program_options -lz
-PKG_LIBS = ${LDFLAGS} ${LDLIBS}
+PKG_LIBS = -ltumopp -lsfmt -lboost_filesystem -lboost_system -lboost_iostreams -lboost_program_options -lz
