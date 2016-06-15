@@ -99,7 +99,7 @@ void Simulation::run() {HERE;
 }
 
 void Simulation::write() const {HERE;
-    std::cout << COMMAND_ARGS << "\n" << SEED << "\n";
+    std::cout << "tumopp " << COMMAND_ARGS << "\n" << SEED << "\n";
 
     if (Tissue::DIMENSIONS() == 3) {
         for (size_t i=0; i<HOWMANY; ++i) {
