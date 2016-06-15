@@ -5,7 +5,7 @@
 #' @param args numeric vector
 #' @return numeric vector
 #' @export
-tumopp_test <- function(args = as.character( c())) {
-    .Call('tumorr_tumopp_test', PACKAGE = 'tumorr', args)
+run_tumopp <- function(args = as.character( c())) {
+    .Call('tumorr_run_tumopp', PACKAGE = 'tumorr', args)
 }
 
