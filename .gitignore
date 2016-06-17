@@ -3,6 +3,7 @@
 *.pdf
 *.trace
 lib*.a
+lib*.so
 build/
 html/
 Dependfile

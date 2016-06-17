@@ -5,6 +5,7 @@ OBJDIR := build
 DESTDIR := ${HOME}/local
 INCLUDEDIR := -isystem ${HOME}/local/include
 ARCHIVE := lib${PACKAGE}.a
+SHARED_OBJ := lib${PACKAGE}.so
 PROGRAM := a.out
 INSTALL := install -p -D
 
@@ -21,9 +22,9 @@ GXX := $(notdir $(firstword $(foreach x,g++-6 g++-5 g++,$(shell which $x))))
 CXX := $(notdir $(firstword $(foreach x,clang++ ${GXX},$(shell which $x 2>/dev/null))))
 CC := $(CXX)
 CPPFLAGS := -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing ${INCLUDEDIR} ${CPPDBG} -ftemplate-depth=512
-CXXFLAGS := -std=c++14 -O2 ${CXXDBG}
+CXXFLAGS := -std=c++14 -O2 -fPIC ${CXXDBG}
 LDFLAGS := -L${HOME}/local/lib
-LDLIBS := -lsfmt -lboost_program_options -lboost_filesystem -lboost_system -lboost_iostreams -lboost_zlib -lz
+LDLIBS := -lsfmt -lboost_program_options -lboost_filesystem -lboost_system -lboost_iostreams -lboost_zlib #-lz
 TARGET_ARCH := -m64 -msse -msse2 -msse3
 
 ifneq (,$(filter $(CXX), ${GXX}))
@@ -47,20 +48,23 @@ export CXX CC TARGET_ARCH
 all:
 	${MAKE} -j3 ${PROGRAM}
 
-${PROGRAM}: main.cpp ${ARCHIVE}
+${PROGRAM}: main.cpp
 	${MAKE} install
-	${LINK.cpp} ${OUTPUT_OPTION} $^ ${LDLIBS}
+	${LINK.cpp} ${OUTPUT_OPTION} $^ -l${PACKAGE}
 
 ${ARCHIVE}: ${OBJS}
 	$(AR) -rcs $@ $^
 	ranlib $@
 
-install: ${ARCHIVE}
+${SHARED_OBJ}: ${OBJS}
+	${LINK.cpp} ${OUTPUT_OPTION} -dynamiclib -install_name ${DESTDIR}/lib/$@ $^ ${LDLIBS}
+
+install: ${SHARED_OBJ}
 	$(INSTALL) -m 644 -t ${DESTDIR}/include/${PACKAGE} ${HEADERS}
 	$(INSTALL) -t ${DESTDIR}/lib $^
 
 clean:
-	${RM} ${OBJS} ${ARCHIVE} ${PROGRAM}
+	${RM} ${OBJS} ${SHARED_OBJ} ${ARCHIVE} ${PROGRAM}
 
 run: ${PROGRAM}
 	@./$<
