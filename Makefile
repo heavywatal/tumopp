@@ -24,8 +24,9 @@ CC := $(CXX)
 CPPFLAGS := -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing ${INCLUDEDIR} ${CPPDBG} -ftemplate-depth=512
 CXXFLAGS := -std=c++14 -O2 -fPIC ${CXXDBG}
 LDFLAGS := -L${HOME}/local/lib
-LDLIBS := -lsfmt -lboost_program_options -lboost_filesystem -lboost_system -lboost_iostreams -lboost_zlib #-lz
+LDLIBS := -lsfmt -lboost_program_options -lboost_filesystem -lboost_system -lboost_iostreams -lboost_zlib
 TARGET_ARCH := -m64 -msse -msse2 -msse3
+ARFLAGS := -rcs
 
 ifneq (,$(filter $(CXX), ${GXX}))
   CXXFLAGS += -mfpmath=sse
@@ -39,6 +40,12 @@ else
   endif
 endif
 
+ifeq ($(shell uname -s),Darwin)
+  SHLIBFLAGS = -dynamiclib -install_name ${DESTDIR}/lib/$@
+else
+  SHLIBFLAGS = -shared -Wl,-soname,${DESTDIR}/lib/$@
+endif
+
 export CXX CC TARGET_ARCH
 
 ## Targets
@@ -46,25 +53,25 @@ export CXX CC TARGET_ARCH
 .DEFAULT_GOAL := all
 
 all:
-	${MAKE} -j3 ${PROGRAM}
+	$(MAKE) -j3 ${PROGRAM}
 
 ${PROGRAM}: main.cpp
-	${MAKE} install
-	${LINK.cpp} ${OUTPUT_OPTION} $^ -l${PACKAGE}
+	$(MAKE) install
+	$(LINK.cpp) ${OUTPUT_OPTION} $^ -l${PACKAGE}
 
 ${ARCHIVE}: ${OBJS}
-	$(AR) -rcs $@ $^
+	$(AR) ${ARFLAGS} $@ $^
 	ranlib $@
 
 ${SHARED_OBJ}: ${OBJS}
-	${LINK.cpp} ${OUTPUT_OPTION} -dynamiclib -install_name ${DESTDIR}/lib/$@ $^ ${LDLIBS}
+	${LINK.cpp} ${OUTPUT_OPTION} ${SHLIBFLAGS} $^ ${LDLIBS}
 
 install: ${SHARED_OBJ}
 	$(INSTALL) -m 644 -t ${DESTDIR}/include/${PACKAGE} ${HEADERS}
 	$(INSTALL) -t ${DESTDIR}/lib $^
 
 clean:
-	${RM} ${OBJS} ${SHARED_OBJ} ${ARCHIVE} ${PROGRAM}
+	$(RM) ${OBJS} ${SHARED_OBJ} ${ARCHIVE} ${PROGRAM}
 
 run: ${PROGRAM}
 	@./$<
@@ -78,10 +85,10 @@ help: ${PROGRAM}
 
 .PHONY: debug release instruments
 debug:
-	${MAKE} CXXDBG="-g" all
+	$(MAKE) CXXDBG="-g" all
 
 release:
-	${MAKE} CPPDBG="-DNDEBUG" all
+	$(MAKE) CPPDBG="-DNDEBUG" all
 
 instruments: ${PROGRAM}
 	instruments -t "Time Profiler" -D profile$$(date +%Y%m%d) ${PROGRAM}
@@ -97,4 +104,4 @@ ${OBJDIR}:
 
 .PHONY: Depend
 Depend:
-	${CXX} -MM ${CPPFLAGS} ${CXXFLAGS} ${TARGET_ARCH} ${SRCS} | sed 's|\(\w*\.o:\)|${OBJDIR}/\1|' > Dependfile
+	$(CXX) -MM ${CPPFLAGS} ${CXXFLAGS} ${TARGET_ARCH} ${SRCS} | sed 's|\(\w*\.o:\)|${OBJDIR}/\1|' > Dependfile
