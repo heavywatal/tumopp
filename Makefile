@@ -49,15 +49,21 @@ endif
 export CXX CC TARGET_ARCH
 
 ## Targets
-.PHONY: all clean run test help
+.PHONY: all archive shared clean run test help
 .DEFAULT_GOAL := all
 
 all:
 	$(MAKE) -j3 ${PROGRAM}
 
-${PROGRAM}: main.cpp
+${PROGRAM}: main.cpp ${ARCHIVE} ${SHARED_OBJ}
 	$(MAKE) install
-	$(LINK.cpp) ${OUTPUT_OPTION} $^ -l${PACKAGE}
+	$(LINK.cpp) ${OUTPUT_OPTION} $< -l${PACKAGE}
+
+archive: ${ARCHIVE}
+	@:
+
+shared: ${SHARED_OBJ}
+	@:
 
 ${ARCHIVE}: ${OBJS}
 	$(AR) ${ARFLAGS} $@ $^
