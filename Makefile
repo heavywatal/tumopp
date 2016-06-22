@@ -43,7 +43,7 @@ endif
 ifeq ($(shell uname -s),Darwin)
   SHLIBFLAGS = -dynamiclib -install_name ${DESTDIR}/lib/$@
 else
-  SHLIBFLAGS = -shared -Wl,-soname,${DESTDIR}/lib/$@
+  SHLIBFLAGS = -shared -Wl,-soname,${DESTDIR}/lib/$@ -Wl,-rpath,${HOME}/local/lib
 endif
 
 export CXX CC TARGET_ARCH
@@ -55,7 +55,7 @@ export CXX CC TARGET_ARCH
 all:
 	$(MAKE) -j3 ${PROGRAM}
 
-${PROGRAM}: main.cpp ${ARCHIVE} ${SHARED_OBJ}
+${PROGRAM}: main.cpp ${SHARED_OBJ}
 	$(MAKE) install
 	$(LINK.cpp) ${OUTPUT_OPTION} $< -l${PACKAGE}
 
