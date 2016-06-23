@@ -11,12 +11,9 @@
 #include <vector>
 #include <random>
 
-#include <boost/filesystem.hpp>
 #include <cxxwtils/iostr.hpp>
 
 #include "tissue.hpp"
-
-namespace fs = boost::filesystem;
 
 namespace boost {
     namespace program_options {
@@ -59,7 +56,7 @@ class Simulation {
     unsigned int SEED = std::random_device{}();
 
     //! Target directory to which the contents in WORK_DIR are moved
-    fs::path OUT_DIR;
+    std::string OUT_DIR;
 
     std::string COMMAND_ARGS;
     std::string CONFIG_STRING;

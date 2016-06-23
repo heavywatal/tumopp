@@ -7,6 +7,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include <boost/filesystem.hpp>
+
 #include <cxxwtils/iostr.hpp>
 #include <cxxwtils/getopt.hpp>
 #include <cxxwtils/prandom.hpp>
@@ -14,6 +16,8 @@
 #include <cxxwtils/gz.hpp>
 
 #include "cell.hpp"
+
+namespace fs = boost::filesystem;
 
 namespace tumopp {
 
@@ -25,7 +29,7 @@ boost::program_options::options_description& Simulation::opt_description() {HERE
         ("verbose,v", po::value<bool>(&VERBOSE)
             ->default_value(VERBOSE)->implicit_value(true), "verbose output")
         ("test", po::value<int>()->default_value(0)->implicit_value(1))
-        ("out_dir,o", po::value<std::string>()->default_value(OUT_DIR.string()))
+        ("out_dir,o", po::value<std::string>(&OUT_DIR)->default_value(OUT_DIR))
         ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
         ("nsam", po::value<size_t>(&NSAM)->default_value(NSAM))
         ("howmany", po::value<size_t>(&HOWMANY)->default_value(HOWMANY))
@@ -86,8 +90,8 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
             << std::fixed << vm["max"].as<size_t>() << std::endl;
         std::abort();
     }
-    OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
-    OUT_DIR = fs::system_complete(OUT_DIR);
+//    OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
+    OUT_DIR = fs::system_complete(OUT_DIR).string();
 }
 
 void Simulation::run() {HERE;
@@ -114,7 +118,7 @@ void Simulation::write() const {HERE;
     if (VERBOSE) {
         derr("mkdir && cd to " << OUT_DIR << std::endl);
         fs::create_directory(OUT_DIR);
-        wtl::cd(OUT_DIR.string());
+        wtl::cd(OUT_DIR);
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
         wtl::gzip{wtl::Fout{"population.tsv.gz"}}
             << tissue_.specimens();
