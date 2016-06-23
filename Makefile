@@ -31,10 +31,10 @@ ARFLAGS := -rcs
 ifneq (,$(filter $(CXX), ${GXX}))
   CXXFLAGS += -mfpmath=sse
   CPPFLAGS += -pthread -D_GLIBCXX_USE_NANOSLEEP
-  LDFLAGS += -L${HOME}/local/boost-gcc/lib -static-libstdc++
+  LDFLAGS += -L${HOME}/local/boost-gcc/lib -Wl,-rpath,${HOME}/local/boost-gcc/lib
 else
   CXXFLAGS += -stdlib=libc++
-  LDFLAGS += -L${HOME}/local/boost-clang/lib
+  LDFLAGS += -L${HOME}/local/boost-clang/lib -Wl,-rpath,${HOME}/local/boost-clang/lib
   ifeq ($(shell uname), Linux)
     LDLIBS += -lpthread -lsupc++
   endif
