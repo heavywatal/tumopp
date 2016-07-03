@@ -2,8 +2,8 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' First example
-#' @param args numeric vector
-#' @return numeric vector
+#' @param args string vector
+#' @return string
 #' @export
 run_tumopp <- function(args = as.character( c())) {
     .Call('tumorr_run_tumopp', PACKAGE = 'tumorr', args)

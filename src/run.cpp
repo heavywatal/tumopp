@@ -3,8 +3,8 @@
 #include <tumopp/simulation.hpp>
 
 //' First example
-//' @param args numeric vector
-//' @return numeric vector
+//' @param args string vector
+//' @return string
 //' @export
 // [[Rcpp::export]]
 std::string run_tumopp(Rcpp::CharacterVector args=Rcpp::CharacterVector::create()) {

@@ -7,10 +7,10 @@
 run_tumopp(args = as.character(c()))
 }
 \arguments{
-\item{args}{numeric vector}
+\item{args}{string vector}
 }
 \value{
-numeric vector
+string
 }
 \description{
 First example
