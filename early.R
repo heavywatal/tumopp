@@ -6,9 +6,10 @@ library(dplyr)
 library(ggplot2)
 library(animation)
 
+library(wtl)
 library(tumorr)
 #load_all('~/git/tumorr')
-(.args = command_args())
+(.args = wtl::command_args())
 #########1#########2#########3#########4#########5#########6#########7#########
 
 indir = .args$args[1]
