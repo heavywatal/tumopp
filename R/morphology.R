@@ -9,7 +9,7 @@ df2img = function(mtrx) {
     .grid = dplyr::summarise_each_(mtrx, dplyr::funs(min, max), vars=vars) %>>%
         {expand.grid(x= seq(.$x_min, .$x_max),
                      y= seq(.$y_min, .$y_max),
-                     z= seq(.$z_min, .$z_max))} %>>% dplyr::tbl_df()
+                     z= seq(.$z_min, .$z_max))} %>>% tibble::as_tibble()
     joined = dplyr::left_join(.grid, mtrx %>>% dplyr::mutate(v=1), by=vars)
     joined = tidyr::replace_na(joined, list(v=0))
     arr = reshape2::acast(joined, x ~ y ~ z, `[`, 1, value.var='v', fill=0)
@@ -26,7 +26,7 @@ img2df = function(img) {
     as.array(img) %>>%
     {dim(.) = head(dim(.), 3); .} %>>%
     reshape2::melt(c('x', 'y', 'z')) %>>%
-    as.data.frame %>>% dplyr::tbl_df()
+    tibble::as_tibble()
 }
 
 #' Structuring element
@@ -37,7 +37,7 @@ img2df = function(img) {
 #' @export
 get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
      coord = match.arg(coord)
-     df = dplyr::data_frame(x=c(-1, 0, 1)) %>>%
+     df = tibble::tibble(x=c(-1, 0, 1)) %>>%
          dplyr::mutate_(y=~x, z=~x) %>>%
          tidyr::expand_(dots=c('x', 'y', 'z'))
      if (coord == 'neumann') {
