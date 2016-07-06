@@ -44,9 +44,9 @@ size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
     `-r,--prolif`       | \f$\omega_\text{max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
     `-u,--mutation`     | \f$\mu\f$               | Cell::MUTATION_RATE_
 */
-boost::program_options::options_description& Cell::opt_description() {
+boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;
-    static po::options_description desc{"Cell"};
+    po::options_description desc{"Cell"};
     desc.add_options()
         ("beta0,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
         ("delta0,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))

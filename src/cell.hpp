@@ -85,7 +85,7 @@ class Cell {
 
     //! Unit test
     static void unit_test();
-    static boost::program_options::options_description& opt_description();
+    static boost::program_options::options_description opt_description();
 
   private:
     //! \f$\beta_0\f$

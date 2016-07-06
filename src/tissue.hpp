@@ -92,7 +92,7 @@ class Tissue {
 
     //! Unit test
     static void unit_test();
-    static boost::program_options::options_description& opt_description();
+    static boost::program_options::options_description opt_description();
 
   private:
     //! Dimensions: {1, 2, 3}

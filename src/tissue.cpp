@@ -38,9 +38,9 @@ size_t Tissue::MAX_SIZE_ = 16384;
     `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
     `-N,--max`          | -              | Simulation::MAX_SIZE
 */
-boost::program_options::options_description& Tissue::opt_description() {
+boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
-    static po::options_description desc{"Tissue"};
+    po::options_description desc{"Tissue"};
     desc.add_options()
         ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
         ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))

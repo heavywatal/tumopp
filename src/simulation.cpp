@@ -21,9 +21,9 @@ namespace fs = boost::filesystem;
 
 namespace tumopp {
 
-boost::program_options::options_description& Simulation::opt_description() {HERE;
+boost::program_options::options_description Simulation::opt_description() {HERE;
     namespace po = boost::program_options;
-    static po::options_description description("Simulation");
+    po::options_description description("Simulation");
     description.add_options()
         ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "produce help")
         ("verbose,v", po::value<bool>(&VERBOSE)

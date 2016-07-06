@@ -41,7 +41,7 @@ class Simulation {
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
-    boost::program_options::options_description& opt_description();
+    boost::program_options::options_description opt_description();
 
     Tissue tissue_;
 
