@@ -39,6 +39,8 @@ class Simulation {
 
     const Tissue& tissue() const {return tissue_;}
 
+    std::string conf() const {return CONFIG_STRING;}
+
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
     boost::program_options::options_description opt_description();
