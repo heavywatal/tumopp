@@ -5,9 +5,8 @@
 //' First example
 //' @param args string vector
 //' @return string
-//' @export
 // [[Rcpp::export]]
-std::string run_tumopp(Rcpp::CharacterVector args=Rcpp::CharacterVector::create()) {
+std::string run_tumopp_raw(Rcpp::CharacterVector args=Rcpp::CharacterVector::create()) {
     auto vs_args = Rcpp::as<std::vector<std::string>>(args);
     tumopp::Simulation sim(vs_args);
     sim.run();

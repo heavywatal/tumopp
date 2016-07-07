@@ -5,14 +5,14 @@
 
 using namespace Rcpp;
 
-// run_tumopp
-std::string run_tumopp(Rcpp::CharacterVector args);
-RcppExport SEXP tumorr_run_tumopp(SEXP argsSEXP) {
+// run_tumopp_raw
+std::string run_tumopp_raw(Rcpp::CharacterVector args);
+RcppExport SEXP tumorr_run_tumopp_raw(SEXP argsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type args(argsSEXP);
-    __result = Rcpp::wrap(run_tumopp(args));
+    __result = Rcpp::wrap(run_tumopp_raw(args));
     return __result;
 END_RCPP
 }

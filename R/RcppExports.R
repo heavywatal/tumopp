@@ -4,8 +4,7 @@
 #' First example
 #' @param args string vector
 #' @return string
-#' @export
-run_tumopp <- function(args = as.character( c())) {
-    .Call('tumorr_run_tumopp', PACKAGE = 'tumorr', args)
+run_tumopp_raw <- function(args = as.character( c())) {
+    .Call('tumorr_run_tumopp_raw', PACKAGE = 'tumorr', args)
 }
 
