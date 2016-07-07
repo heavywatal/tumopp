@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // cpp_tumopp
-std::string cpp_tumopp(const std::vector<std::string>& args);
+std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args);
 RcppExport SEXP tumorr_cpp_tumopp(SEXP argsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;

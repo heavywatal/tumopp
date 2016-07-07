@@ -2,12 +2,13 @@
 #include <Rcpp.h>
 #include <tumopp/simulation.hpp>
 
-//' First example
+//' Run C++ simulation
 //' @param args string vector
-//' @return string
+//' @return conf and population as strings
+//' @rdname cpp
 // [[Rcpp::export]]
-std::string cpp_tumopp(const std::vector<std::string>& args) {
+std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args) {
     tumopp::Simulation sim(args);
     sim.run();
-    return sim.tissue().specimens();
+    return {sim.conf(), sim.tissue().specimens()};
 }

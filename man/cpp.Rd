@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{cpp_tumopp}
 \alias{cpp_tumopp}
-\title{First example}
+\title{Run C++ simulation}
 \usage{
 cpp_tumopp(args)
 }
@@ -10,9 +10,9 @@ cpp_tumopp(args)
 \item{args}{string vector}
 }
 \value{
-string
+conf and population as strings
 }
 \description{
-First example
+Run C++ simulation
 }
 
