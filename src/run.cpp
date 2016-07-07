@@ -6,9 +6,8 @@
 //' @param args string vector
 //' @return string
 // [[Rcpp::export]]
-std::string run_tumopp_raw(Rcpp::CharacterVector args=Rcpp::CharacterVector::create()) {
-    auto vs_args = Rcpp::as<std::vector<std::string>>(args);
-    tumopp::Simulation sim(vs_args);
+std::string cpp_tumopp(const std::vector<std::string>& args) {
+    tumopp::Simulation sim(args);
     sim.run();
     return sim.tissue().specimens();
 }

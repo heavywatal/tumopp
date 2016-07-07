@@ -4,5 +4,5 @@
 #' @rdname tumopp
 #' @export
 tumopp = function(args=character(0)) {
-    run_tumopp_raw(args) %>>% readr::read_tsv()
+    cpp_tumopp(args) %>>% readr::read_tsv()
 }
