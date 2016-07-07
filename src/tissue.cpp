@@ -311,7 +311,7 @@ std::string Tissue::pairwise_distance(const size_t n) const {HERE;
         const auto& p = *it;
         for (auto jt=std::next(it); jt!=end; ++jt) {
             const auto diff = p->coord() - (*jt)->coord();
-            oss << *p - *(*jt) << sep_
+            oss << p->branch_length(*(*jt)) << sep_
                 << coord_func()->graph_distance(diff) << sep_
                 << coord_func()->euclidean_distance(diff) << "\n";
         }

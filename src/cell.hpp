@@ -62,7 +62,7 @@ class Cell {
     std::vector<int> has_mutations_of(const std::vector<size_t>&);
 
     //! Branch length (# of divisions) between two cells
-    size_t operator-(const Cell&) const;
+    size_t branch_length(const Cell&) const;
 
     //! Setter
     void set_coord(const std::valarray<int>& v) {coord_ = v;}

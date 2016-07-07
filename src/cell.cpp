@@ -14,6 +14,12 @@
 
 namespace tumopp {
 
+double Cell::BIRTH_RATE_;
+double Cell::DEATH_RATE_;
+double Cell::MIGRATION_RATE_;
+double Cell::GAMMA_SHAPE_;
+double Cell::PROB_SYMMETRIC_DIVISION_;
+size_t Cell::MAX_PROLIFERATION_CAPACITY_;
 double Cell::MUTATION_RATE_;
 double Cell::DRIVER_RATE_BIRTH_;
 double Cell::DRIVER_RATE_DEATH_;
@@ -24,20 +30,14 @@ double Cell::DRIVER_MEAN_MIGRA_;
 double Cell::DRIVER_SD_BIRTH_;
 double Cell::DRIVER_SD_DEATH_;
 double Cell::DRIVER_SD_MIGRA_;
-double Cell::BIRTH_RATE_;
-double Cell::DEATH_RATE_;
-double Cell::MIGRATION_RATE_;
-double Cell::GAMMA_SHAPE_;
-double Cell::PROB_SYMMETRIC_DIVISION_;
-size_t Cell::MAX_PROLIFERATION_CAPACITY_;
 
 namespace {
-    std::bernoulli_distribution bern_birth;
-    std::bernoulli_distribution bern_death;
-    std::bernoulli_distribution bern_migra;
-    std::normal_distribution<double> gauss_birth;
-    std::normal_distribution<double> gauss_death;
-    std::normal_distribution<double> gauss_migra;
+    std::bernoulli_distribution BERN_BIRTH;
+    std::bernoulli_distribution BERN_DEATH;
+    std::bernoulli_distribution BERN_MIGRA;
+    std::normal_distribution<double> GAUSS_BIRTH;
+    std::normal_distribution<double> GAUSS_DEATH;
+    std::normal_distribution<double> GAUSS_MIGRA;
 }
 
 //! Program options
@@ -52,6 +52,15 @@ namespace {
     `-p,--symmetric`    | \f$p_s\f$               | Cell::PROB_SYMMETRIC_DIVISION_
     `-r,--prolif`       | \f$\omega_\text{max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
     `-u,--mutation`     | \f$\mu\f$               | Cell::MUTATION_RATE_
+    `--ub`              |                         | Cell::DRIVER_RATE_BIRTH_
+    `--ud`              |                         | Cell::DRIVER_RATE_DEATH_
+    `--um`              |                         | Cell::DRIVER_RATE_MIGRA_
+    `--mb`              |                         | Cell::DRIVER_MEAN_BIRTH_
+    `--md`              |                         | Cell::DRIVER_MEAN_DEATH_
+    `--mm`              |                         | Cell::DRIVER_MEAN_MIGRA_
+    `--sb`              |                         | Cell::DRIVER_SD_BIRTH_
+    `--sd`              |                         | Cell::DRIVER_SD_DEATH_
+    `--sm`              |                         | Cell::DRIVER_SD_MIGRA_
 */
 boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;
@@ -78,12 +87,12 @@ boost::program_options::options_description Cell::opt_description() {
 }
 
 void Cell::init_distributions() {
-    bern_birth = std::bernoulli_distribution(DRIVER_RATE_BIRTH_);
-    bern_death = std::bernoulli_distribution(DRIVER_RATE_DEATH_);
-    bern_migra = std::bernoulli_distribution(DRIVER_RATE_MIGRA_);
-    gauss_birth = std::normal_distribution<double>(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_);
-    gauss_death = std::normal_distribution<double>(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_);
-    gauss_migra = std::normal_distribution<double>(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_);
+    BERN_BIRTH = std::bernoulli_distribution(DRIVER_RATE_BIRTH_);
+    BERN_DEATH = std::bernoulli_distribution(DRIVER_RATE_DEATH_);
+    BERN_MIGRA = std::bernoulli_distribution(DRIVER_RATE_MIGRA_);
+    GAUSS_BIRTH = std::normal_distribution<double>(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_);
+    GAUSS_DEATH = std::normal_distribution<double>(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_);
+    GAUSS_MIGRA = std::normal_distribution<double>(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_);
 }
 
 Cell::Cell(const Cell& other):
@@ -103,18 +112,18 @@ Cell::Cell(const Cell& other):
 
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
-    if (bern_birth(wtl::sfmt())) {
-        auto s = gauss_birth(wtl::sfmt());
+    if (BERN_BIRTH(wtl::sfmt())) {
+        auto s = GAUSS_BIRTH(wtl::sfmt());
         oss << genealogy_.back() << "\tbirth\t" << s << "\n";
         birth_rate_ *= (s += 1.0);
     }
-    if (bern_death(wtl::sfmt())) {
-        auto s = gauss_death(wtl::sfmt());
+    if (BERN_DEATH(wtl::sfmt())) {
+        auto s = GAUSS_DEATH(wtl::sfmt());
         oss << genealogy_.back() << "\tdeath\t" << s << "\n";
         death_rate_ *= (s += 1.0);
     }
-    if (bern_migra(wtl::sfmt())) {
-        auto s = gauss_migra(wtl::sfmt());
+    if (BERN_MIGRA(wtl::sfmt())) {
+        auto s = GAUSS_MIGRA(wtl::sfmt());
         oss << genealogy_.back() << "\tmigra\t" << s << "\n";
         migra_rate_ *= (s += 1.0);
     }
@@ -164,7 +173,7 @@ std::vector<int> Cell::has_mutations_of(const std::vector<size_t>& mutants) {
     return genotype;
 }
 
-size_t Cell::operator-(const Cell& other) const {
+size_t Cell::branch_length(const Cell& other) const {
     const size_t this_len = genealogy_.size();
     const size_t other_len = other.genealogy_.size();
     const size_t shorter = std::min(this_len, other_len);
