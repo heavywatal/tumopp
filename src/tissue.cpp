@@ -19,12 +19,12 @@
 
 namespace tumopp {
 
-size_t Tissue::DIMENSIONS_ = 3;
-std::string Tissue::COORDINATE_ = "moore";
-std::string Tissue::PACKING_ = "push";
-double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
-size_t Tissue::INITIAL_SIZE_ = 1;
-size_t Tissue::MAX_SIZE_ = 16384;
+size_t Tissue::DIMENSIONS_;
+std::string Tissue::COORDINATE_;
+std::string Tissue::PACKING_;
+double Tissue::SIGMA_E_;
+size_t Tissue::INITIAL_SIZE_;
+size_t Tissue::MAX_SIZE_;
 
 //! Program options
 /*! @return Program options description
@@ -42,12 +42,12 @@ boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
     po::options_description desc{"Tissue"};
     desc.add_options()
-        ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(DIMENSIONS_))
-        ("coord,C", po::value<std::string>(&COORDINATE_)->default_value(COORDINATE_))
-        ("packing,P", po::value<std::string>(&PACKING_)->default_value(PACKING_))
-        ("peripheral,g", po::value<double>(&SIGMA_E_)->default_value(SIGMA_E_))
-        ("origin,O", po::value<size_t>(&INITIAL_SIZE_)->default_value(INITIAL_SIZE_))
-        ("max,N", po::value<size_t>(&MAX_SIZE_)->default_value(MAX_SIZE_))
+        ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(3))
+        ("coord,C", po::value<std::string>(&COORDINATE_)->default_value("moore"))
+        ("packing,P", po::value<std::string>(&PACKING_)->default_value("push"))
+        ("peripheral,g", po::value<double>(&SIGMA_E_)->default_value(std::numeric_limits<double>::infinity()))
+        ("origin,O", po::value<size_t>(&INITIAL_SIZE_)->default_value(1))
+        ("max,N", po::value<size_t>(&MAX_SIZE_)->default_value(16384))
     ;
     return desc;
 }

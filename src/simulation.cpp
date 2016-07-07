@@ -70,6 +70,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
               options(description).
               positional(positional).run(), vm);
     po::notify(vm);
+    Cell::init_distributions();
 
     if (vm["help"].as<bool>()) {
         description.print(std::cout);

@@ -14,22 +14,31 @@
 
 namespace tumopp {
 
-double Cell::MUTATION_RATE_ = 1e-1;
-double Cell::DRIVER_RATE_BIRTH_ = 0.0;
-double Cell::DRIVER_RATE_DEATH_ = 0.0;
-double Cell::DRIVER_RATE_MIGRA_ = 0.0;
-double Cell::DRIVER_MEAN_BIRTH_ = 0.0;
-double Cell::DRIVER_MEAN_DEATH_ = 0.0;
-double Cell::DRIVER_MEAN_MIGRA_ = 0.0;
-double Cell::DRIVER_SD_BIRTH_ = 0.0;
-double Cell::DRIVER_SD_DEATH_ = 0.0;
-double Cell::DRIVER_SD_MIGRA_ = 0.0;
-double Cell::BIRTH_RATE_ = 1.0;
-double Cell::DEATH_RATE_ = 0.0;
-double Cell::MIGRATION_RATE_ = 0.0;
-double Cell::GAMMA_SHAPE_ = 1.0;
-double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
-size_t Cell::MAX_PROLIFERATION_CAPACITY_ = 10;
+double Cell::MUTATION_RATE_;
+double Cell::DRIVER_RATE_BIRTH_;
+double Cell::DRIVER_RATE_DEATH_;
+double Cell::DRIVER_RATE_MIGRA_;
+double Cell::DRIVER_MEAN_BIRTH_;
+double Cell::DRIVER_MEAN_DEATH_;
+double Cell::DRIVER_MEAN_MIGRA_;
+double Cell::DRIVER_SD_BIRTH_;
+double Cell::DRIVER_SD_DEATH_;
+double Cell::DRIVER_SD_MIGRA_;
+double Cell::BIRTH_RATE_;
+double Cell::DEATH_RATE_;
+double Cell::MIGRATION_RATE_;
+double Cell::GAMMA_SHAPE_;
+double Cell::PROB_SYMMETRIC_DIVISION_;
+size_t Cell::MAX_PROLIFERATION_CAPACITY_;
+
+namespace {
+    std::bernoulli_distribution bern_birth;
+    std::bernoulli_distribution bern_death;
+    std::bernoulli_distribution bern_migra;
+    std::normal_distribution<double> gauss_birth;
+    std::normal_distribution<double> gauss_death;
+    std::normal_distribution<double> gauss_migra;
+}
 
 //! Program options
 /*! @return Program options description
@@ -48,24 +57,33 @@ boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;
     po::options_description desc{"Cell"};
     desc.add_options()
-        ("beta0,b", po::value<double>(&BIRTH_RATE_)->default_value(BIRTH_RATE_))
-        ("delta0,d", po::value<double>(&DEATH_RATE_)->default_value(DEATH_RATE_))
-        ("rho0,m", po::value<double>(&MIGRATION_RATE_)->default_value(MIGRATION_RATE_))
-        ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
-        ("symmetric,p", po::value<double>(&PROB_SYMMETRIC_DIVISION_)->default_value(PROB_SYMMETRIC_DIVISION_))
-        ("prolif,r", po::value<size_t>(&MAX_PROLIFERATION_CAPACITY_)->default_value(MAX_PROLIFERATION_CAPACITY_))
-        ("mutation,u", po::value<double>(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
-        ("ub", po::value<double>(&DRIVER_RATE_BIRTH_)->default_value(DRIVER_RATE_BIRTH_))
-        ("ud", po::value<double>(&DRIVER_RATE_DEATH_)->default_value(DRIVER_RATE_DEATH_))
-        ("um", po::value<double>(&DRIVER_RATE_MIGRA_)->default_value(DRIVER_RATE_MIGRA_))
-        ("mb", po::value<double>(&DRIVER_MEAN_BIRTH_)->default_value(DRIVER_MEAN_BIRTH_))
-        ("md", po::value<double>(&DRIVER_MEAN_DEATH_)->default_value(DRIVER_MEAN_DEATH_))
-        ("mm", po::value<double>(&DRIVER_MEAN_MIGRA_)->default_value(DRIVER_MEAN_MIGRA_))
-        ("sb", po::value<double>(&DRIVER_SD_BIRTH_)->default_value(DRIVER_SD_BIRTH_))
-        ("sd", po::value<double>(&DRIVER_SD_DEATH_)->default_value(DRIVER_SD_DEATH_))
-        ("sm", po::value<double>(&DRIVER_SD_MIGRA_)->default_value(DRIVER_SD_MIGRA_))
+        ("beta0,b", po::value<double>(&BIRTH_RATE_)->default_value(1.0))
+        ("delta0,d", po::value<double>(&DEATH_RATE_)->default_value(0.0))
+        ("rho0,m", po::value<double>(&MIGRATION_RATE_)->default_value(0.0))
+        ("shape,k", po::value<double>(&GAMMA_SHAPE_)->default_value(1.0))
+        ("symmetric,p", po::value<double>(&PROB_SYMMETRIC_DIVISION_)->default_value(1.0))
+        ("prolif,r", po::value<size_t>(&MAX_PROLIFERATION_CAPACITY_)->default_value(10))
+        ("mutation,u", po::value<double>(&MUTATION_RATE_)->default_value(1e-1))
+        ("ub", po::value<double>(&DRIVER_RATE_BIRTH_)->default_value(0.0))
+        ("ud", po::value<double>(&DRIVER_RATE_DEATH_)->default_value(0.0))
+        ("um", po::value<double>(&DRIVER_RATE_MIGRA_)->default_value(0.0))
+        ("mb", po::value<double>(&DRIVER_MEAN_BIRTH_)->default_value(0.0))
+        ("md", po::value<double>(&DRIVER_MEAN_DEATH_)->default_value(0.0))
+        ("mm", po::value<double>(&DRIVER_MEAN_MIGRA_)->default_value(0.0))
+        ("sb", po::value<double>(&DRIVER_SD_BIRTH_)->default_value(0.0))
+        ("sd", po::value<double>(&DRIVER_SD_DEATH_)->default_value(0.0))
+        ("sm", po::value<double>(&DRIVER_SD_MIGRA_)->default_value(0.0))
     ;
     return desc;
+}
+
+void Cell::init_distributions() {
+    bern_birth = std::bernoulli_distribution(DRIVER_RATE_BIRTH_);
+    bern_death = std::bernoulli_distribution(DRIVER_RATE_DEATH_);
+    bern_migra = std::bernoulli_distribution(DRIVER_RATE_MIGRA_);
+    gauss_birth = std::normal_distribution<double>(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_);
+    gauss_death = std::normal_distribution<double>(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_);
+    gauss_migra = std::normal_distribution<double>(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_);
 }
 
 Cell::Cell(const Cell& other):
@@ -84,12 +102,6 @@ Cell::Cell(const Cell& other):
 }
 
 std::string Cell::mutate() {
-    static std::bernoulli_distribution bern_birth(DRIVER_RATE_BIRTH_);
-    static std::bernoulli_distribution bern_death(DRIVER_RATE_DEATH_);
-    static std::bernoulli_distribution bern_migra(DRIVER_RATE_MIGRA_);
-    static std::normal_distribution<> gauss_birth(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_);
-    static std::normal_distribution<> gauss_death(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_);
-    static std::normal_distribution<> gauss_migra(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_);
     auto oss = wtl::make_oss();
     if (bern_birth(wtl::sfmt())) {
         auto s = gauss_birth(wtl::sfmt());

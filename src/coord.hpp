@@ -33,12 +33,11 @@ class Coord {
         return output;
     }
     template <class RNG> inline
-    std::valarray<int> random_direction(RNG& rng) const {
-        std::uniform_int_distribution<ptrdiff_t> uniform(0, directions_.size() - 1);
-        return directions_[uniform(rng)];
+    std::valarray<int> random_direction(RNG& rng) {
+        return directions_[uniform_int_dist_(rng)];
     }
     template <class RNG> inline
-    std::valarray<int> random_neighbor(const std::valarray<int>& v, RNG& rng) const {
+    std::valarray<int> random_neighbor(const std::valarray<int>& v, RNG& rng) {
         return v + random_direction(rng);
     }
     std::valarray<int> outward(const std::valarray<int>& v) const {
@@ -137,6 +136,7 @@ class Coord {
     }
 
     std::vector<std::valarray<int>> directions_;
+    std::uniform_int_distribution<ptrdiff_t> uniform_int_dist_;
 };
 
 class Neumann final: public Coord {
@@ -154,6 +154,7 @@ class Neumann final: public Coord {
         do {
             directions_.push_back(v);
         } while (std::next_permutation(std::begin(v), std::end(v)));
+        uniform_int_dist_ = std::uniform_int_distribution<ptrdiff_t>(0, directions_.size() - 1);
     }
     ~Neumann() = default;
     //! Manhattan distance
@@ -181,6 +182,7 @@ class Moore final: public Coord {
                 }
             }
         }
+        uniform_int_dist_ = std::uniform_int_distribution<ptrdiff_t>(0, directions_.size() - 1);
     }
     ~Moore() = default;
     //! Chebyshev/chessboard distance
@@ -211,6 +213,7 @@ class Hexagonal final: public Coord {
             directions_.push_back({-1, 0, 1});
             directions_.push_back({-1, 1, 1});
         }
+        uniform_int_dist_ = std::uniform_int_distribution<ptrdiff_t>(0, directions_.size() - 1);
     }
     ~Hexagonal() = default;
     virtual int graph_distance(const std::valarray<int>& v) const override {

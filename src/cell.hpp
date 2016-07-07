@@ -10,6 +10,7 @@
 #include <vector>
 #include <valarray>
 #include <string>
+#include <random>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
@@ -83,9 +84,12 @@ class Cell {
     std::string str(const char* sep) const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
+    //! Initialization
+    static boost::program_options::options_description opt_description();
+    static void init_distributions();
+
     //! Unit test
     static void unit_test();
-    static boost::program_options::options_description opt_description();
 
   private:
     //! \f$\beta_0\f$
