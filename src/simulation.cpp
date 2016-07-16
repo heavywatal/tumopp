@@ -52,7 +52,11 @@ inline void test(const int flg) {HERE;
 }
 
 Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
-    COMMAND_ARGS = wtl::str_join(arguments, " ") ;
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+    std::cout.precision(15);
+    std::cerr.precision(6);
+    COMMAND_ARGS = wtl::str_join(arguments, " ");
     OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
 
     namespace po = boost::program_options;
@@ -96,10 +100,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
 }
 
 void Simulation::run() {HERE;
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(0);
-    std::cout.precision(15);
-    std::cerr.precision(6);
     while (!tissue_.grow()) {;}
 }
 
