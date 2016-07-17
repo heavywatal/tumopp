@@ -52,7 +52,7 @@ boost::program_options::options_description Tissue::opt_description() {
     return desc;
 }
 
-void Tissue::init() {
+void Tissue::init() {HERE;
     tumor_.clear();
     queue_.clear();
     time_ = 0.0;

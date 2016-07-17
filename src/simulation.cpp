@@ -95,7 +95,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
             << std::fixed << vm["max"].as<size_t>() << std::endl;
         std::abort();
     }
-//    OUT_DIR = fs::path(vm["out_dir"].as<std::string>());
     OUT_DIR = fs::system_complete(OUT_DIR).string();
 }
 
