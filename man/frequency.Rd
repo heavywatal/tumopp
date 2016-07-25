@@ -2,17 +2,22 @@
 % Please edit documentation in R/frequency.R
 \name{math_score}
 \alias{math_score}
-\title{Calculate MATH score from variant allele freqneucies}
+\title{Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele freqneucies}
 \usage{
-math_score(freqs)
+math_score(x, constant = 1.4826, na.rm = FALSE)
 }
 \arguments{
-\item{freqs}{numeric vector}
+\item{x}{a numeric vector.}
+
+\item{constant}{scale factor.}
+
+\item{na.rm}{if \code{TRUE} then \code{NA} values are stripped
+    from \code{x} before computation takes place.}
 }
 \value{
 numeric
 }
 \description{
-Calculate MATH score from variant allele freqneucies
+Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele freqneucies
 }
 
