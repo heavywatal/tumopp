@@ -17,24 +17,46 @@
 
 #include "cell.hpp"
 
-namespace fs = boost::filesystem;
-
 namespace tumopp {
 
-boost::program_options::options_description Simulation::opt_description() {HERE;
-    namespace po = boost::program_options;
+namespace fs = boost::filesystem;
+namespace po = boost::program_options;
+
+inline po::options_description general_desc() {HERE;
+    po::options_description description("General");
+    description.add_options()
+        ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "print this help")
+        ("verbose,v", po::value<bool>()->default_value(false)->implicit_value(true), "verbose output")
+        ("test", po::value<int>()->default_value(0)->implicit_value(1));
+    return description;
+}
+
+po::options_description Simulation::options_desc() {HERE;
     po::options_description description("Simulation");
     description.add_options()
-        ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "produce help")
-        ("verbose,v", po::value<bool>(&VERBOSE)
-            ->default_value(VERBOSE)->implicit_value(true), "verbose output")
-        ("test", po::value<int>()->default_value(0)->implicit_value(1))
+        ("write,w", po::value<bool>(&WRITE_TO_FILES)->default_value(WRITE_TO_FILES)->implicit_value(true))
         ("out_dir,o", po::value<std::string>(&OUT_DIR)->default_value(OUT_DIR))
-        ("seed", po::value<unsigned int>(&SEED)->default_value(SEED))
-        ("nsam", po::value<size_t>(&NSAM)->default_value(NSAM))
-        ("howmany", po::value<size_t>(&HOWMANY)->default_value(HOWMANY))
-    ;
+        ("seed", po::value<unsigned int>(&SEED)->default_value(SEED));
+    description.add(Cell::opt_description());
+    description.add(Tissue::opt_description());
     return description;
+}
+
+po::options_description Simulation::positional_desc() {HERE;
+    po::options_description description("Positional");
+    description.add_options()
+        ("nsam", po::value<size_t>(&NSAM)->default_value(NSAM))
+        ("howmany", po::value<size_t>(&HOWMANY)->default_value(HOWMANY));
+    return description;
+}
+
+void Simulation::help_and_exit() {HERE;
+    auto description = general_desc();
+    description.add(options_desc());
+    // do not print positional arguments as options
+    std::cout << "Usage: tumopp [options] nsam howmany\n" << std::endl;
+    description.print(std::cout);
+    std::exit(EXIT_SUCCESS);
 }
 
 //! Unit test for each class
@@ -59,30 +81,23 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     COMMAND_ARGS = wtl::str_join(arguments, " ");
     OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
 
-    namespace po = boost::program_options;
-    po::options_description description;
-    description.add(opt_description());
-    description.add(Cell::opt_description());
-    description.add(Tissue::opt_description());
-
+    auto description = general_desc();
+    description.add(options_desc());
+    description.add(positional_desc());
     po::positional_options_description positional;
-    positional.add("nsam", 1);
-    positional.add("howmany", 1);
-
+    positional.add("nsam", 1)
+              .add("howmany", 1);
     po::variables_map vm;
     po::store(po::command_line_parser(arguments).
               options(description).
               positional(positional).run(), vm);
+    if (vm["help"].as<bool>()) {help_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
-
-    if (vm["help"].as<bool>()) {
-        description.print(std::cout);
-        std::exit(EXIT_SUCCESS);
-    }
     wtl::sfmt().seed(SEED);
+
     CONFIG_STRING = wtl::flags_into_string(vm);
-    if (VERBOSE) {
+    if (vm["verbose"].as<bool>()) {
         std::cerr << wtl::iso8601datetime() << std::endl;
         std::cerr << CONFIG_STRING << std::endl;
     }
@@ -115,7 +130,7 @@ void Simulation::write() const {HERE;
         }
     }
 
-    if (VERBOSE) {
+    if (WRITE_TO_FILES) {
         derr("mkdir && cd to " << OUT_DIR << std::endl);
         fs::create_directory(OUT_DIR);
         wtl::cd(OUT_DIR);

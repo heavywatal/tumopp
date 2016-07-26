@@ -43,7 +43,9 @@ class Simulation {
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
-    boost::program_options::options_description opt_description();
+    boost::program_options::options_description options_desc();
+    boost::program_options::options_description positional_desc();
+    void help_and_exit();
 
     Tissue tissue_;
 
@@ -51,8 +53,7 @@ class Simulation {
 
     size_t HOWMANY = 1;
 
-    //! Print extra information
-    bool VERBOSE = false;
+    bool WRITE_TO_FILES = false;
 
     //! Seed for random number generator
     unsigned int SEED = std::random_device{}();

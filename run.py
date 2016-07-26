@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     if not args.batch:
         outdir = make_outdir(rest)
-        cmd = constargs + rest + ['-v', '--out_dir=' + outdir]
+        cmd = constargs + rest + ['-w', '--out_dir=' + outdir]
         print(' '.join(cmd))
         if not args.dry_run:
             subprocess.call(cmd)
