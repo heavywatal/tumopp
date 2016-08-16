@@ -36,8 +36,7 @@ extract_demography = function(grouped_df) {grouped_df %>>%
 exclusive_ancestors = function(population, size, origin=1) {
     stopifnot(size >= origin)
     mothers = head(population, size - origin)$genealogy %>>%
-        strsplit(':') %>>%
-        purrr::map_chr(`[`, length(.))
+        stringr::str_extract('\\d+$')
     seq_len(length(mothers) + size) %>>% setdiff(mothers)
 }
 
