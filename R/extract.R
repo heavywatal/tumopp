@@ -48,8 +48,7 @@ exclusive_ancestors = function(population, size, origin=1) {
 exclusive_ancestors_ss = function(snapshots, size) {
     dplyr::group_by_(~snapshots, ~time) %>>%
     dplyr::filter_(~ n() == size) %>>%
-    (strsplit(.$genealogy, ':')) %>>%
-    sapply(dplyr::last)
+    (stringr::str_extract(.$genealogy, '\\d+$'))
 }
 
 #' split ancestor string and extract one matched
