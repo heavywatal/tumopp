@@ -27,15 +27,15 @@ extract_demography = function(grouped_df) {grouped_df %>>%
 }
 
 #' cell ids that existed at the specified tumor size
-#' @param population a raw data.frame
+#' @param raw_population a data.frame including ancestors
 #' @param size an integer
 #' @param origin an integer
 #' @return an integer vector
 #' @rdname extract
 #' @export
-exclusive_ancestors = function(population, size, origin=1) {
+exclusive_ancestors = function(raw_population, size, origin=1) {
     stopifnot(size >= origin)
-    mothers = head(population, size - origin)$genealogy %>>%
+    mothers = head(raw_population, size - origin)$genealogy %>>%
         stringr::str_extract('\\d+$')
     seq_len(length(mothers) + size) %>>% setdiff(mothers)
 }
@@ -66,7 +66,6 @@ extract_ancestor = function(genealogy, ids) {
 }
 
 #' E ancestor column
-#' @param raw_population a data.frame including ancestors
 #' @param n an integer number of exclusive ancestors
 #' @return a data.frame
 #' @rdname extract
@@ -76,5 +75,6 @@ colorcode_survivors = function(raw_population, n=4) {
     anc_ids = exclusive_ancestors(raw_population, n, num_founders)
     raw_population %>>%
         dplyr::filter_(~ death == 0) %>>%
-        dplyr::mutate_(ancestor=~ extract_ancestor(genealogy, anc_ids))
+        dplyr::mutate_(ancestor=~ extract_ancestor(genealogy, anc_ids)) %>>%
+        dplyr::mutate(id= stringr::str_extract(genealogy, '\\d+$') %>>% as.integer())
 }

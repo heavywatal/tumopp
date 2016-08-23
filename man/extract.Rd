@@ -13,7 +13,7 @@ altered_params(conf)
 
 extract_demography(grouped_df)
 
-exclusive_ancestors(population, size, origin = 1)
+exclusive_ancestors(raw_population, size, origin = 1)
 
 exclusive_ancestors_ss(snapshots, size)
 
@@ -26,7 +26,7 @@ colorcode_survivors(raw_population, n = 4)
 
 \item{grouped_df}{a grouped_df}
 
-\item{population}{a raw data.frame}
+\item{raw_population}{a data.frame including ancestors}
 
 \item{size}{an integer}
 
@@ -37,8 +37,6 @@ colorcode_survivors(raw_population, n = 4)
 \item{genealogy}{a string vector of colon-separated ancestors}
 
 \item{ids}{a string vector of exclusive ancestor ids}
-
-\item{raw_population}{a data.frame including ancestors}
 
 \item{n}{an integer number of exclusive ancestors}
 }
