@@ -7,7 +7,7 @@
 tumopp(args = character(0))
 }
 \arguments{
-\item{args}{command line arguments as a string}
+\item{args}{command line arguments as a string vector}
 }
 \value{
 tibble

@@ -2,11 +2,12 @@
 % Please edit documentation in R/extract.R
 \name{altered_params}
 \alias{altered_params}
-\alias{colorcode_survivors}
+\alias{count_descendants}
 \alias{exclusive_ancestors}
 \alias{exclusive_ancestors_ss}
 \alias{extract_ancestor}
 \alias{extract_demography}
+\alias{extract_survivors}
 \title{extract param names from conf}
 \usage{
 altered_params(conf)
@@ -19,7 +20,9 @@ exclusive_ancestors_ss(snapshots, size)
 
 extract_ancestor(genealogy, ids)
 
-colorcode_survivors(raw_population, n = 4)
+extract_survivors(result, n = 4)
+
+count_descendants(raw_population)
 }
 \arguments{
 \item{conf}{a data.frame}
@@ -34,9 +37,11 @@ colorcode_survivors(raw_population, n = 4)
 
 \item{snapshots}{a data.frame}
 
-\item{genealogy}{a string vector of colon-separated ancestors}
+\item{genealogy}{list of integer vectors}
 
-\item{ids}{a string vector of exclusive ancestor ids}
+\item{ids}{integers}
+
+\item{result}{a row of a nested tibble of conf and list(pop)}
 
 \item{n}{an integer number of exclusive ancestors}
 }
@@ -49,9 +54,11 @@ an integer vector
 
 an integer vector
 
-a factor vector of extracted ancestors
+factor vector of extracted ancestors
 
 a data.frame
+
+tibble with $id and $discendants
 }
 \description{
 extract param names from conf
@@ -64,9 +71,8 @@ cell ids that existed at the specified tumor size (from snapshots)
 
 split ancestor string and extract one matched
 
-E ancestor column
-}
-\examples{
-extract_ancestor(c('1:2:9', '1:2:4:6'), c('2', '5', '6'))
+Extract survivors and add some columns
+
+Add descendants column
 }
 

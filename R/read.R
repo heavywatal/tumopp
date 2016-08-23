@@ -1,6 +1,6 @@
 #' read config files
 #' @param indirs a string vector
-#' @return a data.frame
+#' @return tibble
 #' @rdname read
 #' @export
 read_conf = function(indirs='.') {
@@ -9,27 +9,36 @@ read_conf = function(indirs='.') {
                   .id='path')
 }
 
-
 #' read a population
-#' @param conf a data.frame
-#' @return a data.frame
+#' @param conf tibble
+#' @return tibble
 #' @rdname read
 #' @export
 read_population = function(conf) {
     stopifnot(nrow(conf) == 1L)
-    .types = list(
+    .cols = readr::cols(
         beta= readr::col_double(),
         delta= readr::col_double(),
-        rho= readr::col_double()
-    )
-    se = get_se(conf$coord, conf$dimensions)
-    .path = file.path(conf$path, 'population.tsv.gz')
-    x = readr::read_tsv(.path, col_types=.types)
-    x = detect_surface(x, se)
-    if (conf$coord == 'hex') {
-        x = trans_coord_hex(x)
-    }
-    x
+        rho= readr::col_double())
+    file.path(conf$path, 'population.tsv.gz') %>>%
+        readr::read_tsv(col_types=.cols) %>>%
+        modify_population()
+}
+
+#' Modify population table
+#' @param raw_population tibble including ancestors
+#' @return tibble
+#' @rdname read
+#' @export
+modify_population = function(raw_population) {
+    population = raw_population %>>%
+        dplyr::mutate_(
+          genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
+          divs= ~lengths(genealogy) - 1L,
+          id= ~purrr::map2_int(genealogy, divs + 1L, `[`)
+        ) %>>%
+        count_descendants()
+    population
 }
 
 #' read snapshots
