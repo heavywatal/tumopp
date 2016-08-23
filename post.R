@@ -15,7 +15,7 @@ if (!is.na(indir)) {
 }
 
 conf = read_conf()
-population = read_population(conf) %>>% colorcode_survivors()
+population = conf %>>% purrr::by_row(.to='population', read_population) %>>% extract_survivors()
 
 population %>>%
     dplyr::filter(z == 0) %>>%
