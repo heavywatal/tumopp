@@ -155,7 +155,7 @@ double Cell::delta_time(const double positional_value) {
         return t_death;
     } else {
         next_event_ = Event::migration;
-        elapsed_ = t_birth - t_migra;
+        elapsed_ = t_migra;
         return t_migra;
     }
 }
