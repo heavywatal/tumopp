@@ -4,9 +4,9 @@
 #' @rdname graph
 #' @export
 make_edgelist = function(population) {
-    dplyr::filter_(population, ~divs > 0L) %>>%
+    dplyr::filter_(population, ~age > 0L) %>>%
     dplyr::transmute_(
-      from= ~map2_int(genealogy, divs, `[[`),
+      from= ~map2_int(genealogy, age, `[[`),
       to= ~id
     ) %>>%
     dplyr::mutate_all(as.integer) %>>%

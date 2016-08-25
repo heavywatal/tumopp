@@ -34,8 +34,8 @@ modify_population = function(raw_population) {
     population = raw_population %>>%
         dplyr::mutate_(
           genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
-          divs= ~lengths(genealogy) - 1L,
-          id= ~purrr::map2_int(genealogy, divs + 1L, `[`)
+          age= ~lengths(genealogy) - 1L,
+          id= ~purrr::map2_int(genealogy, age + 1L, `[`)
         ) %>>%
         count_descendants()
     population

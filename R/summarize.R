@@ -5,8 +5,8 @@
 #' @export
 genetic_stats = function(survivors) {
     dplyr::summarize_(survivors,
-       mean_divs= ~mean(divs), sd_divs= ~sd(divs),
-       max_divs= ~max(divs), min_divs= ~min(divs),
+       mean_age= ~mean(age), sd_age= ~sd(age),
+       max_age= ~max(age), min_age= ~min(age),
        evenness= ~wtl::evenness(ancestor)
     )
 }
