@@ -1,3 +1,17 @@
+#' ggplot for frequency spectrum
+#' @param freqs numeric vector
+#' @rdname plot
+#' @export
+ggfreqspec = function(freqs) {
+    tibble::tibble(x=freqs) %>>%
+    ggplot2::ggplot(ggplot2::aes_(~x, ~..density..))+
+    ggplot2::geom_histogram(bins=25)+
+    ggplot2::coord_cartesian(xlim=c(0, 1))+
+    ggplot2::labs(x='frequency of alleles (or living descendants)')+
+    ggplot2::theme_bw()+
+    ggplot2::theme(panel.grid.minor=ggplot2::element_blank())
+}
+
 #' ggplot for 2D lattice
 #' @param .data a data.frame
 #' @param .color a column name to colorcode

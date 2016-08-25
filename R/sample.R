@@ -11,6 +11,7 @@ make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NUL
     common_ancs = purrr::reduce(samples, intersect)
     nodes = purrr::flatten_int(samples) %>>% unique() %>>% setdiff(common_ancs)
     if (is.null(segsites)) {
+        if (is.null(mu)) stop('specify either mu or segsites')
         segsites = stats::rpois(1L, length(nodes) * mu)
     } else if (!is.null(mu)) warning('mu is ignored if segsites is given')
     mutant_ids = sample(nodes, segsites, replace=TRUE)
@@ -22,10 +23,11 @@ make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NUL
 
 #' Summary statistics of neutral mutations
 #' @param msout tibble from `make_samples()`
+#' @param lowerbound to discard peripheral branches
 #' @return tibble
 #' @rdname summarize
 #' @export
-sample_stats = function(msout) {
-    vaf = colMeans(msout)
+sample_stats = function(msout, lowerbound=0) {
+    vaf = colMeans(msout) %>>% (.[. > lowerbound])
     tibble::tibble(math= math_score(vaf))
 }

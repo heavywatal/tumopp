@@ -6,7 +6,7 @@
 \alias{sample_stats}
 \title{Summary statistics of neutral mutations}
 \usage{
-sample_stats(msout)
+sample_stats(msout, lowerbound = 0)
 
 genetic_stats(survivors)
 
@@ -14,6 +14,8 @@ morphological_stats(survivors, coord = c("moore", "hex", "neumann"))
 }
 \arguments{
 \item{msout}{tibble from `make_samples()`}
+
+\item{lowerbound}{to discard peripheral branches}
 
 \item{survivors}{tibble}
 

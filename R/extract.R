@@ -82,18 +82,17 @@ extract_survivors = function(result, n=4) {
     population
 }
 
-#' Add descendants column
+#' Add a column of living descendants number
 #' @return tibble with $id and $discendants
 #' @rdname extract
 #' @export
 count_descendants = function(raw_population) {
     .counts = raw_population %>>%
-        (.$genealogy[.$death==0]) %>>%
-        purrr::flatten_int() %>>%
+        dplyr::filter_(~death == 0) %>>%
+        (purrr::flatten_int(.$genealogy)) %>>%
         table() %>>%
-        (. - 1L) %>>%
         tibble::as_tibble() %>>%
         stats::setNames(c('id', 'descendants')) %>>%
-        dplyr::mutate_all(readr::parse_integer)
+        dplyr::mutate_(id=~ as.integer(id))
     dplyr::left_join(raw_population, .counts, by='id')
 }

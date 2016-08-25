@@ -73,6 +73,6 @@ split ancestor string and extract one matched
 
 Extract survivors and add some columns
 
-Add descendants column
+Add a column of living descendants number
 }
 
