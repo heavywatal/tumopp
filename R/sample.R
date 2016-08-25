@@ -1,20 +1,23 @@
-#' Make ms-like matrix from survivors tibble
-#' @param survivors tibble
+#' Make ms-like matrix from genealogy column of population
+#' @param genealogy list of int vectors
 #' @param nsam number of samples
-#' @param mu mutation rate per cell division
-#' @return logical tibble
+#' @param mu mutation rate per cell division (ignored if segsites is given)
+#' @param segsites number of segregating sites
+#' @return int matrix [nsam x segsites]
 #' @rdname sample
 #' @export
-make_samples = function(survivors, nsam=nrow(survivors), mu=1e-1) {
-    max_id = max(survivors$id)
-    num_mut_events = stats::rpois(1L, (max_id - 1L) * mu)
-    mutant_ids = sample.int(max_id, num_mut_events)
-    survivors %>>%
-        dplyr::sample_n(nsam) %>>%
-        purrr::by_row(~{mutant_ids %in% .$genealogy[[1]]},
-            .to='site', .labels=FALSE, .collate='cols') %>>%
-        stats::setNames(paste0('s', mutant_ids)) %>>%
-        dplyr::select_if(any)
+make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NULL) {
+    samples = sample(genealogy, nsam)
+    common_ancs = purrr::reduce(samples, intersect)
+    nodes = purrr::flatten_int(samples) %>>% unique() %>>% setdiff(common_ancs)
+    if (is.null(segsites)) {
+        segsites = stats::rpois(1L, length(nodes) * mu)
+    } else if (!is.null(mu)) warning('mu is ignored if segsites is given')
+    mutant_ids = sample(nodes, segsites, replace=TRUE)
+    samples %>>%
+        purrr::map(~ mutant_ids %in% .) %>>%
+        purrr::flatten_int() %>>%
+        matrix(nrow=nsam, byrow=TRUE)
 }
 
 #' Summary statistics of neutral mutations

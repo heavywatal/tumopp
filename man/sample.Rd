@@ -2,21 +2,24 @@
 % Please edit documentation in R/sample.R
 \name{make_samples}
 \alias{make_samples}
-\title{Make ms-like matrix from survivors tibble}
+\title{Make ms-like matrix from genealogy column of population}
 \usage{
-make_samples(survivors, nsam = nrow(survivors), mu = 0.1)
+make_samples(genealogy, nsam = length(genealogy), mu = NULL,
+  segsites = NULL)
 }
 \arguments{
-\item{survivors}{tibble}
+\item{genealogy}{list of int vectors}
 
 \item{nsam}{number of samples}
 
-\item{mu}{mutation rate per cell division}
+\item{mu}{mutation rate per cell division (ignored if segsites is given)}
+
+\item{segsites}{number of segregating sites}
 }
 \value{
-logical tibble
+int matrix [nsam x segsites]
 }
 \description{
-Make ms-like matrix from survivors tibble
+Make ms-like matrix from genealogy column of population
 }
 
