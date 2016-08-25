@@ -21,24 +21,7 @@ read_population = function(conf) {
         delta= readr::col_double(),
         rho= readr::col_double())
     file.path(conf$path, 'population.tsv.gz') %>>%
-        readr::read_tsv(col_types=.cols) %>>%
-        modify_population()
-}
-
-#' Modify population table
-#' @param raw_population tibble including ancestors
-#' @return tibble
-#' @rdname read
-#' @export
-modify_population = function(raw_population) {
-    population = raw_population %>>%
-        dplyr::mutate_(
-          genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
-          age= ~lengths(genealogy) - 1L,
-          id= ~purrr::map2_int(genealogy, age + 1L, `[`)
-        ) %>>%
-        count_descendants()
-    population
+        readr::read_tsv(col_types=.cols)
 }
 
 #' read snapshots

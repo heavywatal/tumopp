@@ -18,81 +18,74 @@ extract_demography = function(grouped_df) {grouped_df %>>%
     dplyr::select_(~birth, ~death) %>>%
     tidyr::gather_(~event, ~time, ~birth, ~death) %>>%
     dplyr::filter_(~!(time == 0 & event == 'death')) %>>%  # alive
-    dplyr::mutate_(event=~ factor(event, levels=c('death', 'birth'))) %>>%
+    dplyr::mutate_(event= ~factor(event, levels=c('death', 'birth'))) %>>%
     dplyr::arrange_(~time, ~event) %>>%
-    dplyr::mutate_(dn =~ ifelse(event == 'birth', 1, -1),
-           size =~ cumsum(dn)) %>>%
+    dplyr::mutate_(dn= ~ifelse(event == 'birth', 1, -1),
+                   size= ~cumsum(dn)) %>>%
     dplyr::group_by_(~time, add=TRUE) %>>%
-    dplyr::summarise_(size=~ dplyr::last(size))
+    dplyr::summarise_(size= ~dplyr::last(size))
 }
 
-#' cell ids that existed at the specified tumor size
-#' @param raw_population a data.frame including ancestors
-#' @param size an integer
-#' @param origin an integer
-#' @return an integer vector
+#' Filter extant cells
+#' @return tibble
 #' @rdname extract
 #' @export
-exclusive_ancestors = function(raw_population, size, origin=1) {
-    stopifnot(size >= origin)
-    mothers = head(raw_population, size - origin)$id
-    seq_len(length(mothers) + size) %>>%
-    setdiff(mothers)
+filter_extant = function(raw_population) {
+    dplyr::filter_(raw_population, ~death == 0)
 }
 
-#' cell ids that existed at the specified tumor size (from snapshots)
-#' @param snapshots a data.frame
-#' @return an integer vector
+#' Modify population table
+#' @param result a row of nested tibble
+#' @return tibble
 #' @rdname extract
-#' @export
-exclusive_ancestors_ss = function(snapshots, size) {
-    dplyr::group_by_(~snapshots, ~time) %>>%
-    dplyr::filter_(~ n() == size) %>>%
-    (stringr::str_extract(.$genealogy, '\\d+$'))
-}
-
-#' split ancestor string and extract one matched
-#' @param genealogy list of integer vectors
-#' @param ids integers
-#' @return factor vector of extracted ancestors
-#' @rdname extract
-#' @export
-extract_ancestor = function(genealogy, ids) {
-    purrr::map_int(genealogy, ~ max(.[. %in% ids])) %>>%
-    factor(levels=ids)
-}
-
-#' Extract survivors and add some columns
-#' @param result a row of a nested tibble of conf and list(pop)
-#' @param n an integer number of exclusive ancestors
-#' @return a data.frame
-#' @rdname extract
-#' @export
-extract_survivors = function(result, n=4) {
-    population = result$population[[1]]
-    num_founders = sum(lengths(population$genealogy) == 1L)
-    anc_ids = exclusive_ancestors(population, n, num_founders)
-    population = population %>>%
-        dplyr::filter_(~ death == 0) %>>%
-        dplyr::mutate_(ancestor=~ extract_ancestor(genealogy, anc_ids)) %>>%
-        detect_surface(get_se(result$coord, result$dimensions))
+modify_population = function(result, num_clades=4L) {
+    population = result$population[[1]] %>>%
+        dplyr::mutate_(
+          genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
+          age= ~lengths(genealogy) - 1L,
+          id= ~purrr::map2_int(genealogy, age + 1L, `[`)
+        ) %>>%
+        set_clades(num_clades) %>>%
+        count_descendants()
+    extant = population %>>%
+        filter_extant() %>>%
+        detect_surface(get_se(result$coord, result$dimensions)) %>>%
+        dplyr::select_(~id, ~surface)
+    population = dplyr::left_join(population, extant, by='id')
     if (result$coord == 'hex') {
         population = trans_coord_hex(population)
     }
-    population
+    result$population[[1]] = population
+    result
+}
+
+#' Add a column of ancestor ids by which branches are classified
+#' @param raw_population tibble including ancestors
+#' @param num_clades integer
+#' @return tibble
+#' @rdname extract
+set_clades = function(raw_population, num_clades) {
+    origin = sum(raw_population$age == 0L)
+    stopifnot(num_clades >= origin)
+    num_divisions = num_clades - origin
+    roots = head(raw_population$id, num_divisions)
+    founders = seq_len(num_divisions + num_clades) %>>% setdiff(roots)
+    dplyr::mutate_(raw_population,
+      clade= ~purrr::map_int(genealogy, ~{setdiff(.x, roots)[1L]}),
+      clade= ~factor(clade, levels=founders)
+    )
 }
 
 #' Add a column of living descendants number
 #' @return tibble with $id and $discendants
 #' @rdname extract
-#' @export
 count_descendants = function(raw_population) {
     .counts = raw_population %>>%
-        dplyr::filter_(~death == 0) %>>%
+        filter_extant() %>>%
         (purrr::flatten_int(.$genealogy)) %>>%
         table() %>>%
         tibble::as_tibble() %>>%
         stats::setNames(c('id', 'descendants')) %>>%
-        dplyr::mutate_(id=~ as.integer(id))
+        dplyr::mutate_(id= ~as.integer(id))
     dplyr::left_join(raw_population, .counts, by='id')
 }

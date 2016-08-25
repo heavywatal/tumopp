@@ -5,7 +5,7 @@
 #' @export
 tumopp = function(args=character(0)) {
     results = cpp_tumopp(args)
-    conf = wtl::read_boost_ini(results[1])
-    pop = readr::read_tsv(results[2]) %>>% modify_population()
-    dplyr::mutate(conf, population=list(pop))
+    wtl::read_boost_ini(results[1]) %>>%
+    dplyr::mutate(population=list(readr::read_tsv(results[2]))) %>>%
+    modify_population()
 }

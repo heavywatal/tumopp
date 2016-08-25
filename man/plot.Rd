@@ -9,13 +9,13 @@
 \usage{
 ggfreqspec(freqs)
 
-gglattice2d(.data, .color = "ancestor", .palette = "Spectral",
+gglattice2d(.data, .color = "clade", .palette = "Spectral",
   limit = maxabs(.data))
 
 save_serial_section(filename = "serial_section.gif", .data, width = 720,
   height = 640)
 
-plot_tumor3d(.data, .color = "ancestor", .palette = "Spectral")
+plot_tumor3d(.data, .color = "clade", .palette = "Spectral")
 }
 \arguments{
 \item{freqs}{numeric vector}

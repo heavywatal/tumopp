@@ -19,7 +19,7 @@ ggfreqspec = function(freqs) {
 #' @param limit for value range
 #' @rdname plot
 #' @export
-gglattice2d = function(.data, .color='ancestor', .palette='Spectral', limit=maxabs(.data)) {
+gglattice2d = function(.data, .color='clade', .palette='Spectral', limit=maxabs(.data)) {
     ggplot2::ggplot(.data, ggplot2::aes_(~x, ~y))+
     ggplot2::geom_point(ggplot2::aes_string(colour=.color), alpha=0.66, size=80/limit)+
     ggplot2::scale_colour_brewer(palette=.palette)+
@@ -54,7 +54,7 @@ save_serial_section = function(filename='serial_section.gif', .data, width=720, 
 #' plot tumor in 3d with rgl
 #' @rdname plot
 #' @export
-plot_tumor3d = function(.data, .color='ancestor', .palette='Spectral') {
+plot_tumor3d = function(.data, .color='clade', .palette='Spectral') {
     if (!requireNamespace('rgl', quietly=TRUE)) {
         stop('ERROR: rgl is not installed')
     }

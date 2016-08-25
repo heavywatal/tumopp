@@ -3,24 +3,21 @@
 \name{altered_params}
 \alias{altered_params}
 \alias{count_descendants}
-\alias{exclusive_ancestors}
-\alias{exclusive_ancestors_ss}
-\alias{extract_ancestor}
 \alias{extract_demography}
-\alias{extract_survivors}
+\alias{filter_extant}
+\alias{modify_population}
+\alias{set_clades}
 \title{extract param names from conf}
 \usage{
 altered_params(conf)
 
 extract_demography(grouped_df)
 
-exclusive_ancestors(raw_population, size, origin = 1)
+filter_extant(raw_population)
 
-exclusive_ancestors_ss(snapshots, size)
+modify_population(result, num_clades = 4L)
 
-extract_ancestor(genealogy, ids)
-
-extract_survivors(result, n = 4)
+set_clades(raw_population, num_clades)
 
 count_descendants(raw_population)
 }
@@ -29,34 +26,22 @@ count_descendants(raw_population)
 
 \item{grouped_df}{a grouped_df}
 
-\item{raw_population}{a data.frame including ancestors}
+\item{raw_population}{tibble including ancestors}
 
-\item{size}{an integer}
+\item{result}{a row of nested tibble}
 
-\item{origin}{an integer}
-
-\item{snapshots}{a data.frame}
-
-\item{genealogy}{list of integer vectors}
-
-\item{ids}{integers}
-
-\item{result}{a row of a nested tibble of conf and list(pop)}
-
-\item{n}{an integer number of exclusive ancestors}
+\item{num_clades}{integer}
 }
 \value{
 a string vector
 
 a grouped data.frame
 
-an integer vector
+tibble
 
-an integer vector
+tibble
 
-factor vector of extracted ancestors
-
-a data.frame
+tibble
 
 tibble with $id and $discendants
 }
@@ -65,13 +50,11 @@ extract param names from conf
 
 extract demography from population data
 
-cell ids that existed at the specified tumor size
+Filter extant cells
 
-cell ids that existed at the specified tumor size (from snapshots)
+Modify population table
 
-split ancestor string and extract one matched
-
-Extract survivors and add some columns
+Add a column of ancestor ids by which branches are classified
 
 Add a column of living descendants number
 }
