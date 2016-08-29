@@ -7,7 +7,7 @@ genetic_stats = function(survivors) {
     dplyr::summarize_(survivors,
        mean_age= ~mean(age), sd_age= ~sd(age),
        max_age= ~max(age), min_age= ~min(age),
-       evenness= ~wtl::evenness(ancestor)
+       evenness= ~wtl::evenness(clade)
     )
 }
 
