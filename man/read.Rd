@@ -3,6 +3,7 @@
 \name{read_conf}
 \alias{read_conf}
 \alias{read_population}
+\alias{read_results}
 \alias{read_snapshots}
 \title{read config files}
 \usage{
@@ -10,17 +11,23 @@ read_conf(indirs = ".")
 
 read_population(conf)
 
+read_results(indirs = ".")
+
 read_snapshots(conf)
 }
 \arguments{
 \item{indirs}{a string vector}
 
 \item{conf}{tibble}
+
+\item{indirs}{a string vector}
 }
 \value{
 tibble
 
 tibble
+
+nested tibble
 
 a grouped data.frame
 }
@@ -28,6 +35,8 @@ a grouped data.frame
 read config files
 
 read a population
+
+Read results
 
 read snapshots
 }

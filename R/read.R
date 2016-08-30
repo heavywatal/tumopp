@@ -24,6 +24,23 @@ read_population = function(conf) {
         readr::read_tsv(col_types=.cols)
 }
 
+#' Read results
+#' @return nested tibble
+#' @rdname read
+#' @export
+read_results = function(indirs='.') {
+    .cols = readr::cols(
+        beta= readr::col_double(),
+        delta= readr::col_double(),
+        rho= readr::col_double())
+    pops = file.path(indirs, 'population.tsv.gz') %>>%
+        purrr::map(readr::read_tsv, col_types=.cols)
+    file.path(indirs, 'program_options.conf') %>>%
+        purrr::map_df(wtl::read_boost_ini, .id='path') %>>%
+        dplyr::mutate(population= pops) %>>%
+        modify_population()
+}
+
 #' read snapshots
 #' @return a grouped data.frame
 #' @rdname read
