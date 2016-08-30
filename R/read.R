@@ -1,47 +1,38 @@
-#' read config files
+#' Read config files
 #' @param indirs a string vector
 #' @return tibble
 #' @rdname read
 #' @export
-read_conf = function(indirs='.') {
+read_confs = function(indirs='.') {
     stats::setNames(,indirs) %>>%
-    purrr::map_df(~wtl::read_boost_ini(file.path(., 'program_options.conf')),
-                  .id='path')
+    file.path('program_options.conf') %>>%
+    purrr::map_df(wtl::read_boost_ini, .id='path')
 }
 
-#' read a population
-#' @param conf tibble
-#' @return tibble
+#' Read populations
+#' @return list of tibbles
 #' @rdname read
 #' @export
-read_population = function(conf) {
-    stopifnot(nrow(conf) == 1L)
-    .cols = readr::cols(
+read_populations = function(indirs='.') {
+    file.path(indirs, 'population.tsv.gz') %>>%
+    purrr::map(readr::read_tsv, col_types=readr::cols(
         beta= readr::col_double(),
         delta= readr::col_double(),
-        rho= readr::col_double())
-    file.path(conf$path, 'population.tsv.gz') %>>%
-        readr::read_tsv(col_types=.cols)
+        rho= readr::col_double()))
 }
 
-#' Read results
+#' Read confs and populations as a nested tibble
 #' @return nested tibble
 #' @rdname read
 #' @export
 read_results = function(indirs='.') {
-    .cols = readr::cols(
-        beta= readr::col_double(),
-        delta= readr::col_double(),
-        rho= readr::col_double())
-    pops = file.path(indirs, 'population.tsv.gz') %>>%
-        purrr::map(readr::read_tsv, col_types=.cols)
-    file.path(indirs, 'program_options.conf') %>>%
-        purrr::map_df(wtl::read_boost_ini, .id='path') %>>%
-        dplyr::mutate(population= pops) %>>%
-        modify_population()
+    read_confs(indirs) %>>%
+    dplyr::mutate(population= read_populations(indirs)) %>>%
+    modify_population()
 }
 
 #' read snapshots
+#' @param conf tibble
 #' @return a grouped data.frame
 #' @rdname read
 #' @export
