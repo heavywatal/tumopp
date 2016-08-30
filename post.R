@@ -14,22 +14,22 @@ if (!is.na(indir)) {
     setwd(indir)
 }
 
-conf = read_conf()
-population = conf %>>% purrr::by_row(.to='population', read_population) %>>% extract_survivors()
+result = read_results()
+population = result$population[[1]]
 
 population %>>%
     dplyr::filter(z == 0) %>>%
-    gglattice2d('ancestor') %>>%
+    gglattice2d() %>>%
     (ggsave('section_z0.png', ., width=8, height=7))
 
 population %>>%
     dplyr::filter(z == 0) %>>%
     dplyr::filter(surface) %>>%
-    gglattice2d('ancestor') %>>%
+    gglattice2d() %>>%
     (ggsave('section_z0_surface.png', ., width=8, height=7))
 
 #########1#########2#########3#########4#########5#########6#########7#########
-if (conf[['dimensions']] > 2) {
+if (result[['dimensions']] > 2) {
 
 library(rgl)
 if (rgl.cur()) {rgl.close()}
