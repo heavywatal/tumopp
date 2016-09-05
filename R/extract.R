@@ -9,21 +9,20 @@ altered_params = function(conf) {
     unlist() %>>% (.[. > 1]) %>>% names()
 }
 
-#' extract demography from population data
-#' @param grouped_df a grouped_df
-#' @return a grouped data.frame
+#' Extract demography from raw population data
+#' @return tibble
 #' @rdname extract
 #' @export
-extract_demography = function(grouped_df) {grouped_df %>>%
+extract_demography = function(raw_population) {raw_population %>>%
     dplyr::select_(~birth, ~death) %>>%
-    tidyr::gather_(~event, ~time, ~birth, ~death) %>>%
+    tidyr::gather_('event', 'time', c('birth', 'death')) %>>%
     dplyr::filter_(~!(time == 0 & event == 'death')) %>>%  # alive
     dplyr::mutate_(event= ~factor(event, levels=c('death', 'birth'))) %>>%
     dplyr::arrange_(~time, ~event) %>>%
-    dplyr::mutate_(dn= ~ifelse(event == 'birth', 1, -1),
-                   size= ~cumsum(dn)) %>>%
-    dplyr::group_by_(~time, add=TRUE) %>>%
-    dplyr::summarise_(size= ~dplyr::last(size))
+    dplyr::mutate_(dn= ~ifelse(event == 'birth', 1, -1)) %>>%
+    dplyr::group_by_(~time) %>>%
+    dplyr::summarise_(dn= ~sum(dn)) %>>%
+    dplyr::mutate_(size= ~cumsum(dn))
 }
 
 #' Filter extant cells

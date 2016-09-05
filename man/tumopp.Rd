@@ -10,7 +10,7 @@ tumopp(args = character(0))
 make_args(alt, const = NULL, nreps = 1)
 }
 \arguments{
-\item{args}{command line arguments as a string vector}
+\item{args}{command line arguments as a string vector or list of strings}
 
 \item{alt}{named list of altered arguments}
 
@@ -19,7 +19,7 @@ make_args(alt, const = NULL, nreps = 1)
 \item{nreps}{number of repeats}
 }
 \value{
-tibble
+nested tibble
 
 list of character vectors
 }

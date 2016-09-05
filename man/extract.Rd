@@ -11,7 +11,7 @@
 \usage{
 altered_params(conf)
 
-extract_demography(grouped_df)
+extract_demography(raw_population)
 
 filter_extant(raw_population)
 
@@ -24,8 +24,6 @@ count_descendants(raw_population)
 \arguments{
 \item{conf}{a data.frame}
 
-\item{grouped_df}{a grouped_df}
-
 \item{raw_population}{tibble including ancestors}
 
 \item{result}{a row of nested tibble}
@@ -35,7 +33,7 @@ count_descendants(raw_population)
 \value{
 a string vector
 
-a grouped data.frame
+tibble
 
 tibble
 
@@ -48,7 +46,7 @@ tibble with $id and $discendants
 \description{
 extract param names from conf
 
-extract demography from population data
+Extract demography from raw population data
 
 Filter extant cells
 
