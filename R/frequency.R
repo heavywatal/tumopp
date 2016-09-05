@@ -16,6 +16,6 @@ math_score = function(x, constant=1.4826, na.rm=FALSE) {
 #' @rdname frequency
 #' @export
 descfreqs = function(descendants, lowerbound=0) {
-    frac = descendants / max(descendants)
+    frac = descendants / max(descendants, na.rm=TRUE)
     dplyr::if_else((lowerbound < frac) & (frac < 1), frac, as.double(NA))
 }
