@@ -9,3 +9,22 @@ tumopp = function(args=character(0)) {
     dplyr::mutate(population=list(readr::read_tsv(results[2]))) %>>%
     modify_population()
 }
+
+#' Make argment list for tumopp()
+#' @param alt named list of altered arguments
+#' @param const unnamed vector of constant arguments
+#' @param nreps number of repeats
+#' @return list of character vectors
+#' @rdname tumopp
+#' @export
+make_args = function(alt, const=NULL, nreps=1) {
+    altered = purrr::invoke(expand.grid, alt, stringsAsFactors=FALSE)
+    seq_len(nreps) %>>%
+        purrr::map_df(~dplyr::mutate(altered, o=.x)) %>>%
+        purrr::by_row(~{
+            alt_par = paste0('-', names(.), .)
+            c(const, alt_par)
+        }, .labels=FALSE) %>>%
+        `[[`('.out') %>>%
+        stats::setNames(purrr::map_chr(., paste, collapse=' '))
+}
