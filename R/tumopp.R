@@ -24,9 +24,10 @@ tumopp = function(args=character(0)) {
 #' @return list of character vectors
 #' @rdname tumopp
 #' @export
-make_args = function(alt, const=NULL, nreps=1) {
+make_args = function(alt, const=NULL, nreps=1L) {
     altered = purrr::invoke(expand.grid, alt, stringsAsFactors=FALSE)
-    seq_len(nreps) %>>%
+    prefix = format(Sys.time(), '%Y%m%d_%H%M_')
+    paste0(prefix, seq_len(nreps)) %>>%
         purrr::map_df(~dplyr::mutate(altered, o=.x)) %>>%
         purrr::by_row(~{
             alt_par = paste0('-', names(.), .)

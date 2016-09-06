@@ -7,7 +7,7 @@
 \usage{
 tumopp(args = character(0))
 
-make_args(alt, const = NULL, nreps = 1)
+make_args(alt, const = NULL, nreps = 1L)
 }
 \arguments{
 \item{args}{command line arguments as a string vector or list of strings}
