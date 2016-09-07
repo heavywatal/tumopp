@@ -11,7 +11,7 @@ make_edgelist(population)
 
 layout_genealogy(edgelist)
 
-ggplot_genealogy(.data, age_lim = c(0, max(.data$yend)), hist = TRUE)
+ggplot_genealogy(.data, label = "", hist = TRUE)
 
 age_histogram(.data, age_lim)
 }
@@ -22,9 +22,11 @@ age_histogram(.data, age_lim)
 
 \item{.data}{tibble from layout_genealogy()}
 
-\item{age_lim}{numeric vector}
+\item{label}{character or expression}
 
 \item{hist}{logical: whether add age_histogram() or not.}
+
+\item{age_lim}{numeric vector}
 }
 \value{
 tibble
