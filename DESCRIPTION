@@ -23,6 +23,7 @@ Imports:
     wtl
 Suggests:
     animation,
+    gridExtra,
     igraph,
     rgl
 URL: https://github.com/heavywatal/tumorr
