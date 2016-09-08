@@ -124,15 +124,15 @@ void Tissue::queue_push(double delta_t, const std::shared_ptr<Cell>& x) {
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
     if (PACKING_ == "push") {
         push(daughter, coord_func_->random_direction(wtl::sfmt()));
-    } else if (PACKING_ == "pushn") {
+    } else if (PACKING_ == "hellbent") {
         push(daughter, to_nearest_empty(daughter->coord()));
-    } else if (PACKING_ == "pushne") {
-        pushn_everytime(daughter);
-    } else if (PACKING_ == "fillpush") {
-        fill_push(daughter, coord_func_->random_direction(wtl::sfmt()));
-    } else if (PACKING_ == "fill") {
-        return fill_empty(daughter);
-    } else if (PACKING_ == "empty") {
+    } else if (PACKING_ == "minimal") {
+        push_minimal_drag(daughter);
+    } else if (PACKING_ == "stroll") {
+        stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
+    } else if (PACKING_ == "ifany") {
+        return insert_adjacent(daughter);
+    } else if (PACKING_ == "propto") {
         daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
         return tumor_.insert(daughter).second;
     } else {
@@ -150,27 +150,26 @@ void Tissue::push(std::shared_ptr<Cell> moving, const std::valarray<int>& direct
     } while (swap_existing(&moving));
 }
 
-void Tissue::pushn_everytime(std::shared_ptr<Cell> moving) {
+void Tissue::push_minimal_drag(std::shared_ptr<Cell> moving) {
     do {
         moving->set_coord(moving->coord() + to_nearest_empty(moving->coord()));
     } while (swap_existing(&moving));
 }
 
-void Tissue::fill_push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {
-    while (!fill_empty(moving)) {
+void Tissue::stroll(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {
+    while (!insert_adjacent(moving)) {
         moving->set_coord(moving->coord() + direction);
         swap_existing(&moving);
     }
 }
 
-bool Tissue::fill_empty(const std::shared_ptr<Cell>& moving) {
+bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::sfmt());
     for (auto& x: neighbors) {
         moving->set_coord(x);
         if (tumor_.insert(moving).second) {
-            // end if found and filled an empty space
             return true;
         }
     }

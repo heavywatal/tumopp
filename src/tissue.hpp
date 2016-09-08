@@ -101,7 +101,7 @@ class Tissue {
     //! Coordinate system
     static std::string COORDINATE_;
 
-    //! packing method: push, push_fill, walk_fill
+    //! packing method
     static std::string PACKING_;
 
     //! 0: flat, +: peripheral growth
@@ -120,16 +120,19 @@ class Tissue {
     //! Swap with a random neighbor
     void migrate(const std::shared_ptr<Cell>&);
 
-    //! Emplace daughter cell and push other cells outward
+    //! Emplace daughter cell and push other cells to the direction
     void push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
-    void pushn_everytime(std::shared_ptr<Cell> moving);
-    //! Fill empty neighbor or push to the direction
-    void fill_push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
-    //! Insert x if it has an empty neighbor
-    bool fill_empty(const std::shared_ptr<Cell>& x);
+    //! Push through the minimal drag path
+    void push_minimal_drag(std::shared_ptr<Cell> moving);
+    //! Try insert_adjacent() on every step in push()
+    void stroll(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
+    //! Insert x if any adjacent node is empty
+    bool insert_adjacent(const std::shared_ptr<Cell>& x);
     //! Put new cell and return existing.
     bool swap_existing(std::shared_ptr<Cell>* x);
+    //! Count steps to the nearest empty
     size_t steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const;
+    //! Direction to the nearest empty
     std::valarray<int> to_nearest_empty(const std::valarray<int>& current, size_t search_max=26) const;
 
     size_t num_empty_neighbors(const std::valarray<int>&) const;
