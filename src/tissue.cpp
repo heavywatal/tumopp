@@ -216,10 +216,12 @@ size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<in
 }
 
 std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, size_t search_max) const {
-    search_max = std::min(search_max, coord_func_->directions().size());
     size_t least_steps = std::numeric_limits<size_t>::max();
     std::valarray<int> best_direction;
-    for (const auto& d: wtl::sample_knuth(coord_func_->directions(), search_max, wtl::sfmt())) {
+    auto directions = coord_func_->directions();
+    std::shuffle(directions.begin(), directions.end(), wtl::sfmt());
+    if (search_max < directions.size()) directions.resize(search_max);
+    for (const auto& d: directions) {
         auto n = steps_to_empty(current, d);
         if (n < least_steps) {
             least_steps = n;
