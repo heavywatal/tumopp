@@ -56,7 +56,7 @@ void Simulation::help_and_exit() {HERE;
     // do not print positional arguments as options
     std::cout << "Usage: tumopp [options] nsam howmany\n" << std::endl;
     description.print(std::cout);
-    std::exit(EXIT_SUCCESS);
+    throw wtl::ExitSuccess();
 }
 
 //! Unit test for each class
@@ -67,7 +67,7 @@ inline void test(const int flg) {HERE;
       case 1:
         Cell::unit_test();
         Tissue::unit_test();
-        std::exit(EXIT_SUCCESS);
+        throw wtl::ExitSuccess();
       default:
         throw std::runtime_error("Unknown argument for --test");
     }

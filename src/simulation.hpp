@@ -11,7 +11,7 @@
 #include <vector>
 #include <random>
 
-#include <cxxwtils/iostr.hpp>
+#include <cxxwtils/exception.hpp>
 
 #include "tissue.hpp"
 
