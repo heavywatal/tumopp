@@ -69,7 +69,7 @@ inline void test(const int flg) {HERE;
         Tissue::unit_test();
         std::exit(EXIT_SUCCESS);
       default:
-        std::abort();
+        throw std::runtime_error("Unknown argument for --test");
     }
 }
 
@@ -103,12 +103,11 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     }
     test(vm["test"].as<int>());
     if (NSAM > vm["max"].as<size_t>()) {
-        std::cout.precision(1);
-        std::cout
-            << "\nERROR: NSAM=" << NSAM
-            << " is larger than tumor size "
-            << std::fixed << vm["max"].as<size_t>() << std::endl;
-        std::abort();
+        std::ostringstream oss;
+        oss << "NSAM=" << NSAM
+            << " is larger than final tumor size "
+            << vm["max"].as<size_t>();
+        throw std::runtime_error(oss.str());
     }
     OUT_DIR = fs::system_complete(OUT_DIR).string();
 }

@@ -136,10 +136,10 @@ bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
         daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
         return tumor_.insert(daughter).second;
     } else {
-        std::cout << FILE_LINE_PRETTY
-            << "\nERROR: unknown option value --packing=" << PACKING_
-            << std::endl;
-        std::abort();
+        std::ostringstream oss;
+        oss << FILE_LINE_PRETTY
+            << "\nUnknown option value --packing=" << PACKING_;
+        throw std::runtime_error(oss.str());
     }
     return true;
 }
