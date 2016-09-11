@@ -22,10 +22,11 @@ def args_latest(repeat=1):
 
 def args_all(repeat):
     const = ['-N16384']
+    packing = ['push', 'hellbent', 'minimal', 'stroll', 'ifany', 'propto']
     params = OrderedDict()
     params.update(D=[2, 3])
     params.update(C=['neumann', 'moore', 'hex'])
-    params.update(P=['push', 'pushn', 'pushne', 'fillpush', 'fill', 'empty'])
+    params.update(P=packing)
     params.update(S=['random', 'even'])
     return [const + x + ['--out_dir=' + make_outdir(x, i)]
             for i, x in enumerate(product(params, repeat))]
