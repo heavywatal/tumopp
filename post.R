@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 library(pipeR)
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
 
 library(wtl)
 library(tumorr)
