@@ -34,12 +34,13 @@ layout_genealogy = function(edgelist) {
 #' Plot genealogy
 #' @param .data tibble from layout_genealogy()
 #' @param label character or expression
+#' @param xmax numeric
 #' @param hist logical: whether add age_histogram() or not.
 #' @return gg
 #' @rdname graph
 #' @export
-ggplot_genealogy = function(.data, label='', hist=TRUE) {
-    age_lim=c(0, max(.data$ageend, 20))
+ggplot_genealogy = function(.data, label='', xmax=20, hist=TRUE) {
+    age_lim=c(0, max(.data$ageend, xmax))
     .tree = ggplot2::ggplot(.data)+
     ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=0.3, size=0.3)+
     ggplot2::geom_point(data=dplyr::filter_(.data, ~extant),
