@@ -15,7 +15,8 @@
 #include <cxxwtils/iostr.hpp>
 #include <cxxwtils/gz.hpp>
 #include <cxxwtils/debug.hpp>
-#include <cxxwtils/algorithm.hpp>
+#include <cxxwtils/math.hpp>
+#include <cxxwtils/numeric.hpp>
 
 namespace tumopp {
 
