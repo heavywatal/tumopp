@@ -7,24 +7,29 @@
 \alias{filter_extant}
 \alias{modify_population}
 \alias{set_clades}
+\alias{set_id}
 \title{extract param names from conf}
 \usage{
 altered_params(conf)
 
-extract_demography(raw_population)
+extract_demography(population)
 
-filter_extant(raw_population)
+filter_extant(population)
+
+set_id(raw_population)
 
 modify_population(result, num_clades = 4L)
 
-set_clades(raw_population, num_clades)
+set_clades(population, num_clades)
 
-count_descendants(raw_population)
+count_descendants(population)
 }
 \arguments{
 \item{conf}{a data.frame}
 
-\item{raw_population}{tibble including ancestors}
+\item{population}{tibble including ancestors}
+
+\item{raw_population}{original tibble}
 
 \item{result}{a row of nested tibble}
 
@@ -32,6 +37,8 @@ count_descendants(raw_population)
 }
 \value{
 a string vector
+
+tibble
 
 tibble
 
@@ -49,6 +56,8 @@ extract param names from conf
 Extract demography from raw population data
 
 Filter extant cells
+
+Extract age and id from genealogy column
 
 Modify population table
 

@@ -62,10 +62,11 @@ filter_surface = function(img, se) {
 }
 
 #' extract cells on suface
-#' @return a logical vector
+#' @return tibble with surface column
 #' @rdname morphology
 #' @export
 detect_surface = function(mtrx, se) {
+    if (nrow(mtrx) == 0L) {return(dplyr::mutate(mtrx, surface=logical(0L)))}
     axes = c('x', 'y', 'z')
     mins = dplyr::summarise_each_(mtrx, dplyr::funs(min), vars=axes)
     img = df2img(mtrx) %>>% filter_surface(se)

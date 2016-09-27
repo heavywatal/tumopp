@@ -38,7 +38,7 @@ cimg structuring element
 
 cimg
 
-a logical vector
+tibble with surface column
 }
 \description{
 Convert data.frame to cimg
