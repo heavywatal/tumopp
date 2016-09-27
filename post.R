@@ -14,7 +14,7 @@ if (!is.na(indir)) {
 }
 
 result = read_results()
-population = result$population[[1]]
+population = result$population[[1]] %>>% filter_extant()
 
 population %>>%
     dplyr::filter(z == 0) %>>%
