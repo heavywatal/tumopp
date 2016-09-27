@@ -70,8 +70,10 @@ class Cell {
         time_of_birth_ = t;
         genealogy_.push_back(i);
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
+        frustration_ = 0;
     }
     void set_time_of_death(const double t) {time_of_death_ = t;}
+    size_t frustration() {return ++frustration_;}
 
     //! Getter
     Event next_event() const {return next_event_;}
@@ -120,9 +122,6 @@ class Cell {
     //! Position in a tumor
     std::valarray<int> coord_;
 
-    //! between birth and migration
-    double elapsed_ = 0.0;
-
     double birth_rate_ = BIRTH_RATE_;
     double death_rate_ = DEATH_RATE_;
     double migra_rate_ = MIGRATION_RATE_;
@@ -131,6 +130,8 @@ class Cell {
     size_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
 
     Event next_event_ = Event::birth;
+    double elapsed_ = 0.0;
+    size_t frustration_ = 0;
 
     //! Extra data
     std::vector<size_t> genealogy_;

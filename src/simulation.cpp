@@ -113,7 +113,10 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
 }
 
 void Simulation::run() {HERE;
-    while (!tissue_.grow()) {;}
+    for (size_t i=0; i<10; ++i) {
+        if (tissue_.grow()) return;
+    }
+    std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
 }
 
 void Simulation::write() const {HERE;

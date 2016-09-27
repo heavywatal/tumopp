@@ -132,6 +132,8 @@ std::string Cell::mutate() {
 
 double Cell::delta_time(const double positional_value) {
     double t_birth = std::numeric_limits<double>::infinity();
+    double t_death = std::numeric_limits<double>::infinity();
+    double t_migra = std::numeric_limits<double>::infinity();
     if (proliferation_capacity_ > 0) {
         double mu = 1.0;
         mu /= birth_rate_;
@@ -141,10 +143,14 @@ double Cell::delta_time(const double positional_value) {
         std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
         t_birth = gamma(wtl::sfmt());
     }
-    std::exponential_distribution<double> exponential_death(death_rate_);
-    std::exponential_distribution<double> exponential_migra(migra_rate_);
-    const double t_death = exponential_death(wtl::sfmt());
-    const double t_migra = exponential_migra(wtl::sfmt());
+    if (death_rate_ > 0.0) {
+        std::exponential_distribution<double> exponential(death_rate_);
+        t_death = exponential(wtl::sfmt());
+    }
+    if (migra_rate_ > 0.0) {
+        std::exponential_distribution<double> exponential(migra_rate_);
+        t_migra = exponential(wtl::sfmt());
+    }
 
     if (t_birth < t_death && t_birth < t_migra) {
         next_event_ = Event::birth;
@@ -222,6 +228,8 @@ void Cell::unit_test() {
     std::cerr.precision(15);
     Cell cell({1, 2, 3});
     std::cerr << Cell::header("\t") << "\n" << cell << std::endl;
+    std::exponential_distribution<double> exponential(0.0);
+    std::cerr << "exponential(0): " << exponential(wtl::sfmt()) << std::endl;
 }
 
 } // namespace tumopp
