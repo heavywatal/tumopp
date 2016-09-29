@@ -196,7 +196,8 @@ std::string Cell::header(const char* sep) {
     oss << "x" << sep << "y" << sep << "z" << sep
         << "genealogy" << sep
         << "birth" << sep << "death" << sep
-        << "beta" << sep << "delta" << sep << "rho";
+        << "beta" << sep << "delta" << sep << "rho" << sep
+        << "type" << sep << "omega";
     return oss.str();
 }
 
@@ -209,7 +210,9 @@ std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
         << time_of_birth_ << sep << time_of_death_ << sep
         << birth_rate_ << sep
         << death_rate_ << sep
-        << migra_rate_;
+        << migra_rate_ << sep
+        << static_cast<int>(type_) << sep <<
+        proliferation_capacity_;
 }
 
 std::string Cell::str(const char* sep) const {
