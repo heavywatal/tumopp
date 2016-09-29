@@ -53,6 +53,9 @@ class Simulation {
 
     size_t HOWMANY = 1;
 
+    //! Max tumor size to stop simulation
+    size_t MAX_SIZE = 16384;
+
     bool WRITE_TO_FILES = false;
 
     //! Seed for random number generator

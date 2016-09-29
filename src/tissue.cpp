@@ -25,7 +25,6 @@ std::string Tissue::COORDINATE_;
 std::string Tissue::PACKING_;
 double Tissue::SIGMA_E_;
 size_t Tissue::INITIAL_SIZE_;
-size_t Tissue::MAX_SIZE_;
 
 //! Program options
 /*! @return Program options description
@@ -37,18 +36,16 @@ size_t Tissue::MAX_SIZE_;
     `-P,--packing`      | -              | Tissue::PACKING_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
-    `-N,--max`          | -              | Simulation::MAX_SIZE
 */
 boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
     po::options_description desc{"Tissue"};
     desc.add_options()
-        ("dimensions,D", po::value<size_t>(&DIMENSIONS_)->default_value(3))
-        ("coord,C", po::value<std::string>(&COORDINATE_)->default_value("moore"))
-        ("packing,P", po::value<std::string>(&PACKING_)->default_value("push"))
-        ("peripheral,g", po::value<double>(&SIGMA_E_)->default_value(std::numeric_limits<double>::infinity()))
-        ("origin,O", po::value<size_t>(&INITIAL_SIZE_)->default_value(1))
-        ("max,N", po::value<size_t>(&MAX_SIZE_)->default_value(16384))
+        ("dimensions,D", po::value(&DIMENSIONS_)->default_value(3))
+        ("coord,C", po::value(&COORDINATE_)->default_value("moore"))
+        ("packing,P", po::value(&PACKING_)->default_value("push"))
+        ("peripheral,g", po::value(&SIGMA_E_)->default_value(std::numeric_limits<double>::infinity()))
+        ("origin,O", po::value(&INITIAL_SIZE_)->default_value(1))
     ;
     return desc;
 }
@@ -76,12 +73,14 @@ bool Tissue::grow(const size_t max_size) {HERE;
     snap(snapshots_);
     bool taking_snapshots = true;
     bool success = false;
+    const size_t max_time = static_cast<size_t>(std::log2(max_size) * 10);
     size_t i = 0;
     while (true) {
         if (tumor_.size() >= max_size) {success = true; break;}
         if ((++i % 256) == 0) {derr("\r" << tumor_.size());}
         auto it = queue_.begin();
         time_ = it->first;
+        if (time_ > max_time) {success = true; break;}
         const auto mother = it->second;
         queue_.erase(it);
         if (mother->next_event() == Event::birth) {
@@ -300,7 +299,7 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Cell>> section;
-    section.reserve(coord_func_->cross_section(MAX_SIZE_));
+    section.reserve(coord_func_->cross_section(tumor_.size()));
     for (const auto& p: tumor_) {
         if (p->coord()[2] == 0) {section.push_back(p);}
     }

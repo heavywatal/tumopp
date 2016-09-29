@@ -31,12 +31,20 @@ inline po::options_description general_desc() {HERE;
     return description;
 }
 
+//! Program options
+/*! @return Program options description
+
+    Command line option | Symbol         | Variable
+    --------------------| -------------- | -------------------------
+    `-N,--max`          | -              | Simulation::MAX_SIZE
+*/
 po::options_description Simulation::options_desc() {HERE;
     po::options_description description("Simulation");
     description.add_options()
-        ("write,w", po::value<bool>(&WRITE_TO_FILES)->default_value(WRITE_TO_FILES)->implicit_value(true))
-        ("out_dir,o", po::value<std::string>(&OUT_DIR)->default_value(OUT_DIR))
-        ("seed", po::value<unsigned int>(&SEED)->default_value(SEED));
+        ("max,N", po::value(&MAX_SIZE)->default_value(MAX_SIZE))
+        ("write,w", po::value(&WRITE_TO_FILES)->default_value(WRITE_TO_FILES)->implicit_value(true))
+        ("out_dir,o", po::value(&OUT_DIR)->default_value(OUT_DIR))
+        ("seed", po::value(&SEED)->default_value(SEED));
     description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
     return description;
@@ -45,8 +53,8 @@ po::options_description Simulation::options_desc() {HERE;
 po::options_description Simulation::positional_desc() {HERE;
     po::options_description description("Positional");
     description.add_options()
-        ("nsam", po::value<size_t>(&NSAM)->default_value(NSAM))
-        ("howmany", po::value<size_t>(&HOWMANY)->default_value(HOWMANY));
+        ("nsam", po::value(&NSAM)->default_value(NSAM))
+        ("howmany", po::value(&HOWMANY)->default_value(HOWMANY));
     return description;
 }
 
@@ -114,9 +122,11 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
 
 void Simulation::run() {HERE;
     for (size_t i=0; i<10; ++i) {
-        if (tissue_.grow()) return;
+        if (tissue_.grow(MAX_SIZE)) break;
     }
-    std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
+    if (tissue_.size() != MAX_SIZE) {
+        std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
+    }
 }
 
 void Simulation::write() const {HERE;

@@ -63,7 +63,7 @@ class Tissue {
     Tissue() = default;
 
     //! main function
-    bool grow(const size_t max_size=MAX_SIZE_);
+    bool grow(const size_t max_size);
 
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
@@ -109,9 +109,6 @@ class Tissue {
 
     //! initial population size
     static size_t INITIAL_SIZE_;
-
-    //! Max tumor size to stop simulation
-    static size_t MAX_SIZE_;
 
     void init();
 
