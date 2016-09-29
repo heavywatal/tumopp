@@ -4,9 +4,9 @@
 #' @rdname coord
 #' @export
 #' @examples
-#' maxabs(data.frame(x=2, y=-3, z=4))
-maxabs = function(mtrx) {
-    max(abs(c(mtrx$x, mtrx$y, mtrx$z)))
+#' max_abs_xyz(data.frame(x=2, y=-3, z=4))
+max_abs_xyz = function(mtrx) {
+    max(abs(mtrx[c('x', 'y', 'z')]))
 }
 
 #' 2D transformation into hexagonal grid

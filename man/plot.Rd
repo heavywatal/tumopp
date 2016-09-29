@@ -9,30 +9,34 @@
 \usage{
 ggfreqspec(freqs)
 
-gglattice2d(.data, .color = "clade", .palette = "Spectral",
-  limit = maxabs(.data))
+gglattice2d(.data, colour = "clade", alpha = 0.66,
+  limit = max_abs_xyz(.data))
 
-save_serial_section(filename = "serial_section.gif", .data, width = 720,
-  height = 640)
+save_serial_section(.data, filename = "serial_section.gif", ...,
+  width = 720, height = 640)
 
-plot_tumor3d(.data, .color = "clade", .palette = "Spectral")
+plot_tumor3d(.data, colour = "clade", .palette = "Spectral")
 }
 \arguments{
 \item{freqs}{numeric vector}
 
-\item{.data}{a data.frame}
+\item{.data}{data.frame}
 
-\item{.color}{a column name to colorcode}
+\item{colour}{column name to colorcode}
 
-\item{.palette}{name for RColorBrewer::brewer.pal()}
+\item{alpha}{opacity [0, 1]}
 
 \item{limit}{for value range}
 
-\item{filename}{a string}
+\item{filename}{string}
 
-\item{width}{an integer}
+\item{...}{passed to gglattice2d}
 
-\item{height}{an integer}
+\item{width}{integer}
+
+\item{height}{integer}
+
+\item{.palette}{name for RColorBrewer::brewer.pal()}
 }
 \description{
 ggplot for frequency spectrum
