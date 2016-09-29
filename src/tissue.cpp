@@ -25,6 +25,7 @@ std::string Tissue::COORDINATE_;
 std::string Tissue::PACKING_;
 double Tissue::SIGMA_E_;
 size_t Tissue::INITIAL_SIZE_;
+size_t Tissue::RECORDING_EARLY_GROWTH_;
 
 //! Program options
 /*! @return Program options description
@@ -46,6 +47,7 @@ boost::program_options::options_description Tissue::opt_description() {
         ("packing,P", po::value(&PACKING_)->default_value("push"))
         ("peripheral,g", po::value(&SIGMA_E_)->default_value(std::numeric_limits<double>::infinity()))
         ("origin,O", po::value(&INITIAL_SIZE_)->default_value(1))
+        ("record,R", po::value(&RECORDING_EARLY_GROWTH_)->default_value(0))
     ;
     return desc;
 }
@@ -70,12 +72,15 @@ void Tissue::init() {HERE;
 
 bool Tissue::grow(const size_t max_size) {HERE;
     init();
-    snap(snapshots_);
-    bool taking_snapshots = true;
     bool success = false;
     const size_t max_time = static_cast<size_t>(std::log2(max_size) * 10);
     size_t i = 0;
     while (true) {
+        if (tumor_.size() < RECORDING_EARLY_GROWTH_) {
+            snap(snapshots_);
+        } else {
+            RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
+        }
         if (tumor_.size() >= max_size) {success = true; break;}
         if ((++i % 256) == 0) {derr("\r" << tumor_.size());}
         auto it = queue_.begin();
@@ -108,11 +113,6 @@ bool Tissue::grow(const size_t max_size) {HERE;
         } else {
             migrate(mother);
             queue_push(mother->delta_time(positional_value(mother->coord())), mother);
-        }
-        if (taking_snapshots && tumor_.size() < 128) {
-            snap(snapshots_);
-        } else {
-            taking_snapshots = false;  // prevent restart by cell death
         }
     }
     derr(std::endl);

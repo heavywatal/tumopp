@@ -110,6 +110,9 @@ class Tissue {
     //! initial population size
     static size_t INITIAL_SIZE_;
 
+    //! a flag
+    static size_t RECORDING_EARLY_GROWTH_;
+
     void init();
 
     bool insert(const std::shared_ptr<Cell>&);
