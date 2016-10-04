@@ -5,11 +5,9 @@
 #' @export
 tumopp = function(args=character(0)) {
     if (is.list(args)) {
-        purrr::map_df(args, ~{
-            message(paste(.x, collapse=' '))
-            tumopp(.x)
-        }, .id='args')
+        purrr::map_df(args, tumopp, .id='args')
     } else {
+        message(paste(args, collapse=' '))
         results = cpp_tumopp(args)
         wtl::read_boost_ini(results[1]) %>>%
         dplyr::mutate(population=list(readr::read_tsv(results[2]))) %>>%
