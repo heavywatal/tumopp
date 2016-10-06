@@ -9,7 +9,7 @@
 \usage{
 ggfreqspec(freqs)
 
-gglattice2d(.data, colour = "clade", alpha = 0.66,
+gglattice2d(.data, colour = "clade", alpha = 0.66, size = 1,
   limit = max_abs_xyz(.data))
 
 save_serial_section(.data, filename = "serial_section.gif", ...,

@@ -7,7 +7,8 @@ ggfreqspec = function(freqs) {
     ggplot2::ggplot(ggplot2::aes_(~x, ~..density..))+
     ggplot2::geom_histogram(bins=25)+
     ggplot2::coord_cartesian(xlim=c(0, 1))+
-    ggplot2::labs(x='frequency of alleles (or living descendants)')
+    ggplot2::labs(x='frequency of alleles (or living descendants)')+
+    wtl::theme_wtl()
 }
 
 #' ggplot for 2D lattice
@@ -17,10 +18,11 @@ ggfreqspec = function(freqs) {
 #' @param limit for value range
 #' @rdname plot
 #' @export
-gglattice2d = function(.data, colour='clade', alpha=0.66, limit=max_abs_xyz(.data)) {
+gglattice2d = function(.data, colour='clade', alpha=0.66, size=1, limit=max_abs_xyz(.data)) {
     ggplot2::ggplot(.data, ggplot2::aes_(~x, ~y))+
-    ggplot2::geom_point(ggplot2::aes_string(colour=colour), alpha=alpha, size=80/limit)+
-    ggplot2::expand_limits(x=limit * c(-1, 1), y=limit * c(-1, 1))+
+    ggplot2::geom_point(ggplot2::aes_string(colour=colour), alpha=alpha, size=size*80/limit)+
+    ggplot2::coord_equal(xlim=limit * c(-1, 1), ylim=limit * c(-1, 1))+
+    wtl::theme_wtl()+
     ggplot2::theme(axis.title=ggplot2::element_blank())
 }
 
@@ -40,7 +42,7 @@ save_serial_section = function(.data, filename='serial_section.gif', ..., width=
         dplyr::do(plt={
             gglattice2d(., ..., limit=.lim)+
             ggplot2::geom_hline(yintercept=.$z[1])+
-            wtl::theme_clean()
+            wtl::theme_wtl()
         })
     animation::saveGIF({for (p in section_plots$plt) {print(p)}},
         filename, outdir=getwd(), interval=0.15,
