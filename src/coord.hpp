@@ -238,9 +238,9 @@ class Hexagonal final: public Coord {
     }
     virtual double radius(const size_t volume) const override {
         if (dimensions == 2) {
-            return Coord::radius(volume) * std::sqrt(3.0 / 4.0);
+            return Coord::radius(volume * std::sqrt(3.0 / 4.0));
         } else {
-            return Coord::radius(volume) * std::sqrt(0.5);
+            return Coord::radius(volume * std::sqrt(0.5));
         }
     }
     virtual std::vector<std::valarray<int>> core() const override {
