@@ -9,20 +9,20 @@
 \alias{trans_coord_hex_xy}
 \title{get max value for plot limits}
 \usage{
-max_abs_xyz(mtrx)
+max_abs_xyz(.data)
 
-trans_coord_hex_xy(mtrx)
+trans_coord_hex_xy(.data)
 
-trans_coord_hcc(mtrx)
+trans_coord_hcc(.data)
 
-trans_coord_fcc(mtrx)
+trans_coord_fcc(.data)
 
-trans_coord_hex(mtrx)
+trans_coord_hex(.data)
 
-rotate(mtrx, theta, axis = c("z", "x", "y"))
+rotate(.data, theta, axis = c("z", "x", "y"))
 }
 \arguments{
-\item{mtrx}{a data.frame with (x, y, z) columns}
+\item{.data}{data.frame with (x, y, z) columns}
 
 \item{theta}{radian angle}
 
@@ -50,7 +50,7 @@ get max value for plot limits
 
 3D transformation (face centered cubic, cubic close packed)
 
-coordinate transformation
+2D/3D transformation into hexagonal grid
 
 Rotate
 }
