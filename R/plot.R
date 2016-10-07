@@ -14,6 +14,7 @@ ggfreqspec = function(freqs) {
 #' ggplot for 2D lattice
 #' @param .data data.frame
 #' @param colour column name to colorcode
+#' @param size relative size of points
 #' @param alpha opacity [0, 1]
 #' @param limit for value range
 #' @rdname plot

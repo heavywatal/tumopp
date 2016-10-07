@@ -26,6 +26,8 @@ plot_tumor3d(.data, colour = "clade", .palette = "Spectral")
 
 \item{alpha}{opacity [0, 1]}
 
+\item{size}{relative size of points}
+
 \item{limit}{for value range}
 
 \item{filename}{string}
