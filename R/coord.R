@@ -116,5 +116,5 @@ radius_rect3d = function(volume) {
 }
 volume_hex2d = function(radius) volume_rect2d(radius) * 2 / sqrt(3)
 volume_hex3d = function(radius) volume_rect3d(radius) * sqrt(2)
-radius_hex2d = function(volume) radius_rect2d(volume) * sqrt(0.75)
-radius_hex3d = function(volume) radius_rect3d(volume) * sqrt(0.5)
+radius_hex2d = function(volume) radius_rect2d(volume * sqrt(0.75))
+radius_hex3d = function(volume) radius_rect3d(volume * sqrt(0.5))
