@@ -34,6 +34,16 @@ filter_extant = function(population) {
     dplyr::filter_(population, ~death == 0)
 }
 
+#' Filter connected cells
+#' @param genealogy int-list column of extant/sample cells
+#' @return tibble
+#' @rdname extract
+#' @export
+filter_connected = function(population, genealogy) {
+    .id = purrr::flatten_int(genealogy) %>>% unique()
+    dplyr::filter_(population, ~ id %in% .id)
+}
+
 #' Extract age and id from genealogy column
 #' @param raw_population original tibble
 #' @return tibble

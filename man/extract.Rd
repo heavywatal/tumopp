@@ -4,6 +4,7 @@
 \alias{altered_params}
 \alias{count_descendants}
 \alias{extract_demography}
+\alias{filter_connected}
 \alias{filter_extant}
 \alias{modify_population}
 \alias{set_clades}
@@ -15,6 +16,8 @@ altered_params(conf)
 extract_demography(population)
 
 filter_extant(population)
+
+filter_connected(population, genealogy)
 
 set_id(raw_population)
 
@@ -28,6 +31,8 @@ count_descendants(population)
 \item{conf}{a data.frame}
 
 \item{population}{tibble including ancestors}
+
+\item{genealogy}{int-list column of extant/sample cells}
 
 \item{raw_population}{original tibble}
 
@@ -48,6 +53,8 @@ tibble
 
 tibble
 
+tibble
+
 tibble with $id and $discendants
 }
 \description{
@@ -56,6 +63,8 @@ extract param names from conf
 Extract demography from raw population data
 
 Filter extant cells
+
+Filter connected cells
 
 Extract age and id from genealogy column
 

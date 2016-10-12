@@ -1,3 +1,17 @@
+#' Sample bulk of cells near the specified coord
+#' @param population tibble of extant cells
+#' @param center named vector or single-row tbl
+#' @param size number of cells
+#' @return tibble
+#' @rdname sample
+#' @export
+sample_bulk = function(population, center, size=100L) {
+    population %>>%
+    dplyr::mutate_(dist= ~dist_euclidean(., center)) %>>%
+    dplyr::arrange_(~dist) %>>%
+    head(size)
+}
+
 #' Make ms-like matrix from genealogy column of population
 #' @param genealogy list of int vectors
 #' @param nsam number of samples

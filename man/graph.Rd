@@ -2,12 +2,21 @@
 % Please edit documentation in R/graph.R
 \name{make_edgelist}
 \alias{age_histogram}
+\alias{fst_HBK}
+\alias{fst_HSM}
 \alias{ggplot_genealogy}
 \alias{layout_genealogy}
 \alias{make_edgelist}
+\alias{mean_branch_length}
 \title{Make parent-child list from raw population tibble}
 \usage{
 make_edgelist(population)
+
+mean_branch_length(graph, from = igraph::V(graph), to = from)
+
+fst_HSM(within, between)
+
+fst_HBK(within, between, n = 2)
 
 layout_genealogy(edgelist)
 
@@ -17,6 +26,14 @@ age_histogram(.data, age_lim)
 }
 \arguments{
 \item{population}{tibble}
+
+\item{graph}{igraph}
+
+\item{from, to}{node names}
+
+\item{within, between}{mean branch length or diversity}
+
+\item{n}{number of subpopulations}
 
 \item{edgelist}{tibble from make_edgelist()}
 
@@ -33,6 +50,12 @@ age_histogram(.data, age_lim)
 \value{
 tibble
 
+numeric
+
+numeric
+
+numeric
+
 tibble
 
 gg
@@ -41,6 +64,12 @@ gg
 }
 \description{
 Make parent-child list from raw population tibble
+
+Mean branch length within/between sub-graphs
+
+Calculate Fst by Hudson, Slatkin, and Maddison (1992)
+
+Calculate Kst by Hudson, Boos, and Kaplan (1992)
 
 Set coordinates of nodes and edges for plotting
 
