@@ -28,6 +28,6 @@ make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NUL
 #' @rdname summarize
 #' @export
 sample_stats = function(msout, lowerbound=0) {
-    vaf = colMeans(msout) %>>% (.[. > lowerbound])
-    tibble::tibble(math= math_score(vaf))
+    vaf = colMeans(msout)
+    tibble::tibble(math= math_score(vaf[vaf > lowerbound]))
 }

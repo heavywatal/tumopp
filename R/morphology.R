@@ -43,8 +43,7 @@ get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
      if (coord == 'neumann') {
          df = dplyr::filter_(df, ~abs(x) + abs(y) + abs(z) < 2)
      } else if (coord == 'hex') {
-         idx = trans_coord_hex(df) %>>% {.$x^2 + .$y^2 + .$z^2 < 1.1}
-         df = dplyr::filter(df, idx)
+         df = dplyr::filter(df, (trans_coord_hex(df) %>>% dist_euclidean()) < 1.1)
      }
      if (dimensions < 3) {
          df = dplyr::filter_(df, ~z == 0)

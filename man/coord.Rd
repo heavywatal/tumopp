@@ -24,7 +24,7 @@ trans_coord_hex(.data)
 
 rotate(.data, theta, axis = c("z", "x", "y"))
 
-dist_euclidean(.data, center)
+dist_euclidean(.data, center = c(x = 0, y = 0, z = 0))
 
 volume_function(coord = "hex", dimensions = 3L)
 
