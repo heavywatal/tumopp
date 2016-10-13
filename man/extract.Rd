@@ -17,9 +17,9 @@ extract_demography(population)
 
 filter_extant(population)
 
-filter_connected(population, genealogy)
+filter_connected(population, ids)
 
-set_id(raw_population)
+set_id(population)
 
 modify_population(result, num_clades = 4L)
 
@@ -32,9 +32,7 @@ count_descendants(population)
 
 \item{population}{tibble including ancestors}
 
-\item{genealogy}{int-list column of extant/sample cells}
-
-\item{raw_population}{original tibble}
+\item{ids}{integer vector of extant/sample cells}
 
 \item{result}{a row of nested tibble}
 

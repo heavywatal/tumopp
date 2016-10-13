@@ -9,17 +9,20 @@
 \alias{make_edgelist}
 \alias{make_igraph}
 \alias{mean_branch_length}
+\alias{mean_branch_length.igraph}
 \title{Make parent-child list from raw population tbl or igraph}
 \usage{
 make_edgelist(obj)
 
-make_igraph(population)
+make_igraph(population, ids = integer(0L))
 
-mean_branch_length(graph, from = igraph::V(graph), to = from)
+mean_branch_length(population, from = integer(0L), to = from)
+
+mean_branch_length.igraph(graph, from = igraph::V(graph), to = from)
+
+fst_HBK(within, between, n = 2)
 
 fst_HSM(within, between)
-
-fst_HBK(within, between)
 
 layout_genealogy(graph)
 
@@ -32,11 +35,15 @@ age_histogram(.data, age_lim)
 
 \item{population}{tbl}
 
+\item{ids}{integer vector}
+
+\item{from, to}{node id}
+
 \item{graph}{igraph}
 
-\item{from, to}{node names}
-
 \item{within, between}{mean branch length or diversity}
+
+\item{n}{number of subpopulations}
 
 \item{.data}{tbl from layout_genealogy()}
 
@@ -59,6 +66,8 @@ numeric
 
 numeric
 
+numeric
+
 tibble
 
 gg
@@ -72,9 +81,11 @@ Make igraph from raw population tbl
 
 Mean branch length within/between sub-graphs
 
-Calculate Fst by Hudson, Slatkin, and Maddison (1992)
+Mean branch length within/between sub-graphs
 
 Calculate Kst by Hudson, Boos, and Kaplan (1992)
+
+Calculate Fst by Hudson, Slatkin, and Maddison (1992)
 
 Set coordinates of nodes and edges for plotting
 

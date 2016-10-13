@@ -35,21 +35,22 @@ filter_extant = function(population) {
 }
 
 #' Filter connected cells
-#' @param genealogy int-list column of extant/sample cells
+#' @param ids integer vector of extant/sample cells
 #' @return tibble
 #' @rdname extract
 #' @export
-filter_connected = function(population, genealogy) {
-    .id = purrr::flatten_int(genealogy) %>>% unique()
-    dplyr::filter_(population, ~ id %in% .id)
+filter_connected = function(population, ids) {
+    ids = dplyr::filter_(population, ~ id %in% ids)$genealogy %>>%
+        purrr::flatten_int() %>>%
+        unique()
+    dplyr::filter_(population, ~ id %in% ids)
 }
 
 #' Extract age and id from genealogy column
-#' @param raw_population original tibble
 #' @return tibble
 #' @rdname extract
-set_id = function(raw_population) {
-    dplyr::mutate_(raw_population,
+set_id = function(population) {
+    dplyr::mutate_(population,
         genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
         age= ~lengths(genealogy) - 1L,
         id= ~purrr::map2_int(genealogy, age + 1L, `[`))

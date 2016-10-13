@@ -72,12 +72,12 @@ rotate = function(.data, theta, axis=c('z', 'x', 'y')) {
 }
 
 #' Calculate distance from a specified cell
-#' @param center single row in .data
+#' @param point named vector or tibble
 #' @return numeric vector
 #' @rdname coord
 #' @export
-dist_euclidean = function(.data, center=c(x=0, y=0, z=0)) {
-    sqrt((.data[['x']] - center[['x']])^2 + (.data[['y']] - center[['y']])^2 + (.data[['z']] - center[['z']])^2)
+dist_euclidean = function(.data, point=c(x=0, y=0, z=0)) {
+    sqrt((.data[['x']] - point[['x']])^2 + (.data[['y']] - point[['y']])^2 + (.data[['z']] - point[['z']])^2)
 }
 
 #' Return volume function of specified coord and dims

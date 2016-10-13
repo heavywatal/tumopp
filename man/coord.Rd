@@ -24,7 +24,7 @@ trans_coord_hex(.data)
 
 rotate(.data, theta, axis = c("z", "x", "y"))
 
-dist_euclidean(.data, center = c(x = 0, y = 0, z = 0))
+dist_euclidean(.data, point = c(x = 0, y = 0, z = 0))
 
 volume_function(coord = "hex", dimensions = 3L)
 
@@ -37,7 +37,7 @@ radius_function(coord = "hex", dimensions = 3L)
 
 \item{axis}{a string}
 
-\item{center}{single row in .data}
+\item{point}{named vector or tibble}
 
 \item{coord}{hex or not}
 

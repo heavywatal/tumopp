@@ -20,47 +20,69 @@ make_edgelist = function(obj) {
 
 #' Make igraph from raw population tbl
 #' @param population tbl
+#' @param ids integer vector
 #' @return tibble
 #' @rdname graph
 #' @export
-make_igraph = function(population) {
+make_igraph = function(population, ids=integer(0L)) {
+    if (length(ids) > 0L) {
+        population = filter_connected(population, ids)
+    }
     igraph::graph_from_data_frame(make_edgelist(population))
 }
 
 #' Mean branch length within/between sub-graphs
-#' @param graph igraph
-#' @param from,to node names
+#' @param from,to node id
 #' @return numeric
 #' @rdname graph
 #' @export
-mean_branch_length = function(graph, from=igraph::V(graph), to=from) {
+mean_branch_length = function(population, from=integer(0L), to=from) {
+    graph = make_igraph(population, union(from, to))
+    mean_branch_length.igraph(graph, as.character(from), as.character(to))
+}
+
+#' Mean branch length within/between sub-graphs
+#' @return numeric
+#' @rdname graph
+#' @export
+mean_branch_length.igraph = function(graph, from=igraph::V(graph), to=from) {
     .d = igraph::distances(graph, from, to, mode='all', weights=NA)
-    sum(.d) / sum(.d > 0)
+    .n = length(from) * length(to) - length(intersect(from, to))
+    sum(.d) / .n
+}
+
+# Slow; do not use
+mean_branch_length.R = function(genealogy) {
+    .len = length(genealogy)
+    .sum_lengths = sum(lengths(genealogy, FALSE)) * (.len - 1)
+    .sum_intersects = tidyr::crossing(from=seq_len(.len), to=seq_len(.len)) %>>%
+        dplyr::filter_(~from < to) %>>%
+        purrr::pmap_int(function(from, to) {
+            length(intersect(genealogy[[from]], genealogy[[to]]))
+        }) %>>% sum()
+    (.sum_lengths - 2 * .sum_intersects) / choose(.len, 2)
+}
+
+#' Calculate Kst by Hudson, Boos, and Kaplan (1992)
+#' @param within,between mean branch length or diversity
+#' @param n number of subpopulations
+#' @return numeric
+#' @rdname graph
+#' @export
+fst_HBK = function(within, between, n=2) {
+    (between - within) / (between + within / (n - 1))
 }
 
 #' Calculate Fst by Hudson, Slatkin, and Maddison (1992)
-#' @param within,between mean branch length or diversity
 #' @return numeric
 #' @rdname graph
 #' @export
 fst_HSM = function(within, between) {
-    within = mean(within)
-    between = mean(between)
     1.0 - within / between
 }
 
-#' Calculate Kst by Hudson, Boos, and Kaplan (1992)
-#' @return numeric
-#' @rdname graph
-#' @export
-fst_HBK = function(within, between) {
-    n_1 = length(within) - 1
-    within = mean(within)
-    between = mean(between)
-    (between - within) / (between + within / n_1)
-}
-
 #' Set coordinates of nodes and edges for plotting
+#' @param graph igraph
 #' @return tibble
 #' @rdname graph
 #' @export
