@@ -7,25 +7,30 @@
 \alias{ggplot_genealogy}
 \alias{layout_genealogy}
 \alias{make_edgelist}
+\alias{make_igraph}
 \alias{mean_branch_length}
-\title{Make parent-child list from raw population tibble}
+\title{Make parent-child list from raw population tbl or igraph}
 \usage{
-make_edgelist(population)
+make_edgelist(obj)
+
+make_igraph(population)
 
 mean_branch_length(graph, from = igraph::V(graph), to = from)
 
 fst_HSM(within, between)
 
-fst_HBK(within, between, n = 2)
+fst_HBK(within, between)
 
-layout_genealogy(edgelist)
+layout_genealogy(graph)
 
-ggplot_genealogy(.data, label = "", xmax = 20, hist = TRUE)
+ggplot_genealogy(.data, label = "", xmax = 20, hist = FALSE)
 
 age_histogram(.data, age_lim)
 }
 \arguments{
-\item{population}{tibble}
+\item{obj}{population tbl or igraph}
+
+\item{population}{tbl}
 
 \item{graph}{igraph}
 
@@ -33,11 +38,7 @@ age_histogram(.data, age_lim)
 
 \item{within, between}{mean branch length or diversity}
 
-\item{n}{number of subpopulations}
-
-\item{edgelist}{tibble from make_edgelist()}
-
-\item{.data}{tibble from layout_genealogy()}
+\item{.data}{tbl from layout_genealogy()}
 
 \item{label}{character or expression}
 
@@ -48,6 +49,8 @@ age_histogram(.data, age_lim)
 \item{age_lim}{numeric vector}
 }
 \value{
+tibble
+
 tibble
 
 numeric
@@ -63,7 +66,9 @@ gg
 gg
 }
 \description{
-Make parent-child list from raw population tibble
+Make parent-child list from raw population tbl or igraph
+
+Make igraph from raw population tbl
 
 Mean branch length within/between sub-graphs
 

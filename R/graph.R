@@ -1,16 +1,30 @@
-#' Make parent-child list from raw population tibble
-#' @param population tibble
+#' Make parent-child list from raw population tbl or igraph
+#' @param obj population tbl or igraph
 #' @return tibble
 #' @rdname graph
 #' @export
-make_edgelist = function(population) {
-    dplyr::filter_(population, ~age > 0L) %>>%
-    dplyr::transmute_(
-      from= ~purrr::map2_int(genealogy, age, `[[`),
-      to= ~id
-    ) %>>%
-    dplyr::mutate_all(as.integer) %>>%
-    dplyr::arrange_(~to)
+make_edgelist = function(obj) {
+    if (igraph::is_igraph(obj)) {
+        igraph::as_data_frame(obj, 'edges') %>>%
+        tibble::as_tibble()
+    } else {
+        dplyr::filter_(obj, ~age > 0L) %>>%
+        dplyr::transmute_(
+          from= ~purrr::map2_int(genealogy, age, `[[`),
+          to= ~id
+        ) %>>%
+        dplyr::arrange_(~to) %>>%
+        dplyr::mutate_all(as.character)
+    }
+}
+
+#' Make igraph from raw population tbl
+#' @param population tbl
+#' @return tibble
+#' @rdname graph
+#' @export
+make_igraph = function(population) {
+    igraph::graph_from_data_frame(make_edgelist(population))
 }
 
 #' Mean branch length within/between sub-graphs
@@ -30,45 +44,47 @@ mean_branch_length = function(graph, from=igraph::V(graph), to=from) {
 #' @rdname graph
 #' @export
 fst_HSM = function(within, between) {
+    within = mean(within)
+    between = mean(between)
     1.0 - within / between
 }
 
 #' Calculate Kst by Hudson, Boos, and Kaplan (1992)
-#' @param n number of subpopulations
 #' @return numeric
 #' @rdname graph
 #' @export
-fst_HBK = function(within, between, n=2) {
-    (between - within) / (between + within / (n - 1))
+fst_HBK = function(within, between) {
+    n_1 = length(within) - 1
+    within = mean(within)
+    between = mean(between)
+    (between - within) / (between + within / n_1)
 }
 
 #' Set coordinates of nodes and edges for plotting
-#' @param edgelist tibble from make_edgelist()
 #' @return tibble
 #' @rdname graph
 #' @export
-layout_genealogy = function(edgelist) {
-    g = igraph::graph_from_data_frame(edgelist)
-    lo = igraph::layout_as_tree(g, flip.y=FALSE)
+layout_genealogy = function(graph) {
+    lo = igraph::layout_as_tree(graph, flip.y=FALSE)
     nodes = tibble::as_tibble(lo) %>>%
         stats::setNames(c('pos', 'age')) %>>%
         dplyr::mutate_(
-          id= ~igraph::V(g)$name %>>% as.integer(),
-          extant= ~(igraph::degree(g, mode='out') == 0L))
-    edgelist %>>%
+          id= ~igraph::V(graph)$name,
+          extant= ~(igraph::degree(graph, mode='out') == 0L))
+    make_edgelist(graph) %>>%
     dplyr::left_join(dplyr::select_(nodes, ~-extant), by=c(from='id')) %>>%
     dplyr::left_join(dplyr::select_(nodes, posend= ~pos, ageend= ~age, ~extant, to= ~id), by='to')
 }
 
 #' Plot genealogy
-#' @param .data tibble from layout_genealogy()
+#' @param .data tbl from layout_genealogy()
 #' @param label character or expression
 #' @param xmax numeric
 #' @param hist logical: whether add age_histogram() or not.
 #' @return gg
 #' @rdname graph
 #' @export
-ggplot_genealogy = function(.data, label='', xmax=20, hist=TRUE) {
+ggplot_genealogy = function(.data, label='', xmax=20, hist=FALSE) {
     age_lim=c(0, max(.data$ageend, xmax))
     .tree = ggplot2::ggplot(.data)+
     ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=0.3, size=0.3)+
@@ -78,11 +94,15 @@ ggplot_genealogy = function(.data, label='', xmax=20, hist=TRUE) {
     ggplot2::coord_cartesian(xlim=age_lim)+
     wtl::theme_wtl()+
     ggplot2::theme(
-        axis.title=ggplot2::element_blank(),
-        axis.text=ggplot2::element_blank(),
-        axis.ticks=ggplot2::element_blank(),
+        axis.title.y=ggplot2::element_blank(),
+        axis.text.y=ggplot2::element_blank(),
+        axis.ticks.y=ggplot2::element_blank(),
         panel.grid.major.y=ggplot2::element_blank())
     if (hist) {
+        .tree = .tree + ggplot2::theme(
+            axis.title.x=ggplot2::element_blank(),
+            axis.text.x=ggplot2::element_blank(),
+            axis.ticks.x=ggplot2::element_blank())
         .hist = age_histogram(.data, age_lim)
         .top = grid::textGrob(label, x=grid::unit(0.1, 'npc'), just=c('left', 'top'))
         gridExtra::arrangeGrob(.tree, .hist, nrow=2, heights=c(3, 1), top=.top)
