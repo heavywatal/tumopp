@@ -2,8 +2,6 @@
 % Please edit documentation in R/graph.R
 \name{make_edgelist}
 \alias{age_histogram}
-\alias{fst_HBK}
-\alias{fst_HSM}
 \alias{ggplot_genealogy}
 \alias{layout_genealogy}
 \alias{make_edgelist}
@@ -19,10 +17,6 @@ make_igraph(population, ids = integer(0L))
 mean_branch_length(population, from = integer(0L), to = from)
 
 mean_branch_length.igraph(graph, from = igraph::V(graph), to = from)
-
-fst_HBK(within, between, n = 2)
-
-fst_HSM(within, between)
 
 layout_genealogy(graph)
 
@@ -40,10 +34,6 @@ age_histogram(.data, age_lim)
 \item{from, to}{node id}
 
 \item{graph}{igraph}
-
-\item{within, between}{mean branch length or diversity}
-
-\item{n}{number of subpopulations}
 
 \item{.data}{tbl from layout_genealogy()}
 
@@ -64,10 +54,6 @@ numeric
 
 numeric
 
-numeric
-
-numeric
-
 tibble
 
 gg
@@ -82,10 +68,6 @@ Make igraph from raw population tbl
 Mean branch length within/between sub-graphs
 
 Mean branch length within/between sub-graphs
-
-Calculate Kst by Hudson, Boos, and Kaplan (1992)
-
-Calculate Fst by Hudson, Slatkin, and Maddison (1992)
 
 Set coordinates of nodes and edges for plotting
 

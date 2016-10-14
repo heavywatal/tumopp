@@ -63,24 +63,6 @@ mean_branch_length.R = function(genealogy) {
     (.sum_lengths - 2 * .sum_intersects) / choose(.len, 2)
 }
 
-#' Calculate Kst by Hudson, Boos, and Kaplan (1992)
-#' @param within,between mean branch length or diversity
-#' @param n number of subpopulations
-#' @return numeric
-#' @rdname graph
-#' @export
-fst_HBK = function(within, between, n=2) {
-    (between - within) / (between + within / (n - 1))
-}
-
-#' Calculate Fst by Hudson, Slatkin, and Maddison (1992)
-#' @return numeric
-#' @rdname graph
-#' @export
-fst_HSM = function(within, between) {
-    1.0 - within / between
-}
-
 #' Set coordinates of nodes and edges for plotting
 #' @param graph igraph
 #' @return tibble
