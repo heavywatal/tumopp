@@ -3,13 +3,11 @@
 \name{max_abs_xyz}
 \alias{dist_euclidean}
 \alias{max_abs_xyz}
-\alias{radius_function}
 \alias{rotate}
 \alias{trans_coord_fcc}
 \alias{trans_coord_hcc}
 \alias{trans_coord_hex}
 \alias{trans_coord_hex_xy}
-\alias{volume_function}
 \title{get max value for plot limits}
 \usage{
 max_abs_xyz(.data)
@@ -25,10 +23,6 @@ trans_coord_hex(.data)
 rotate(.data, theta, axis = c("z", "x", "y"))
 
 dist_euclidean(.data, point = c(x = 0, y = 0, z = 0))
-
-volume_function(coord = "hex", dimensions = 3L)
-
-radius_function(coord = "hex", dimensions = 3L)
 }
 \arguments{
 \item{.data}{data.frame with (x, y, z) columns}
@@ -38,10 +32,6 @@ radius_function(coord = "hex", dimensions = 3L)
 \item{axis}{a string}
 
 \item{point}{named vector or tibble}
-
-\item{coord}{hex or not}
-
-\item{dimensions}{integer}
 }
 \value{
 max(abs(x, y, z))
@@ -57,10 +47,6 @@ transformed matrix
 modified data.frame
 
 numeric vector
-
-function with radius argument
-
-function with volume argument
 }
 \description{
 get max value for plot limits
@@ -76,10 +62,6 @@ get max value for plot limits
 Rotate
 
 Calculate distance from a specified cell
-
-Return volume function of specified coord and dims
-
-Return radius function of specified coord and dims
 }
 \examples{
 max_abs_xyz(data.frame(x=2, y=-3, z=4))
