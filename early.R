@@ -14,20 +14,21 @@ if (!is.na(indir)) {
     setwd(indir)
 }
 
-conf = tumorr::read_conf() %>>% (?.)
-snapshots = tumorr::read_snapshots(conf)
-nzero = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
-anc_colours = max(4, nzero)
-anc_ids = exclusive_ancestors_ss(snapshots, anc_colours)
-.data = snapshots %>>%
-    dplyr::mutate(ancestor= extract_ancestor(genealogy, anc_ids))
+snapshots = tumorr::read_snapshots()$snapshots[[1]]
+norigins = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
+nclades = max(4L, norigins)
+founders = snapshots %>>% group_by(time) %>>% dplyr::filter(n() == nclades) %>>% (id)
+roots = snapshots %>>% dplyr::filter(id < max(founders)) %>>% (id) %>>% setdiff(founders)
 
-.lim = maxabs(snapshots)
+.data = snapshots %>>%
+    dplyr::mutate_(clade= ~purrr::map_int(genealogy, ~{setdiff(.x, roots)[1L]}))
+
+.lim = max_abs_xyz(snapshots)
 
 plot_snapshot = function(.data) {
     .t = .data$time[1]
     .N = nrow(.data)
-    gglattice2d(.data, 'ancestor', limit=.lim)+
+    gglattice2d(.data, 'clade', limit=.lim)+
     labs(title=sprintf('t = %.5f, N =%4d', .t, .N))+
     theme(legend.position='none')
 }
