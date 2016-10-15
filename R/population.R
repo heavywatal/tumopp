@@ -1,65 +1,7 @@
-#' extract param names from conf
-#' @param conf a data.frame
-#' @return a string vector
-#' @rdname extract
-#' @export
-altered_params = function(conf) {
-    dplyr::select_(conf, ~-path, ~-out_dir, ~-seed) %>>%
-    dplyr::summarise_each(dplyr::funs(length(unique(.)))) %>>%
-    unlist() %>>% (.[. > 1L]) %>>% names()
-}
-
-#' Extract demography from raw population data
-#' @return tibble
-#' @rdname extract
-#' @export
-extract_demography = function(population) {population %>>%
-    dplyr::select_(~birth, ~death) %>>%
-    tidyr::gather_('event', 'time', c('birth', 'death')) %>>%
-    dplyr::filter_(~!(time == 0 & event == 'death')) %>>%  # alive
-    dplyr::mutate_(event= ~factor(event, levels=c('death', 'birth'))) %>>%
-    dplyr::arrange_(~time, ~event) %>>%
-    dplyr::mutate_(dn= ~ifelse(event == 'birth', 1, -1)) %>>%
-    dplyr::group_by_(~time) %>>%
-    dplyr::summarise_(dn= ~sum(dn)) %>>%
-    dplyr::mutate_(size= ~cumsum(dn))
-}
-
-#' Filter extant cells
-#' @param population tibble including ancestors
-#' @return tibble
-#' @rdname extract
-#' @export
-filter_extant = function(population) {
-    dplyr::filter_(population, ~death == 0)
-}
-
-#' Filter connected cells
-#' @param ids integer vector of extant/sample cells
-#' @return tibble
-#' @rdname extract
-#' @export
-filter_connected = function(population, ids) {
-    ids = dplyr::filter_(population, ~ id %in% ids)$genealogy %>>%
-        purrr::flatten_int() %>>%
-        unique()
-    dplyr::filter_(population, ~ id %in% ids)
-}
-
-#' Extract age and id from genealogy column
-#' @return tibble
-#' @rdname extract
-set_id = function(population) {
-    dplyr::mutate_(population,
-        genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
-        age= ~lengths(genealogy) - 1L,
-        id= ~purrr::map2_int(genealogy, age + 1L, `[`))
-}
-
 #' Modify population table
 #' @param result a row of nested tibble
 #' @return tibble
-#' @rdname extract
+#' @rdname population
 modify_population = function(result, num_clades=4L) {
     population = result$population[[1L]] %>>% set_id()
     extant = filter_extant(population)
@@ -76,10 +18,41 @@ modify_population = function(result, num_clades=4L) {
     result
 }
 
+#' Filter extant cells
+#' @param population tibble including ancestors
+#' @return tibble
+#' @rdname population
+#' @export
+filter_extant = function(population) {
+    dplyr::filter_(population, ~death == 0)
+}
+
+#' Filter connected cells
+#' @param ids integer vector of extant/sample cells
+#' @return tibble
+#' @rdname population
+#' @export
+filter_connected = function(population, ids) {
+    ids = dplyr::filter_(population, ~ id %in% ids)$genealogy %>>%
+        purrr::flatten_int() %>>%
+        unique()
+    dplyr::filter_(population, ~ id %in% ids)
+}
+
+#' Extract age and id from genealogy column
+#' @return tibble
+#' @rdname population
+set_id = function(population) {
+    dplyr::mutate_(population,
+        genealogy= ~stringr::str_split(genealogy, ':') %>>% purrr::map(as.integer),
+        age= ~lengths(genealogy) - 1L,
+        id= ~purrr::map2_int(genealogy, age + 1L, `[`))
+}
+
 #' Add a column of ancestor ids by which branches are classified
 #' @param num_clades integer
 #' @return tibble
-#' @rdname extract
+#' @rdname population
 set_clades = function(population, num_clades) {
     origin = sum(population$age == 0L)
     stopifnot(num_clades >= origin)
@@ -93,7 +66,7 @@ set_clades = function(population, num_clades) {
 
 #' Add a column of living descendants number
 #' @return tibble with $id and $discendants
-#' @rdname extract
+#' @rdname population
 count_descendants = function(population) {
     if (nrow(population) == 0L) {
         return(tibble::tibble(id=integer(0L), descendants=integer(0L)))
@@ -104,4 +77,20 @@ count_descendants = function(population) {
         tibble::as_tibble() %>>%
         stats::setNames(c('id', 'descendants')) %>>%
         dplyr::mutate_(id= ~as.integer(id))
+}
+
+#' Extract demography from raw population data
+#' @return tibble
+#' @rdname population
+#' @export
+extract_demography = function(population) {population %>>%
+    dplyr::select_(~birth, ~death) %>>%
+    tidyr::gather_('event', 'time', c('birth', 'death')) %>>%
+    dplyr::filter_(~!(time == 0 & event == 'death')) %>>%  # alive
+    dplyr::mutate_(event= ~factor(event, levels=c('death', 'birth'))) %>>%
+    dplyr::arrange_(~time, ~event) %>>%
+    dplyr::mutate_(dn= ~ifelse(event == 'birth', 1, -1)) %>>%
+    dplyr::group_by_(~time) %>>%
+    dplyr::summarise_(dn= ~sum(dn)) %>>%
+    dplyr::mutate_(size= ~cumsum(dn))
 }
