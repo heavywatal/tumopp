@@ -13,12 +13,10 @@ read_populations(indirs = ".")
 
 read_results(indirs = ".")
 
-read_snapshots(conf)
+read_snapshots(indirs = ".")
 }
 \arguments{
 \item{indirs}{a string vector}
-
-\item{conf}{tibble}
 }
 \value{
 tibble

@@ -32,17 +32,15 @@ read_results = function(indirs='.') {
 }
 
 #' read snapshots
-#' @param conf tibble
 #' @return a grouped data.frame
 #' @rdname read
 #' @export
-read_snapshots = function(conf) {
-    dplyr::group_by_(conf, ~path) %>>%
-    dplyr::do({
-        x = readr::read_tsv(file.path(.$path, 'snapshots.tsv.gz'))
-        if (.$coord == 'hex') {
-            x = trans_coord_hex(x)
-        }
-        x
-    })
+read_snapshots = function(indirs='.') {
+    read_confs(indirs) %>>%
+    dplyr::mutate(path=indirs) %>>%
+    purrr::by_row(~{
+        .d = readr::read_tsv(file.path(.x$path, 'snapshots.tsv.gz'))
+        if (.x$coord == 'hex') .d = trans_coord_hex(.d)
+        .d %>>% set_id()
+    }, .to='snapshots')
 }
