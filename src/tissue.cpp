@@ -77,7 +77,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
     size_t i = 0;
     while (true) {
         if (tumor_.size() < RECORDING_EARLY_GROWTH_) {
-            snap(snapshots_);
+            write(snapshots_);
         } else {
             RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
         }
@@ -92,7 +92,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
                 mother->set_time_of_death(time_);
-                collect(specimens_, *mother);
+                write(specimens_, *mother);
                 mother->set_time_of_death(0.0);
                 mother->set_time_of_birth(time_, ++id_tail_);
                 daughter->set_time_of_birth(time_, ++id_tail_);
@@ -103,11 +103,11 @@ bool Tissue::grow(const size_t max_size) {HERE;
             } else {
                 if (mother->frustration() > 256) break;
                 queue_push(mother->delta_time(positional_value(mother->coord())), mother);
-                continue;  // skip snap()
+                continue;  // skip write()
             }
         } else if (mother->next_event() == Event::death) {
             mother->set_time_of_death(time_);
-            collect(specimens_, *mother);
+            write(specimens_, *mother);
             tumor_.erase(mother);
             if (tumor_.empty()) break;
         } else {
@@ -116,7 +116,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
         }
     }
     derr(std::endl);
-    snap(specimens_);
+    write(specimens_);
     return success;
 }
 
@@ -331,14 +331,14 @@ std::string Tissue::header() const {HERE;
     return oss.str();
 }
 
-void Tissue::collect(std::ostream& ost, const Cell& cell) {
+void Tissue::write(std::ostream& ost, const Cell& cell) const {
     cell.write(ost << time_ << sep_, sep_) << sep_
        << num_empty_neighbors(cell.coord()) << "\n";
 }
 
-void Tissue::snap(std::ostream& ost) {
+void Tissue::write(std::ostream& ost) const {
     for (const auto& p: tumor_) {
-        collect(ost, *p);
+        write(ost, *p);
     }
 }
 
@@ -380,7 +380,7 @@ void Tissue::unit_test() {HERE;
     tissue.grow(10);
     std::cerr << tissue << std::endl;
     std::cerr << tissue.header();
-    tissue.snap(std::cerr);
+    tissue.write(std::cerr);
 
     const std::valarray<int> v2{3, -2};
     test_coordinate<Neumann>(v2);

@@ -69,13 +69,12 @@ class Tissue {
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
     std::vector<std::shared_ptr<Cell>> sample_section(const size_t) const;
 
-    void collect(std::ostream&, const Cell&);
-    void snap(std::ostream&);
-
     std::string specimens() const {return specimens_.str();}
     std::string snapshots() const {return snapshots_.str();}
     std::string drivers() const {return drivers_.str();}
     std::string pairwise_distance(const size_t) const;
+
+    void write(std::ostream&) const;
 
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
@@ -144,6 +143,7 @@ class Tissue {
     std::vector<size_t> generate_neutral_mutations() const;
 
     std::string header() const;
+    void write(std::ostream&, const Cell&) const;
 
     /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
