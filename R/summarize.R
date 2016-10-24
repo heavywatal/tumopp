@@ -32,15 +32,12 @@ within_between_samples = function(population, size=100L) {
 }
 
 #' Summary statistics of morphology
-#' @param coord string
 #' @return tibble
 #' @rdname summarize
 #' @export
-morphological_stats = function(extant, coord=c('moore', 'hex', 'neumann')) {
-    .phi_max = c(hex=12, moore=27, neumann=6)[match.arg(coord)]
+morphological_stats = function(extant) {
     extant %>>%
         dplyr::filter_(~surface) %>>%
-        dplyr::mutate_(r= ~sqrt(x^2 + y^2 + z^2), phi= ~phi / .phi_max) %>>%
         dplyr::summarise_(phi_mean= ~mean(phi), phi_sd= ~stats::sd(phi),
                           r_mean= ~mean(r), r_sd= ~stats::sd(r)) %>>%
         dplyr::mutate(surface=sum(extant$surface) / nrow(extant))

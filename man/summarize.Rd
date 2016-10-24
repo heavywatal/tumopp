@@ -13,7 +13,7 @@ genetic_stats(extant)
 
 within_between_samples(population, size = 100L)
 
-morphological_stats(extant, coord = c("moore", "hex", "neumann"))
+morphological_stats(extant)
 }
 \arguments{
 \item{msout}{tibble from `make_samples()`}
@@ -25,8 +25,6 @@ morphological_stats(extant, coord = c("moore", "hex", "neumann"))
 \item{population}{tibble}
 
 \item{size}{number of cells}
-
-\item{coord}{string}
 }
 \value{
 tibble

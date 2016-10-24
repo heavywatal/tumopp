@@ -11,7 +11,9 @@ modify_population = function(result, num_clades=4L) {
     if (result$coord == 'hex') {
         population = trans_coord_hex(population)
     }
+    result$max_phi = c(hex=12, moore=27, neumann=6)[result$coord]
     result$population[[1L]] = population %>>%
+        dplyr::mutate_(r= ~dist_euclidean(.), phi= ~phi / result$max_phi) %>>%
         set_clades(num_clades) %>>%
         dplyr::left_join(count_descendants(extant), by='id') %>>%
         dplyr::left_join(col_surface, by='id')
