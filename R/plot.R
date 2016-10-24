@@ -49,23 +49,3 @@ save_serial_section = function(.data, filename='serial_section.gif', ..., width=
         filename, outdir=getwd(), interval=0.15,
         ani.width=width, ani.height=height, loop=TRUE, autobrowse=FALSE)
 }
-
-#' plot tumor in 3d with rgl
-#' @rdname plot
-#' @param .palette name for RColorBrewer::brewer.pal()
-#' @export
-plot_tumor3d = function(.data, colour='clade', .palette='Spectral') {
-    if (!requireNamespace('rgl', quietly=TRUE)) {
-        stop('ERROR: rgl is not installed')
-    }
-    colcol = .data[[colour]]
-    if (!is.factor(colcol)) {
-        colcol = as.factor(colcol)
-    }
-    num_colors = length(levels(colcol))
-    .colors = RColorBrewer::brewer.pal(num_colors, .palette)
-    with(.data, {
-        rgl::spheres3d(x, y, z, color=.colors[colcol], radius=1, alpha=1)})
-    rgl::box3d()
-    rgl::view3d(15, 15, 15, 0.9)
-}

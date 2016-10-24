@@ -3,7 +3,6 @@
 \name{ggfreqspec}
 \alias{ggfreqspec}
 \alias{gglattice2d}
-\alias{plot_tumor3d}
 \alias{save_serial_section}
 \title{ggplot for frequency spectrum}
 \usage{
@@ -14,8 +13,6 @@ gglattice2d(.data, colour = "clade", alpha = 0.66, size = 1,
 
 save_serial_section(.data, filename = "serial_section.gif", ...,
   width = 720, height = 640)
-
-plot_tumor3d(.data, colour = "clade", .palette = "Spectral")
 }
 \arguments{
 \item{freqs}{numeric vector}
@@ -37,8 +34,6 @@ plot_tumor3d(.data, colour = "clade", .palette = "Spectral")
 \item{width}{integer}
 
 \item{height}{integer}
-
-\item{.palette}{name for RColorBrewer::brewer.pal()}
 }
 \description{
 ggplot for frequency spectrum
@@ -46,7 +41,5 @@ ggplot for frequency spectrum
 ggplot for 2D lattice
 
 Write animation GIF for serial sections of 3D tumor
-
-plot tumor in 3d with rgl
 }
 
