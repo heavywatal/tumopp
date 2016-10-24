@@ -61,7 +61,7 @@ loadNamespace('cowplot')
 }
 .plts = .plot_specimens(.population, .o1, .o2)
 .gg = cowplot::plot_grid(plotlist=.plts)
-ggsave('fst_Pifany.png', .gg, width=2, height=1, scale=6)
+ggsave('sample_phylogeny_Pifany.png', .gg, width=2, height=1, scale=6)
 
 .n = 40
 purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>>%
@@ -69,3 +69,28 @@ purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>>%
     ggplot(aes(euclidean, fst))+
     geom_point()+
     theme_wtl()
+
+
+#########1#########2#########3#########4#########5#########6#########7#########
+## Draw random tree
+
+.draw_tree = function() {
+    .result = tumopp(str_split('-D3 -Chex -Pifany -N60', ' ')[[1]])
+    .data = .result$population[[1]] %>>% make_igraph() %>>% layout_genealogy()
+    .tree = ggplot2::ggplot(.data)+
+        ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=1, size=1)+
+        ggplot2::geom_point(data=dplyr::filter_(.data, ~extant),  ggplot2::aes_(x=~ageend, y=~posend),
+            size=2, colour='dodgerblue', alpha=1)+
+        ggplot2::geom_point(data=dplyr::filter_(.data, ~!extant), ggplot2::aes_(x=~ageend, y=~posend),
+            size=1.2, colour='black', alpha=1)+
+        wtl::theme_wtl()+
+        ggplot2::theme(
+            axis.title=ggplot2::element_blank(),
+            axis.text=ggplot2::element_blank(),
+            axis.ticks=ggplot2::element_blank(),
+            panel.grid.major=ggplot2::element_blank())
+    .outfile = sprintf('tree_%s.png', as.character(.result$seed))
+    message(.outfile)
+    ggsave(.outfile, .tree, width=1, height=1, scale=4)
+}
+.draw_tree()
