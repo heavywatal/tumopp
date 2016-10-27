@@ -63,10 +63,22 @@ void Tissue::init() {HERE;
     (specimens_ = wtl::make_oss()) << header();
     (snapshots_ = wtl::make_oss()) << header();
     (drivers_ = wtl::make_oss()) << "id\ttype\tcoef\n";
-    for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
-        auto x = std::make_shared<Cell>(coord, ++id_tail_);
-        tumor_.insert(x);
-        queue_push(x);
+    const auto initial_coords = coord_func_->sphere(INITIAL_SIZE_);
+    const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
+    tumor_.insert(origin);
+    queue_push(origin);
+    while (tumor_.size() < INITIAL_SIZE_) {
+        for (const auto& mother: tumor_) {
+            const auto daughter = std::make_shared<Cell>(*mother);
+            mother->set_time_of_death(0.0);
+            write(specimens_, *mother);
+            mother->set_time_of_birth(0.0, ++id_tail_);
+            daughter->set_time_of_birth(0.0, ++id_tail_);
+            daughter->set_coord(initial_coords[tumor_.size()]);
+            tumor_.insert(daughter);
+            queue_push(daughter);
+            if (tumor_.size() >= INITIAL_SIZE_) break;
+        }
     }
 }
 
