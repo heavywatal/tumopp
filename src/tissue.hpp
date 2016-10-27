@@ -136,7 +136,7 @@ class Tissue {
 
     size_t num_empty_neighbors(const std::valarray<int>&) const;
 
-    void queue_push(double delta_t, const std::shared_ptr<Cell>&);
+    void queue_push(const std::shared_ptr<Cell>&);
 
     double positional_value(const std::valarray<int>&) const;
 

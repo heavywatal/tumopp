@@ -66,7 +66,7 @@ void Tissue::init() {HERE;
     for (const auto& coord: coord_func_->sphere(INITIAL_SIZE_)) {
         auto x = std::make_shared<Cell>(coord, ++id_tail_);
         tumor_.insert(x);
-        queue_push(x->delta_time(positional_value(x->coord())), x);
+        queue_push(x);
     }
 }
 
@@ -98,11 +98,11 @@ bool Tissue::grow(const size_t max_size) {HERE;
                 daughter->set_time_of_birth(time_, ++id_tail_);
                 drivers_ << mother->mutate();
                 drivers_ << daughter->mutate();
-                queue_push(mother->delta_time(positional_value(mother->coord())), mother);
-                queue_push(daughter->delta_time(positional_value(daughter->coord())), daughter);
+                queue_push(mother);
+                queue_push(daughter);
             } else {
                 if (mother->frustration() > 256) break;
-                queue_push(mother->delta_time(positional_value(mother->coord())), mother);
+                queue_push(mother);
                 continue;  // skip write()
             }
         } else if (mother->next_event() == Event::death) {
@@ -112,7 +112,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
             if (tumor_.empty()) break;
         } else {
             migrate(mother);
-            queue_push(mother->delta_time(positional_value(mother->coord())), mother);
+            queue_push(mother);
         }
     }
     derr(std::endl);
@@ -120,8 +120,9 @@ bool Tissue::grow(const size_t max_size) {HERE;
     return success;
 }
 
-void Tissue::queue_push(double delta_t, const std::shared_ptr<Cell>& x) {
-    queue_.insert(queue_.end(), std::make_pair(delta_t += time_, x));
+void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
+    double dt = x->delta_time(positional_value(x->coord()));
+    queue_.insert(queue_.end(), std::make_pair(dt += time_, x));
 }
 
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
