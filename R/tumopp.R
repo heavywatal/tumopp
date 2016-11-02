@@ -1,17 +1,23 @@
 #' Run C++ simulation
 #' @param args command line arguments as a string vector or list of strings
+#' @param nsam number of samples to measure genetic and physical distance
 #' @return nested tibble
 #' @rdname tumopp
 #' @export
-tumopp = function(args=character(0)) {
+tumopp = function(args=character(0L), nsam=0L) {
     if (is.list(args)) {
         purrr::map_df(args, tumopp, .id='args')
     } else {
         message(paste(args, collapse=' '))
-        results = cpp_tumopp(args)
-        wtl::read_boost_ini(results[1]) %>>%
-        dplyr::mutate(population=list(readr::read_tsv(results[2]))) %>>%
-        modify_population()
+        result = cpp_tumopp(args, nsam)
+        .out = wtl::read_boost_ini(result[1L]) %>>%
+            dplyr::mutate(population=list(readr::read_tsv(result[2L]))) %>>%
+            modify_population()
+        if (nsam > 0L) {
+            .dist = readr::read_tsv(result[3L])
+            .out = .out %>>% dplyr::mutate(distances=list(.dist))
+        }
+        .out
     }
 }
 

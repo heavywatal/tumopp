@@ -6,13 +6,14 @@
 using namespace Rcpp;
 
 // cpp_tumopp
-std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args);
-RcppExport SEXP tumorr_cpp_tumopp(SEXP argsSEXP) {
+std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, const size_t nsam);
+RcppExport SEXP tumorr_cpp_tumopp(SEXP argsSEXP, SEXP nsamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::vector<std::string>& >::type args(argsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_tumopp(args));
+    Rcpp::traits::input_parameter< const size_t >::type nsam(nsamSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_tumopp(args, nsam));
     return rcpp_result_gen;
 END_RCPP
 }

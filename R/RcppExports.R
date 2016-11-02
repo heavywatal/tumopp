@@ -2,10 +2,9 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' Run C++ simulation
-#' @param args string vector
 #' @return conf and population as strings
-#' @rdname cpp
-cpp_tumopp <- function(args) {
-    .Call('tumorr_cpp_tumopp', PACKAGE = 'tumorr', args)
+#' @rdname tumopp
+cpp_tumopp <- function(args, nsam = 0L) {
+    .Call('tumorr_cpp_tumopp', PACKAGE = 'tumorr', args, nsam)
 }
 
