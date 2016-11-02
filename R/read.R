@@ -4,8 +4,8 @@
 #' @rdname read
 #' @export
 read_confs = function(indirs='.') {
-    stats::setNames(,indirs) %>>%
-    file.path('program_options.conf') %>>%
+    file.path(indirs, 'program_options.conf') %>>%
+    stats::setNames(indirs) %>>%
     purrr::map_df(wtl::read_boost_ini, .id='path')
 }
 
@@ -28,7 +28,8 @@ read_populations = function(indirs='.') {
 read_results = function(indirs='.') {
     read_confs(indirs) %>>%
     dplyr::mutate(population= read_populations(indirs)) %>>%
-    modify_population()
+    purrr::by_row(modify_population, .labels=FALSE) %>>%
+    tidyr::unnest()
 }
 
 #' read snapshots
@@ -37,7 +38,6 @@ read_results = function(indirs='.') {
 #' @export
 read_snapshots = function(indirs='.') {
     read_confs(indirs) %>>%
-    dplyr::mutate(path=indirs) %>>%
     purrr::by_row(~{
         .d = readr::read_tsv(file.path(.x$path, 'snapshots.tsv.gz'))
         if (.x$coord == 'hex') .d = trans_coord_hex(.d)
