@@ -11,7 +11,7 @@ sample_stats(msout, lowerbound = 0)
 
 genetic_stats(extant)
 
-within_between_samples(population, size = 100L)
+within_between_samples(population, ncell = 100L, npair = 1L)
 
 morphological_stats(extant)
 }
@@ -24,7 +24,9 @@ morphological_stats(extant)
 
 \item{population}{tibble}
 
-\item{size}{number of cells}
+\item{ncell}{number of cells per specimen}
+
+\item{npair}{number of pairs and output rows}
 }
 \value{
 tibble
