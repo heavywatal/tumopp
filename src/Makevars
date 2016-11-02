@@ -3,5 +3,5 @@
 # LDFLAGS = -L/path/to/libs
 
 CXX_STD = CXX11
-PKG_CPPFLAGS = -I ${HOME}/local/include
+PKG_CPPFLAGS = -I${HOME}/local/include
 PKG_LIBS = -ltumopp
