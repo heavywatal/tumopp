@@ -72,7 +72,7 @@ class Tissue {
     std::string specimens() const {return specimens_.str();}
     std::string snapshots() const {return snapshots_.str();}
     std::string drivers() const {return drivers_.str();}
-    std::string pairwise_distance(const size_t) const;
+    std::string pairwise_distance(const size_t npair) const;
 
     void write(std::ostream&) const;
 

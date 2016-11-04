@@ -319,19 +319,20 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
     return wtl::sample(section, n, wtl::sfmt());
 }
 
-std::string Tissue::pairwise_distance(const size_t n) const {HERE;
+std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     auto oss = wtl::make_oss(6);
     oss << "genealogy" << sep_ << "graph" << sep_ << "euclidean\n";
-    const auto samples = sample_random(n);
-    const auto end = samples.end();
+    auto samples = sample_random(2 * npair);
+    std::shuffle(samples.begin(), samples.end(), wtl::sfmt());
+    //TODO: should be randam sampling from all possible pairs
+    const auto end = samples.cend();
     for (auto it=samples.cbegin(); it!=end; ++it) {
-        const auto& p = *it;
-        for (auto jt=std::next(it); jt!=end; ++jt) {
-            const auto diff = p->coord() - (*jt)->coord();
-            oss << p->branch_length(*(*jt)) << sep_
-                << coord_func()->graph_distance(diff) << sep_
-                << coord_func()->euclidean_distance(diff) << "\n";
-        }
+        const auto& lhs = *(*it);
+        const auto& rhs = *(*(++it));
+        const auto diff = lhs.coord() - rhs.coord();
+        oss << lhs.branch_length(rhs) << sep_
+            << coord_func()->graph_distance(diff) << sep_
+            << coord_func()->euclidean_distance(diff) << "\n";
     }
     return oss.str();
 }
