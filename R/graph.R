@@ -88,14 +88,15 @@ layout_genealogy = function(graph) {
 #' @return gg
 #' @rdname graph
 #' @export
-ggplot_genealogy = function(.data, label='', xmax=20, hist=FALSE) {
-    age_lim=c(0, max(.data$ageend, xmax))
+plot_genealogy = function(.data, label='', xmax=max(.data$ageend), hist=FALSE) {
+    xmax = max(.data$ageend, xmax)
     .tree = ggplot2::ggplot(.data)+
     ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=0.3, size=0.3)+
     ggplot2::geom_point(data=dplyr::filter_(.data, ~extant),
         ggplot2::aes_(x=~ageend, y=~posend),
         size=0.8, colour='dodgerblue', alpha=0.2)+
-    ggplot2::coord_cartesian(xlim=age_lim)+
+    ggplot2::coord_cartesian(xlim=c(0, xmax))+
+    ggplot2::labs(title=label)+
     wtl::theme_wtl()+
     ggplot2::theme(
         axis.title.y=ggplot2::element_blank(),
@@ -107,21 +108,23 @@ ggplot_genealogy = function(.data, label='', xmax=20, hist=FALSE) {
             axis.title.x=ggplot2::element_blank(),
             axis.text.x=ggplot2::element_blank(),
             axis.ticks.x=ggplot2::element_blank())
-        .hist = age_histogram(.data, age_lim)
+        .hist = plot_age_histogram(.data, xmax)
         .top = grid::textGrob(label, x=grid::unit(0.1, 'npc'), just=c('left', 'top'))
         gridExtra::arrangeGrob(.tree, .hist, nrow=2, heights=c(3, 1), top=.top)
     } else {.tree}
 }
 
 #' Plot age histogram
-#' @param age_lim numeric vector
+#' @param alpha opacity
+#' @param ... passed to aes_()
 #' @return gg
 #' @rdname graph
-age_histogram = function(.data, age_lim) {
+#' @export
+plot_age_histogram = function(.data, xmax=max(.data$ageend), alpha=1.0, ...) {
     dplyr::filter_(.data, ~extant) %>>%
-    ggplot2::ggplot(ggplot2::aes_(~ageend))+
-    ggplot2::geom_histogram(binwidth=1, center=0)+
-    ggplot2::coord_cartesian(xlim=age_lim)+
+    ggplot2::ggplot(ggplot2::aes_(~ageend, ...))+
+    ggplot2::geom_histogram(position='identity', binwidth=1, center=0, alpha=alpha)+
+    ggplot2::coord_cartesian(xlim=c(0, xmax))+
     wtl::theme_wtl()+
     ggplot2::theme(
         axis.title=ggplot2::element_blank(),
