@@ -100,8 +100,11 @@ class Tissue {
     //! Coordinate system
     static std::string COORDINATE_;
 
-    //! packing method
-    static std::string PACKING_;
+    //! {const, step, linear}
+    static std::string LOCAL_DENSITY_EFFECT_;
+
+    //! {random, mindrag, minstraight}
+    static std::string DISPLACEMENT_PATH_;
 
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
@@ -121,8 +124,8 @@ class Tissue {
 
     //! Emplace daughter cell and push other cells to the direction
     void push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
-    //! Push through the minimal drag path
-    void push_minimal_drag(std::shared_ptr<Cell> moving);
+    //! Push through the minimum drag path
+    void push_minimum_drag(std::shared_ptr<Cell> moving);
     //! Try insert_adjacent() on every step in push()
     void stroll(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
     //! Insert x if any adjacent node is empty

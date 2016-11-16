@@ -22,7 +22,8 @@ namespace tumopp {
 
 size_t Tissue::DIMENSIONS_;
 std::string Tissue::COORDINATE_;
-std::string Tissue::PACKING_;
+std::string Tissue::LOCAL_DENSITY_EFFECT_;
+std::string Tissue::DISPLACEMENT_PATH_;
 double Tissue::SIGMA_E_;
 size_t Tissue::INITIAL_SIZE_;
 size_t Tissue::RECORDING_EARLY_GROWTH_;
@@ -34,7 +35,6 @@ size_t Tissue::RECORDING_EARLY_GROWTH_;
     --------------------| -------------- | -------------------------
     `-D,--dimensions`   | -              | Tissue::DIMENSIONS_
     `-C,--coord`        | -              | Tissue::COORDINATE_
-    `-P,--packing`      | -              | Tissue::PACKING_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
 */
@@ -44,7 +44,8 @@ boost::program_options::options_description Tissue::opt_description() {
     desc.add_options()
         ("dimensions,D", po::value(&DIMENSIONS_)->default_value(3))
         ("coord,C", po::value(&COORDINATE_)->default_value("moore"))
-        ("packing,P", po::value(&PACKING_)->default_value("push"))
+        ("local,L", po::value(&LOCAL_DENSITY_EFFECT_)->default_value("const"))
+        ("path,P", po::value(&DISPLACEMENT_PATH_)->default_value("default"))
         ("peripheral,g", po::value(&SIGMA_E_)->default_value(std::numeric_limits<double>::infinity()))
         ("origin,O", po::value(&INITIAL_SIZE_)->default_value(1))
         ("record,R", po::value(&RECORDING_EARLY_GROWTH_)->default_value(0))
@@ -138,23 +139,33 @@ void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
 }
 
 bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
-    if (PACKING_ == "push") {
-        push(daughter, coord_func_->random_direction(wtl::sfmt()));
-    } else if (PACKING_ == "hellbent") {
-        push(daughter, to_nearest_empty(daughter->coord()));
-    } else if (PACKING_ == "minimal") {
-        push_minimal_drag(daughter);
-    } else if (PACKING_ == "stroll") {
-        stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
-    } else if (PACKING_ == "ifany") {
-        return insert_adjacent(daughter);
-    } else if (PACKING_ == "propto") {
-        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
-        return tumor_.insert(daughter).second;
+    if (LOCAL_DENSITY_EFFECT_ == "const") {
+        if (DISPLACEMENT_PATH_ == "stroll") {
+            stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
+        } else if (DISPLACEMENT_PATH_ == "minstraight") {
+            push(daughter, to_nearest_empty(daughter->coord()));
+        } else if (DISPLACEMENT_PATH_ == "mindrag") {
+            push_minimum_drag(daughter);
+        } else {// default
+            push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        }
+    } else if (LOCAL_DENSITY_EFFECT_ == "step") {
+        if (DISPLACEMENT_PATH_ == "random") {
+            throw std::runtime_error("TODO");
+        } else {// default
+            return insert_adjacent(daughter);
+        }
+    } else if (LOCAL_DENSITY_EFFECT_ == "linear") {
+        if (DISPLACEMENT_PATH_ == "random") {
+            throw std::runtime_error("TODO");
+        } else {// default
+            daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
+            return tumor_.insert(daughter).second;
+        }
     } else {
         std::ostringstream oss;
         oss << FILE_LINE_PRETTY
-            << "\nUnknown option value --packing=" << PACKING_;
+            << "\nUnknown option value --local=" << LOCAL_DENSITY_EFFECT_;
         throw std::runtime_error(oss.str());
     }
     return true;
@@ -166,7 +177,7 @@ void Tissue::push(std::shared_ptr<Cell> moving, const std::valarray<int>& direct
     } while (swap_existing(&moving));
 }
 
-void Tissue::push_minimal_drag(std::shared_ptr<Cell> moving) {
+void Tissue::push_minimum_drag(std::shared_ptr<Cell> moving) {
     do {
         moving->set_coord(moving->coord() + to_nearest_empty(moving->coord()));
     } while (swap_existing(&moving));
