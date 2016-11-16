@@ -17,6 +17,7 @@
 #include <cxxwtils/debug.hpp>
 #include <cxxwtils/math.hpp>
 #include <cxxwtils/numeric.hpp>
+#include <cxxwtils/algorithm.hpp>
 
 namespace tumopp {
 
@@ -68,6 +69,7 @@ void Tissue::init() {HERE;
     const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
     tumor_.insert(origin);
     queue_push(origin);
+    init_insert_function();
     while (tumor_.size() < INITIAL_SIZE_) {
         for (const auto& mother: tumor_) {
             const auto daughter = std::make_shared<Cell>(*mother);
@@ -138,40 +140,56 @@ void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
     queue_.insert(queue_.end(), std::make_pair(dt += time_, x));
 }
 
-bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
-    if (LOCAL_DENSITY_EFFECT_ == "const") {
-        if (DISPLACEMENT_PATH_ == "stroll") {
-            stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
-        } else if (DISPLACEMENT_PATH_ == "minstraight") {
-            push(daughter, to_nearest_empty(daughter->coord()));
-        } else if (DISPLACEMENT_PATH_ == "mindrag") {
-            push_minimum_drag(daughter);
-        } else {// default
-            push(daughter, coord_func_->random_direction(wtl::sfmt()));
-        }
-    } else if (LOCAL_DENSITY_EFFECT_ == "step") {
-        if (DISPLACEMENT_PATH_ == "random") {
-            if (num_empty_neighbors(daughter->coord()) == 0) {return false;}
-            push(daughter, coord_func_->random_direction(wtl::sfmt()));
-        } else {// default
-            return insert_adjacent(daughter);
-        }
-    } else if (LOCAL_DENSITY_EFFECT_ == "linear") {
-        if (DISPLACEMENT_PATH_ == "random") {
-            const double prob = proportion_empty_neighbors(daughter->coord());
-            if (!std::bernoulli_distribution(prob)(wtl::sfmt())) {return false;}
-            push(daughter, coord_func_->random_direction(wtl::sfmt()));
-        } else {// default
-            daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
-            return tumor_.insert(daughter).second;
-        }
-    } else {
+void Tissue::init_insert_function() {
+    std::unordered_map<std::string, std::function<bool(const std::shared_ptr<Cell>&)>> swtch;
+    swtch["const/random"] = [this](const std::shared_ptr<Cell>& daughter) {
+        push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        return true;
+    };
+    swtch["const/mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
+        push_minimum_drag(daughter);
+        return true;
+    };
+    swtch["const/minstraight"] = [this](const std::shared_ptr<Cell>& daughter) {
+        push(daughter, to_nearest_empty(daughter->coord()));
+        return true;
+    };
+    swtch["const/stroll"] = [this](const std::shared_ptr<Cell>& daughter) {
+        stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
+        return true;
+    };
+    swtch["step/random"] = [this](const std::shared_ptr<Cell>& daughter) {
+        if (num_empty_neighbors(daughter->coord()) == 0) {return false;}
+        push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        return true;
+    };
+    swtch["step/mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
+        return insert_adjacent(daughter);
+    };
+    swtch["linear/random"] = [this](const std::shared_ptr<Cell>& daughter) {
+        const double prob = proportion_empty_neighbors(daughter->coord());
+        if (!std::bernoulli_distribution(prob)(wtl::sfmt())) {return false;}
+        push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        return true;
+    };
+    swtch["linear/mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
+        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
+        return tumor_.insert(daughter).second;
+    };
+    swtch["const/default"] = swtch["const/random"];
+    swtch["step/default"] = swtch["step/mindrag"];
+    swtch["linear/default"] = swtch["linear/mindrag"];
+    std::string key = LOCAL_DENSITY_EFFECT_ + "/" + DISPLACEMENT_PATH_;
+    try {
+        insert = swtch.at(key);
+    } catch (std::exception& e) {
         std::ostringstream oss;
-        oss << FILE_LINE_PRETTY
-            << "\nUnknown option value --local=" << LOCAL_DENSITY_EFFECT_;
+        oss << std::endl << FILE_LINE_PRETTY
+            << "\nInvalid value for -L/-P: "
+            << LOCAL_DENSITY_EFFECT_ << "/" << DISPLACEMENT_PATH_
+            << std::endl << "Choose from " << wtl::keys(swtch);
         throw std::runtime_error(oss.str());
     }
-    return true;
 }
 
 void Tissue::push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {

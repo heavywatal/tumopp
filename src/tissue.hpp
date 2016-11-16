@@ -117,7 +117,8 @@ class Tissue {
 
     void init();
 
-    bool insert(const std::shared_ptr<Cell>&);
+    void init_insert_function();
+    std::function<bool(const std::shared_ptr<Cell>&)> insert;
 
     //! Swap with a random neighbor
     void migrate(const std::shared_ptr<Cell>&);
