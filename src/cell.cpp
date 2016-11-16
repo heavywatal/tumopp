@@ -43,24 +43,24 @@ namespace {
 //! Program options
 /*! @return Program options description
 
-    Command line option | Symbol                  | Variable
-    --------------------| ----------------------- | -------------------------
-    `-b,--beta0`        | \f$\beta_0\f$           | Cell::BIRTH_RATE_
-    `-d,--delta0`       | \f$\delta_0\f$          | Cell::DEATH_RATE_
-    `-m,--rho0`         | \f$\rho_0\f$            | Cell::MIGRATION_RATE_
-    `-k,--shape`        | \f$k\f$                 | Cell::GAMMA_SHAPE_
-    `-p,--symmetric`    | \f$p_s\f$               | Cell::PROB_SYMMETRIC_DIVISION_
-    `-r,--prolif`       | \f$\omega_\text{max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
-    `-u,--mutation`     | \f$\mu\f$               | Cell::MUTATION_RATE_
-    `--ub`              |                         | Cell::DRIVER_RATE_BIRTH_
-    `--ud`              |                         | Cell::DRIVER_RATE_DEATH_
-    `--um`              |                         | Cell::DRIVER_RATE_MIGRA_
-    `--mb`              |                         | Cell::DRIVER_MEAN_BIRTH_
-    `--md`              |                         | Cell::DRIVER_MEAN_DEATH_
-    `--mm`              |                         | Cell::DRIVER_MEAN_MIGRA_
-    `--sb`              |                         | Cell::DRIVER_SD_BIRTH_
-    `--sd`              |                         | Cell::DRIVER_SD_DEATH_
-    `--sm`              |                         | Cell::DRIVER_SD_MIGRA_
+    Command line option | Symbol              | Variable
+    ------------------- | ------------------- | -------------------------
+    `-b,--beta0`        | \f$\beta_0\f$       | Cell::BIRTH_RATE_
+    `-d,--delta0`       | \f$\delta_0\f$      | Cell::DEATH_RATE_
+    `-m,--rho0`         | \f$\rho_0\f$        | Cell::MIGRATION_RATE_
+    `-k,--shape`        | \f$k\f$             | Cell::GAMMA_SHAPE_
+    `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
+    `-r,--prolif`       | \f$\omega_{\max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
+    `-u,--mutation`     | \f$\mu\f$           | Cell::MUTATION_RATE_
+    `--ub`              |                     | Cell::DRIVER_RATE_BIRTH_
+    `--ud`              |                     | Cell::DRIVER_RATE_DEATH_
+    `--um`              |                     | Cell::DRIVER_RATE_MIGRA_
+    `--mb`              |                     | Cell::DRIVER_MEAN_BIRTH_
+    `--md`              |                     | Cell::DRIVER_MEAN_DEATH_
+    `--mm`              |                     | Cell::DRIVER_MEAN_MIGRA_
+    `--sb`              |                     | Cell::DRIVER_SD_BIRTH_
+    `--sd`              |                     | Cell::DRIVER_SD_DEATH_
+    `--sm`              |                     | Cell::DRIVER_SD_MIGRA_
 */
 boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;

@@ -33,11 +33,14 @@ size_t Tissue::RECORDING_EARLY_GROWTH_;
 /*! @return Program options description
 
     Command line option | Symbol         | Variable
-    --------------------| -------------- | -------------------------
+    ------------------- | -------------- | -------------------------------
     `-D,--dimensions`   | -              | Tissue::DIMENSIONS_
     `-C,--coord`        | -              | Tissue::COORDINATE_
+    `-L,--local`        | \f$E_2\f$      | Tissue::LOCAL_DENSITY_EFFECT_
+    `-P,--path`         | -              | Tissue::DISPLACEMENT_PATH_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
+    `-R,--record`       | -              | Tissue::RECORDING_EARLY_GROWTH_
 */
 boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
