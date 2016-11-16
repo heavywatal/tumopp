@@ -138,6 +138,10 @@ class Tissue {
     std::valarray<int> to_nearest_empty(const std::valarray<int>& current, size_t search_max=26) const;
 
     size_t num_empty_neighbors(const std::valarray<int>&) const;
+    double proportion_empty_neighbors(const std::valarray<int>& coord) const {
+        double x = static_cast<double>(num_empty_neighbors(coord));
+        return x /= static_cast<double>(coord_func_->directions().size());
+    }
 
     void queue_push(const std::shared_ptr<Cell>&);
 

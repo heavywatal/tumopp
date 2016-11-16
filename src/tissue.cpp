@@ -151,13 +151,16 @@ bool Tissue::insert(const std::shared_ptr<Cell>& daughter) {
         }
     } else if (LOCAL_DENSITY_EFFECT_ == "step") {
         if (DISPLACEMENT_PATH_ == "random") {
-            throw std::runtime_error("TODO");
+            if (num_empty_neighbors(daughter->coord()) == 0) {return false;}
+            push(daughter, coord_func_->random_direction(wtl::sfmt()));
         } else {// default
             return insert_adjacent(daughter);
         }
     } else if (LOCAL_DENSITY_EFFECT_ == "linear") {
         if (DISPLACEMENT_PATH_ == "random") {
-            throw std::runtime_error("TODO");
+            const double prob = proportion_empty_neighbors(daughter->coord());
+            if (!std::bernoulli_distribution(prob)(wtl::sfmt())) {return false;}
+            push(daughter, coord_func_->random_direction(wtl::sfmt()));
         } else {// default
             daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
             return tumor_.insert(daughter).second;
