@@ -82,21 +82,21 @@ layout_genealogy = function(graph) {
 
 #' Plot genealogy
 #' @param .data tbl from layout_genealogy()
-#' @param label character or expression
+#' @param title character or expression
 #' @param xmax numeric
 #' @param hist logical: whether add age_histogram() or not.
 #' @return gg
 #' @rdname graph
 #' @export
-plot_genealogy = function(.data, label='', xmax=max(.data$ageend), hist=FALSE) {
+plot_genealogy = function(.data, title=NULL, xmax=max(.data$ageend), hist=FALSE) {
     xmax = max(.data$ageend, xmax)
     .tree = ggplot2::ggplot(.data)+
     ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=0.3, size=0.3)+
     ggplot2::geom_point(data=dplyr::filter_(.data, ~extant),
         ggplot2::aes_(x=~ageend, y=~posend),
         size=0.8, colour='dodgerblue', alpha=0.2)+
-    ggplot2::coord_cartesian(xlim=c(0, xmax))+
-    ggplot2::labs(title=label)+
+    ggplot2::coord_cartesian(xlim=c(0, xmax), expand=FALSE)+
+    ggplot2::labs(title=title)+
     wtl::theme_wtl()+
     ggplot2::theme(
         axis.title.y=ggplot2::element_blank(),
@@ -109,8 +109,7 @@ plot_genealogy = function(.data, label='', xmax=max(.data$ageend), hist=FALSE) {
             axis.text.x=ggplot2::element_blank(),
             axis.ticks.x=ggplot2::element_blank())
         .hist = plot_age_histogram(.data, xmax)
-        .top = grid::textGrob(label, x=grid::unit(0.1, 'npc'), just=c('left', 'top'))
-        gridExtra::arrangeGrob(.tree, .hist, nrow=2, heights=c(3, 1), top=.top)
+        gridExtra::arrangeGrob(.tree, .hist, nrow=2, heights=c(3, 1))
     } else {.tree}
 }
 
