@@ -116,7 +116,7 @@ class Tissue {
     static size_t RECORDING_EARLY_GROWTH_;
 
     void init();
-
+    void init_coord();
     void init_insert_function();
     std::function<bool(const std::shared_ptr<Cell>&)> insert;
 

@@ -62,17 +62,15 @@ void Tissue::init() {HERE;
     queue_.clear();
     time_ = 0.0;
     id_tail_ = 0;
-    if (COORDINATE_ == "neumann") {coord_func_ = std::make_unique<Neumann>(DIMENSIONS_);}
-    else if (COORDINATE_ == "moore") {coord_func_ = std::make_unique<Moore>(DIMENSIONS_);}
-    else if (COORDINATE_ == "hex") {coord_func_ = std::make_unique<Hexagonal>(DIMENSIONS_);}
     (specimens_ = wtl::make_oss()) << header();
     (snapshots_ = wtl::make_oss()) << header();
     (drivers_ = wtl::make_oss()) << "id\ttype\tcoef\n";
+    init_coord();
+    init_insert_function();
     const auto initial_coords = coord_func_->sphere(INITIAL_SIZE_);
     const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
     tumor_.insert(origin);
     queue_push(origin);
-    init_insert_function();
     while (tumor_.size() < INITIAL_SIZE_) {
         for (const auto& mother: tumor_) {
             const auto daughter = std::make_shared<Cell>(*mother);
@@ -85,6 +83,22 @@ void Tissue::init() {HERE;
             queue_push(daughter);
             if (tumor_.size() >= INITIAL_SIZE_) break;
         }
+    }
+}
+
+void Tissue::init_coord() {HERE;
+    std::unordered_map<std::string, std::unique_ptr<Coord>> swtch;
+    swtch["neumann"] = std::make_unique<Neumann>(DIMENSIONS_);
+    swtch["moore"] = std::make_unique<Moore>(DIMENSIONS_);
+    swtch["hex"] = std::make_unique<Hexagonal>(DIMENSIONS_);
+    try {
+        coord_func_ = std::move(swtch.at(COORDINATE_));
+    } catch (std::exception& e) {
+        std::ostringstream oss;
+        oss << std::endl << FILE_LINE_PRETTY
+            << "\nInvalid value for -C (" << COORDINATE_ << "); choose from "
+            << wtl::keys(swtch);
+        throw std::runtime_error(oss.str());
     }
 }
 
