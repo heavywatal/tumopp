@@ -20,8 +20,7 @@ mean_branch_length.igraph(graph, from = igraph::V(graph), to = from)
 
 layout_genealogy(graph)
 
-plot_genealogy(.data, title = NULL, xmax = max(.data$ageend),
-  hist = FALSE)
+plot_genealogy(.data, xmax = max(.data$ageend), colour = "dodgerblue")
 
 plot_age_histogram(.data, xmax = max(.data$ageend), alpha = 1, ...)
 }
@@ -38,11 +37,9 @@ plot_age_histogram(.data, xmax = max(.data$ageend), alpha = 1, ...)
 
 \item{.data}{tbl from layout_genealogy()}
 
-\item{title}{character or expression}
-
 \item{xmax}{numeric}
 
-\item{hist}{logical: whether add age_histogram() or not.}
+\item{colour}{character}
 
 \item{alpha}{opacity}
 
