@@ -43,15 +43,11 @@ namespace std {
 
 namespace tumopp {
 
-inline bool all(const std::valarray<bool>& v) {
-    return std::all_of(std::begin(v), std::end(v), [](bool x){return x;});
-}
-
 class equal_shptr_cell {
   public:
     bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
                      const std::shared_ptr<tumopp::Cell>& rhs) const {
-        return all(lhs->coord() == rhs->coord());
+        return (lhs->coord() == rhs->coord()).min();
     }
 };
 
