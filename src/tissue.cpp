@@ -4,8 +4,6 @@
 */
 #include "tissue.hpp"
 
-#include <cstdlib>
-#include <cassert>
 #include <iostream>
 #include <sstream>
 
