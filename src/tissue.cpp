@@ -16,6 +16,7 @@
 #include <cxxwtils/math.hpp>
 #include <cxxwtils/numeric.hpp>
 #include <cxxwtils/algorithm.hpp>
+#include <cxxwtils/genetic.hpp>
 
 namespace tumopp {
 
@@ -172,6 +173,10 @@ void Tissue::init_insert_function() {
         push(daughter, to_nearest_empty(daughter->coord()));
         return true;
     };
+    swtch["const"]["roulette"] = [this](const std::shared_ptr<Cell>& daughter) {
+        push(daughter, roulette_direction(daughter->coord()));
+        return true;
+    };
     swtch["const"]["stroll"] = [this](const std::shared_ptr<Cell>& daughter) {
         stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
         return true;
@@ -297,6 +302,18 @@ std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, s
         }
     }
     return best_direction;
+}
+
+std::valarray<int> Tissue::roulette_direction(const std::valarray<int>& current) const {
+    auto directions = coord_func_->directions();
+    std::shuffle(directions.begin(), directions.end(), wtl::sfmt());
+    std::vector<double> roulette;
+    for (const auto& d: directions) {
+        const auto l = steps_to_empty(current, d);
+        if (l == 0) {return d;}
+        roulette.push_back(1.0 / l);
+    }
+    return directions[wtl::roulette_select(roulette, wtl::sfmt())];
 }
 
 size_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {

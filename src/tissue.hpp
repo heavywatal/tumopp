@@ -133,6 +133,8 @@ class Tissue {
     size_t steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const;
     //! Direction to the nearest empty
     std::valarray<int> to_nearest_empty(const std::valarray<int>& current, size_t search_max=26) const;
+    //! Direction is selected with a probability proportional with 1/l
+    std::valarray<int> roulette_direction(const std::valarray<int>& current) const;
 
     size_t num_empty_neighbors(const std::valarray<int>&) const;
     double proportion_empty_neighbors(const std::valarray<int>& coord) const {
