@@ -55,6 +55,7 @@ class Cell {
 
     //! driver mutation
     std::string mutate();
+    std::string force_mutate();
 
     //! Calc dt and set next_event_
     double delta_time(const double positional_value);
@@ -74,8 +75,14 @@ class Cell {
     }
     void set_time_of_death(const double t) {time_of_death_ = t;}
     size_t frustration() {return ++frustration_;}
+    void set_birth_rate(const double x) {birth_rate_ = x;}
+    void set_death_rate(const double x) {death_rate_ = x;}
+    void set_migra_rate(const double x) {migra_rate_ = x;}
 
     //! Getter
+    double birth_rate() const {return birth_rate_;}
+    double death_rate() const {return death_rate_;}
+    double migra_rate() const {return migra_rate_;}
     Event next_event() const {return next_event_;}
     const std::valarray<int>& coord() const {return coord_;}
     static double MUTATION_RATE() {return MUTATION_RATE_;}

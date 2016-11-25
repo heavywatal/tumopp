@@ -111,6 +111,9 @@ class Tissue {
     //! a flag
     static size_t RECORDING_EARLY_GROWTH_;
 
+    //! Time (tumor_.size()) to introduce a driver mutation
+    static size_t MUTATION_TIMING_;
+
     void init();
     void init_coord();
     void init_insert_function();

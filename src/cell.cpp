@@ -113,20 +113,32 @@ Cell::Cell(const Cell& other):
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
     if (BERN_BIRTH(wtl::sfmt())) {
-        auto s = GAUSS_BIRTH(wtl::sfmt());
+        double s = GAUSS_BIRTH(wtl::sfmt());
         oss << genealogy_.back() << "\tbirth\t" << s << "\n";
         birth_rate_ *= (s += 1.0);
     }
     if (BERN_DEATH(wtl::sfmt())) {
-        auto s = GAUSS_DEATH(wtl::sfmt());
+        double s = GAUSS_DEATH(wtl::sfmt());
         oss << genealogy_.back() << "\tdeath\t" << s << "\n";
         death_rate_ *= (s += 1.0);
     }
     if (BERN_MIGRA(wtl::sfmt())) {
-        auto s = GAUSS_MIGRA(wtl::sfmt());
+        double s = GAUSS_MIGRA(wtl::sfmt());
         oss << genealogy_.back() << "\tmigra\t" << s << "\n";
         migra_rate_ *= (s += 1.0);
     }
+    return oss.str();
+}
+
+std::string Cell::force_mutate() {
+    birth_rate_ *= (1.0 + DRIVER_MEAN_BIRTH_);
+    death_rate_ *= (1.0 + DRIVER_MEAN_DEATH_);
+    migra_rate_ *= (1.0 + DRIVER_MEAN_MIGRA_);
+    const size_t id = genealogy_.back();
+    auto oss = wtl::make_oss();
+    oss << id << "\tbirth\t" << DRIVER_MEAN_BIRTH_ << "\n"
+        << id << "\tdeath\t" << DRIVER_MEAN_DEATH_ << "\n"
+        << id << "\tmigra\t" << DRIVER_MEAN_MIGRA_ << "\n";
     return oss.str();
 }
 
