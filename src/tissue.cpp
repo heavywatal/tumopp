@@ -41,6 +41,7 @@ size_t Tissue::MUTATION_TIMING_;
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | -              | Tissue::INITIAL_SIZE_
     `-R,--record`       | -              | Tissue::RECORDING_EARLY_GROWTH_
+    `-U,--mutate`       | -              | Tissue::MUTATION_TIMING_
 */
 boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
