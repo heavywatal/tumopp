@@ -16,6 +16,7 @@ namespace tumopp {
 
 double Cell::BIRTH_RATE_;
 double Cell::DEATH_RATE_;
+double Cell::DEATH_PROB_;
 double Cell::MIGRATION_RATE_;
 double Cell::GAMMA_SHAPE_;
 double Cell::PROB_SYMMETRIC_DIVISION_;
@@ -47,6 +48,7 @@ namespace {
     ------------------- | ------------------- | -------------------------
     `-b,--beta0`        | \f$\beta_0\f$       | Cell::BIRTH_RATE_
     `-d,--delta0`       | \f$\delta_0\f$      | Cell::DEATH_RATE_
+    `-a,--alpha0`       | \f$\alpha_0\f$      | Cell::DEATH_PROB_
     `-m,--rho0`         | \f$\rho_0\f$        | Cell::MIGRATION_RATE_
     `-k,--shape`        | \f$k\f$             | Cell::GAMMA_SHAPE_
     `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
@@ -68,6 +70,7 @@ boost::program_options::options_description Cell::opt_description() {
     desc.add_options()
         ("beta0,b", po::value(&BIRTH_RATE_)->default_value(1.0))
         ("delta0,d", po::value(&DEATH_RATE_)->default_value(0.0))
+        ("alpha0,a", po::value(&DEATH_PROB_)->default_value(0.0))
         ("rho0,m", po::value(&MIGRATION_RATE_)->default_value(0.0))
         ("shape,k", po::value(&GAMMA_SHAPE_)->default_value(1.0))
         ("symmetric,p", po::value(&PROB_SYMMETRIC_DIVISION_)->default_value(1.0))
@@ -121,6 +124,7 @@ std::string Cell::mutate() {
         double s = GAUSS_DEATH(wtl::sfmt());
         oss << genealogy_.back() << "\tdeath\t" << s << "\n";
         death_rate_ *= (s += 1.0);
+        death_prob_ *= (s += 1.0);
     }
     if (BERN_MIGRA(wtl::sfmt())) {
         double s = GAUSS_MIGRA(wtl::sfmt());
@@ -133,6 +137,7 @@ std::string Cell::mutate() {
 std::string Cell::force_mutate() {
     birth_rate_ *= (1.0 + DRIVER_MEAN_BIRTH_);
     death_rate_ *= (1.0 + DRIVER_MEAN_DEATH_);
+    death_prob_ *= (1.0 + DRIVER_MEAN_DEATH_);
     migra_rate_ *= (1.0 + DRIVER_MEAN_MIGRA_);
     const size_t id = genealogy_.back();
     auto oss = wtl::make_oss();
@@ -165,7 +170,12 @@ double Cell::delta_time(const double positional_value) {
     }
 
     if (t_birth < t_death && t_birth < t_migra) {
-        next_event_ = Event::birth;
+        std::bernoulli_distribution bern_death(death_prob_);
+        if (bern_death(wtl::sfmt())) {
+            next_event_ = Event::death;
+        } else {
+            next_event_ = Event::birth;
+        }
         elapsed_ = 0.0;
         return t_birth;
     } else if (t_death < t_migra) {

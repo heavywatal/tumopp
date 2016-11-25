@@ -105,6 +105,8 @@ class Cell {
     static double BIRTH_RATE_;
     //! \f$\delta_0\f$
     static double DEATH_RATE_;
+    //! \f$\alpha_0\f$, death probability on cell division attempt
+    static double DEATH_PROB_;
     //! \f$\rho_0\f$
     static double MIGRATION_RATE_;
     //! \f$k\f$
@@ -131,6 +133,7 @@ class Cell {
 
     double birth_rate_ = BIRTH_RATE_;
     double death_rate_ = DEATH_RATE_;
+    double death_prob_ = DEATH_PROB_;
     double migra_rate_ = MIGRATION_RATE_;
 
     CellType type_ = CellType::stem;
