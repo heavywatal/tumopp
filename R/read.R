@@ -29,7 +29,8 @@ read_results = function(indirs='.') {
     read_confs(indirs) %>>%
     dplyr::mutate(population= read_populations(indirs)) %>>%
     purrr::by_row(modify_population, .labels=FALSE) %>>%
-    tidyr::unnest()
+    tidyr::unnest() %>>%
+    dplyr::mutate(drivers= purrr::map(file.path(indirs, 'drivers.tsv.gz'), readr::read_tsv))
 }
 
 #' read snapshots

@@ -13,8 +13,9 @@ tumopp = function(args=character(0L), nsam=0L) {
         .out = wtl::read_boost_ini(result[1L]) %>>%
             dplyr::mutate(population=list(readr::read_tsv(result[2L]))) %>>%
             modify_population()
+        .out$drivers = list(readr::read_tsv(result[3L]))
         if (nsam > 0L) {
-            .dist = readr::read_tsv(result[3L])
+            .dist = readr::read_tsv(result[4L])
             .out = .out %>>% dplyr::mutate(distances=list(.dist))
         }
         .out
