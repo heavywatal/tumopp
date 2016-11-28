@@ -13,7 +13,7 @@ plot_tumor3d = function(.data, colour='clade', .palette='Spectral') {
         colcol = as.factor(colcol)
     }
     num_colors = length(levels(colcol))
-    .colors = RColorBrewer::brewer.pal(num_colors, .palette)
+    .colors = wtl::brewer_palette(.palette, num_colors)
     with(.data, {
         rgl::spheres3d(x, y, z, color=.colors[colcol], radius=1, alpha=1)})
     rgl::box3d()
