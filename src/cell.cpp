@@ -102,6 +102,7 @@ Cell::Cell(const Cell& other):
     coord_(other.coord_),
     birth_rate_(other.birth_rate_),
     death_rate_(other.death_rate_),
+    death_prob_(other.death_prob_),
     migra_rate_(other.migra_rate_),
     type_(other.type_),
     proliferation_capacity_(other.proliferation_capacity_),
