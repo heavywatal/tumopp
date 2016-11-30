@@ -5,7 +5,7 @@
 \alias{snapshot_surface}
 \title{plot tumor in 3d with rgl}
 \usage{
-plot_tumor3d(.data, colour = "clade", .palette = "Spectral")
+plot_tumor3d(.data, colour = "clade", .palette = "Spectral", .min = NULL)
 
 snapshot_surface(.data, filename = tempfile("rgl_", fileext = ".png"), ...)
 }
@@ -15,6 +15,8 @@ snapshot_surface(.data, filename = tempfile("rgl_", fileext = ".png"), ...)
 \item{colour}{column name to colorcode}
 
 \item{.palette}{name for RColorBrewer::brewer.pal()}
+
+\item{.min}{minimum limit of axes}
 
 \item{filename}{string}
 

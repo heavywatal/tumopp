@@ -2,9 +2,10 @@
 #' @param .data data.frame
 #' @param colour column name to colorcode
 #' @param .palette name for RColorBrewer::brewer.pal()
+#' @param .min minimum limit of axes
 #' @rdname plot-rgl
 #' @export
-plot_tumor3d = function(.data, colour='clade', .palette='Spectral') {
+plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .min=NULL) {
     if (!requireNamespace('rgl', quietly=TRUE)) {
         stop('ERROR: rgl is not installed')
     }
@@ -13,9 +14,14 @@ plot_tumor3d = function(.data, colour='clade', .palette='Spectral') {
         colcol = as.factor(colcol)
     }
     num_colors = length(levels(colcol))
-    .colors = wtl::brewer_palette(.palette, num_colors)
-    with(.data, {
-        rgl::spheres3d(x, y, z, color=.colors[colcol], radius=1, alpha=1)})
+    .col = wtl::brewer_palette(.palette, num_colors)[colcol]
+    .lim = if (is.null(.min)) {NULL} else {
+        max(max_abs_xyz(.data), .min) %>>% (c(-., .))
+    }
+    with(.data, {rgl::plot3d(x, y, z,
+        xlab='', ylab='', zlab='', axes=FALSE,
+        type='s', col=.col, alpha=1, radius=1,
+        aspect=TRUE, xlim=.lim, ylim=.lim, zlim=.lim)})
     rgl::box3d()
     rgl::view3d(15, 15, 15, 0.9)
 }
