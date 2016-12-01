@@ -43,6 +43,16 @@ trans_coord_hex = function(.data) {
     trans_coord_fcc(.data)
 }
 
+#' Translate cells to minimize the range of symmetric axes
+#' @return modified data.frame
+#' @rdname coord
+#' @export
+centering = function(.data) {
+    .offset = dplyr::filter_(.data, ~surface) %>>%
+        dplyr::summarise_at(c('x', 'y', 'z'), dplyr::funs((min(.) + max(.)) * 0.5))
+    dplyr::mutate_(.data, x=~ x - .offset$x, y=~ y - .offset$y, z=~ z - .offset$z)
+}
+
 #' Rotate
 #' @param theta radian angle
 #' @param axis a string
