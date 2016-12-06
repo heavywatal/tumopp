@@ -18,7 +18,7 @@ mean_branch_length(population, from = integer(0L), to = from)
 
 mean_branch_length.igraph(graph, from = igraph::V(graph), to = from)
 
-layout_genealogy(graph)
+layout_genealogy(population)
 
 plot_genealogy(.data, xmax = max(.data$ageend), colour = "dodgerblue")
 

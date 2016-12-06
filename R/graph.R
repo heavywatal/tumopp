@@ -42,6 +42,7 @@ mean_branch_length = function(population, from=integer(0L), to=from) {
 }
 
 #' Mean branch length within/between sub-graphs
+#' @param graph igraph
 #' @return numeric
 #' @rdname graph
 #' @export
@@ -64,20 +65,22 @@ mean_branch_length.R = function(genealogy) {
 }
 
 #' Set coordinates of nodes and edges for plotting
-#' @param graph igraph
 #' @return tibble
 #' @rdname graph
 #' @export
-layout_genealogy = function(graph) {
-    lo = igraph::layout_as_tree(graph, flip.y=FALSE)
-    nodes = tibble::as_tibble(lo) %>>%
+layout_genealogy = function(population) {
+    graph = make_igraph(population)
+    nodes = igraph::layout_as_tree(graph, flip.y=FALSE) %>>%
+        tibble::as_tibble() %>>%
         stats::setNames(c('pos', 'age')) %>>%
-        dplyr::mutate_(
-          id= ~igraph::V(graph)$name,
-          extant= ~(igraph::degree(graph, mode='out') == 0L))
+        dplyr::mutate_(id= ~igraph::V(graph)$name)
+    .extant = population %>>%
+        dplyr::transmute_(id= ~as.character(id), extant= ~death == 0)
+    .children = dplyr::select_(nodes, posend= ~pos, ageend= ~age, ~id) %>>%
+        dplyr::left_join(.extant, by='id')
     make_edgelist(graph) %>>%
-    dplyr::left_join(dplyr::select_(nodes, ~-extant), by=c(from='id')) %>>%
-    dplyr::left_join(dplyr::select_(nodes, posend= ~pos, ageend= ~age, ~extant, to= ~id), by='to')
+        dplyr::left_join(nodes, by=c(from='id')) %>>%
+        dplyr::left_join(.children, by=c(to='id'))
 }
 
 #' Plot genealogy
