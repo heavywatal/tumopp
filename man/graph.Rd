@@ -6,8 +6,6 @@
 \alias{make_igraph}
 \alias{mean_branch_length}
 \alias{mean_branch_length.igraph}
-\alias{plot_age_histogram}
-\alias{plot_genealogy}
 \title{Make parent-child list from raw population tbl or igraph}
 \usage{
 make_edgelist(obj)
@@ -19,10 +17,6 @@ mean_branch_length(population, from = integer(0L), to = from)
 mean_branch_length.igraph(graph, from = igraph::V(graph), to = from)
 
 layout_genealogy(population)
-
-plot_genealogy(.data, xmax = max(.data$ageend), colour = "dodgerblue")
-
-plot_age_histogram(.data, xmax = max(.data$ageend), alpha = 1, ...)
 }
 \arguments{
 \item{obj}{population tbl or igraph}
@@ -34,16 +28,6 @@ plot_age_histogram(.data, xmax = max(.data$ageend), alpha = 1, ...)
 \item{from, to}{node id}
 
 \item{graph}{igraph}
-
-\item{.data}{tbl from layout_genealogy()}
-
-\item{xmax}{numeric}
-
-\item{colour}{character}
-
-\item{alpha}{opacity}
-
-\item{...}{passed to aes_()}
 }
 \value{
 tibble
@@ -55,10 +39,6 @@ numeric
 numeric
 
 tibble
-
-gg
-
-gg
 }
 \description{
 Make parent-child list from raw population tbl or igraph
@@ -70,9 +50,5 @@ Mean branch length within/between sub-graphs
 Mean branch length within/between sub-graphs
 
 Set coordinates of nodes and edges for plotting
-
-Plot genealogy
-
-Plot age histogram
 }
 

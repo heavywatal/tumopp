@@ -3,21 +3,17 @@
 \name{ggfreqspec}
 \alias{ggfreqspec}
 \alias{gglattice2d}
-\alias{save_serial_section}
 \title{ggplot for frequency spectrum}
 \usage{
 ggfreqspec(freqs)
 
 gglattice2d(.data, colour = "clade", alpha = 0.66, size = 1,
   limit = max_abs_xyz(.data))
-
-save_serial_section(.data, filename = "serial_section.gif", ...,
-  width = 720, height = 640)
 }
 \arguments{
 \item{freqs}{numeric vector}
 
-\item{.data}{data.frame}
+\item{.data}{tbl with extant cells}
 
 \item{colour}{column name to colorcode}
 
@@ -26,20 +22,10 @@ save_serial_section(.data, filename = "serial_section.gif", ...,
 \item{size}{relative size of points}
 
 \item{limit}{for value range}
-
-\item{filename}{string}
-
-\item{...}{passed to gglattice2d}
-
-\item{width}{integer}
-
-\item{height}{integer}
 }
 \description{
 ggplot for frequency spectrum
 
 ggplot for 2D lattice
-
-Write animation GIF for serial sections of 3D tumor
 }
 
