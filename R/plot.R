@@ -2,7 +2,7 @@
 #' @param freqs numeric vector
 #' @rdname plot
 #' @export
-ggfreqspec = function(freqs) {
+histogram_freqspec = function(freqs) {
     tibble::tibble(x=freqs) %>>%
     ggplot2::ggplot(ggplot2::aes_(~x, ~..density..))+
     ggplot2::geom_histogram(bins=25)+
@@ -19,7 +19,7 @@ ggfreqspec = function(freqs) {
 #' @param limit for value range
 #' @rdname plot
 #' @export
-gglattice2d = function(.data, colour='clade', alpha=0.66, size=1, limit=max_abs_xyz(.data)) {
+plot_lattice2d = function(.data, colour='clade', alpha=0.66, size=1, limit=max_abs_xyz(.data)) {
     ggplot2::ggplot(.data, ggplot2::aes_(~x, ~y))+
     ggplot2::geom_point(ggplot2::aes_string(colour=colour), alpha=alpha, size=size*80/limit)+
     ggplot2::coord_equal(xlim=limit * c(-1, 1), ylim=limit * c(-1, 1))+
@@ -56,10 +56,10 @@ plot_genealogy = function(.data, xmax=max(.data$ageend), colour='dodgerblue') {
 #' @return gg
 #' @rdname plot-igraph
 #' @export
-plot_age_histogram = function(.data, xmax=max(.data$ageend), alpha=1.0, ...) {
+plot_bar_age = function(.data, xmax=max(.data$ageend), alpha=1.0, ...) {
     dplyr::filter_(.data, ~extant) %>>%
     ggplot2::ggplot(ggplot2::aes_(~ageend, ...))+
-    ggplot2::geom_histogram(position='identity', binwidth=1, center=0, alpha=alpha)+
+    ggplot2::geom_bar(alpha=alpha)+
     ggplot2::coord_cartesian(xlim=c(0, xmax))+
     wtl::theme_wtl()+
     ggplot2::theme(
@@ -86,7 +86,7 @@ save_serial_section = function(.data, filename='serial_section.gif', ..., width=
     .lim = max_abs_xyz(.data)
     section_plots = dplyr::group_by_(.data, ~z) %>>%
         dplyr::do(plt={
-            gglattice2d(., ..., limit=.lim)+
+            plot_lattice2d(., ..., limit=.lim)+
             ggplot2::geom_hline(yintercept=.$z[1])+
             wtl::theme_wtl()
         })
