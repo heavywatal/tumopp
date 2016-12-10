@@ -356,6 +356,7 @@ std::vector<size_t> Tissue::generate_neutral_mutations() const {
 
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
     const size_t sample_size = samples.size();
+    if (sample_size == 0) return ost;
     const auto mutants = generate_neutral_mutations();
     std::vector<std::vector<int>> flags;
     flags.reserve(sample_size);
