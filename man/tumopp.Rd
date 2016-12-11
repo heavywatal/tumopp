@@ -6,16 +6,16 @@
 \alias{tumopp}
 \title{Run C++ simulation}
 \usage{
-cpp_tumopp(args, nsam = 0L)
+cpp_tumopp(args, npair = 0L)
 
-tumopp(args = character(0L), nsam = 0L)
+tumopp(args = character(0L), npair = 0L)
 
 make_args(alt, const = NULL, nreps = 1L)
 }
 \arguments{
 \item{args}{command line arguments as a string vector or list of strings}
 
-\item{nsam}{number of samples to measure genetic and physical distance}
+\item{npair}{number of samples to measure genetic and physical distance}
 
 \item{alt}{named list of altered arguments}
 

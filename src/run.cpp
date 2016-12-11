@@ -6,12 +6,12 @@
 //' @return conf and population as strings
 //' @rdname tumopp
 // [[Rcpp::export]]
-std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, const size_t nsam=0) {
+std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, const size_t npair=0) {
     tumopp::Simulation sim(args);
     sim.run();
     return {
         sim.conf(),
         sim.tissue().specimens(),
         sim.tissue().drivers(),
-        sim.tissue().pairwise_distance(nsam)};
+        sim.tissue().pairwise_distance(npair)};
 }
