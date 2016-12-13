@@ -3,10 +3,10 @@
 #' @return tibble
 #' @rdname read
 #' @export
-read_confs = function(indirs='.') {
+read_confs = function(indirs=getwd()) {
     file.path(indirs, 'program_options.conf') %>>%
     stats::setNames(indirs) %>>%
-    purrr::map_df(wtl::read_boost_ini, .id='path')
+    purrr::map_df(wtl::read_boost_ini, .id='directory')
 }
 
 #' Read populations
@@ -40,7 +40,7 @@ read_results = function(indirs='.') {
 read_snapshots = function(indirs='.') {
     read_confs(indirs) %>>%
     purrr::by_row(~{
-        .d = readr::read_tsv(file.path(.x$path, 'snapshots.tsv.gz'))
+        .d = readr::read_tsv(file.path(.x$directory, 'snapshots.tsv.gz'))
         if (.x$coord == 'hex') .d = trans_coord_hex(.d)
         .d %>>% set_id()
     }, .to='snapshots')

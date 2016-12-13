@@ -7,7 +7,7 @@
 \alias{read_snapshots}
 \title{Read config files}
 \usage{
-read_confs(indirs = ".")
+read_confs(indirs = getwd())
 
 read_populations(indirs = ".")
 
