@@ -9,11 +9,11 @@
 \usage{
 read_confs(indirs = getwd())
 
-read_populations(indirs = ".")
+read_populations(indirs = getwd())
 
-read_results(indirs = ".")
+read_results(indirs = getwd())
 
-read_snapshots(indirs = ".")
+read_snapshots(indirs = getwd())
 }
 \arguments{
 \item{indirs}{a string vector}
