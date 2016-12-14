@@ -38,8 +38,8 @@ make_args = function(alt, const=NULL, nreps=1L) {
     purrr::pmap(function(...) {
         .params = c(...)
         .names = names(.params)
-        .hyphens = ifelse(nchar(.names) > 1L, '--', '-')
-        c(const, paste0(.hyphens, .names, .params))
+        .template = ifelse(nchar(.names) > 1L, '--%s=%s', '-%s%s')
+        c(const, sprintf(.template, .names, .params))
     }) %>>%
     stats::setNames(purrr::map_chr(., paste, collapse=' '))
 }
