@@ -34,11 +34,12 @@ make_args = function(alt, const=NULL, nreps=1L) {
     altered = purrr::invoke(expand.grid, alt, stringsAsFactors=FALSE)
     prefix = format(Sys.time(), '%Y%m%d_%H%M_')
     paste0(prefix, seq_len(nreps)) %>>%
-        purrr::map_df(~dplyr::mutate(altered, o=.x)) %>>%
-        purrr::by_row(~{
-            alt_par = paste0('-', names(.), .)
-            c(const, alt_par)
-        }, .labels=FALSE) %>>%
-        `[[`('.out') %>>%
-        stats::setNames(purrr::map_chr(., paste, collapse=' '))
+    purrr::map_df(~dplyr::mutate(altered, o=.x)) %>>%
+    purrr::pmap(function(...) {
+        .params = c(...)
+        .names = names(.params)
+        .hyphens = ifelse(nchar(.names) > 1L, '--', '-')
+        c(const, paste0(.hyphens, .names, .params))
+    }) %>>%
+    stats::setNames(purrr::map_chr(., paste, collapse=' '))
 }
