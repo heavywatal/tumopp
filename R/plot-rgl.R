@@ -2,10 +2,11 @@
 #' @param .data data.frame
 #' @param colour column name to colorcode
 #' @param .palette name for RColorBrewer::brewer.pal()
+#' @param .reverse logical for order of color vector
 #' @param .min minimum limit of axes
 #' @rdname plot-rgl
 #' @export
-plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .min=NULL) {
+plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .reverse=FALSE, .min=NULL) {
     if (!requireNamespace('rgl', quietly=TRUE)) {
         stop('ERROR: rgl is not installed')
     }
@@ -14,7 +15,9 @@ plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .min=NULL) {
         colcol = as.factor(colcol)
     }
     num_colors = length(levels(colcol))
-    .col = wtl::brewer_palette(.palette, num_colors)[colcol]
+    .palette = wtl::brewer_palette(.palette, num_colors)
+    if (.reverse) .palette = rev(.palette)
+    .col = .palette[colcol]
     .lim = if (is.null(.min)) {NULL} else {
         max(max_abs_xyz(.data), .min) %>>% (c(-., .))
     }
