@@ -143,7 +143,7 @@ void Simulation::write() const {HERE;
     }
 
     if (WRITE_TO_FILES) {
-        derr("mkdir && cd to " << OUT_DIR << std::endl);
+        DCERR("mkdir && cd to " << OUT_DIR << std::endl);
         fs::create_directory(OUT_DIR);
         wtl::cd(OUT_DIR);
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;

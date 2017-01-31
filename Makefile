@@ -31,7 +31,7 @@ CC := $(CXX)
 CPPFLAGS := -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing ${INCLUDEDIR} ${CPPDBG} -ftemplate-depth=512
 CXXFLAGS := -std=c++14 -O2 -fPIC ${CXXDBG}
 LDFLAGS = -L${DESTDIR}/lib -L${BOOST}/lib
-LDLIBS := -lsfmt -lboost_program_options -lboost_filesystem -lboost_system -lboost_iostreams -lboost_zlib
+LDLIBS := -lsfmt -lboost_program_options-mt -lboost_filesystem-mt -lboost_system-mt -lboost_iostreams-mt #-lboost_zlib
 TARGET_ARCH := -m64 -msse -msse2 -msse3
 ARFLAGS := -rcs
 

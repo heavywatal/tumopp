@@ -116,7 +116,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
             RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
         }
         if (tumor_.size() >= max_size) {success = true; break;}
-        if ((++i % 256) == 0) {derr("\r" << tumor_.size());}
+        if ((++i % 256) == 0) {DCERR("\r" << tumor_.size());}
         auto it = queue_.begin();
         time_ = it->first;
         if (time_ > max_time) {success = true; break;}
@@ -153,7 +153,7 @@ bool Tissue::grow(const size_t max_size) {HERE;
             queue_push(mother);
         }
     }
-    derr(std::endl);
+    DCERR(std::endl);
     write(specimens_);
     return success;
 }
