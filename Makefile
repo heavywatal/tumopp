@@ -47,7 +47,7 @@ else
 endif
 
 ## Targets
-.PHONY: all archive shared clean run test help
+.PHONY: all archive shared clean run test help docs
 .DEFAULT_GOAL := all
 
 all:
@@ -86,6 +86,9 @@ test: ${PROGRAM}
 help: ${PROGRAM}
 	./$< --help
 
+docs:
+	$(RM) -rf $@/*
+	doxygen
 
 .PHONY: debug release profile
 debug:

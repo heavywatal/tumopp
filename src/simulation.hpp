@@ -1,5 +1,5 @@
 // -*- mode: c++; coding: utf-8 -*-
-/*! @file simulation.h
+/*! @file simulation.hpp
     @brief Interface of Simulation class
 */
 #pragma once

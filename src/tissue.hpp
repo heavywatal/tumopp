@@ -1,5 +1,5 @@
 // -*- mode: c++; coding: utf-8 -*-
-/*! @file tissue.h
+/*! @file tissue.hpp
     @brief Interface of Tissue class
 */
 #pragma once
