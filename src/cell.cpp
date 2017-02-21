@@ -42,7 +42,8 @@ namespace {
 }
 
 //! Program options
-/*! @return Program options description
+/*! @ingroup params
+    @return Program options description
 
     Command line option | Symbol              | Variable
     ------------------- | ------------------- | -------------------------
@@ -54,15 +55,15 @@ namespace {
     `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
     `-r,--prolif`       | \f$\omega_{\max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
     `-u,--mutation`     | \f$\mu\f$           | Cell::MUTATION_RATE_
-    `--ub`              |                     | Cell::DRIVER_RATE_BIRTH_
-    `--ud`              |                     | Cell::DRIVER_RATE_DEATH_
-    `--um`              |                     | Cell::DRIVER_RATE_MIGRA_
-    `--mb`              |                     | Cell::DRIVER_MEAN_BIRTH_
-    `--md`              |                     | Cell::DRIVER_MEAN_DEATH_
-    `--mm`              |                     | Cell::DRIVER_MEAN_MIGRA_
-    `--sb`              |                     | Cell::DRIVER_SD_BIRTH_
-    `--sd`              |                     | Cell::DRIVER_SD_DEATH_
-    `--sm`              |                     | Cell::DRIVER_SD_MIGRA_
+    `--ub`              | \f$\mu_\beta\f$     | Cell::DRIVER_RATE_BIRTH_
+    `--ud`              | \f$\mu_\delta\f$    | Cell::DRIVER_RATE_DEATH_
+    `--um`              | \f$\mu_\rho\f$      | Cell::DRIVER_RATE_MIGRA_
+    `--mb`              | \f$\bar s_\beta\f$  | Cell::DRIVER_MEAN_BIRTH_
+    `--md`              | \f$\bar s_\delta\f$ | Cell::DRIVER_MEAN_DEATH_
+    `--mm`              | \f$\bar s_\rho\f$   | Cell::DRIVER_MEAN_MIGRA_
+    `--sb`              | \f$\sigma_\beta\f$  | Cell::DRIVER_SD_BIRTH_
+    `--sd`              | \f$\sigma_\delta\f$ | Cell::DRIVER_SD_DEATH_
+    `--sm`              | \f$\sigma_\rho\f$   | Cell::DRIVER_SD_MIGRA_
 */
 boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;

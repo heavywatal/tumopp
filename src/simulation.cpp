@@ -1,6 +1,7 @@
 // -*- mode: c++; coding: utf-8 -*-
 /*! @file simulation.cpp
     @brief Inplementation of Simulation class
+    @defgroup params Parameters
 */
 #include "simulation.hpp"
 
@@ -32,11 +33,15 @@ inline po::options_description general_desc() {HERE;
 }
 
 //! Program options
-/*! @return Program options description
+/*! @ingroup params
+    @return Program options description
 
     Command line option | Symbol         | Variable
-    --------------------| -------------- | -------------------------
-    `-N,--max`          | -              | Simulation::MAX_SIZE
+    ------------------- | -------------- | -------------------------
+    `-N,--max`          | \f$N_\max\f$    | Simulation::MAX_SIZE
+    `-w,--write`        | -              | Simulation::WRITE_TO_FILES
+    `-o,--out_dir`      | -              | Simulation::OUT_DIR
+    `--seed`            | -              | Simulation::SEED
 */
 po::options_description Simulation::options_desc() {HERE;
     po::options_description description("Simulation");
