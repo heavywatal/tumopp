@@ -3,7 +3,7 @@ PACKAGE := $(notdir ${CURDIR})
 SRCDIR := src
 OBJDIR := build
 DESTDIR := ${HOME}/local
-INCLUDEDIR := -I${HOME}/local/include
+INCLUDEDIR := -I${HOME}/local/include -I/usr/local/include
 ARCHIVE := lib${PACKAGE}.a
 SHARED_OBJ := lib${PACKAGE}.so
 PROGRAM := a.out
@@ -30,7 +30,7 @@ export CXX
 CC := $(CXX)
 CPPFLAGS := -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing ${INCLUDEDIR} ${CPPDBG} -ftemplate-depth=512
 CXXFLAGS := -std=c++14 -O2 -fPIC ${CXXDBG}
-LDFLAGS = -L${DESTDIR}/lib -L${BOOST}/lib
+LDFLAGS = -L${DESTDIR}/lib -L${BOOST}/lib -L/usr/local/lib
 LDLIBS := -lsfmt -lboost_program_options-mt -lboost_filesystem-mt -lboost_system-mt -lboost_iostreams-mt #-lboost_zlib
 TARGET_ARCH := -m64 -msse -msse2 -msse3
 ARFLAGS := -rcs
