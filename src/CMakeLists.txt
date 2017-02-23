@@ -5,7 +5,9 @@ add_library(${PROJECT_NAME} SHARED
   cell.cpp
 )
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem system iostreams)
+set(Boost_NO_BOOST_CMAKE ON)
+set(BOOST_ROOT ~/local)
+find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams)
 message(${Boost_INCLUDE_DIRS})
 message(${Boost_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} sfmt)
