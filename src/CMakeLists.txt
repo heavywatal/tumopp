@@ -12,8 +12,7 @@ message(${Boost_INCLUDE_DIRS})
 message(${Boost_LIBRARY_DIRS})
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} sfmt)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+set_target_properties(${PROJECT_NAME} PROPERTIES NO_SONAME TRUE)
 
 install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION lib)
