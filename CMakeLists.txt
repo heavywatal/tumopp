@@ -20,6 +20,18 @@ find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams)
 message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
 
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX "~/local" CACHE PATH "install prefix" FORCE)
+endif()
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+
+if(APPLE)
+    set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+else()
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-soname,${CMAKE_INSTALL_PREFIX}/lib/lib${PROJECT_NAME}.so")
+endif()
+
 aux_source_directory(src srcfiles)
 message("Source files: ${srcfiles}")
 
@@ -32,18 +44,6 @@ set_target_properties(lib${PROJECT_NAME} PROPERTIES
   NO_SONAME TRUE
   PREFIX ""
 )
-
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "~/local" CACHE PATH "install prefix" FORCE)
-endif()
-message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
-
-if(APPLE)
-    set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-else()
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-soname,${CMAKE_INSTALL_PREFIX}/lib/lib${PROJECT_NAME}.so")
-endif()
 
 install(TARGETS ${PROJECT_NAME} lib${PROJECT_NAME}
   RUNTIME DESTINATION bin
