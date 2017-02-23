@@ -11,8 +11,12 @@ Tumor growth simulator in C++.
 
 ## Installation
 
-```
-make release
+```sh
+git clone https://github.com/heavywatal/tumopp.git
+mkdir build-tumopp
+cd build-tumopp/
+cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ../tumopp
+make
 make install
 ```
 
