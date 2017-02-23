@@ -1,11 +1,42 @@
 cmake_minimum_required(VERSION 3.1)
 project(tumopp CXX)
 
+include_directories(~/local/include)
+include_directories(/usr/local/include)
+link_directories(~/local/lib)
+link_directories(/usr/local/lib)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
+set(CMAKE_BUILD_TYPE release)
+
+set(Boost_NO_BOOST_CMAKE ON)
+set(BOOST_ROOT ~/local)
+find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams)
+message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
+
+aux_source_directory(src srcfiles)
+message("Source files: ${srcfiles}")
+
+add_executable(${PROJECT_NAME} main.cpp)
+add_library(lib${PROJECT_NAME} SHARED ${srcfiles})
+
+target_link_libraries(${PROJECT_NAME} lib${PROJECT_NAME})
+target_link_libraries(lib${PROJECT_NAME} ${Boost_LIBRARIES} sfmt)
+set_target_properties(lib${PROJECT_NAME} PROPERTIES
+  NO_SONAME TRUE
+  PREFIX ""
+)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set (CMAKE_INSTALL_PREFIX "~/local" CACHE PATH "install prefix" FORCE)
 endif()
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 if(APPLE)
     set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
@@ -14,23 +45,10 @@ else()
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-soname,${CMAKE_INSTALL_PREFIX}/lib/lib${PROJECT_NAME}.so")
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -Wno-unused-parameter")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
-set(CMAKE_BUILD_TYPE release)
-
-include_directories(~/local/include)
-include_directories(/usr/local/include)
-link_directories(~/local/lib)
-
-add_executable(a.out main.cpp)
-target_link_libraries(a.out ${PROJECT_NAME})
-
-add_subdirectory(src)
-
-#install(TARGETS a.out RUNTIME DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} lib${PROJECT_NAME}
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+)
 
 install(DIRECTORY src/
   DESTINATION include/${PROJECT_NAME}
