@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(tumopp CXX)
+option(PROFILE "Use gperftools" OFF)
 
 include_directories(~/local/include)
 include_directories(/usr/local/include)
@@ -46,6 +47,10 @@ set_target_properties(lib${PROJECT_NAME} PROPERTIES
   NO_SONAME TRUE
   PREFIX ""
 )
+
+if(PROFILE)
+  target_link_libraries(${PROJECT_NAME} profiler)
+endif()
 
 install(TARGETS ${PROJECT_NAME} lib${PROJECT_NAME}
   RUNTIME DESTINATION bin
