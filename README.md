@@ -5,12 +5,19 @@ a tumor growth simulator in C++.
 
 ## Installation
 
-```r
-devtools::install_github('heavywatal/tumorr')
-```
+1.  Install [tumopp](https://github.com/heavywatal/tumopp) to `~/local/` or `/usr/local/`
 
-Before that, you may need to add the following line to your `~/.R/Makevars`:
+2.  Install [devtools](https://github.com/hadley/devtools) in R:
+    `install.packages('devtools')`
 
-```
-CXX1XSTD = -std=c++14
-```
+3.  Create `~/.R/Makevars`:
+
+    ```
+    CXX1XSTD = -std=c++14
+    LDFLAGS = -L${HOME}/local/lib -L/usr/local/lib
+    ```
+
+    [`CXX_STD = CXX14` in `src/Makevars` will be supported in R 3.4.0]
+    (http://gallery.rcpp.org/articles/rcpp-and-c++11-c++14-c++17/)
+
+4. `devtools::install_github('heavywatal/tumorr')`
