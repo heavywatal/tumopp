@@ -8,4 +8,3 @@
 \description{
 tumorr: R interface to tumopp
 }
-

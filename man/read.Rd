@@ -36,4 +36,3 @@ Read confs and populations as a nested tibble
 
 read snapshots
 }
-

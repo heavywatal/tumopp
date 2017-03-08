@@ -2,8 +2,8 @@
 % Please edit documentation in R/RcppExports.R, R/tumopp.R
 \name{cpp_tumopp}
 \alias{cpp_tumopp}
-\alias{make_args}
 \alias{tumopp}
+\alias{make_args}
 \title{Run C++ simulation}
 \usage{
 cpp_tumopp(args, npair = 0L)
@@ -37,4 +37,3 @@ Run C++ simulation
 
 Make argment list for tumopp()
 }
-

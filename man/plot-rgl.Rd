@@ -33,4 +33,3 @@ plot tumor in 3d with rgl
 
 Shortcut of plot_tumor3d() %>>% snapshot3d()
 }
-

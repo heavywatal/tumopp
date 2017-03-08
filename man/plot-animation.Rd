@@ -21,4 +21,3 @@ save_serial_section(.data, filename = "serial_section.gif", ...,
 \description{
 Write animation GIF for serial sections of 3D tumor
 }
-

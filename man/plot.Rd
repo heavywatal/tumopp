@@ -28,4 +28,3 @@ ggplot for frequency spectrum
 
 ggplot for 2D lattice
 }
-
