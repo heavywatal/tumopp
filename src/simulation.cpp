@@ -152,13 +152,13 @@ void Simulation::write() const {HERE;
         fs::create_directory(OUT_DIR);
         wtl::cd(OUT_DIR);
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
-        wtl::gzip{wtl::Fout{"population.tsv.gz"}}
+        wtl::ogzstream{"population.tsv.gz"}
             << tissue_.specimens();
-        wtl::gzip{wtl::Fout{"snapshots.tsv.gz"}}
+        wtl::ogzstream{"snapshots.tsv.gz"}
             << tissue_.snapshots();
-        wtl::gzip{wtl::Fout{"drivers.tsv.gz"}}
+        wtl::ogzstream{"drivers.tsv.gz"}
             << tissue_.drivers();
-        wtl::gzip{wtl::Fout{"distance.tsv.gz"}}
+        wtl::ogzstream{"distance.tsv.gz"}
             << tissue_.pairwise_distance(std::min(200UL, tissue_.size()));
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
