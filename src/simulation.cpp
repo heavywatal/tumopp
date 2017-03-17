@@ -14,7 +14,7 @@
 #include <cxxwtils/getopt.hpp>
 #include <cxxwtils/prandom.hpp>
 #include <cxxwtils/os.hpp>
-#include <cxxwtils/gz.hpp>
+#include <cxxwtils/zfstream.hpp>
 
 #include "cell.hpp"
 
@@ -152,13 +152,13 @@ void Simulation::write() const {HERE;
         fs::create_directory(OUT_DIR);
         wtl::cd(OUT_DIR);
         wtl::Fout{"program_options.conf"} << CONFIG_STRING;
-        wtl::ogzstream{"population.tsv.gz"}
+        wtl::ozfstream{"population.tsv.gz"}
             << tissue_.specimens();
-        wtl::ogzstream{"snapshots.tsv.gz"}
+        wtl::ozfstream{"snapshots.tsv.gz"}
             << tissue_.snapshots();
-        wtl::ogzstream{"drivers.tsv.gz"}
+        wtl::ozfstream{"drivers.tsv.gz"}
             << tissue_.drivers();
-        wtl::ogzstream{"distance.tsv.gz"}
+        wtl::ozfstream{"distance.tsv.gz"}
             << tissue_.pairwise_distance(std::min(200UL, tissue_.size()));
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
