@@ -9,11 +9,8 @@
 #include <cmath>
 #include <vector>
 #include <valarray>
-#include <algorithm>
 #include <numeric>
 #include <random>
-
-#include <cxxwtils/debug.hpp>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
@@ -129,10 +126,7 @@ class Coord {
     Coord() = delete;
     explicit Coord(const size_t d): dimensions(d) {
         if (d < 2 || 3 < d) {
-            std::ostringstream oss;
-            oss << std::endl << FILE_LINE_PRETTY << std::endl
-                << "Invalid value for dimensions: " << d;
-            throw std::runtime_error(oss.str());
+            throw std::runtime_error("Invalid value for dimensions");
         }
     }
 
