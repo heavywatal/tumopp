@@ -9,8 +9,8 @@
 
 #include <boost/program_options.hpp>
 
-#include <cxxwtils/prandom.hpp>
-#include <cxxwtils/iostr.hpp>
+#include <wtl/prandom.hpp>
+#include <wtl/iostr.hpp>
 
 namespace tumopp {
 

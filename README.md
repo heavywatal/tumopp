@@ -7,7 +7,7 @@ Tumor growth simulator in C++.
 - C++14 compiler
 - [Boost C++ Libraries](http://www.boost.org/)
 - [sfmt-class](//github.com/heavywatal/sfmt-class)
-- [cxxwtils](//github.com/heavywatal/cxxwtils)
+- [cxxwtl](//github.com/heavywatal/cxxwtl)
 
 ## Installation
 

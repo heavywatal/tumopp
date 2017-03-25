@@ -9,13 +9,13 @@
 
 #include <boost/program_options.hpp>
 
-#include <cxxwtils/prandom.hpp>
-#include <cxxwtils/iostr.hpp>
-#include <cxxwtils/debug.hpp>
-#include <cxxwtils/math.hpp>
-#include <cxxwtils/numeric.hpp>
-#include <cxxwtils/algorithm.hpp>
-#include <cxxwtils/genetic.hpp>
+#include <wtl/prandom.hpp>
+#include <wtl/iostr.hpp>
+#include <wtl/debug.hpp>
+#include <wtl/math.hpp>
+#include <wtl/numeric.hpp>
+#include <wtl/algorithm.hpp>
+#include <wtl/genetic.hpp>
 
 namespace tumopp {
 
