@@ -5,6 +5,7 @@ Tumor growth simulator in C++.
 
 - Unix-like OS (macOS, Linux, etc.)
 - C++14 compiler
+- [CMake](https://cmake.org/)
 - [Boost C++ Libraries](http://www.boost.org/)
 - [sfmt-class](//github.com/heavywatal/sfmt-class)
 - [cxxwtl](//github.com/heavywatal/cxxwtl)
