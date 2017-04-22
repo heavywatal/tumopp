@@ -1,7 +1,6 @@
 # ~/.R/Makevars
-# CXX1XSTD = -std=c++14
 # LDFLAGS = -L/path/to/libs
 
-CXX_STD = CXX11
+CXX_STD = CXX14
 PKG_CPPFLAGS = -I${HOME}/local/include
 PKG_LIBS = -ltumopp
