@@ -1,6 +1,6 @@
 // -*- mode: c++; coding: utf-8 -*-
 /*! @file simulation.cpp
-    @brief Inplementation of Simulation class
+    @brief Implementation of Simulation class
     @defgroup params Parameters
 */
 #include "simulation.hpp"
