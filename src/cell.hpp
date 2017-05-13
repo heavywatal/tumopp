@@ -57,6 +57,9 @@ class Cell {
     std::string mutate();
     std::string force_mutate();
 
+    //! Set death rate to simulate Moran-like model
+    void increase_death_rate();
+
     //! Calc dt and set next_event_
     double delta_time(const double positional_value);
 

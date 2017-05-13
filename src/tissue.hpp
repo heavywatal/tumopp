@@ -59,7 +59,7 @@ class Tissue {
     Tissue() = default;
 
     //! main function
-    bool grow(const size_t max_size);
+    bool grow(const size_t max_size, const double plateau=0.0);
 
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;

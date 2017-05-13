@@ -56,6 +56,9 @@ class Simulation {
     //! Max tumor size to stop simulation
     size_t MAX_SIZE = 16384;
 
+    //! Duration of turnover phase after log growth
+    double PLATEAU_TIME = 0.0;
+
     bool WRITE_TO_FILES = false;
 
     //! Seed for random number generator

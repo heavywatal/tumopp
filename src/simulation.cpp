@@ -47,6 +47,7 @@ po::options_description Simulation::options_desc() {HERE;
     po::options_description description("Simulation");
     description.add_options()
         ("max,N", po::value(&MAX_SIZE)->default_value(MAX_SIZE))
+        ("plateau,T", po::value(&PLATEAU_TIME)->default_value(PLATEAU_TIME))
         ("write,w", po::value(&WRITE_TO_FILES)->default_value(WRITE_TO_FILES)->implicit_value(true))
         ("out_dir,o", po::value(&OUT_DIR)->default_value(OUT_DIR))
         ("seed", po::value(&SEED)->default_value(SEED));
@@ -127,7 +128,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
 
 void Simulation::run() {HERE;
     for (size_t i=0; i<10; ++i) {
-        if (tissue_.grow(MAX_SIZE)) break;
+        if (tissue_.grow(MAX_SIZE, PLATEAU_TIME)) break;
     }
     if (tissue_.size() != MAX_SIZE) {
         std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
