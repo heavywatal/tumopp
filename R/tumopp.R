@@ -13,7 +13,7 @@ tumopp = function(args=character(0L), npair=0L) {
         result = cpp_tumopp(c(args, nsam_nrep), npair)
         .out = wtl::read_boost_ini(result[1L]) %>>%
             dplyr::mutate(population=list(readr::read_tsv(result[2L]))) %>>%
-            modify_population()
+            purrr::pmap_df(modify_population)
         .out$drivers = list(readr::read_tsv(result[3L]))
         if (npair > 0L) {
             .dist = readr::read_tsv(result[4L])

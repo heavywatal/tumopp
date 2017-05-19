@@ -28,8 +28,7 @@ read_populations = function(indirs=getwd()) {
 read_results = function(indirs=getwd()) {
     read_confs(indirs) %>>%
     dplyr::mutate(population= read_populations(indirs)) %>>%
-    purrr::by_row(modify_population, .labels=FALSE) %>>%
-    tidyr::unnest() %>>%
+    purrr::pmap_df(modify_population) %>>%
     dplyr::mutate(drivers= purrr::map(file.path(indirs, 'drivers.tsv.gz'), readr::read_tsv))
 }
 
@@ -39,7 +38,8 @@ read_results = function(indirs=getwd()) {
 #' @export
 read_snapshots = function(indirs=getwd()) {
     read_confs(indirs) %>>%
-    purrr::by_row(~{
+    purrr::pmap_df(function(...) {
+        .x = list(...)
         .d = readr::read_tsv(file.path(.x$directory, 'snapshots.tsv.gz'))
         if (.x$coord == 'hex') .d = trans_coord_hex(.d)
         .d %>>% set_id()

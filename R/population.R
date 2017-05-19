@@ -1,9 +1,10 @@
 #' Modify population table
-#' @param result a row of nested tibble
+#' @param ... a row of nested tibble
 #' @return tibble
 #' @rdname population
-modify_population = function(result, num_clades=4L) {
-    population = result$population[[1L]] %>>% set_id()
+modify_population = function(..., num_clades=4L) {
+    result = list(...)
+    population = result$population %>>% set_id()
     extant = filter_extant(population)
     strelem = get_se(result$coord, result$dimensions)
     col_surface = detect_surface(extant, strelem) %>>%
@@ -12,11 +13,12 @@ modify_population = function(result, num_clades=4L) {
         population = trans_coord_hex(population)
     }
     result$max_phi = c(hex=12, moore=27, neumann=6)[result$coord]
-    result$population[[1L]] = population %>>%
+    result$population = population %>>%
         dplyr::mutate_(r= ~dist_euclidean(.), phi= ~phi / result$max_phi) %>>%
         set_clades(num_clades) %>>%
         dplyr::left_join(count_descendants(extant), by='id') %>>%
-        dplyr::left_join(col_surface, by='id')
+        dplyr::left_join(col_surface, by='id') %>>%
+        list()
     result
 }
 

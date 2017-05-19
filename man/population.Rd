@@ -10,7 +10,7 @@
 \alias{extract_demography}
 \title{Modify population table}
 \usage{
-modify_population(result, num_clades = 4L)
+modify_population(..., num_clades = 4L)
 
 filter_extant(population)
 
@@ -25,7 +25,7 @@ count_descendants(population)
 extract_demography(population)
 }
 \arguments{
-\item{result}{a row of nested tibble}
+\item{...}{a row of nested tibble}
 
 \item{num_clades}{integer}
 
