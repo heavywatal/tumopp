@@ -6,17 +6,17 @@
 #ifndef TISSUE_HPP_
 #define TISSUE_HPP_
 
+#include "coord.hpp"
+#include "cell.hpp"
+
+#include <boost/functional/hash.hpp>
+
 #include <iostream>
 #include <vector>
 #include <valarray>
 #include <unordered_set>
 #include <memory>
 #include <string>
-
-#include <boost/functional/hash.hpp>
-
-#include "cell.hpp"
-#include "coord.hpp"
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 

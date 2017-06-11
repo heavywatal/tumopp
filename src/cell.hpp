@@ -6,7 +6,6 @@
 #ifndef CELL_HPP_
 #define CELL_HPP_
 
-#include <cmath>
 #include <vector>
 #include <valarray>
 #include <string>

@@ -7,8 +7,9 @@
 #define COORD_HPP_
 
 #include <cmath>
-#include <vector>
+#include <cstdlib> // std::abs for int
 #include <valarray>
+#include <vector>
 #include <numeric>
 #include <random>
 
@@ -159,7 +160,8 @@ class Neumann final: public Coord {
     ~Neumann() = default;
     //! Manhattan distance
     virtual int graph_distance(const std::valarray<int>& v) const override {
-        return std::abs(v).sum();
+        const std::valarray<int> absv = std::abs(v);
+        return absv.sum();
     }
 };
 

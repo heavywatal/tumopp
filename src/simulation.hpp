@@ -6,14 +6,14 @@
 #ifndef SIMULATION_HPP_
 #define SIMULATION_HPP_
 
+#include "tissue.hpp"
+
+#include <wtl/exception.hpp>
+
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <random>
-
-#include <wtl/exception.hpp>
-
-#include "tissue.hpp"
 
 namespace boost {
     namespace program_options {
