@@ -151,7 +151,7 @@ void Simulation::write() const {HERE;
         DCERR("mkdir && cd to " << OUT_DIR << std::endl);
         fs::create_directory(OUT_DIR);
         wtl::cd(OUT_DIR);
-        wtl::Fout{"program_options.conf"} << CONFIG_STRING;
+        wtl::opfstream{"program_options.conf"} << CONFIG_STRING;
         wtl::ozfstream{"population.tsv.gz"}
             << tissue_.specimens();
         wtl::ozfstream{"snapshots.tsv.gz"}
