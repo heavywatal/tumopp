@@ -6,15 +6,20 @@
 #ifndef COORD_HPP_
 #define COORD_HPP_
 
+#include <boost/math/constants/constants.hpp>
+
 #include <cmath>
 #include <cstdlib> // std::abs for int
 #include <valarray>
 #include <vector>
+#include <bitset>
 #include <numeric>
 #include <random>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
+
+constexpr double PI = boost::math::constants::pi<double>();
 
 class Coord {
   public:
@@ -47,7 +52,7 @@ class Coord {
         });
     }
     double cross_section(size_t vol) const {
-        return std::pow((9.0 / 16.0) * M_PI * (vol *= vol), 1.0 / 3.0);
+        return std::pow((9.0 / 16.0) * PI * (vol *= vol), 1.0 / 3.0);
     }
 
     // virtual methods
@@ -57,7 +62,7 @@ class Coord {
     }
     virtual double radius(const size_t points) const {
         double x = points;
-        x /= M_PI;
+        x /= PI;
         if (dimensions == 2) {
             // S = pi r^2
             return std::sqrt(x);
