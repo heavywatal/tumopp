@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <cstdlib> // std::abs for int
+#include <stdexcept>
 #include <valarray>
 #include <vector>
 #include <bitset>
