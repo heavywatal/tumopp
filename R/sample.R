@@ -6,9 +6,9 @@
 #' @rdname sample
 #' @export
 sample_bulk = function(population, center, size=100L) {
-    population %>>%
-    dplyr::mutate_(dist= ~dist_euclidean(., center)) %>>%
-    dplyr::arrange_(~dist) %>>%
+    population %>%
+    dplyr::mutate_(dist= ~dist_euclidean(., center)) %>%
+    dplyr::arrange_(~dist) %>%
     head(size)
 }
 
@@ -23,15 +23,15 @@ sample_bulk = function(population, center, size=100L) {
 make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NULL) {
     samples = sample(genealogy, nsam)
     common_ancs = purrr::reduce(samples, intersect)
-    nodes = purrr::flatten_int(samples) %>>% unique() %>>% setdiff(common_ancs)
+    nodes = purrr::flatten_int(samples) %>% unique() %>% setdiff(common_ancs)
     if (is.null(segsites)) {
         if (is.null(mu)) stop('specify either mu or segsites')
         segsites = stats::rpois(1L, length(nodes) * mu)
     } else if (!is.null(mu)) warning('mu is ignored if segsites is given')
     mutant_ids = sample(nodes, segsites, replace=TRUE)
-    samples %>>%
-        purrr::map(~ mutant_ids %in% .) %>>%
-        purrr::flatten_int() %>>%
+    samples %>%
+        purrr::map(~ mutant_ids %in% .) %>%
+        purrr::flatten_int() %>%
         matrix(nrow=nsam, byrow=TRUE)
 }
 

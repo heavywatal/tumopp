@@ -3,7 +3,7 @@
 #' @rdname plot
 #' @export
 histogram_freqspec = function(freqs) {
-    tibble::tibble(x=freqs) %>>%
+    tibble::tibble(x=freqs) %>%
     ggplot2::ggplot(ggplot2::aes_(~x, ~..density..))+
     ggplot2::geom_histogram(bins=25)+
     ggplot2::coord_cartesian(xlim=c(0, 1))+
@@ -57,7 +57,7 @@ plot_genealogy = function(.data, xmax=max(.data$ageend), colour='dodgerblue') {
 #' @rdname plot-igraph
 #' @export
 plot_bar_age = function(.data, xmax=max(.data$ageend), alpha=1.0, ...) {
-    dplyr::filter_(.data, ~extant) %>>%
+    dplyr::filter_(.data, ~extant) %>%
     ggplot2::ggplot(ggplot2::aes_(~ageend, ...))+
     ggplot2::geom_bar(alpha=alpha)+
     ggplot2::coord_cartesian(xlim=c(0, xmax))+
@@ -84,7 +84,7 @@ save_serial_section = function(.data, filename='serial_section.gif', ..., width=
         stop('ERROR: animation is not installed')
     }
     .lim = max_abs_xyz(.data)
-    section_plots = dplyr::group_by_(.data, ~z) %>>%
+    section_plots = dplyr::group_by_(.data, ~z) %>%
         dplyr::do(plt={
             plot_lattice2d(., ..., limit=.lim)+
             ggplot2::geom_hline(yintercept=.$z[1])+

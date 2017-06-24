@@ -19,7 +19,7 @@ plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .reverse=FAL
     if (.reverse) .palette = rev(.palette)
     .col = .palette[colcol]
     .lim = if (is.null(.min)) {NULL} else {
-        max(max_abs_xyz(.data), .min) %>>% (c(-., .))
+        max(max_abs_xyz(.data), .min) %>% {c(-., .)}
     }
     with(.data, {rgl::plot3d(x, y, z,
         xlab='', ylab='', zlab='', axes=FALSE,
@@ -29,7 +29,7 @@ plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .reverse=FAL
     rgl::view3d(15, 15, 15, 0.9)
 }
 
-#' Shortcut of plot_tumor3d() %>>% snapshot3d()
+#' Shortcut of plot_tumor3d() %>% snapshot3d()
 #' @param filename string
 #' @param ... passed to plot_tumor3d()
 #' @return filename
@@ -38,7 +38,7 @@ plot_tumor3d = function(.data, colour='clade', .palette='Spectral', .reverse=FAL
 snapshot_surface = function(.data, filename=tempfile('rgl_', fileext='.png'), ...) {
     on.exit(rgl::rgl.close())
     rgl::open3d(useNULL=FALSE)
-    dplyr::filter_(.data, ~surface) %>>% plot_tumor3d(...)
+    dplyr::filter_(.data, ~surface) %>% plot_tumor3d(...)
     rgl::snapshot3d(filename)
     filename
 }

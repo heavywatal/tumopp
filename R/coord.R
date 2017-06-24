@@ -13,7 +13,7 @@ max_abs_xyz = function(.data) {
 #' @return transformed matrix
 #' @rdname coord
 trans_coord_hex_xy = function(.data) {
-    dplyr::mutate_(.data, y=~ y + x * 0.5) %>>%
+    dplyr::mutate_(.data, y=~ y + x * 0.5) %>%
     dplyr::mutate_(x=~ x * sqrt(3.0 / 4.0))
 }
 
@@ -21,8 +21,8 @@ trans_coord_hex_xy = function(.data) {
 #' @return transformed matrix
 #' @rdname coord
 trans_coord_hcc = function(.data) {
-    trans_coord_hex_xy(.data) %>>%
-    dplyr::mutate_(x=~ x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>>%
+    trans_coord_hex_xy(.data) %>%
+    dplyr::mutate_(x=~ x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>%
     dplyr::mutate_(z=~ z * sqrt(2.0 / 3.0))
 }
 
@@ -30,8 +30,8 @@ trans_coord_hcc = function(.data) {
 #' @return transformed matrix
 #' @rdname coord
 trans_coord_fcc = function(.data) {
-    trans_coord_hex_xy(.data) %>>%
-    dplyr::mutate_(x=~ x + z / sqrt(3.0)) %>>%
+    trans_coord_hex_xy(.data) %>%
+    dplyr::mutate_(x=~ x + z / sqrt(3.0)) %>%
     dplyr::mutate_(z=~ z * sqrt(2.0 / 3.0))
 }
 
@@ -48,7 +48,7 @@ trans_coord_hex = function(.data) {
 #' @rdname coord
 #' @export
 centering = function(.data) {
-    .offset = dplyr::filter_(.data, ~surface) %>>%
+    .offset = dplyr::filter_(.data, ~surface) %>%
         dplyr::summarise_at(c('x', 'y', 'z'), dplyr::funs((min(.) + max(.)) * 0.5))
     dplyr::mutate_(.data, x=~ x - .offset$x, y=~ y - .offset$y, z=~ z - .offset$z)
 }

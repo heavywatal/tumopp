@@ -11,7 +11,7 @@ Imports:
     dplyr,
     ggplot2,
     imager,
-    pipeR,
+    magrittr,
     purrr,
     readr,
     reshape2,

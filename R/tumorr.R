@@ -2,6 +2,6 @@
 #' @docType package
 #' @name tumorr
 #' @useDynLib tumorr
-#' @importFrom pipeR %>>%
+#' @importFrom magrittr %>%
 #' @importFrom utils head tail
 NULL

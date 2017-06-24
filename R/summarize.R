@@ -41,9 +41,9 @@ within_between_samples = function(population, ncell=100L, npair=1L) {
 #' @rdname summarize
 #' @export
 morphological_stats = function(extant) {
-    extant %>>%
-        dplyr::filter_(~surface) %>>%
-        dplyr::summarise_(phi_mean= ~mean(phi), phi_sd= ~stats::sd(phi),
-                          r_mean= ~mean(r), r_sd= ~stats::sd(r)) %>>%
-        dplyr::mutate(surface=sum(extant$surface) / nrow(extant))
+    extant %>%
+    dplyr::filter_(~surface)
+    dplyr::summarise_(phi_mean= ~mean(phi), phi_sd= ~stats::sd(phi),
+                      r_mean= ~mean(r), r_sd= ~stats::sd(r))
+    dplyr::mutate(surface=sum(extant$surface) / nrow(extant))
 }

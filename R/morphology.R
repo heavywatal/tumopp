@@ -6,11 +6,11 @@
 df2img = function(mtrx) {
     vars = c('x', 'y', 'z')
     mtrx = mtrx[vars]
-    .grid = dplyr::summarise_each_(mtrx, dplyr::funs(min, max), vars=vars) %>>%
+    .grid = dplyr::summarise_each_(mtrx, dplyr::funs(min, max), vars=vars) %>%
         {expand.grid(x= seq(.$x_min, .$x_max),
                      y= seq(.$y_min, .$y_max),
-                     z= seq(.$z_min, .$z_max))} %>>% tibble::as_tibble()
-    joined = dplyr::left_join(.grid, mtrx %>>% dplyr::mutate(v=1), by=vars)
+                     z= seq(.$z_min, .$z_max))} %>% tibble::as_tibble()
+    joined = dplyr::left_join(.grid, mtrx %>% dplyr::mutate(v=1), by=vars)
     joined = tidyr::replace_na(joined, list(v=0))
     arr = reshape2::acast(joined, x ~ y ~ z, `[`, 1, value.var='v', fill=0)
     dim(arr) = c(dim(arr), 1)
@@ -23,9 +23,9 @@ df2img = function(mtrx) {
 #' @rdname morphology
 #' @export
 img2df = function(img) {
-    as.array(img) %>>%
-    {dim(.) = head(dim(.), 3); .} %>>%
-    reshape2::melt(c('x', 'y', 'z')) %>>%
+    as.array(img) %>%
+    {dim(.) = head(dim(.), 3); .} %>%
+    reshape2::melt(c('x', 'y', 'z')) %>%
     tibble::as_tibble()
 }
 
@@ -37,13 +37,13 @@ img2df = function(img) {
 #' @export
 get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
      coord = match.arg(coord)
-     df = tibble::tibble(x=c(-1, 0, 1)) %>>%
-         dplyr::mutate_(y=~x, z=~x) %>>%
+     df = tibble::tibble(x=c(-1, 0, 1)) %>%
+         dplyr::mutate_(y=~x, z=~x) %>%
          tidyr::expand_(dots=c('x', 'y', 'z'))
      if (coord == 'neumann') {
          df = dplyr::filter_(df, ~abs(x) + abs(y) + abs(z) < 2)
      } else if (coord == 'hex') {
-         df = dplyr::filter(df, (trans_coord_hex(df) %>>% dist_euclidean()) < 1.1)
+         df = dplyr::filter(df, (trans_coord_hex(df) %>% dist_euclidean()) < 1.1)
      }
      if (dimensions < 3) {
          df = dplyr::filter_(df, ~z == 0)
@@ -68,8 +68,8 @@ detect_surface = function(mtrx, se) {
     if (nrow(mtrx) == 0L) {return(dplyr::mutate(mtrx, surface=logical(0L)))}
     axes = c('x', 'y', 'z')
     mins = dplyr::summarise_each_(mtrx, dplyr::funs(min), vars=axes)
-    img = df2img(mtrx) %>>% filter_surface(se)
-    product = img2df(img) %>>% dplyr::transmute_(
+    img = df2img(mtrx) %>% filter_surface(se)
+    product = img2df(img) %>% dplyr::transmute_(
         x=~ x + mins$x - 1,
         y=~ y + mins$y - 1,
         z=~ z + mins$z - 1,
