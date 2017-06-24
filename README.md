@@ -25,6 +25,12 @@ make install
 
 Run tumopp in R via [`tumorr` package](//github.com/heavywatal/tumorr)
 
+Alternatively, it can be executed as a command-line program:
+```sh
+tumopp -h
+tumopp -N20000 -D3 -Chex -k100 -d0.1 -m0.5 -w -o OUTPUT
+```
+
 ## Reference
 
 Watal M. Iwasaki and Hideki Innan (2017)
