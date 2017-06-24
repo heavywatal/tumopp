@@ -6,11 +6,11 @@
 #include "simulation.hpp"
 #include "cell.hpp"
 
-#include <sfmt.hpp>
+#include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
 #include <wtl/getopt.hpp>
-#include <wtl/os.hpp>
 #include <wtl/zfstream.hpp>
+#include <sfmt.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -150,7 +150,7 @@ void Simulation::write() const {HERE;
     if (WRITE_TO_FILES) {
         DCERR("mkdir && cd to " << OUT_DIR << std::endl);
         fs::create_directory(OUT_DIR);
-        wtl::cd(OUT_DIR);
+        fs::current_path(OUT_DIR);
         wtl::opfstream{"program_options.conf"} << CONFIG_STRING;
         wtl::ozfstream{"population.tsv.gz"}
             << tissue_.specimens();
