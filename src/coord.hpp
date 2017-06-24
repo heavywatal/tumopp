@@ -20,7 +20,8 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
 
-constexpr double PI = boost::math::constants::pi<double>();
+// Avoid conflict with M_PI and PI in R_ext/Constants.h
+constexpr double BMATH_PI = boost::math::constants::pi<double>();
 
 class Coord {
   public:
@@ -53,7 +54,7 @@ class Coord {
         });
     }
     double cross_section(size_t vol) const {
-        return std::pow((9.0 / 16.0) * PI * (vol *= vol), 1.0 / 3.0);
+        return std::pow((9.0 / 16.0) * BMATH_PI * (vol *= vol), 1.0 / 3.0);
     }
 
     // virtual methods
@@ -63,7 +64,7 @@ class Coord {
     }
     virtual double radius(const size_t points) const {
         double x = points;
-        x /= PI;
+        x /= BMATH_PI;
         if (dimensions == 2) {
             // S = pi r^2
             return std::sqrt(x);
