@@ -5,12 +5,12 @@
 \alias{plot_bar_age}
 \title{Plot genealogy}
 \usage{
-plot_genealogy(.data, xmax = max(.data$ageend), colour = "dodgerblue")
+plot_genealogy(.tbl, xmax = max(.tbl$ageend), colour = "dodgerblue")
 
-plot_bar_age(.data, xmax = max(.data$ageend), alpha = 1, ...)
+plot_bar_age(.tbl, xmax = max(.tbl$ageend), alpha = 1, ...)
 }
 \arguments{
-\item{.data}{tbl from layout_genealogy()}
+\item{.tbl}{tbl from layout_genealogy()}
 
 \item{xmax}{numeric}
 

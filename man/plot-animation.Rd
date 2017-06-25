@@ -4,11 +4,11 @@
 \alias{save_serial_section}
 \title{Write animation GIF for serial sections of 3D tumor}
 \usage{
-save_serial_section(.data, filename = "serial_section.gif", ...,
-  width = 720, height = 640)
+save_serial_section(.tbl, filename = "serial_section.gif", ..., width = 720,
+  height = 640)
 }
 \arguments{
-\item{.data}{tbl with extant cells}
+\item{.tbl}{tbl with extant cells}
 
 \item{filename}{string}
 

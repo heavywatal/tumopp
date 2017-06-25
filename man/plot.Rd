@@ -7,13 +7,13 @@
 \usage{
 histogram_freqspec(freqs)
 
-plot_lattice2d(.data, colour = "clade", alpha = 0.66, size = 1,
-  limit = max_abs_xyz(.data))
+plot_lattice2d(.tbl, colour = "clade", alpha = 0.66, size = 1,
+  limit = max_abs_xyz(.tbl))
 }
 \arguments{
 \item{freqs}{numeric vector}
 
-\item{.data}{tbl with extant cells}
+\item{.tbl}{tbl with extant cells}
 
 \item{colour}{column name to colorcode}
 

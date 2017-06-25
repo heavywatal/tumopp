@@ -1,27 +1,27 @@
 #' get max value for plot limits
-#' @param .data data.frame with (x, y, z) columns
+#' @param .tbl data.frame with (x, y, z) columns
 #' @return max(abs(x, y, z))
 #' @rdname coord
 #' @export
 #' @examples
 #' max_abs_xyz(data.frame(x=2, y=-3, z=4))
-max_abs_xyz = function(.data) {
-    max(abs(.data[c('x', 'y', 'z')]))
+max_abs_xyz = function(.tbl) {
+    max(abs(.tbl[c('x', 'y', 'z')]))
 }
 
 #' 2D transformation into hexagonal grid
 #' @return transformed matrix
 #' @rdname coord
-trans_coord_hex_xy = function(.data) {
-    dplyr::mutate_(.data, y=~ y + x * 0.5) %>%
+trans_coord_hex_xy = function(.tbl) {
+    dplyr::mutate_(.tbl, y=~ y + x * 0.5) %>%
     dplyr::mutate_(x=~ x * sqrt(3.0 / 4.0))
 }
 
 #' 3D transformation (hexagonal close packed)
 #' @return transformed matrix
 #' @rdname coord
-trans_coord_hcc = function(.data) {
-    trans_coord_hex_xy(.data) %>%
+trans_coord_hcc = function(.tbl) {
+    trans_coord_hex_xy(.tbl) %>%
     dplyr::mutate_(x=~ x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>%
     dplyr::mutate_(z=~ z * sqrt(2.0 / 3.0))
 }
@@ -29,8 +29,8 @@ trans_coord_hcc = function(.data) {
 #' 3D transformation (face centered cubic, cubic close packed)
 #' @return transformed matrix
 #' @rdname coord
-trans_coord_fcc = function(.data) {
-    trans_coord_hex_xy(.data) %>%
+trans_coord_fcc = function(.tbl) {
+    trans_coord_hex_xy(.tbl) %>%
     dplyr::mutate_(x=~ x + z / sqrt(3.0)) %>%
     dplyr::mutate_(z=~ z * sqrt(2.0 / 3.0))
 }
@@ -39,18 +39,18 @@ trans_coord_fcc = function(.data) {
 #' @return transformed matrix
 #' @rdname coord
 #' @export
-trans_coord_hex = function(.data) {
-    trans_coord_fcc(.data)
+trans_coord_hex = function(.tbl) {
+    trans_coord_fcc(.tbl)
 }
 
 #' Translate cells to minimize the range of symmetric axes
 #' @return modified data.frame
 #' @rdname coord
 #' @export
-centering = function(.data) {
-    .offset = dplyr::filter_(.data, ~surface) %>%
+centering = function(.tbl) {
+    .offset = dplyr::filter_(.tbl, ~surface) %>%
         dplyr::summarise_at(c('x', 'y', 'z'), dplyr::funs((min(.) + max(.)) * 0.5))
-    dplyr::mutate_(.data, x=~ x - .offset$x, y=~ y - .offset$y, z=~ z - .offset$z)
+    dplyr::mutate_(.tbl, x=~ x - .offset$x, y=~ y - .offset$y, z=~ z - .offset$z)
 }
 
 #' Rotate
@@ -59,23 +59,23 @@ centering = function(.data) {
 #' @return modified data.frame
 #' @rdname coord
 #' @export
-rotate = function(.data, theta, axis=c('z', 'x', 'y')) {
+rotate = function(.tbl, theta, axis=c('z', 'x', 'y')) {
     axis = match.arg(axis)
-    .x = .data[['x']]
-    .y = .data[['y']]
-    .z = .data[['z']]
+    .x = .tbl[['x']]
+    .y = .tbl[['y']]
+    .z = .tbl[['z']]
     .sin = sin(theta)
     .cos = cos(theta)
     if (axis == 'z') {
-        dplyr::mutate(.data,
+        dplyr::mutate(.tbl,
             x= .x * .cos - .y * .sin,
             y= .x * .sin + .y * .cos)
     } else if (axis == 'x') {
-        dplyr::mutate(.data,
+        dplyr::mutate(.tbl,
             y= .y * .cos - .z * .sin,
             z= .y * .sin + .z * .cos)
     } else {  # y
-        dplyr::mutate(.data,
+        dplyr::mutate(.tbl,
             x= .x * .cos + .z * .sin,
             z= - .x * .sin + .z * .cos)
     }
@@ -86,6 +86,6 @@ rotate = function(.data, theta, axis=c('z', 'x', 'y')) {
 #' @return numeric vector
 #' @rdname coord
 #' @export
-dist_euclidean = function(.data, point=c(x=0, y=0, z=0)) {
-    sqrt((.data[['x']] - point[['x']])^2 + (.data[['y']] - point[['y']])^2 + (.data[['z']] - point[['z']])^2)
+dist_euclidean = function(.tbl, point=c(x=0, y=0, z=0)) {
+    sqrt((.tbl[['x']] - point[['x']])^2 + (.tbl[['y']] - point[['y']])^2 + (.tbl[['z']] - point[['z']])^2)
 }

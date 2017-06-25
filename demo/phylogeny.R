@@ -83,12 +83,12 @@ purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>>%
 
 .draw_tree = function() {
     .result = tumopp(str_split('-D3 -Chex -Lstep -N60', ' ')[[1]])
-    .data = .result$population[[1]] %>>% layout_genealogy()
-    .tree = ggplot2::ggplot(.data)+
+    .tbl = .result$population[[1]] %>>% layout_genealogy()
+    .tree = ggplot2::ggplot(.tbl)+
         ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=1, size=1)+
-        ggplot2::geom_point(data=dplyr::filter_(.data, ~extant),  ggplot2::aes_(x=~ageend, y=~posend),
+        ggplot2::geom_point(data=dplyr::filter_(.tbl, ~extant),  ggplot2::aes_(x=~ageend, y=~posend),
             size=2, colour='dodgerblue', alpha=1)+
-        ggplot2::geom_point(data=dplyr::filter_(.data, ~!extant), ggplot2::aes_(x=~ageend, y=~posend),
+        ggplot2::geom_point(data=dplyr::filter_(.tbl, ~!extant), ggplot2::aes_(x=~ageend, y=~posend),
             size=1.2, colour='black', alpha=1)+
         wtl::theme_wtl()+
         ggplot2::theme(

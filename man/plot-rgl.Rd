@@ -5,13 +5,13 @@
 \alias{snapshot_surface}
 \title{plot tumor in 3d with rgl}
 \usage{
-plot_tumor3d(.data, colour = "clade", .palette = "Spectral",
+plot_tumor3d(.tbl, colour = "clade", .palette = "Spectral",
   .reverse = FALSE, .min = NULL)
 
-snapshot_surface(.data, filename = tempfile("rgl_", fileext = ".png"), ...)
+snapshot_surface(.tbl, filename = tempfile("rgl_", fileext = ".png"), ...)
 }
 \arguments{
-\item{.data}{data.frame}
+\item{.tbl}{data.frame}
 
 \item{colour}{column name to colorcode}
 

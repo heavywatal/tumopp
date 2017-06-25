@@ -18,27 +18,27 @@ nclades = max(4L, norigins)
 founders = snapshots %>>% group_by(time) %>>% dplyr::filter(n() == nclades) %>>% (id)
 roots = snapshots %>>% dplyr::filter(id < max(founders)) %>>% (id) %>>% setdiff(founders)
 
-.data = snapshots %>>% dplyr::mutate_(
+.tbl = snapshots %>>% dplyr::mutate_(
     clade= ~purrr::map_int(genealogy, ~{setdiff(.x, roots)[1L]}),
     clade= ~factor(clade, levels=founders)) %>>% (?.)
 
 .lim = max_abs_xyz(snapshots)
 
-plot_snapshot = function(.data) {
-    .t = .data$time[1]
-    .N = nrow(.data)
-    plot_lattice2d(.data, 'clade', limit=.lim)+
+plot_snapshot = function(.tbl) {
+    .t = .tbl$time[1]
+    .N = nrow(.tbl)
+    plot_lattice2d(.tbl, 'clade', limit=.lim)+
     labs(title=sprintf('t = %.5f, N =%4d', .t, .N))+
     theme(legend.position='none')
 }
 
 if (FALSE) {
-    .data %>>%
+    .tbl %>>%
     dplyr::filter(time==sample(unique(time), 1)) %>>%
     plot_snapshot()
 }
 
-.out = .data %>>%
+.out = .tbl %>>%
     dplyr::group_by(time) %>>%
     dplyr::do(plt={plot_snapshot(.)})
 

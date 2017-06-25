@@ -11,24 +11,24 @@
 \alias{dist_euclidean}
 \title{get max value for plot limits}
 \usage{
-max_abs_xyz(.data)
+max_abs_xyz(.tbl)
 
-trans_coord_hex_xy(.data)
+trans_coord_hex_xy(.tbl)
 
-trans_coord_hcc(.data)
+trans_coord_hcc(.tbl)
 
-trans_coord_fcc(.data)
+trans_coord_fcc(.tbl)
 
-trans_coord_hex(.data)
+trans_coord_hex(.tbl)
 
-centering(.data)
+centering(.tbl)
 
-rotate(.data, theta, axis = c("z", "x", "y"))
+rotate(.tbl, theta, axis = c("z", "x", "y"))
 
-dist_euclidean(.data, point = c(x = 0, y = 0, z = 0))
+dist_euclidean(.tbl, point = c(x = 0, y = 0, z = 0))
 }
 \arguments{
-\item{.data}{data.frame with (x, y, z) columns}
+\item{.tbl}{data.frame with (x, y, z) columns}
 
 \item{theta}{radian angle}
 
