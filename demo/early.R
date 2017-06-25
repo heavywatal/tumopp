@@ -1,5 +1,4 @@
 #!/usr/bin/env Rscript
-library(pipeR)
 library(tidyverse)
 library(animation)
 library(wtl)
@@ -13,14 +12,14 @@ if (!is.na(indir)) {
 }
 
 snapshots = tumorr::read_snapshots()$snapshots[[1]]
-norigins = snapshots %>>% dplyr::filter(time == 0) %>>% nrow()
+norigins = snapshots %>% dplyr::filter(time == 0) %>% nrow()
 nclades = max(4L, norigins)
-founders = snapshots %>>% group_by(time) %>>% dplyr::filter(n() == nclades) %>>% (id)
-roots = snapshots %>>% dplyr::filter(id < max(founders)) %>>% (id) %>>% setdiff(founders)
+founders = snapshots %>% group_by(time) %>% dplyr::filter(n() == nclades) %>% {.$id}
+roots = snapshots %>% dplyr::filter(id < max(founders)) %>% {.$id} %>% setdiff(founders)
 
-.tbl = snapshots %>>% dplyr::mutate(
+.tbl = snapshots %>% dplyr::mutate(
     clade= purrr::map_int(.data$genealogy, ~{setdiff(.x, roots)[1L]}),
-    clade= factor(.data$clade, levels=founders)) %>>% (?.)
+    clade= factor(.data$clade, levels=founders)) %>% print()
 
 .lim = max_abs_xyz(snapshots)
 
@@ -33,13 +32,13 @@ plot_snapshot = function(.tbl) {
 }
 
 if (FALSE) {
-    .tbl %>>%
-    dplyr::filter(time==sample(unique(time), 1)) %>>%
+    .tbl %>%
+    dplyr::filter(time==sample(unique(time), 1)) %>%
     plot_snapshot()
 }
 
-.out = .tbl %>>%
-    dplyr::group_by(time) %>>%
+.out = .tbl %>%
+    dplyr::group_by(time) %>%
     dplyr::do(plt={plot_snapshot(.)})
 
 animation::saveGIF({for (.p in .out$plt[-1]) {print(.p)}},

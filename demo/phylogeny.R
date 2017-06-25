@@ -1,4 +1,3 @@
-library(pipeR)
 library(tidyverse)
 library(wtl)
 library(tumorr)
@@ -7,11 +6,11 @@ refresh('tumorr')
 
 (.result = tumopp(str_split('-D3 -Chex -k24 -Lstep', ' ')[[1]]))
 (.population = .result$population[[1]])
-(.extant = .population %>>% filter_extant())
+(.extant = .population %>% filter_extant())
 
 .n = 100
-.o1 = dplyr::sample_n(.extant %>>% dplyr::filter(z == 0), 1) %>>% (?.)
-.o2 = dplyr::sample_n(.extant %>>% dplyr::filter(z == 0), 1) %>>% (?.)
+.o1 = dplyr::sample_n(.extant %>% dplyr::filter(z == 0), 1) %>% print()
+.o2 = dplyr::sample_n(.extant %>% dplyr::filter(z == 0), 1) %>% print()
 .specimen1 = sample_bulk(.extant, .o1, .n)
 .specimen2 = sample_bulk(.extant, .o2, .n)
 
@@ -38,10 +37,10 @@ fst_HSM(.ts, .tb)
 loadNamespace('cowplot')
 
 .plot_genealogy = function(population, .nodes1, .nodes2) {
-    .layout = layout_genealogy(population) %>>%
+    .layout = layout_genealogy(population) %>%
         dplyr::mutate(specimen=
             ifelse(to %in% .nodes1, 1L,
-            ifelse(to %in% .nodes2, 2L, NA)) %>>% as.factor())
+            ifelse(to %in% .nodes2, 2L, NA)) %>% as.factor())
     .specimens = dplyr::filter(.layout, !is.na(specimen))
     plot_genealogy(.layout)+
         ggplot2::geom_point(data= .specimens,
@@ -57,9 +56,9 @@ loadNamespace('cowplot')
     .extant = filter_extant(population)
     .specimen1 = sample_bulk(.extant, o1, size)
     .specimen2 = sample_bulk(.extant, o2, size)
-    .plat = gglattice2d(.extant %>>% dplyr::filter(-1 <= z, z < 1), 'z', , 0.5)+
-        geom_point(data=.specimen1 %>>% dplyr::filter(-1 <= z, z < 1), colour='tomato', alpha=0.7)+
-        geom_point(data=.specimen2 %>>% dplyr::filter(-1 <= z, z < 1), colour='turquoise', alpha=0.7)
+    .plat = gglattice2d(.extant %>% dplyr::filter(-1 <= z, z < 1), 'z', , 0.5)+
+        geom_point(data=.specimen1 %>% dplyr::filter(-1 <= z, z < 1), colour='tomato', alpha=0.7)+
+        geom_point(data=.specimen2 %>% dplyr::filter(-1 <= z, z < 1), colour='turquoise', alpha=0.7)
     .nodes1 = as.character(.specimen1$id)
     .nodes2 = as.character(.specimen2$id)
     .pgen = .plot_genealogy(population, .nodes1, .nodes2)
@@ -71,8 +70,8 @@ gprint(.gg)
 ggsave('sample_phylogeny_Pifany.png', .gg, width=2, height=1, scale=6)
 
 .n = 40
-purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>>%
-    dplyr::mutate(fst=fst_HBK(within, between)) %>>%
+purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>%
+    dplyr::mutate(fst=fst_HBK(within, between)) %>%
     ggplot(aes(euclidean, fst))+
     geom_point()+
     theme_wtl()
@@ -83,7 +82,7 @@ purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>>%
 
 .draw_tree = function() {
     .result = tumopp(str_split('-D3 -Chex -Lstep -N60', ' ')[[1]])
-    .tbl = .result$population[[1]] %>>% layout_genealogy()
+    .tbl = .result$population[[1]] %>% layout_genealogy()
     .tree = ggplot2::ggplot(.tbl)+
         ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=1, size=1)+
         ggplot2::geom_point(data=dplyr::filter(.tbl, .data$extant),  ggplot2::aes_(x=~ageend, y=~posend),
