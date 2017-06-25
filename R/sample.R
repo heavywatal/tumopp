@@ -7,8 +7,8 @@
 #' @export
 sample_bulk = function(population, center, size=100L) {
     population %>%
-    dplyr::mutate_(dist= ~dist_euclidean(., center)) %>%
-    dplyr::arrange_(~dist) %>%
+    dplyr::mutate(dist= dist_euclidean(., center)) %>%
+    dplyr::arrange(.data$dist) %>%
     head(size)
 }
 

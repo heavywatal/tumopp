@@ -38,7 +38,7 @@ plot_tumor3d = function(.tbl, colour='clade', .palette='Spectral', .reverse=FALS
 snapshot_surface = function(.tbl, filename=tempfile('rgl_', fileext='.png'), ...) {
     on.exit(rgl::rgl.close())
     rgl::open3d(useNULL=FALSE)
-    dplyr::filter_(.tbl, ~surface) %>% plot_tumor3d(...)
+    dplyr::filter(.tbl, .data$surface) %>% plot_tumor3d(...)
     rgl::snapshot3d(filename)
     filename
 }

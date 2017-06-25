@@ -4,10 +4,10 @@
 #' @rdname summarize
 #' @export
 genetic_stats = function(extant) {
-    dplyr::summarize_(extant,
-       mean_age= ~mean(age), sd_age= ~sd(age),
-       max_age= ~max(age), min_age= ~min(age),
-       evenness= ~wtl::evenness(clade)
+    dplyr::summarize(extant,
+       mean_age= mean(.data$age), sd_age= stats::sd(.data$age),
+       max_age= max(.data$age), min_age= min(.data$age),
+       evenness= wtl::evenness(.data$clade)
     )
 }
 
@@ -42,8 +42,8 @@ within_between_samples = function(population, ncell=100L, npair=1L) {
 #' @export
 morphological_stats = function(extant) {
     extant %>%
-    dplyr::filter_(~surface)
-    dplyr::summarise_(phi_mean= ~mean(phi), phi_sd= ~stats::sd(phi),
-                      r_mean= ~mean(r), r_sd= ~stats::sd(r))
+    dplyr::filter(.data$surface)
+    dplyr::summarise(phi_mean= mean(.data$phi), phi_sd= stats::sd(.data$phi),
+                     r_mean= mean(.data$r), r_sd= stats::sd(.data$r))
     dplyr::mutate(surface=sum(extant$surface) / nrow(extant))
 }

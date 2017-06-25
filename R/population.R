@@ -8,13 +8,13 @@ modify_population = function(..., num_clades=4L) {
     extant = filter_extant(population)
     strelem = get_se(result$coord, result$dimensions)
     col_surface = detect_surface(extant, strelem) %>%
-        dplyr::select_(~id, ~surface)
+        dplyr::select(.data$id, .data$surface)
     if (result$coord == 'hex') {
         population = trans_coord_hex(population)
     }
     result$max_phi = c(hex=12, moore=27, neumann=6)[result$coord]
     result$population = population %>%
-        dplyr::mutate_(r= ~dist_euclidean(.), phi= ~phi / result$max_phi) %>%
+        dplyr::mutate(r= dist_euclidean(.), phi= .data$phi / result$max_phi) %>%
         set_clades(num_clades) %>%
         dplyr::left_join(count_descendants(extant), by='id') %>%
         dplyr::left_join(col_surface, by='id') %>%
@@ -28,7 +28,7 @@ modify_population = function(..., num_clades=4L) {
 #' @rdname population
 #' @export
 filter_extant = function(population) {
-    dplyr::filter_(population, ~death == 0)
+    dplyr::filter(population, .data$death == 0)
 }
 
 #' Filter connected cells
@@ -37,20 +37,20 @@ filter_extant = function(population) {
 #' @rdname population
 #' @export
 filter_connected = function(population, ids) {
-    ids = dplyr::filter_(population, ~ id %in% ids)$genealogy %>%
+    ids = dplyr::filter(population, .data$id %in% ids)$genealogy %>%
         purrr::flatten_int() %>%
         unique()
-    dplyr::filter_(population, ~ id %in% ids)
+    dplyr::filter(population, .data$id %in% ids)
 }
 
 #' Extract age and id from genealogy column
 #' @return tibble
 #' @rdname population
 set_id = function(population) {
-    dplyr::mutate_(population,
-        genealogy= ~stringr::str_split(genealogy, ':') %>% purrr::map(as.integer),
-        age= ~lengths(genealogy) - 1L,
-        id= ~purrr::map2_int(genealogy, age + 1L, `[`))
+    dplyr::mutate(population,
+        genealogy= stringr::str_split(.data$genealogy, ':') %>% purrr::map(as.integer),
+        age= lengths(.data$genealogy) - 1L,
+        id= purrr::map2_int(.data$genealogy, .data$age + 1L, `[`))
 }
 
 #' Add a column of ancestor ids by which branches are classified
@@ -63,9 +63,9 @@ set_clades = function(population, num_clades) {
     num_divisions = num_clades - origin
     roots = head(population$id, num_divisions)
     founders = seq_len(num_divisions + num_clades) %>% setdiff(roots)
-    dplyr::mutate_(population,
-        clade= ~purrr::map_int(genealogy, ~{setdiff(.x, roots)[1L]}),
-        clade= ~factor(clade, levels=founders))
+    dplyr::mutate(population,
+        clade= purrr::map_int(.data$genealogy, ~{setdiff(.x, roots)[1L]}),
+        clade= factor(.data$clade, levels=founders))
 }
 
 #' Add a column of living descendants number
@@ -80,7 +80,7 @@ count_descendants = function(population) {
         table() %>%
         tibble::as_tibble() %>%
         stats::setNames(c('id', 'descendants')) %>%
-        dplyr::mutate_(id= ~as.integer(id))
+        dplyr::mutate(id= as.integer(.data$id))
 }
 
 #' Extract demography from raw population data
@@ -88,13 +88,13 @@ count_descendants = function(population) {
 #' @rdname population
 #' @export
 extract_demography = function(population) {population %>%
-    dplyr::select_(~birth, ~death) %>%
+    dplyr::select(.data$birth, .data$death) %>%
     tidyr::gather_('event', 'time', c('birth', 'death')) %>%
-    dplyr::filter_(~!(time == 0 & event == 'death')) %>%  # alive
-    dplyr::mutate_(event= ~factor(event, levels=c('death', 'birth'))) %>%
-    dplyr::arrange_(~time, ~event) %>%
-    dplyr::mutate_(dn= ~ifelse(event == 'birth', 1, -1)) %>%
-    dplyr::group_by_(~time) %>%
-    dplyr::summarise_(dn= ~sum(dn)) %>%
-    dplyr::mutate_(size= ~cumsum(dn))
+    dplyr::filter(!(.data$time == 0 & .data$event == 'death')) %>%  # alive
+    dplyr::mutate(event= factor(.data$event, levels=c('death', 'birth'))) %>%
+    dplyr::arrange(.data$time, .data$event) %>%
+    dplyr::mutate(dn= ifelse(.data$event == 'birth', 1, -1)) %>%
+    dplyr::group_by(.data$time) %>%
+    dplyr::summarise(dn= sum(.data$dn)) %>%
+    dplyr::mutate(size= cumsum(.data$dn))
 }

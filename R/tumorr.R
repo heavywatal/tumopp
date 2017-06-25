@@ -3,5 +3,6 @@
 #' @name tumorr
 #' @useDynLib tumorr
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @importFrom utils head tail
 NULL

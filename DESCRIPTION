@@ -15,6 +15,7 @@ Imports:
     purrr,
     readr,
     reshape2,
+    rlang,
     stringr,
     tibble,
     tidyr,

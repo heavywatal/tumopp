@@ -8,12 +8,12 @@ make_edgelist = function(obj) {
         igraph::as_data_frame(obj, 'edges') %>%
         tibble::as_tibble()
     } else {
-        dplyr::filter_(obj, ~age > 0L) %>%
-        dplyr::transmute_(
-          from= ~purrr::map2_int(genealogy, age, `[[`),
-          to= ~id
+        dplyr::filter(obj, .data$age > 0L) %>%
+        dplyr::transmute(
+          from= purrr::map2_int(.data$genealogy, .data$age, `[[`),
+          to= .data$id
         ) %>%
-        dplyr::arrange_(~to) %>%
+        dplyr::arrange(.data$to) %>%
         dplyr::mutate_all(as.character)
     }
 }
@@ -57,7 +57,7 @@ mean_branch_length.R = function(genealogy) {
     .len = length(genealogy)
     .sum_lengths = sum(lengths(genealogy, FALSE)) * (.len - 1)
     .sum_intersects = tidyr::crossing(from=seq_len(.len), to=seq_len(.len)) %>%
-        dplyr::filter_(~from < to) %>%
+        dplyr::filter(.data$from < .data$to) %>%
         purrr::pmap_int(function(from, to) {
             length(intersect(genealogy[[from]], genealogy[[to]]))
         }) %>% sum()
@@ -73,10 +73,10 @@ layout_genealogy = function(population) {
     nodes = igraph::layout_as_tree(graph, flip.y=FALSE) %>%
         tibble::as_tibble() %>%
         stats::setNames(c('pos', 'age')) %>%
-        dplyr::mutate_(id= ~igraph::V(graph)$name)
+        dplyr::mutate(id= igraph::V(.data$graph)$name)
     .extant = population %>%
-        dplyr::transmute_(id= ~as.character(id), extant= ~death == 0)
-    .children = dplyr::select_(nodes, posend= ~pos, ageend= ~age, ~id) %>%
+        dplyr::transmute(id= as.character(.data$id), extant= .data$death == 0)
+    .children = dplyr::select(nodes, posend= .data$pos, ageend= .data$age, .data$id) %>%
         dplyr::left_join(.extant, by='id')
     make_edgelist(graph) %>%
         dplyr::left_join(nodes, by=c(from='id')) %>%

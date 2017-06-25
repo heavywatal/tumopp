@@ -38,15 +38,15 @@ img2df = function(img) {
 get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
      coord = match.arg(coord)
      df = tibble::tibble(x=c(-1, 0, 1)) %>%
-         dplyr::mutate_(y=~x, z=~x) %>%
+         dplyr::mutate(y= .data$x, z= .data$x) %>%
          tidyr::expand_(dots=c('x', 'y', 'z'))
      if (coord == 'neumann') {
-         df = dplyr::filter_(df, ~abs(x) + abs(y) + abs(z) < 2)
+         df = dplyr::filter(df, abs(.data$x) + abs(.data$y) + abs(.data$z) < 2)
      } else if (coord == 'hex') {
          df = dplyr::filter(df, (trans_coord_hex(df) %>% dist_euclidean()) < 1.1)
      }
      if (dimensions < 3) {
-         df = dplyr::filter_(df, ~z == 0)
+         df = dplyr::filter(df, .data$z == 0)
      }
      df2img(df)
 }
@@ -69,10 +69,10 @@ detect_surface = function(mtrx, se) {
     axes = c('x', 'y', 'z')
     mins = dplyr::summarise_at(mtrx, axes, dplyr::funs(min))
     img = df2img(mtrx) %>% filter_surface(se)
-    product = img2df(img) %>% dplyr::transmute_(
-        x=~ x + mins$x - 1,
-        y=~ y + mins$y - 1,
-        z=~ z + mins$z - 1,
-        surface=~ value > 0)
+    product = img2df(img) %>% dplyr::transmute(
+        x= .data$x + mins$x - 1,
+        y= .data$y + mins$y - 1,
+        z= .data$z + mins$z - 1,
+        surface= .data$value > 0)
     dplyr::left_join(mtrx, product, by=axes)
 }

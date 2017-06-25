@@ -13,8 +13,8 @@ max_abs_xyz = function(.tbl) {
 #' @return transformed matrix
 #' @rdname coord
 trans_coord_hex_xy = function(.tbl) {
-    dplyr::mutate_(.tbl, y=~ y + x * 0.5) %>%
-    dplyr::mutate_(x=~ x * sqrt(3.0 / 4.0))
+    dplyr::mutate(.tbl, y= .data$y + .data$x * 0.5) %>%
+    dplyr::mutate(x= .data$x * sqrt(3.0 / 4.0))
 }
 
 #' 3D transformation (hexagonal close packed)
@@ -22,8 +22,8 @@ trans_coord_hex_xy = function(.tbl) {
 #' @rdname coord
 trans_coord_hcc = function(.tbl) {
     trans_coord_hex_xy(.tbl) %>%
-    dplyr::mutate_(x=~ x + ifelse(z %% 2 == 1, sqrt(3) / 3, 0)) %>%
-    dplyr::mutate_(z=~ z * sqrt(2.0 / 3.0))
+    dplyr::mutate(x= .data$x + ifelse(.data$z %% 2 == 1, sqrt(3) / 3, 0)) %>%
+    dplyr::mutate(z= .data$z * sqrt(2.0 / 3.0))
 }
 
 #' 3D transformation (face centered cubic, cubic close packed)
@@ -31,8 +31,8 @@ trans_coord_hcc = function(.tbl) {
 #' @rdname coord
 trans_coord_fcc = function(.tbl) {
     trans_coord_hex_xy(.tbl) %>%
-    dplyr::mutate_(x=~ x + z / sqrt(3.0)) %>%
-    dplyr::mutate_(z=~ z * sqrt(2.0 / 3.0))
+    dplyr::mutate(x= .data$x + .data$z / sqrt(3.0)) %>%
+    dplyr::mutate(z= .data$z * sqrt(2.0 / 3.0))
 }
 
 #' 2D/3D transformation into hexagonal grid
@@ -48,9 +48,12 @@ trans_coord_hex = function(.tbl) {
 #' @rdname coord
 #' @export
 centering = function(.tbl) {
-    .offset = dplyr::filter_(.tbl, ~surface) %>%
+    .offset = dplyr::filter(.tbl, .data$surface) %>%
         dplyr::summarise_at(c('x', 'y', 'z'), dplyr::funs((min(.) + max(.)) * 0.5))
-    dplyr::mutate_(.tbl, x=~ x - .offset$x, y=~ y - .offset$y, z=~ z - .offset$z)
+    dplyr::mutate(.tbl,
+        x= .data$x - .offset$x,
+        y= .data$y - .offset$y,
+        z= .data$z - .offset$z)
 }
 
 #' Rotate

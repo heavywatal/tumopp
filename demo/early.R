@@ -18,9 +18,9 @@ nclades = max(4L, norigins)
 founders = snapshots %>>% group_by(time) %>>% dplyr::filter(n() == nclades) %>>% (id)
 roots = snapshots %>>% dplyr::filter(id < max(founders)) %>>% (id) %>>% setdiff(founders)
 
-.tbl = snapshots %>>% dplyr::mutate_(
-    clade= ~purrr::map_int(genealogy, ~{setdiff(.x, roots)[1L]}),
-    clade= ~factor(clade, levels=founders)) %>>% (?.)
+.tbl = snapshots %>>% dplyr::mutate(
+    clade= purrr::map_int(.data$genealogy, ~{setdiff(.x, roots)[1L]}),
+    clade= factor(.data$clade, levels=founders)) %>>% (?.)
 
 .lim = max_abs_xyz(snapshots)
 

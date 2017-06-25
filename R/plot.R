@@ -39,7 +39,7 @@ plot_lattice2d = function(.tbl, colour='clade', alpha=0.66, size=1, limit=max_ab
 plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour='dodgerblue') {
     ggplot2::ggplot(.tbl)+
     ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=0.3, size=0.3)+
-    ggplot2::geom_point(data=dplyr::filter_(.tbl, ~extant),
+    ggplot2::geom_point(data=dplyr::filter(.tbl, .data$extant),
         ggplot2::aes_(x=~ageend, y=~posend), size=0.8, colour=colour, alpha=0.2)+
     ggplot2::coord_cartesian(xlim=c(0, xmax), expand=FALSE)+
     wtl::theme_wtl()+
@@ -57,7 +57,7 @@ plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour='dodgerblue') {
 #' @rdname plot-igraph
 #' @export
 plot_bar_age = function(.tbl, xmax=max(.tbl$ageend), alpha=1.0, ...) {
-    dplyr::filter_(.tbl, ~extant) %>%
+    dplyr::filter(.tbl, .data$extant) %>%
     ggplot2::ggplot(ggplot2::aes_(~ageend, ...))+
     ggplot2::geom_bar(alpha=alpha)+
     ggplot2::coord_cartesian(xlim=c(0, xmax))+
@@ -84,7 +84,7 @@ save_serial_section = function(.tbl, filename='serial_section.gif', ..., width=7
         stop('ERROR: animation is not installed')
     }
     .lim = max_abs_xyz(.tbl)
-    section_plots = dplyr::group_by_(.tbl, ~z) %>%
+    section_plots = dplyr::group_by(.tbl, .data$z) %>%
         dplyr::do(plt={
             plot_lattice2d(., ..., limit=.lim)+
             ggplot2::geom_hline(yintercept=.$z[1])+
