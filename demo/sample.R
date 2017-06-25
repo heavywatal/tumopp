@@ -54,7 +54,7 @@ summarize_pattern = function(binary) {binary %>>%
         variegated=(!any(all)) & all(any),
         side_specific=(!public) & (!any(any)) & any(all),
         regional=(!any(all)) & (!variegated) & any(any)) %>>%
-    summarise_each(funs(sum), -site)
+    summarise_at(vars(-site), sum)
 }
 
 summarize_glands = function(samples) {

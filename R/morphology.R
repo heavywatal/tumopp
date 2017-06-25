@@ -6,7 +6,7 @@
 df2img = function(mtrx) {
     vars = c('x', 'y', 'z')
     mtrx = mtrx[vars]
-    .grid = dplyr::summarise_each_(mtrx, dplyr::funs(min, max), vars=vars) %>%
+    .grid = dplyr::summarise_at(mtrx, vars, dplyr::funs(min, max)) %>%
         {expand.grid(x= seq(.$x_min, .$x_max),
                      y= seq(.$y_min, .$y_max),
                      z= seq(.$z_min, .$z_max))} %>% tibble::as_tibble()
@@ -67,7 +67,7 @@ filter_surface = function(img, se) {
 detect_surface = function(mtrx, se) {
     if (nrow(mtrx) == 0L) {return(dplyr::mutate(mtrx, surface=logical(0L)))}
     axes = c('x', 'y', 'z')
-    mins = dplyr::summarise_each_(mtrx, dplyr::funs(min), vars=axes)
+    mins = dplyr::summarise_at(mtrx, axes, dplyr::funs(min))
     img = df2img(mtrx) %>% filter_surface(se)
     product = img2df(img) %>% dplyr::transmute_(
         x=~ x + mins$x - 1,
