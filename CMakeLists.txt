@@ -19,13 +19,12 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(Boost_NO_BOOST_CMAKE TRUE)
-set(BOOST_ROOT ~/local)
 find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams)
 message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "~/local" CACHE PATH "install prefix" FORCE)
+    set(CMAKE_INSTALL_PREFIX "~/local" CACHE PATH "install prefix" FORCE)
 endif()
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 

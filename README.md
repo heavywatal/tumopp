@@ -4,18 +4,21 @@ Tumor growth simulator in C++.
 ## Dependencies
 
 - Unix-like OS (macOS, Linux, etc.)
-- C++14 compiler
+- C++14 compiler (clang++ >= Apple LLVM 8.1, g++ >= 5.3)
 - [CMake](https://cmake.org/)
-- [Boost C++ Libraries](http://www.boost.org/)
+- [Boost C++ Libraries](http://www.boost.org/) (>= 1.64.0)
 - [sfmt-class](//github.com/heavywatal/sfmt-class)
 - [cxxwtl](//github.com/heavywatal/cxxwtl)
 
 ## Installation
 
+Use `BOOST_ROOT` environment variable so that CMake can find your boost library.
+
 ```sh
 git clone https://github.com/heavywatal/tumopp.git
 mkdir build-tumopp
 cd build-tumopp/
+export BOOST_ROOT=${HOME}/local
 cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ../tumopp
 make
 make install
