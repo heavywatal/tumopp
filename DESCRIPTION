@@ -8,7 +8,7 @@ Depends:
 License: MIT + file LICENSE
 LazyData: true
 Imports:
-    dplyr,
+    dplyr (>= 0.7),
     ggplot2,
     imager,
     magrittr,
