@@ -1,6 +1,6 @@
-#' Convert data.frame to cimg
+#' Convert data.frame to binary array
 #' @param mtrx a data.frame with (x, y, z) columns
-#' @return cimg
+#' @return binary array
 #' @rdname morphology
 #' @export
 df2img = function(mtrx) {
@@ -14,25 +14,25 @@ df2img = function(mtrx) {
     joined = tidyr::replace_na(joined, list(v=0))
     arr = reshape2::acast(joined, x ~ y ~ z, `[`, 1, value.var='v', fill=0)
     dim(arr) = c(dim(arr), 1)
-    imager::as.cimg(arr)
+    arr
 }
 
-#' Convert cimg to data.frame
-#' @param img a cimg object
+#' Convert binary array to data.frame
+#' @param img a binary array
 #' @return a data.frame with (x, y, z) columns
 #' @rdname morphology
 #' @export
 img2df = function(img) {
-    as.array(img) %>%
+    img %>%
     {dim(.) = head(dim(.), 3); .} %>%
     reshape2::melt(c('x', 'y', 'z')) %>%
     tibble::as_tibble()
 }
 
-#' Structuring element
+#' Structuring element (kernel)
 #' @param coord a string
 #' @param dimensions an integer
-#' @return cimg structuring element
+#' @return structuring element as a binary array
 #' @rdname morphology
 #' @export
 get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
@@ -52,12 +52,12 @@ get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
 }
 
 #' Filter img by surface
-#' @param se a cimg object
-#' @return cimg
+#' @param se structuring element as a binary array
+#' @return a binary array
 #' @rdname morphology
 #' @export
 filter_surface = function(img, se) {
-    img - imager::erode(img, se)
+    img - mmand::erode(img, se)
 }
 
 #' extract cells on suface

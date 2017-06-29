@@ -10,8 +10,8 @@ LazyData: true
 Imports:
     dplyr (>= 0.7),
     ggplot2,
-    imager,
     magrittr,
+    mmand,
     purrr,
     readr,
     reshape2,

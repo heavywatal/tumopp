@@ -6,7 +6,7 @@
 \alias{get_se}
 \alias{filter_surface}
 \alias{detect_surface}
-\title{Convert data.frame to cimg}
+\title{Convert data.frame to binary array}
 \usage{
 df2img(mtrx)
 
@@ -21,31 +21,31 @@ detect_surface(mtrx, se)
 \arguments{
 \item{mtrx}{a data.frame with (x, y, z) columns}
 
-\item{img}{a cimg object}
+\item{img}{a binary array}
 
 \item{coord}{a string}
 
 \item{dimensions}{an integer}
 
-\item{se}{a cimg object}
+\item{se}{structuring element as a binary array}
 }
 \value{
-cimg
+binary array
 
 a data.frame with (x, y, z) columns
 
-cimg structuring element
+structuring element as a binary array
 
-cimg
+a binary array
 
 tibble with surface column
 }
 \description{
-Convert data.frame to cimg
+Convert data.frame to binary array
 
-Convert cimg to data.frame
+Convert binary array to data.frame
 
-Structuring element
+Structuring element (kernel)
 
 Filter img by surface
 
