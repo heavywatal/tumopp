@@ -10,8 +10,9 @@ a tumor growth simulator in C++.
 2.  Install [devtools](https://github.com/hadley/devtools) in R:
     `install.packages('devtools')`
 
-3.  Create `~/.R/Makevars` to specify the location of boost and tumopp libraries:
+3.  Create `~/.R/Makevars` to specify the location of tumopp and boost libraries:
     ```
+    CPPFLAGS = -I${HOME}/local/include -L/usr/local/include
     LDFLAGS = -L${HOME}/local/lib -L/usr/local/lib
     ```
 
