@@ -19,7 +19,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(Boost_NO_BOOST_CMAKE TRUE)
-find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams)
+find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams system)
 message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
 
