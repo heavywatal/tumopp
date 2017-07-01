@@ -37,7 +37,8 @@ inline po::options_description general_desc() {HERE;
 
     Command line option | Symbol         | Variable
     ------------------- | -------------- | -------------------------
-    `-N,--max`          | \f$N_\max\f$    | Simulation::MAX_SIZE
+    `-N,--max`          | \f$N_\max\f$   | Simulation::MAX_SIZE
+    `-T,--plateau`      | -              | Simulation::PLATEAU_TIME
     `-w,--write`        | -              | Simulation::WRITE_TO_FILES
     `-o,--out_dir`      | -              | Simulation::OUT_DIR
     `--seed`            | -              | Simulation::SEED
