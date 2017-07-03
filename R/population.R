@@ -61,7 +61,7 @@ set_clades = function(population, num_clades) {
     origin = sum(population$age == 0L)
     stopifnot(num_clades >= origin)
     num_divisions = num_clades - origin
-    roots = head(population$id, num_divisions)
+    roots = utils::head(population$id, num_divisions)
     founders = seq_len(num_divisions + num_clades) %>% setdiff(roots)
     dplyr::mutate(population,
         clade= purrr::map_int(.data$genealogy, ~{setdiff(.x, roots)[1L]}),

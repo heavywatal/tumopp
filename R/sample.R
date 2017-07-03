@@ -9,7 +9,7 @@ sample_bulk = function(population, center, size=100L) {
     population %>%
     dplyr::mutate(dist= dist_euclidean(., center)) %>%
     dplyr::arrange(.data$dist) %>%
-    head(size)
+    utils::head(size)
 }
 
 #' Make ms-like matrix from genealogy column of population

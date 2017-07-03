@@ -24,7 +24,7 @@ df2img = function(mtrx) {
 #' @export
 img2df = function(img) {
     img %>%
-    {dim(.) = head(dim(.), 3); .} %>%
+    {dim(.) = utils::head(dim(.), 3); .} %>%
     reshape2::melt(c('x', 'y', 'z')) %>%
     tibble::as_tibble()
 }
