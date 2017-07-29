@@ -6,6 +6,7 @@
 #ifndef CELL_HPP_
 #define CELL_HPP_
 
+#include <cstdint>
 #include <vector>
 #include <valarray>
 #include <string>
@@ -21,15 +22,15 @@ namespace boost {
 
 namespace tumopp {
 
-enum class CellType: int {
+enum class CellType: uint_fast8_t {
    stem,
    nonstem,
 };
 
-enum class Event: int {
-   death     = -1,
-   migration =  0,
-   birth     =  1,
+enum class Event: uint_fast8_t {
+   birth,
+   death,
+   migration,
 };
 
 
@@ -62,7 +63,7 @@ class Cell {
     //! Calc dt and set next_event_
     double delta_time(const double positional_value);
 
-    std::vector<int> has_mutations_of(const std::vector<size_t>&);
+    std::vector<unsigned int> has_mutations_of(const std::vector<size_t>&);
 
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
@@ -76,7 +77,7 @@ class Cell {
         frustration_ = 0;
     }
     void set_time_of_death(const double t) {time_of_death_ = t;}
-    size_t frustration() {return ++frustration_;}
+    uint_fast8_t frustration() {return ++frustration_;}
     void set_birth_rate(const double x) {birth_rate_ = x;}
     void set_death_rate(const double x) {death_rate_ = x;}
     void set_migra_rate(const double x) {migra_rate_ = x;}
@@ -116,7 +117,7 @@ class Cell {
     //! \f$p_s\f$
     static double PROB_SYMMETRIC_DIVISION_;
     //! \f$\omega_\text{max}\f$
-    static size_t MAX_PROLIFERATION_CAPACITY_;
+    static unsigned int MAX_PROLIFERATION_CAPACITY_;
 
     //! mutation rate per cell division
     static double MUTATION_RATE_;
@@ -139,11 +140,11 @@ class Cell {
     double migra_rate_ = MIGRATION_RATE_;
 
     CellType type_ = CellType::stem;
-    size_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
+    uint_fast8_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
 
     Event next_event_ = Event::birth;
     double elapsed_ = 0.0;
-    size_t frustration_ = 0;
+    uint_fast8_t frustration_ = 0;
 
     //! Extra data
     std::vector<size_t> genealogy_;

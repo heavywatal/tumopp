@@ -11,6 +11,7 @@
 
 #include <boost/functional/hash.hpp>
 
+#include <cstdint>
 #include <iostream>
 #include <vector>
 #include <valarray>
@@ -53,7 +54,7 @@ class equal_shptr_cell {
 
 class Tissue {
   public:
-    static size_t DIMENSIONS() {return DIMENSIONS_;}
+    static unsigned int DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
     Tissue() = default;
@@ -91,7 +92,7 @@ class Tissue {
 
   private:
     //! Dimensions: {1, 2, 3}
-    static size_t DIMENSIONS_;
+    static unsigned int DIMENSIONS_;
 
     //! Coordinate system
     static std::string COORDINATE_;
@@ -135,11 +136,11 @@ class Tissue {
     //! Count steps to the nearest empty
     size_t steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const;
     //! Direction to the nearest empty
-    std::valarray<int> to_nearest_empty(const std::valarray<int>& current, size_t search_max=26) const;
+    std::valarray<int> to_nearest_empty(const std::valarray<int>& current, const unsigned int search_max=26) const;
     //! Direction is selected with a probability proportional with 1/l
     std::valarray<int> roulette_direction(const std::valarray<int>& current) const;
 
-    size_t num_empty_neighbors(const std::valarray<int>&) const;
+    uint_fast8_t num_empty_neighbors(const std::valarray<int>&) const;
     double proportion_empty_neighbors(const std::valarray<int>& coord) const {
         double x = static_cast<double>(num_empty_neighbors(coord));
         return x /= static_cast<double>(coord_func_->directions().size());

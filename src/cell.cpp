@@ -20,7 +20,7 @@ double Cell::DEATH_PROB_;
 double Cell::MIGRATION_RATE_;
 double Cell::GAMMA_SHAPE_;
 double Cell::PROB_SYMMETRIC_DIVISION_;
-size_t Cell::MAX_PROLIFERATION_CAPACITY_;
+unsigned int Cell::MAX_PROLIFERATION_CAPACITY_;
 double Cell::MUTATION_RATE_;
 double Cell::DRIVER_RATE_BIRTH_;
 double Cell::DRIVER_RATE_DEATH_;
@@ -195,14 +195,14 @@ double Cell::delta_time(const double positional_value) {
     }
 }
 
-std::vector<int> Cell::has_mutations_of(const std::vector<size_t>& mutants) {
-    std::vector<int> genotype;
+std::vector<unsigned int> Cell::has_mutations_of(const std::vector<size_t>& mutants) {
+    std::vector<unsigned int> genotype;
     genotype.reserve(mutants.size());
-    for (const size_t mut: mutants) {
+    for (const auto mut: mutants) {
         if (std::find(genealogy_.begin(), genealogy_.end(), mut) != genealogy_.end()) {
-            genotype.push_back(1);
+            genotype.push_back(1U);
         } else {
-            genotype.push_back(0);
+            genotype.push_back(0U);
         }
     }
     return genotype;
@@ -231,8 +231,7 @@ std::string Cell::header(const char* sep) {
 }
 
 std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
-    int z = 0;
-    if (coord_.size() > 2) {z = coord_[2];}
+    int z = (coord_.size() > 2U) ? coord_[2] : 0;
     return ost
         << coord_[0] << sep << coord_[1] << sep << z << sep
         << wtl::join(genealogy_, ":") << sep

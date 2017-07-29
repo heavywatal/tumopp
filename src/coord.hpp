@@ -64,7 +64,7 @@ class Coord {
     virtual double radius(const size_t points) const {
         double x = points;
         x /= PI;
-        if (dimensions == 2) {
+        if (dimensions == 2U) {
             // S = pi r^2
             return std::sqrt(x);
         } else {
@@ -89,7 +89,7 @@ class Coord {
     // sphere coordinates with inside-out direction
     std::vector<std::valarray<int>> sphere(const size_t n) const {
         std::vector<std::valarray<int>> output;
-        if (dimensions == 2) {
+        if (dimensions == 2U) {
             const int lim = 9;
             // radius 9: regular: 253, hex: 281
             output.reserve(281);
@@ -127,12 +127,12 @@ class Coord {
     virtual ~Coord() = default;
 
     // properties
-    const size_t dimensions;
+    const unsigned int dimensions;
 
   protected:
     Coord() = delete;
-    explicit Coord(const size_t d): dimensions(d) {
-        if (d < 2 || 3 < d) {
+    explicit Coord(const unsigned int d): dimensions(d) {
+        if (d < 2U || 3U < d) {
             throw std::runtime_error("Invalid value for dimensions");
         }
     }
@@ -150,7 +150,7 @@ class Neumann final: public Coord {
   public:
     Neumann() = delete;
     explicit Neumann(const size_t d): Coord(d) {
-        directions_.reserve(2 * dimensions);
+        directions_.reserve(2U * dimensions);
         std::valarray<int> v(dimensions);
         v[v.size() - 1] += 1;
         do {
@@ -179,7 +179,7 @@ class Moore final: public Coord {
         directions_.reserve(std::pow(3, dimensions) - 1);
         for (const int x: {-1, 0, 1}) {
             for (const int y: {-1, 0, 1}) {
-                if (dimensions == 2) {
+                if (dimensions == 2U) {
                     if (x == 0 && y == 0) continue;
                     directions_.push_back({x, y});
                     continue;
@@ -205,7 +205,7 @@ class Hexagonal final: public Coord {
     explicit Hexagonal(const size_t d): Coord(d) {
         std::valarray<int> v{-1, 0, 1};
         directions_.reserve(6 * (dimensions - 1));
-        if (dimensions == 2) {
+        if (dimensions == 2U) {
             do {
                 directions_.push_back({v[0], v[1]});
             } while (std::next_permutation(std::begin(v), std::end(v)));
@@ -226,7 +226,7 @@ class Hexagonal final: public Coord {
     ~Hexagonal() = default;
     virtual int graph_distance(const std::valarray<int>& v) const override {
         int d = std::max(std::abs(v).max(), std::abs(v[0] + v[1]));
-        if (dimensions > 2) {
+        if (dimensions > 2U) {
             return std::max(d, std::abs(v[0] + v[2]));
         }
         return d;
@@ -237,7 +237,7 @@ class Hexagonal final: public Coord {
         true_pos[1] += static_cast<double>(v[1]);
         true_pos[1] += true_pos[0] * 0.5;
         true_pos[0] *= std::sqrt(3.0 / 4.0);
-        if (dimensions > 2) {
+        if (dimensions > 2U) {
             true_pos[2] += static_cast<double>(v[2]);
             true_pos[0] += true_pos[2] / sqrt(3.0);
             true_pos[2] *= std::sqrt(2.0 / 3.0);
@@ -245,7 +245,7 @@ class Hexagonal final: public Coord {
         return _euclidean_distance(true_pos);
     }
     virtual double radius(const size_t volume) const override {
-        if (dimensions == 2) {
+        if (dimensions == 2U) {
             return Coord::radius(volume * std::sqrt(3.0 / 4.0));
         } else {
             return Coord::radius(volume * std::sqrt(0.5));
@@ -253,7 +253,7 @@ class Hexagonal final: public Coord {
     }
     virtual std::vector<std::valarray<int>> core() const override {
         std::vector<std::valarray<int>> output = Neumann(dimensions).core();
-        if (dimensions == 3) {
+        if (dimensions == 3U) {
             output.resize(3);
             output.push_back({1, 0, -1});
         }

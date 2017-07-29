@@ -20,7 +20,7 @@
 
 namespace tumopp {
 
-size_t Tissue::DIMENSIONS_;
+unsigned int Tissue::DIMENSIONS_;
 std::string Tissue::COORDINATE_;
 std::string Tissue::LOCAL_DENSITY_EFFECT_;
 std::string Tissue::DISPLACEMENT_PATH_;
@@ -127,7 +127,7 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
                 queue_push(p);
             }
         }
-        if ((++i % 256) == 0) {DCERR("\r" << tumor_.size());}
+        if ((++i % 256U) == 0U) {DCERR("\r" << tumor_.size());}
         auto it = queue_.begin();
         time_ = it->first;
         if (time_stopped > 0.0 && time_ - time_stopped > plateau_time) {break;}
@@ -151,7 +151,7 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
                 queue_push(mother);
                 queue_push(daughter);
             } else {
-                if (mother->frustration() > 256) break;
+                if (mother->frustration() > 250U) break;
                 queue_push(mother);
                 continue;  // skip write()
             }
@@ -201,7 +201,7 @@ void Tissue::init_insert_function() {
         return true;
     };
     swtch["step"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
-        if (num_empty_neighbors(daughter->coord()) == 0) {return false;}
+        if (num_empty_neighbors(daughter->coord()) == 0U) {return false;}
         push(daughter, coord_func_->random_direction(wtl::sfmt()));
         return true;
     };
@@ -307,7 +307,7 @@ size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<in
     return steps;
 }
 
-std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, size_t search_max) const {
+std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, const unsigned int search_max) const {
     size_t least_steps = std::numeric_limits<size_t>::max();
     std::valarray<int> best_direction;
     auto directions = coord_func_->directions();
@@ -329,14 +329,14 @@ std::valarray<int> Tissue::roulette_direction(const std::valarray<int>& current)
     std::vector<double> roulette;
     for (const auto& d: directions) {
         const auto l = steps_to_empty(current, d);
-        if (l == 0) {return d;}
+        if (l == 0U) {return d;}
         roulette.push_back(1.0 / l);
     }
     return directions[wtl::roulette_select(roulette, wtl::sfmt())];
 }
 
-size_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
-    size_t cnt = 0;
+uint_fast8_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
+    uint_fast8_t cnt = 0;
     std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
         nb->set_coord(coord + d);
@@ -346,7 +346,7 @@ size_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
 }
 
 double Tissue::positional_value(const std::valarray<int>& coord) const {
-    if ((SIGMA_E_ > 1e9) | (tumor_.size() <= 8)) return 1.0;
+    if ((SIGMA_E_ > 1e9) | (tumor_.size() <= 8U)) return 1.0;
     double rel_d = coord_func_->euclidean_distance(coord)
                    / coord_func_->radius(tumor_.size());
     double exponent = wtl::pow(std::max(0.0, 1.0 - rel_d), 2);
@@ -355,12 +355,12 @@ double Tissue::positional_value(const std::valarray<int>& coord) const {
 }
 
 std::vector<size_t> Tissue::generate_neutral_mutations() const {
-    std::poisson_distribution<size_t> poisson(Cell::MUTATION_RATE() * id_tail_);
-    const size_t num_mutants = poisson(wtl::sfmt());
+    std::poisson_distribution<unsigned int> poisson(Cell::MUTATION_RATE() * id_tail_);
+    const unsigned int num_mutants = poisson(wtl::sfmt());
     std::uniform_int_distribution<size_t> uniform(0, id_tail_);
     std::vector<size_t> mutants;
     mutants.reserve(num_mutants);
-    for (size_t i=0; i<num_mutants; ++i) {
+    for (unsigned int i=0; i<num_mutants; ++i) {
         mutants.push_back(uniform(wtl::sfmt()));
     }
     return mutants;
@@ -369,21 +369,21 @@ std::vector<size_t> Tissue::generate_neutral_mutations() const {
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
     const size_t sample_size = samples.size();
     const auto mutants = generate_neutral_mutations();
-    std::vector<std::vector<int>> flags;
+    std::vector<std::vector<unsigned int>> flags;
     flags.reserve(sample_size);
     for (const auto& cell: samples) {
         flags.push_back(cell->has_mutations_of(mutants));
     }
     flags = wtl::transpose(flags);
-    std::vector<std::vector<int>> segsites;
+    std::vector<std::vector<unsigned int>> segsites;
     segsites.reserve(flags.size());
     for (size_t i=0; i<flags.size(); ++i) {
-        const size_t daf = wtl::sum(flags[i]);
-        if (0 < daf && daf < sample_size) segsites.push_back(flags[i]);
+        const auto daf = wtl::sum(flags[i]);
+        if (0U < daf && daf < sample_size) segsites.push_back(flags[i]);
     }
     const size_t s = segsites.size();
     ost << "\n//\nsegsites: " << s << "\n";
-    if (s > 0) {
+    if (s > 0U) {
         segsites = wtl::transpose(segsites);
         ost << "positions: "
             << wtl::join(std::vector<int>(s), " ") << "\n";
