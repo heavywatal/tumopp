@@ -5,6 +5,6 @@
 #' @return conf and population as strings
 #' @rdname tumopp
 cpp_tumopp <- function(args, npair = 0L) {
-    .Call('tumorr_cpp_tumopp', PACKAGE = 'tumorr', args, npair)
+    .Call('_tumorr_cpp_tumopp', PACKAGE = 'tumorr', args, npair)
 }
 
