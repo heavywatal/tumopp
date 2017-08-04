@@ -58,7 +58,8 @@ $(function() {
 
 <p>Interface of Cell class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;vector&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;valarray&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;random&gt;</code><br />
@@ -72,15 +73,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:add98ce137eace21583890eb74cbe238e"><td class="memItemLeft" align="right" valign="top"><a id="add98ce137eace21583890eb74cbe238e"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CellType</b> : int { <b>stem</b>, 
+<tr class="memitem:a36714c346b1c0422dcab0e64d60f2b3e"><td class="memItemLeft" align="right" valign="top"><a id="a36714c346b1c0422dcab0e64d60f2b3e"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CellType</b> : uint_fast8_t { <b>stem</b>, 
 <b>nonstem</b>
  }</td></tr>
-<tr class="separator:add98ce137eace21583890eb74cbe238e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a475b8333d391efed2c257afa85938407"><td class="memItemLeft" align="right" valign="top"><a id="a475b8333d391efed2c257afa85938407"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Event</b> : int { <b>death</b> = -1, 
-<b>migration</b> = 0, 
-<b>birth</b> = 1
+<tr class="separator:a36714c346b1c0422dcab0e64d60f2b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6541dc28b22056ce0e9338fc44423fec"><td class="memItemLeft" align="right" valign="top"><a id="a6541dc28b22056ce0e9338fc44423fec"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Event</b> : uint_fast8_t { <b>birth</b>, 
+<b>death</b>, 
+<b>migration</b>
  }</td></tr>
-<tr class="separator:a475b8333d391efed2c257afa85938407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a6541dc28b22056ce0e9338fc44423fec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface of Cell class. </p>

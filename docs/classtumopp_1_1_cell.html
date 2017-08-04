@@ -104,9 +104,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a97dded28a5f87126660c7edf17bd1d8b">delta_time</a> (const double positional_value)</td></tr>
 <tr class="memdesc:a97dded28a5f87126660c7edf17bd1d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calc dt and set next_event_. <br /></td></tr>
 <tr class="separator:a97dded28a5f87126660c7edf17bd1d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac96e4f825f607db45f2b6132f5fdee58"><td class="memItemLeft" align="right" valign="top"><a id="ac96e4f825f607db45f2b6132f5fdee58"></a>
-std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>has_mutations_of</b> (const std::vector&lt; size_t &gt; &amp;)</td></tr>
-<tr class="separator:ac96e4f825f607db45f2b6132f5fdee58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea9b3c1f0cb1f24a3000f7ef90e75065"><td class="memItemLeft" align="right" valign="top"><a id="aea9b3c1f0cb1f24a3000f7ef90e75065"></a>
+std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>has_mutations_of</b> (const std::vector&lt; size_t &gt; &amp;)</td></tr>
+<tr class="separator:aea9b3c1f0cb1f24a3000f7ef90e75065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78601a1e05730081b55865d068e2e6b2"><td class="memItemLeft" align="right" valign="top"><a id="a78601a1e05730081b55865d068e2e6b2"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a78601a1e05730081b55865d068e2e6b2">branch_length</a> (const <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &amp;) const</td></tr>
 <tr class="memdesc:a78601a1e05730081b55865d068e2e6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Branch length (# of divisions) between two cells. <br /></td></tr>
@@ -121,9 +121,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_time_of_birth</b>
 <tr class="memitem:a3ef0208c305ab34f10cbf8241d249c84"><td class="memItemLeft" align="right" valign="top"><a id="a3ef0208c305ab34f10cbf8241d249c84"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_time_of_death</b> (const double t)</td></tr>
 <tr class="separator:a3ef0208c305ab34f10cbf8241d249c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0b59a79f760e7e7ef8c91edc9ea3cd5"><td class="memItemLeft" align="right" valign="top"><a id="ad0b59a79f760e7e7ef8c91edc9ea3cd5"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>frustration</b> ()</td></tr>
-<tr class="separator:ad0b59a79f760e7e7ef8c91edc9ea3cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2f864eeb1a4b213f547816962625bc5"><td class="memItemLeft" align="right" valign="top"><a id="ac2f864eeb1a4b213f547816962625bc5"></a>
+uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><b>frustration</b> ()</td></tr>
+<tr class="separator:ac2f864eeb1a4b213f547816962625bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a079be889ea2b7a842d8dd902a219d739"><td class="memItemLeft" align="right" valign="top"><a id="a079be889ea2b7a842d8dd902a219d739"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_birth_rate</b> (const double x)</td></tr>
 <tr class="separator:a079be889ea2b7a842d8dd902a219d739"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,18 +197,18 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>migra_rate_</b> = <
 <tr class="memitem:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="memItemLeft" align="right" valign="top"><a id="a8bc889165e9dc62b622b986cbfc8a3b5"></a>
 CellType&#160;</td><td class="memItemRight" valign="bottom"><b>type_</b> = CellType::stem</td></tr>
 <tr class="separator:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a516dc93d4aa278b6a88e5e468ebaad59"><td class="memItemLeft" align="right" valign="top"><a id="a516dc93d4aa278b6a88e5e468ebaad59"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>proliferation_capacity_</b> = <a class="el" href="classtumopp_1_1_cell.html#a4757b104bd47a81e588771850cdea553">MAX_PROLIFERATION_CAPACITY_</a></td></tr>
-<tr class="separator:a516dc93d4aa278b6a88e5e468ebaad59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="memItemLeft" align="right" valign="top"><a id="ae901542f3cf21bb9ca35ba81cb12c0c5"></a>
+uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><b>proliferation_capacity_</b> = <a class="el" href="classtumopp_1_1_cell.html#a2cb92b5229434ec2e242a592466b9f5e">MAX_PROLIFERATION_CAPACITY_</a></td></tr>
+<tr class="separator:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48c7f319a9cbbe069e314105b64497a4"><td class="memItemLeft" align="right" valign="top"><a id="a48c7f319a9cbbe069e314105b64497a4"></a>
 Event&#160;</td><td class="memItemRight" valign="bottom"><b>next_event_</b> = Event::birth</td></tr>
 <tr class="separator:a48c7f319a9cbbe069e314105b64497a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85882b8a52b2e5dbf929b96307174279"><td class="memItemLeft" align="right" valign="top"><a id="a85882b8a52b2e5dbf929b96307174279"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>elapsed_</b> = 0.0</td></tr>
 <tr class="separator:a85882b8a52b2e5dbf929b96307174279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55406c6906101dc00f93bb197f63f17e"><td class="memItemLeft" align="right" valign="top"><a id="a55406c6906101dc00f93bb197f63f17e"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>frustration_</b> = 0</td></tr>
-<tr class="separator:a55406c6906101dc00f93bb197f63f17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5afbe3f4740202660b547a667046522"><td class="memItemLeft" align="right" valign="top"><a id="ad5afbe3f4740202660b547a667046522"></a>
+uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><b>frustration_</b> = 0</td></tr>
+<tr class="separator:ad5afbe3f4740202660b547a667046522"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="memItemLeft" align="right" valign="top"><a id="aa4f3f61ed6ddb761295cbd5720d4b1b3"></a>
 std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aa4f3f61ed6ddb761295cbd5720d4b1b3">genealogy_</a></td></tr>
 <tr class="memdesc:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra data. <br /></td></tr>
@@ -246,10 +246,10 @@ static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a3533184ddf11df826d38c188d3d41695">PROB_SYMMETRIC_DIVISION_</a></td></tr>
 <tr class="memdesc:a3533184ddf11df826d38c188d3d41695"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(p_s\) <br /></td></tr>
 <tr class="separator:a3533184ddf11df826d38c188d3d41695"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4757b104bd47a81e588771850cdea553"><td class="memItemLeft" align="right" valign="top"><a id="a4757b104bd47a81e588771850cdea553"></a>
-static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4757b104bd47a81e588771850cdea553">MAX_PROLIFERATION_CAPACITY_</a></td></tr>
-<tr class="memdesc:a4757b104bd47a81e588771850cdea553"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\omega_\text{max}\) <br /></td></tr>
-<tr class="separator:a4757b104bd47a81e588771850cdea553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb92b5229434ec2e242a592466b9f5e"><td class="memItemLeft" align="right" valign="top"><a id="a2cb92b5229434ec2e242a592466b9f5e"></a>
+static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a2cb92b5229434ec2e242a592466b9f5e">MAX_PROLIFERATION_CAPACITY_</a></td></tr>
+<tr class="memdesc:a2cb92b5229434ec2e242a592466b9f5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\omega_\text{max}\) <br /></td></tr>
+<tr class="separator:a2cb92b5229434ec2e242a592466b9f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec36cb1072b4c52cb6134412f0c87374"><td class="memItemLeft" align="right" valign="top"><a id="aec36cb1072b4c52cb6134412f0c87374"></a>
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374">MUTATION_RATE_</a></td></tr>
 <tr class="memdesc:aec36cb1072b4c52cb6134412f0c87374"><td class="mdescLeft">&#160;</td><td class="mdescRight">mutation rate per cell division <br /></td></tr>
@@ -291,7 +291,7 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="cell_8hpp_source.html#l00036">36</a> of file <a class="el" href="cell_8hpp_source.html">cell.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cell_8hpp_source.html#l00037">37</a> of file <a class="el" href="cell_8hpp_source.html">cell.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="cell_8hpp_source.html">cell.hpp</a></li>
 <li>src/<a class="el" href="cell_8cpp_source.html">cell.cpp</a></li>
