@@ -239,8 +239,8 @@ std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
         << birth_rate_ << sep
         << death_rate_ << sep << death_prob_ << sep
         << migra_rate_ << sep
-        << static_cast<int>(type_) << sep <<
-        proliferation_capacity_;
+        << static_cast<unsigned int>(type_) << sep
+        << static_cast<unsigned int>(proliferation_capacity_);
 }
 
 std::string Cell::str(const char* sep) const {

@@ -435,7 +435,7 @@ std::string Tissue::header() const {HERE;
 
 void Tissue::write(std::ostream& ost, const Cell& cell) const {
     cell.write(ost << time_ << sep_, sep_) << sep_
-       << num_empty_neighbors(cell.coord()) << "\n";
+       << static_cast<unsigned int>(num_empty_neighbors(cell.coord())) << "\n";
 }
 
 void Tissue::write(std::ostream& ost) const {
