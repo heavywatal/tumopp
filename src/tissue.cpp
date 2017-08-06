@@ -442,6 +442,7 @@ void Tissue::write(std::ostream& ost) const {
     }
 }
 
+//! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
     for (const auto& p: tissue.tumor_) {
         ost << *p << "\n";
@@ -449,6 +450,7 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
     return ost;
 }
 
+//! Test coordinate system
 template <class T> inline
 void test_coordinate(const std::valarray<int>& v) {HERE;
     T coord(v.size());
@@ -462,6 +464,7 @@ void test_coordinate(const std::valarray<int>& v) {HERE;
     std::cerr << coord.euclidean_distance(v) << std::endl;
 }
 
+//! Test radius function
 template <class T> inline
 void test_radius() {HERE;
     Tissue tissue;

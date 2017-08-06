@@ -22,18 +22,21 @@ namespace boost {
 
 namespace tumopp {
 
+//! C1 cell type
 enum class CellType: uint_fast8_t {
    stem,
    nonstem,
 };
 
+//! event types
 enum class Event: uint_fast8_t {
    birth,
    death,
    migration,
 };
 
-
+/*! Cancer cell
+*/
 class Cell {
   public:
     //! Default constructor

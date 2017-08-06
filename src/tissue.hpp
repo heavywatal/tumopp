@@ -28,12 +28,14 @@ namespace boost {
 }
 
 namespace std {
+  //! hash function for cell coord
   template <> struct hash<std::valarray<int>> {
     //! hash function for cell coord
     size_t operator() (const std::valarray<int>& v) const {
         return boost::hash_range(std::begin(v), std::end(v));
     }
   };
+  //! hash function for cell coord
   template <> struct hash<std::shared_ptr<tumopp::Cell>> {
     //! hash function for cell coord
     size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
@@ -46,6 +48,7 @@ namespace std {
 
 namespace tumopp {
 
+//! Compare cell coord
 class equal_shptr_cell {
   public:
     //! Compare cell coord
@@ -55,6 +58,8 @@ class equal_shptr_cell {
     }
 };
 
+/*! a mass of cancer cells
+*/
 class Tissue {
   public:
     //! getter of DIMENSIONS_
@@ -85,7 +90,6 @@ class Tissue {
     //! Write all cells
     void write(std::ostream&) const;
 
-    //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! Shortcut of tumor_.size()

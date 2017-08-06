@@ -20,8 +20,11 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
 
+//! Mathematical constant
 constexpr double PI = boost::math::constants::pi<double>();
 
+/*! Base class of coordinate system
+*/
 class Coord {
   public:
     //! getter of directions_
@@ -161,6 +164,8 @@ class Coord {
     std::uniform_int_distribution<ptrdiff_t> uniform_int_dist_;
 };
 
+/*! Derived class of coordinate system
+*/
 class Neumann final: public Coord {
   public:
     Neumann() = delete;
@@ -187,7 +192,10 @@ class Neumann final: public Coord {
     }
 };
 
-//! Neumann + diagonal cells
+/*! Derived class of coordinate system
+
+    Neumann + diagonal cells
+*/
 class Moore final: public Coord {
   public:
     Moore() = delete;
@@ -216,6 +224,8 @@ class Moore final: public Coord {
     }
 };
 
+/*! Derived class of coordinate system
+*/
 class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;

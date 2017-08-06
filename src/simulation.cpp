@@ -22,6 +22,7 @@ namespace tumopp {
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
+//! Options description for general purpose
 inline po::options_description general_desc() {HERE;
     po::options_description description("General");
     description.add_options()
