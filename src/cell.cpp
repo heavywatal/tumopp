@@ -254,7 +254,7 @@ std::ostream& operator<< (std::ostream& ost, const Cell& x) {
     return x.write(ost);
 }
 
-void Cell::unit_test() {
+void Cell::test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
     Cell cell({1, 2, 3});

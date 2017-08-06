@@ -118,7 +118,7 @@ class Cell {
     static void init_distributions();
 
     //! Unit test
-    static void unit_test();
+    static void test();
 
   private:
     //! \f$\beta_0\f$

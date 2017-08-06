@@ -472,7 +472,7 @@ void test_radius() {HERE;
     std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
 }
 
-void Tissue::unit_test() {HERE;
+void Tissue::test() {HERE;
     std::cerr.precision(15);
 
     Tissue tissue;

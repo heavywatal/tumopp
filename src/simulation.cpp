@@ -79,8 +79,8 @@ inline void test(const int flg) {HERE;
       case 0:
         break;
       case 1:
-        Cell::unit_test();
-        Tissue::unit_test();
+        Cell::test();
+        Tissue::test();
         throw wtl::ExitSuccess();
       default:
         throw std::runtime_error("Unknown argument for --test");

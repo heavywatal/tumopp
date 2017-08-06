@@ -104,7 +104,7 @@ class Tissue {
     const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
     //! Unit test
-    static void unit_test();
+    static void test();
     //! Options description
     static boost::program_options::options_description opt_description();
 
