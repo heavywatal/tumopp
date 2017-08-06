@@ -119,36 +119,56 @@ class Cell {
     //! \f$\omega_\text{max}\f$
     static unsigned int MAX_PROLIFERATION_CAPACITY_;
 
-    //! mutation rate per cell division
+    //! \f$\mu\f$ per cell division
     static double MUTATION_RATE_;
+    //! \f$\mu_\beta\f$
     static double DRIVER_RATE_BIRTH_;
+    //! \f$\mu_\delta\f$
     static double DRIVER_RATE_DEATH_;
+    //! \f$\mu_\rho\f$
     static double DRIVER_RATE_MIGRA_;
+    //! \f$\bar s_\beta\f$
     static double DRIVER_MEAN_BIRTH_;
+    //! \f$\bar s_\delta\f$
     static double DRIVER_MEAN_DEATH_;
+    //! \f$\bar s_\rho\f$
     static double DRIVER_MEAN_MIGRA_;
+    //! \f$\sigma_\beta\f$
     static double DRIVER_SD_BIRTH_;
+    //! \f$\sigma_\delta\f$
     static double DRIVER_SD_DEATH_;
+    //! \f$\sigma_\rho\f$
     static double DRIVER_SD_MIGRA_;
 
     //! Position in a tumor
     std::valarray<int> coord_;
 
+    //! \f$\beta\f$
     double birth_rate_ = BIRTH_RATE_;
+    //! \f$\delta\f$
     double death_rate_ = DEATH_RATE_;
+    //! \f$\alpha\f$
     double death_prob_ = DEATH_PROB_;
+    //! \f$\rho\f$
     double migra_rate_ = MIGRATION_RATE_;
 
+    //! C1 cell type
     CellType type_ = CellType::stem;
+    //! \f$\omega\f$
     uint_fast8_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
 
+    //! next event: birth, death, or migration
     Event next_event_ = Event::birth;
+    //! elapsed time by migration
     double elapsed_ = 0.0;
+    //! become quiescent after some failures
     uint_fast8_t frustration_ = 0;
 
-    //! Extra data
+    //! ancestor IDs
     std::vector<size_t> genealogy_;
+    //! time of birth
     double time_of_birth_ = 0.0;
+    //! time of death
     double time_of_death_ = 0.0;
 };
 

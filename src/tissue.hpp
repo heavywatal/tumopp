@@ -167,13 +167,20 @@ class Tissue {
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;
 
+    //! continuous time
     double time_ = 0.0;
+
+    //! incremented when a new cell is born
     size_t id_tail_ = 0;
 
+    //! Call set_coord() once
     std::unique_ptr<Coord> coord_func_;
 
+    //! record all cells existed
     std::ostringstream specimens_;
+    //! record state when size() < RECORDING_EARLY_GROWTH_
     std::ostringstream snapshots_;
+    //! record driver mutations
     std::ostringstream drivers_;
 };
 

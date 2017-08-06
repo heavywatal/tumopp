@@ -24,12 +24,14 @@ constexpr double PI = boost::math::constants::pi<double>();
 
 class Coord {
   public:
-    // methods
+    //! getter of directions_
     const std::vector<std::valarray<int>>& directions() const {return directions_;}
 
+    //! [0, 0, ...]
     std::valarray<int> origin() const {
         return std::valarray<int>(dimensions);
     }
+    //! List neighboring sites
     std::vector<std::valarray<int>> neighbors(const std::valarray<int>& v) const {
         std::vector<std::valarray<int>> output = directions_;
         for (auto& d: output) {
@@ -37,14 +39,17 @@ class Coord {
         }
         return output;
     }
+    //! Choose a random neighbor
     template <class RNG> inline
     std::valarray<int> random_direction(RNG& rng) {
         return directions_[uniform_int_dist_(rng)];
     }
+    //! Choose a random neighbor of the specified site
     template <class RNG> inline
     std::valarray<int> random_neighbor(const std::valarray<int>& v, RNG& rng) {
         return v + random_direction(rng);
     }
+    //! Direction that maximize the distance from the origin
     std::valarray<int> outward(const std::valarray<int>& v) const {
         const auto candidates = neighbors(v);
         return *std::max_element(candidates.begin(), candidates.end(),
@@ -52,15 +57,19 @@ class Coord {
             return euclidean_distance(lhs) < euclidean_distance(rhs);
         });
     }
+    //! Area of cross section
     double cross_section(size_t vol) const {
         return std::pow((9.0 / 16.0) * PI * (vol *= vol), 1.0 / 3.0);
     }
 
     // virtual methods
+    //! Graph distance
     virtual int graph_distance(const std::valarray<int>& v) const = 0;
+    //! Euclidean distance
     virtual double euclidean_distance(const std::valarray<int>& v) const {
         return _euclidean_distance(v);
     }
+    //! Estimate radius from volume
     virtual double radius(const size_t points) const {
         double x = points;
         x /= PI;
@@ -72,6 +81,7 @@ class Coord {
             return std::pow(x *= (3.0 / 4.0), 1.0 / 3.0);
         }
     }
+    //! square or cube
     virtual std::vector<std::valarray<int>> core() const {
         const size_t n = std::pow(2, dimensions);
         std::vector<std::valarray<int>> output;
@@ -86,7 +96,7 @@ class Coord {
         }
         return output;
     }
-    // sphere coordinates with inside-out direction
+    //! sphere coordinates with inside-out direction
     std::vector<std::valarray<int>> sphere(const size_t n) const {
         std::vector<std::valarray<int>> output;
         if (dimensions == 2U) {
@@ -123,26 +133,31 @@ class Coord {
         output.resize(n);
         return output;
     }
-
+    //! Destructor
     virtual ~Coord() = default;
 
-    // properties
+    //! two or three
     const unsigned int dimensions;
 
   protected:
+    //! Default constructor is deleted
     Coord() = delete;
+    //! Initialize with the number of dimensions
     explicit Coord(const unsigned int d): dimensions(d) {
         if (d < 2U || 3U < d) {
             throw std::runtime_error("Invalid value for dimensions");
         }
     }
 
+    //! Euclidean distance
     template <class T> inline
     double _euclidean_distance(const std::valarray<T>& v) const {
         return std::sqrt((v * v).sum());
     }
 
+    //! initialized in derived class constructor
     std::vector<std::valarray<int>> directions_;
+    //! initialized in derived class constructor
     std::uniform_int_distribution<ptrdiff_t> uniform_int_dist_;
 };
 

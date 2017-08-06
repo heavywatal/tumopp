@@ -49,8 +49,10 @@ class Simulation {
 
     Tissue tissue_;
 
+    //! Number of samples
     size_t NSAM = 20;
 
+    //! Number of repeats
     size_t HOWMANY = 1;
 
     //! Max tumor size to stop simulation
@@ -59,6 +61,7 @@ class Simulation {
     //! Duration of turnover phase after log growth
     double PLATEAU_TIME = 0.0;
 
+    //! -w
     bool WRITE_TO_FILES = false;
 
     //! Seed for random number generator
@@ -67,7 +70,9 @@ class Simulation {
     //! Target directory to which the contents in WORK_DIR are moved
     std::string OUT_DIR;
 
+    //! Command line arguments
     std::string COMMAND_ARGS;
+    //! Writen to program_options.conf
     std::string CONFIG_STRING;
 };
 

@@ -149,22 +149,22 @@ Event&#160;</td><td class="memItemRight" valign="bottom"><b>next_event</b> () co
 <tr class="memitem:a0159fdbc06d50ee1cc827a384b906126"><td class="memItemLeft" align="right" valign="top"><a id="a0159fdbc06d50ee1cc827a384b906126"></a>
 const std::valarray&lt; int &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>coord</b> () const</td></tr>
 <tr class="separator:a0159fdbc06d50ee1cc827a384b906126"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae900cf5ef4fdd8ebb525d98e803fc30a"><td class="memItemLeft" align="right" valign="top"><a id="ae900cf5ef4fdd8ebb525d98e803fc30a"></a>
-std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (std::ostream &amp;ost, const char *sep) const</td></tr>
-<tr class="separator:ae900cf5ef4fdd8ebb525d98e803fc30a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a977812930be37a674389db82f5a01df4"><td class="memItemLeft" align="right" valign="top"><a id="a977812930be37a674389db82f5a01df4"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>str</b> (const char *sep) const</td></tr>
-<tr class="separator:a977812930be37a674389db82f5a01df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab542c6108030c220704f0f7692cbff47"><td class="memItemLeft" align="right" valign="top"><a id="ab542c6108030c220704f0f7692cbff47"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (std::ostream &amp;ost) const</td></tr>
+<tr class="separator:ab542c6108030c220704f0f7692cbff47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad86f830cb0e1e5597097b5bbf80a1803"><td class="memItemLeft" align="right" valign="top"><a id="ad86f830cb0e1e5597097b5bbf80a1803"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>str</b> () const</td></tr>
+<tr class="separator:ad86f830cb0e1e5597097b5bbf80a1803"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a5f86efb11474166b533140935572ed96"><td class="memItemLeft" align="right" valign="top"><a id="a5f86efb11474166b533140935572ed96"></a>
 static double&#160;</td><td class="memItemRight" valign="bottom"><b>MUTATION_RATE</b> ()</td></tr>
 <tr class="separator:a5f86efb11474166b533140935572ed96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41ef7e3b4ac7fd8f6ad598eafd1c1b6f"><td class="memItemLeft" align="right" valign="top"><a id="a41ef7e3b4ac7fd8f6ad598eafd1c1b6f"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a41ef7e3b4ac7fd8f6ad598eafd1c1b6f">header</a> (const char *sep)</td></tr>
-<tr class="memdesc:a41ef7e3b4ac7fd8f6ad598eafd1c1b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print. <br /></td></tr>
-<tr class="separator:a41ef7e3b4ac7fd8f6ad598eafd1c1b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf294699568ae816353bd9fec8de604a"><td class="memItemLeft" align="right" valign="top"><a id="adf294699568ae816353bd9fec8de604a"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#adf294699568ae816353bd9fec8de604a">header</a> ()</td></tr>
+<tr class="memdesc:adf294699568ae816353bd9fec8de604a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print. <br /></td></tr>
+<tr class="separator:adf294699568ae816353bd9fec8de604a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9eff67d457d523902fb1ac3660ac0b42"><td class="memItemLeft" align="right" valign="top">static boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga9eff67d457d523902fb1ac3660ac0b42">opt_description</a> ()</td></tr>
 <tr class="memdesc:ga9eff67d457d523902fb1ac3660ac0b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization.  <a href="group__params.html#ga9eff67d457d523902fb1ac3660ac0b42">More...</a><br /></td></tr>
 <tr class="separator:ga9eff67d457d523902fb1ac3660ac0b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,41 +183,52 @@ std::valarray&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a
 <tr class="memdesc:a3bc6d8b7ac792d0df5b9bb9a8f28ce36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Position in a tumor. <br /></td></tr>
 <tr class="separator:a3bc6d8b7ac792d0df5b9bb9a8f28ce36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6dfcf8f41c164ee77beb1959ab2e0d3"><td class="memItemLeft" align="right" valign="top"><a id="ac6dfcf8f41c164ee77beb1959ab2e0d3"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>birth_rate_</b> = <a class="el" href="classtumopp_1_1_cell.html#a64b66f93c962cc6e8b095843c9850163">BIRTH_RATE_</a></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ac6dfcf8f41c164ee77beb1959ab2e0d3">birth_rate_</a> = <a class="el" href="classtumopp_1_1_cell.html#a64b66f93c962cc6e8b095843c9850163">BIRTH_RATE_</a></td></tr>
+<tr class="memdesc:ac6dfcf8f41c164ee77beb1959ab2e0d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\beta\) <br /></td></tr>
 <tr class="separator:ac6dfcf8f41c164ee77beb1959ab2e0d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f87a79f5f82d7f01eb5ca6247c96b27"><td class="memItemLeft" align="right" valign="top"><a id="a4f87a79f5f82d7f01eb5ca6247c96b27"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>death_rate_</b> = <a class="el" href="classtumopp_1_1_cell.html#a84ead1eae36953fbe5ffd9ff28e858e2">DEATH_RATE_</a></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4f87a79f5f82d7f01eb5ca6247c96b27">death_rate_</a> = <a class="el" href="classtumopp_1_1_cell.html#a84ead1eae36953fbe5ffd9ff28e858e2">DEATH_RATE_</a></td></tr>
+<tr class="memdesc:a4f87a79f5f82d7f01eb5ca6247c96b27"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\delta\) <br /></td></tr>
 <tr class="separator:a4f87a79f5f82d7f01eb5ca6247c96b27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1dedf2540071cd0a5c8319a9ed064ef"><td class="memItemLeft" align="right" valign="top"><a id="ab1dedf2540071cd0a5c8319a9ed064ef"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>death_prob_</b> = <a class="el" href="classtumopp_1_1_cell.html#a774ad2fb1d51cb19a7a8d09fa4b0c92d">DEATH_PROB_</a></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab1dedf2540071cd0a5c8319a9ed064ef">death_prob_</a> = <a class="el" href="classtumopp_1_1_cell.html#a774ad2fb1d51cb19a7a8d09fa4b0c92d">DEATH_PROB_</a></td></tr>
+<tr class="memdesc:ab1dedf2540071cd0a5c8319a9ed064ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\alpha\) <br /></td></tr>
 <tr class="separator:ab1dedf2540071cd0a5c8319a9ed064ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c90349decc7fb235b38cc39b46bbd51"><td class="memItemLeft" align="right" valign="top"><a id="a7c90349decc7fb235b38cc39b46bbd51"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>migra_rate_</b> = <a class="el" href="classtumopp_1_1_cell.html#af221035ba8246d96ac7284546a195310">MIGRATION_RATE_</a></td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7c90349decc7fb235b38cc39b46bbd51">migra_rate_</a> = <a class="el" href="classtumopp_1_1_cell.html#af221035ba8246d96ac7284546a195310">MIGRATION_RATE_</a></td></tr>
+<tr class="memdesc:a7c90349decc7fb235b38cc39b46bbd51"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\rho\) <br /></td></tr>
 <tr class="separator:a7c90349decc7fb235b38cc39b46bbd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="memItemLeft" align="right" valign="top"><a id="a8bc889165e9dc62b622b986cbfc8a3b5"></a>
-CellType&#160;</td><td class="memItemRight" valign="bottom"><b>type_</b> = CellType::stem</td></tr>
+CellType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a8bc889165e9dc62b622b986cbfc8a3b5">type_</a> = CellType::stem</td></tr>
+<tr class="memdesc:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">C1 cell type. <br /></td></tr>
 <tr class="separator:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="memItemLeft" align="right" valign="top"><a id="ae901542f3cf21bb9ca35ba81cb12c0c5"></a>
-uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><b>proliferation_capacity_</b> = <a class="el" href="classtumopp_1_1_cell.html#a2cb92b5229434ec2e242a592466b9f5e">MAX_PROLIFERATION_CAPACITY_</a></td></tr>
+uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae901542f3cf21bb9ca35ba81cb12c0c5">proliferation_capacity_</a> = <a class="el" href="classtumopp_1_1_cell.html#a2cb92b5229434ec2e242a592466b9f5e">MAX_PROLIFERATION_CAPACITY_</a></td></tr>
+<tr class="memdesc:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\omega\) <br /></td></tr>
 <tr class="separator:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48c7f319a9cbbe069e314105b64497a4"><td class="memItemLeft" align="right" valign="top"><a id="a48c7f319a9cbbe069e314105b64497a4"></a>
-Event&#160;</td><td class="memItemRight" valign="bottom"><b>next_event_</b> = Event::birth</td></tr>
+Event&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4">next_event_</a> = Event::birth</td></tr>
+<tr class="memdesc:a48c7f319a9cbbe069e314105b64497a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">next event: birth, death, or migration <br /></td></tr>
 <tr class="separator:a48c7f319a9cbbe069e314105b64497a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85882b8a52b2e5dbf929b96307174279"><td class="memItemLeft" align="right" valign="top"><a id="a85882b8a52b2e5dbf929b96307174279"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>elapsed_</b> = 0.0</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a85882b8a52b2e5dbf929b96307174279">elapsed_</a> = 0.0</td></tr>
+<tr class="memdesc:a85882b8a52b2e5dbf929b96307174279"><td class="mdescLeft">&#160;</td><td class="mdescRight">elapsed time by migration <br /></td></tr>
 <tr class="separator:a85882b8a52b2e5dbf929b96307174279"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5afbe3f4740202660b547a667046522"><td class="memItemLeft" align="right" valign="top"><a id="ad5afbe3f4740202660b547a667046522"></a>
-uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><b>frustration_</b> = 0</td></tr>
+uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ad5afbe3f4740202660b547a667046522">frustration_</a> = 0</td></tr>
+<tr class="memdesc:ad5afbe3f4740202660b547a667046522"><td class="mdescLeft">&#160;</td><td class="mdescRight">become quiescent after some failures <br /></td></tr>
 <tr class="separator:ad5afbe3f4740202660b547a667046522"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="memItemLeft" align="right" valign="top"><a id="aa4f3f61ed6ddb761295cbd5720d4b1b3"></a>
 std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aa4f3f61ed6ddb761295cbd5720d4b1b3">genealogy_</a></td></tr>
-<tr class="memdesc:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra data. <br /></td></tr>
+<tr class="memdesc:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">ancestor IDs <br /></td></tr>
 <tr class="separator:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0718cb9386cc15ecd9b29dd24e7a923b"><td class="memItemLeft" align="right" valign="top"><a id="a0718cb9386cc15ecd9b29dd24e7a923b"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>time_of_birth_</b> = 0.0</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b">time_of_birth_</a> = 0.0</td></tr>
+<tr class="memdesc:a0718cb9386cc15ecd9b29dd24e7a923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">time of birth <br /></td></tr>
 <tr class="separator:a0718cb9386cc15ecd9b29dd24e7a923b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a667e0253ed08a59572e9e96bfc434475"><td class="memItemLeft" align="right" valign="top"><a id="a667e0253ed08a59572e9e96bfc434475"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>time_of_death_</b> = 0.0</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475">time_of_death_</a> = 0.0</td></tr>
+<tr class="memdesc:a667e0253ed08a59572e9e96bfc434475"><td class="mdescLeft">&#160;</td><td class="mdescRight">time of death <br /></td></tr>
 <tr class="separator:a667e0253ed08a59572e9e96bfc434475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
@@ -252,34 +263,43 @@ static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class=
 <tr class="separator:a2cb92b5229434ec2e242a592466b9f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec36cb1072b4c52cb6134412f0c87374"><td class="memItemLeft" align="right" valign="top"><a id="aec36cb1072b4c52cb6134412f0c87374"></a>
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374">MUTATION_RATE_</a></td></tr>
-<tr class="memdesc:aec36cb1072b4c52cb6134412f0c87374"><td class="mdescLeft">&#160;</td><td class="mdescRight">mutation rate per cell division <br /></td></tr>
+<tr class="memdesc:aec36cb1072b4c52cb6134412f0c87374"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu\) per cell division <br /></td></tr>
 <tr class="separator:aec36cb1072b4c52cb6134412f0c87374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a73051fce9cce124250aadb5bd6ad1e"><td class="memItemLeft" align="right" valign="top"><a id="a7a73051fce9cce124250aadb5bd6ad1e"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_RATE_BIRTH_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7a73051fce9cce124250aadb5bd6ad1e">DRIVER_RATE_BIRTH_</a></td></tr>
+<tr class="memdesc:a7a73051fce9cce124250aadb5bd6ad1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\beta\) <br /></td></tr>
 <tr class="separator:a7a73051fce9cce124250aadb5bd6ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a033422f163baf839143503e77415b1ba"><td class="memItemLeft" align="right" valign="top"><a id="a033422f163baf839143503e77415b1ba"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_RATE_DEATH_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a033422f163baf839143503e77415b1ba">DRIVER_RATE_DEATH_</a></td></tr>
+<tr class="memdesc:a033422f163baf839143503e77415b1ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\delta\) <br /></td></tr>
 <tr class="separator:a033422f163baf839143503e77415b1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38fc3587d9e78cc341084689ecf0e63e"><td class="memItemLeft" align="right" valign="top"><a id="a38fc3587d9e78cc341084689ecf0e63e"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_RATE_MIGRA_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a38fc3587d9e78cc341084689ecf0e63e">DRIVER_RATE_MIGRA_</a></td></tr>
+<tr class="memdesc:a38fc3587d9e78cc341084689ecf0e63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\rho\) <br /></td></tr>
 <tr class="separator:a38fc3587d9e78cc341084689ecf0e63e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a070a2d619af80d8ddebb4f1cac17f145"><td class="memItemLeft" align="right" valign="top"><a id="a070a2d619af80d8ddebb4f1cac17f145"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_MEAN_BIRTH_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a070a2d619af80d8ddebb4f1cac17f145">DRIVER_MEAN_BIRTH_</a></td></tr>
+<tr class="memdesc:a070a2d619af80d8ddebb4f1cac17f145"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\bar s_\beta\) <br /></td></tr>
 <tr class="separator:a070a2d619af80d8ddebb4f1cac17f145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e610fad946c873a2c10d71e0e983def"><td class="memItemLeft" align="right" valign="top"><a id="a1e610fad946c873a2c10d71e0e983def"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_MEAN_DEATH_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a1e610fad946c873a2c10d71e0e983def">DRIVER_MEAN_DEATH_</a></td></tr>
+<tr class="memdesc:a1e610fad946c873a2c10d71e0e983def"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\bar s_\delta\) <br /></td></tr>
 <tr class="separator:a1e610fad946c873a2c10d71e0e983def"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e9c6de1b5df3a7c58de5e58c49f7e6a"><td class="memItemLeft" align="right" valign="top"><a id="a8e9c6de1b5df3a7c58de5e58c49f7e6a"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_MEAN_MIGRA_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a8e9c6de1b5df3a7c58de5e58c49f7e6a">DRIVER_MEAN_MIGRA_</a></td></tr>
+<tr class="memdesc:a8e9c6de1b5df3a7c58de5e58c49f7e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\bar s_\rho\) <br /></td></tr>
 <tr class="separator:a8e9c6de1b5df3a7c58de5e58c49f7e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada71bcfa00507b240d067015f71687f0"><td class="memItemLeft" align="right" valign="top"><a id="ada71bcfa00507b240d067015f71687f0"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_SD_BIRTH_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ada71bcfa00507b240d067015f71687f0">DRIVER_SD_BIRTH_</a></td></tr>
+<tr class="memdesc:ada71bcfa00507b240d067015f71687f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\beta\) <br /></td></tr>
 <tr class="separator:ada71bcfa00507b240d067015f71687f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6e7b389efed8c6305fc5144682b922a"><td class="memItemLeft" align="right" valign="top"><a id="ab6e7b389efed8c6305fc5144682b922a"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_SD_DEATH_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab6e7b389efed8c6305fc5144682b922a">DRIVER_SD_DEATH_</a></td></tr>
+<tr class="memdesc:ab6e7b389efed8c6305fc5144682b922a"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\delta\) <br /></td></tr>
 <tr class="separator:ab6e7b389efed8c6305fc5144682b922a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c82812fcc104e8aa1b4b449a45c8880"><td class="memItemLeft" align="right" valign="top"><a id="a4c82812fcc104e8aa1b4b449a45c8880"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>DRIVER_SD_MIGRA_</b></td></tr>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4c82812fcc104e8aa1b4b449a45c8880">DRIVER_SD_MIGRA_</a></td></tr>
+<tr class="memdesc:a4c82812fcc104e8aa1b4b449a45c8880"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\rho\) <br /></td></tr>
 <tr class="separator:a4c82812fcc104e8aa1b4b449a45c8880"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
