@@ -29,11 +29,13 @@ namespace boost {
 
 namespace std {
   template <> struct hash<std::valarray<int>> {
+    //! hash function for cell coord
     size_t operator() (const std::valarray<int>& v) const {
         return boost::hash_range(std::begin(v), std::end(v));
     }
   };
   template <> struct hash<std::shared_ptr<tumopp::Cell>> {
+    //! hash function for cell coord
     size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
         return std::hash<std::valarray<int>>()(x->coord());
     }
@@ -46,6 +48,7 @@ namespace tumopp {
 
 class equal_shptr_cell {
   public:
+    //! Compare cell coord
     bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
                      const std::shared_ptr<tumopp::Cell>& rhs) const {
         return (lhs->coord() == rhs->coord()).min();

@@ -164,6 +164,7 @@ class Coord {
 class Neumann final: public Coord {
   public:
     Neumann() = delete;
+    //! Constructor
     explicit Neumann(const size_t d): Coord(d) {
         directions_.reserve(2U * dimensions);
         std::valarray<int> v(dimensions);
@@ -190,6 +191,7 @@ class Neumann final: public Coord {
 class Moore final: public Coord {
   public:
     Moore() = delete;
+    //! Constructor
     explicit Moore(const size_t d): Coord(d) {
         directions_.reserve(std::pow(3, dimensions) - 1);
         for (const int x: {-1, 0, 1}) {
@@ -217,6 +219,7 @@ class Moore final: public Coord {
 class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;
+    //! Constructor
     explicit Hexagonal(const size_t d): Coord(d) {
         std::valarray<int> v{-1, 0, 1};
         directions_.reserve(6 * (dimensions - 1));
