@@ -54,6 +54,7 @@ class equal_shptr_cell {
 
 class Tissue {
   public:
+    //! getter of DIMENSIONS_
     static unsigned int DIMENSIONS() {return DIMENSIONS_;}
 
     //! Constructor
@@ -62,62 +63,73 @@ class Tissue {
     //! main function
     bool grow(const size_t max_size, const double plateau=0.0);
 
+    //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
+    //! sample cells
     std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
+    //! sample cells in a cross section
     std::vector<std::shared_ptr<Cell>> sample_section(const size_t) const;
 
+    //! Stringify specimens_
     std::string specimens() const {return specimens_.str();}
+    //! Stringify snapshots_
     std::string snapshots() const {return snapshots_.str();}
+    //! Stringify drivers_
     std::string drivers() const {return drivers_.str();}
+    //! Make TSV of pairwise distance
     std::string pairwise_distance(const size_t npair) const;
 
+    //! Write all cells
     void write(std::ostream&) const;
 
+    //! Stream operator for debug print
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
+    //! Shortcut of tumor_.size()
     size_t size() const {return tumor_.size();};
+    //! Shortcut of coord.radius(tumor_.size())
     double radius() const {return coord_func_->radius(tumor_.size());}
+    //! Relative distance from the origin
     double relative_pos(std::shared_ptr<Cell> x) const {
         return coord_func_->euclidean_distance(x->coord()) / radius();
     }
 
-    //! Set coordinate function object
+    //! Set coord_func_ for testing
     template <class FuncObj>
-    void set_coord() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
+    void init_coord_test() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
+    //! getter of coord_func_
     const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
     //! Unit test
     static void unit_test();
+    //! Options description
     static boost::program_options::options_description opt_description();
 
   private:
     //! Dimensions: {1, 2, 3}
     static unsigned int DIMENSIONS_;
-
     //! Coordinate system
     static std::string COORDINATE_;
-
     //! {const, step, linear}
     static std::string LOCAL_DENSITY_EFFECT_;
-
     //! {random, mindrag, minstraight}
     static std::string DISPLACEMENT_PATH_;
-
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
-
     //! initial population size
     static size_t INITIAL_SIZE_;
-
     //! a flag
     static size_t RECORDING_EARLY_GROWTH_;
-
     //! Time (tumor_.size()) to introduce a driver mutation
     static size_t MUTATION_TIMING_;
 
+    //! Initializer is separated from constructor for restarting
     void init();
+    //! Set coord_func_
     void init_coord();
+    //! Check LOCAL_DENSITY_EFFECT_ and DISPLACEMENT_PATH_ and set function
     void init_insert_function();
+    //! initialized in init_insert_function()
     std::function<bool(const std::shared_ptr<Cell>&)> insert;
 
     //! Swap with a random neighbor
@@ -140,19 +152,26 @@ class Tissue {
     //! Direction is selected with a probability proportional with 1/l
     std::valarray<int> roulette_direction(const std::valarray<int>& current) const;
 
+    //! Count adjacent empty sites
     uint_fast8_t num_empty_neighbors(const std::valarray<int>&) const;
+    //! num_empty_neighbors / directions().size()
     double proportion_empty_neighbors(const std::valarray<int>& coord) const {
         double x = static_cast<double>(num_empty_neighbors(coord));
         return x /= static_cast<double>(coord_func_->directions().size());
     }
 
+    //! Push a cell to event queue
     void queue_push(const std::shared_ptr<Cell>&);
 
+    //! Calculate positional value
     double positional_value(const std::valarray<int>&) const;
 
+    //! Put random mutations on genealogy
     std::vector<size_t> generate_neutral_mutations() const;
 
+    //! TSV header
     std::string header() const;
+    //! TSV
     void write(std::ostream&, const Cell&) const;
 
     /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////

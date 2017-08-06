@@ -427,9 +427,7 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
 
 std::string Tissue::header() const {HERE;
     auto oss = wtl::make_oss();
-    oss << "time\t"
-        << Cell::header() << "\t"
-        << "phi\n";
+    oss << "time\t" << Cell::header() << "\tphi\n";
     return oss.str();
 }
 
@@ -444,7 +442,6 @@ void Tissue::write(std::ostream& ost) const {
     }
 }
 
-//! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
     for (const auto& p: tissue.tumor_) {
         ost << *p << "\n";
@@ -468,7 +465,7 @@ void test_coordinate(const std::valarray<int>& v) {HERE;
 template <class T> inline
 void test_radius() {HERE;
     Tissue tissue;
-    tissue.set_coord<T>();
+    tissue.init_coord_test<T>();
     tissue.grow(100);
     std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
     tissue.grow(1000);
