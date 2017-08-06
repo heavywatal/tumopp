@@ -175,7 +175,6 @@ class Tissue {
     std::ostringstream specimens_;
     std::ostringstream snapshots_;
     std::ostringstream drivers_;
-    const char* sep_ = "\t";
 };
 
 } // namespace tumopp

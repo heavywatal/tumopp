@@ -220,45 +220,45 @@ size_t Cell::branch_length(const Cell& other) const {
     return branch;
 }
 
-std::string Cell::header(const char* sep) {
+std::string Cell::header() {
     std::ostringstream oss;
-    oss << "x" << sep << "y" << sep << "z" << sep
-        << "genealogy" << sep
-        << "birth" << sep << "death" << sep
-        << "beta" << sep << "delta" << sep << "alpha" << sep << "rho" << sep
-        << "type" << sep << "omega";
+    oss << "x\ty\tz\t"
+        << "genealogy\t"
+        << "birth\tdeath\t"
+        << "beta\tdelta\talpha\trho\t"
+        << "type\tomega";
     return oss.str();
 }
 
-std::ostream& Cell::write(std::ostream& ost, const char* sep) const {
+std::ostream& Cell::write(std::ostream& ost) const {
     int z = (coord_.size() > 2U) ? coord_[2] : 0;
     return ost
-        << coord_[0] << sep << coord_[1] << sep << z << sep
-        << wtl::join(genealogy_, ":") << sep
-        << time_of_birth_ << sep << time_of_death_ << sep
-        << birth_rate_ << sep
-        << death_rate_ << sep << death_prob_ << sep
-        << migra_rate_ << sep
-        << static_cast<unsigned int>(type_) << sep
+        << coord_[0] << "\t" << coord_[1] << "\t" << z << "\t"
+        << wtl::join(genealogy_, ":") << "\t"
+        << time_of_birth_ << "\t" << time_of_death_ << "\t"
+        << birth_rate_ << "\t"
+        << death_rate_ << "\t" << death_prob_ << "\t"
+        << migra_rate_ << "\t"
+        << static_cast<unsigned int>(type_) << "\t"
         << static_cast<unsigned int>(proliferation_capacity_);
 }
 
-std::string Cell::str(const char* sep) const {
+std::string Cell::str() const {
     auto oss = wtl::make_oss();
-    write(oss, sep);
+    write(oss);
     return oss.str();
 }
 
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Cell& x) {
-    return x.write(ost, "\t");
+    return x.write(ost);
 }
 
 void Cell::unit_test() {
     std::cerr << __PRETTY_FUNCTION__ << std::endl;
     std::cerr.precision(15);
     Cell cell({1, 2, 3});
-    std::cerr << Cell::header("\t") << "\n" << cell << std::endl;
+    std::cerr << Cell::header() << "\n" << cell << std::endl;
     std::exponential_distribution<double> exponential(0.0);
     std::cerr << "exponential(0): " << exponential(wtl::sfmt()) << std::endl;
 }

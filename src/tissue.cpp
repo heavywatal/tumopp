@@ -409,7 +409,7 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
 
 std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     auto oss = wtl::make_oss(6);
-    oss << "genealogy" << sep_ << "graph" << sep_ << "euclidean\n";
+    oss << "genealogy\tgraph\teuclidean\n";
     auto samples = sample_random(2 * npair);
     std::shuffle(samples.begin(), samples.end(), wtl::sfmt());
     //TODO: should be randam sampling from all possible pairs
@@ -418,8 +418,8 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
         const auto& lhs = *(*it);
         const auto& rhs = *(*(++it));
         const auto diff = lhs.coord() - rhs.coord();
-        oss << lhs.branch_length(rhs) << sep_
-            << coord_func()->graph_distance(diff) << sep_
+        oss << lhs.branch_length(rhs) << "\t"
+            << coord_func()->graph_distance(diff) << "\t"
             << coord_func()->euclidean_distance(diff) << "\n";
     }
     return oss.str();
@@ -427,14 +427,14 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
 
 std::string Tissue::header() const {HERE;
     auto oss = wtl::make_oss();
-    oss << "time" << sep_
-        << Cell::header(sep_) << sep_
+    oss << "time\t"
+        << Cell::header() << "\t"
         << "phi\n";
     return oss.str();
 }
 
 void Tissue::write(std::ostream& ost, const Cell& cell) const {
-    cell.write(ost << time_ << sep_, sep_) << sep_
+    cell.write(ost << time_ << "\t") << "\t"
        << static_cast<unsigned int>(num_empty_neighbors(cell.coord())) << "\n";
 }
 

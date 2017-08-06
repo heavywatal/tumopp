@@ -91,9 +91,9 @@ class Cell {
     static double MUTATION_RATE() {return MUTATION_RATE_;}
 
     //! Print
-    static std::string header(const char* sep);
-    std::ostream& write(std::ostream& ost, const char* sep) const;
-    std::string str(const char* sep) const;
+    static std::string header();
+    std::ostream& write(std::ostream& ost) const;
+    std::string str() const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Initialization
