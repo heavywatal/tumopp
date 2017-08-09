@@ -38,10 +38,10 @@ class Simulation {
     //! Write ms-like sequence and files (if WRITE_TO_FILES)
     void write() const;
 
-    //! getter of tissue_ for tumorr
+    //! getter of #tissue_ for tumorr
     const Tissue& tissue() const {return tissue_;}
 
-    //! getter of CONFIG_STRING for tumorr
+    //! getter of #CONFIG_STRING for tumorr
     std::string conf() const {return CONFIG_STRING;}
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////

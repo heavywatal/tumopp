@@ -78,11 +78,11 @@ class Tissue {
     //! sample cells in a cross section
     std::vector<std::shared_ptr<Cell>> sample_section(const size_t) const;
 
-    //! Stringify specimens_
+    //! Stringify #specimens_
     std::string specimens() const {return specimens_.str();}
-    //! Stringify snapshots_
+    //! Stringify #snapshots_
     std::string snapshots() const {return snapshots_.str();}
-    //! Stringify drivers_
+    //! Stringify #drivers_
     std::string drivers() const {return drivers_.str();}
     //! Make TSV of pairwise distance
     std::string pairwise_distance(const size_t npair) const;
@@ -101,15 +101,15 @@ class Tissue {
         return coord_func_->euclidean_distance(x->coord()) / radius();
     }
 
-    //! Set coord_func_ for testing
+    //! Set #coord_func_ for testing
     template <class FuncObj>
     void init_coord_test() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
-    //! getter of coord_func_
+    //! getter of #coord_func_
     const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
     //! Unit test
     static void test();
-    //! Options description
+
     static boost::program_options::options_description opt_description();
 
   private:
@@ -132,7 +132,7 @@ class Tissue {
 
     //! Initializer is separated from constructor for restarting
     void init();
-    //! Set coord_func_
+    //! Set #coord_func_
     void init_coord();
     //! Check LOCAL_DENSITY_EFFECT_ and DISPLACEMENT_PATH_ and set function
     void init_insert_function();
@@ -161,7 +161,7 @@ class Tissue {
 
     //! Count adjacent empty sites
     uint_fast8_t num_empty_neighbors(const std::valarray<int>&) const;
-    //! num_empty_neighbors / directions().size()
+    //! num_empty_neighbors() / directions().size()
     double proportion_empty_neighbors(const std::valarray<int>& coord) const {
         double x = static_cast<double>(num_empty_neighbors(coord));
         return x /= static_cast<double>(coord_func_->directions().size());
@@ -204,7 +204,7 @@ class Tissue {
 
     //! record all cells existed
     std::ostringstream specimens_;
-    //! record state when size() < RECORDING_EARLY_GROWTH_
+    //! record state when size() < #RECORDING_EARLY_GROWTH_
     std::ostringstream snapshots_;
     //! record driver mutations
     std::ostringstream drivers_;

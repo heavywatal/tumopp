@@ -64,46 +64,46 @@ class Cell {
     //! Set death rate to simulate Moran-like model
     void increase_death_rate();
 
-    //! Calc dt and set next_event_
+    //! Calc dt and set #next_event_
     double delta_time(const double positional_value);
 
-    //! Check mutant ancestors on genealogy_
+    //! Check mutant ancestors on #genealogy_
     std::vector<unsigned int> has_mutations_of(const std::vector<size_t>&);
 
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
 
-    //! setter of coord_
+    //! setter of #coord_
     void set_coord(const std::valarray<int>& v) {coord_ = v;}
-    //! setter of time_of_birth_; reset other properties
+    //! setter of #time_of_birth_; reset other properties
     void set_time_of_birth(const double t, const size_t i) {
         time_of_birth_ = t;
         genealogy_.push_back(i);
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
         frustration_ = 0;
     }
-    //! setter of time_of_death_
+    //! setter of #time_of_death_
     void set_time_of_death(const double t) {time_of_death_ = t;}
-    //! Increment and regurn frustration_
+    //! Increment and return #frustration_
     uint_fast8_t frustration() {return ++frustration_;}
-    //! setter of birth_rate_
+    //! setter of #birth_rate_
     void set_birth_rate(const double x) {birth_rate_ = x;}
-    //! setter of death_rate_
+    //! setter of #death_rate_
     void set_death_rate(const double x) {death_rate_ = x;}
-    //! setter of migra_rate_
+    //! setter of #migra_rate_
     void set_migra_rate(const double x) {migra_rate_ = x;}
 
-    //! getter of birth_rate_
+    //! getter of #birth_rate_
     double birth_rate() const {return birth_rate_;}
-    //! getter of death_rate_
+    //! getter of #death_rate_
     double death_rate() const {return death_rate_;}
-    //! getter of migra_rate_
+    //! getter of #migra_rate_
     double migra_rate() const {return migra_rate_;}
-    //! getter of next_event_
+    //! getter of #next_event_
     Event next_event() const {return next_event_;}
-    //! getter of coord_
+    //! getter of #coord_
     const std::valarray<int>& coord() const {return coord_;}
-    //! getter of MUTATION_RATE_
+    //! getter of #MUTATION_RATE_
     static double MUTATION_RATE() {return MUTATION_RATE_;}
 
     //! TSV header
@@ -115,13 +115,13 @@ class Cell {
     //! TSV
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
-    //! Options description
-    static boost::program_options::options_description opt_description();
     //! Initialize probability distributions for events
     static void init_distributions();
 
     //! Unit test
     static void test();
+
+    static boost::program_options::options_description opt_description();
 
   private:
     //! \f$\beta_0\f$

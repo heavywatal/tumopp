@@ -27,7 +27,7 @@ constexpr double PI = boost::math::constants::pi<double>();
 */
 class Coord {
   public:
-    //! getter of directions_
+    //! getter of #directions_
     const std::vector<std::valarray<int>>& directions() const {return directions_;}
 
     //! [0, 0, ...]
