@@ -73,7 +73,7 @@ layout_genealogy = function(population) {
     nodes = igraph::layout_as_tree(graph, flip.y=FALSE) %>%
         tibble::as_tibble() %>%
         stats::setNames(c('pos', 'age')) %>%
-        dplyr::mutate(id= igraph::V(.data$graph)$name)
+        dplyr::mutate(id= igraph::V(graph)$name)
     .extant = population %>%
         dplyr::transmute(id= as.character(.data$id), extant= .data$death == 0)
     .children = dplyr::select(nodes, posend= .data$pos, ageend= .data$age, .data$id) %>%
