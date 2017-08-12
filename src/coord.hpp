@@ -23,7 +23,7 @@ namespace tumopp {
 //! Mathematical constant
 constexpr double PI = boost::math::constants::pi<double>();
 
-/*! Base class of coordinate system
+/*! @brief Base class of coordinate system
 */
 class Coord {
   public:
@@ -164,7 +164,7 @@ class Coord {
     std::uniform_int_distribution<ptrdiff_t> uniform_int_dist_;
 };
 
-/*! Derived class of coordinate system
+/*! @brief Derived class of Coord
 */
 class Neumann final: public Coord {
   public:
@@ -192,7 +192,7 @@ class Neumann final: public Coord {
     }
 };
 
-/*! Derived class of coordinate system
+/*! @brief Derived class of Coord
 
     Neumann + diagonal cells
 */
@@ -224,7 +224,7 @@ class Moore final: public Coord {
     }
 };
 
-/*! Derived class of coordinate system
+/*! @brief Derived class of Coord
 */
 class Hexagonal final: public Coord {
   public:

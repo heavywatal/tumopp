@@ -35,7 +35,7 @@ enum class Event: uint_fast8_t {
    migration,
 };
 
-/*! Cancer cell
+/*! @brief Cancer cell
 */
 class Cell {
   public:

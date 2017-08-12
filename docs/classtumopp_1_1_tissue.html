@@ -48,6 +48,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
@@ -60,8 +61,23 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Population of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a>.  
+ <a href="classtumopp_1_1_tissue.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtumopp_1_1_tissue_1_1equal__shptr__cell.html">equal_shptr_cell</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equal function object for shptr&lt;Cell&gt;  <a href="structtumopp_1_1_tissue_1_1equal__shptr__cell.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtumopp_1_1_tissue_1_1hash__shptr__cell.html">hash_shptr_cell</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashing function object for shptr&lt;Cell&gt;  <a href="structtumopp_1_1_tissue_1_1hash__shptr__cell.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtumopp_1_1_tissue_1_1hash__valarray__int.html">hash_valarray_int</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashing function object for cell coord.  <a href="structtumopp_1_1_tissue_1_1hash__valarray__int.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a06b43f679ea3dc8522a8d7bb27e3cd05"><td class="memItemLeft" align="right" valign="top"><a id="a06b43f679ea3dc8522a8d7bb27e3cd05"></a>
@@ -119,11 +135,11 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memitem:aca8b469b2c1b3f7810a0ddf2675eb059"><td class="memTemplParams" colspan="2"><a id="aca8b469b2c1b3f7810a0ddf2675eb059"></a>
 template&lt;class FuncObj &gt; </td></tr>
 <tr class="memitem:aca8b469b2c1b3f7810a0ddf2675eb059"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aca8b469b2c1b3f7810a0ddf2675eb059">init_coord_test</a> ()</td></tr>
-<tr class="memdesc:aca8b469b2c1b3f7810a0ddf2675eb059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="Call set_coord() once. ">coord_func_</a> for testing. <br /></td></tr>
+<tr class="memdesc:aca8b469b2c1b3f7810a0ddf2675eb059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="initialized in init_coord() or init_coord_test() ">coord_func_</a> for testing. <br /></td></tr>
 <tr class="separator:aca8b469b2c1b3f7810a0ddf2675eb059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="memItemLeft" align="right" valign="top"><a id="ad4a9d89742e26b5f4721f26ad7c53d33"></a>
 const std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_coord.html">Coord</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ad4a9d89742e26b5f4721f26ad7c53d33">coord_func</a> () const</td></tr>
-<tr class="memdesc:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="Call set_coord() once. ">coord_func_</a> <br /></td></tr>
+<tr class="memdesc:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="initialized in init_coord() or init_coord_test() ">coord_func_</a> <br /></td></tr>
 <tr class="separator:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
@@ -148,11 +164,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a2c7aa339db443c3c6914259de624496f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9703dfdce43531876171cff79bf1fea8"><td class="memItemLeft" align="right" valign="top"><a id="a9703dfdce43531876171cff79bf1fea8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a9703dfdce43531876171cff79bf1fea8">init_coord</a> ()</td></tr>
-<tr class="memdesc:a9703dfdce43531876171cff79bf1fea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="Call set_coord() once. ">coord_func_</a>. <br /></td></tr>
+<tr class="memdesc:a9703dfdce43531876171cff79bf1fea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="initialized in init_coord() or init_coord_test() ">coord_func_</a>. <br /></td></tr>
 <tr class="separator:a9703dfdce43531876171cff79bf1fea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa6609fd185f78e800f44b1e37a1ea1a"><td class="memItemLeft" align="right" valign="top"><a id="aaa6609fd185f78e800f44b1e37a1ea1a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aaa6609fd185f78e800f44b1e37a1ea1a">init_insert_function</a> ()</td></tr>
-<tr class="memdesc:aaa6609fd185f78e800f44b1e37a1ea1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check LOCAL_DENSITY_EFFECT_ and DISPLACEMENT_PATH_ and set function. <br /></td></tr>
+<tr class="memdesc:aaa6609fd185f78e800f44b1e37a1ea1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_tissue.html#af198b76dd15164f5c7e915ccad2c138d" title="initialized in init_insert_function() ">insert</a> function according to <a class="el" href="classtumopp_1_1_tissue.html#a900ece5313454d1cb05e6373d30910ca" title="E2 {const, step, linear}. ">LOCAL_DENSITY_EFFECT_</a> and <a class="el" href="classtumopp_1_1_tissue.html#ad5b317bb2a3c766acc7fa9b8fa4ffa1e" title="Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}. ">DISPLACEMENT_PATH_</a>. <br /></td></tr>
 <tr class="separator:aaa6609fd185f78e800f44b1e37a1ea1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a652673b9bc8935e261199b3665bba122"><td class="memItemLeft" align="right" valign="top"><a id="a652673b9bc8935e261199b3665bba122"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a652673b9bc8935e261199b3665bba122">migrate</a> (const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &amp;)</td></tr>
@@ -223,12 +239,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Private Attributes</h2></td></tr>
 <tr class="memitem:af198b76dd15164f5c7e915ccad2c138d"><td class="memItemLeft" align="right" valign="top"><a id="af198b76dd15164f5c7e915ccad2c138d"></a>
 std::function&lt; bool(const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#af198b76dd15164f5c7e915ccad2c138d">insert</a></td></tr>
-<tr class="memdesc:af198b76dd15164f5c7e915ccad2c138d"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialized in <a class="el" href="classtumopp_1_1_tissue.html#aaa6609fd185f78e800f44b1e37a1ea1a" title="Check LOCAL_DENSITY_EFFECT_ and DISPLACEMENT_PATH_ and set function. ">init_insert_function()</a> <br /></td></tr>
+<tr class="memdesc:af198b76dd15164f5c7e915ccad2c138d"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialized in <a class="el" href="classtumopp_1_1_tissue.html#aaa6609fd185f78e800f44b1e37a1ea1a" title="Set insert function according to LOCAL_DENSITY_EFFECT_ and DISPLACEMENT_PATH_. ">init_insert_function()</a> <br /></td></tr>
 <tr class="separator:af198b76dd15164f5c7e915ccad2c138d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c57ef30c2a008416bd7d58117b91569"><td class="memItemLeft" align="right" valign="top"><a id="a8c57ef30c2a008416bd7d58117b91569"></a>
-std::unordered_set&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;, std::hash&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;, <a class="el" href="classtumopp_1_1equal__shptr__cell.html">equal_shptr_cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a8c57ef30c2a008416bd7d58117b91569">tumor_</a></td></tr>
-<tr class="memdesc:a8c57ef30c2a008416bd7d58117b91569"><td class="mdescLeft">&#160;</td><td class="mdescRight">cells <br /></td></tr>
-<tr class="separator:a8c57ef30c2a008416bd7d58117b91569"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7e412502f859486d462d13938572025"><td class="memItemLeft" align="right" valign="top"><a id="ad7e412502f859486d462d13938572025"></a>
+std::unordered_set&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;, <a class="el" href="structtumopp_1_1_tissue_1_1hash__shptr__cell.html">hash_shptr_cell</a>, <a class="el" href="structtumopp_1_1_tissue_1_1equal__shptr__cell.html">equal_shptr_cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ad7e412502f859486d462d13938572025">tumor_</a></td></tr>
+<tr class="memdesc:ad7e412502f859486d462d13938572025"><td class="mdescLeft">&#160;</td><td class="mdescRight">cells <br /></td></tr>
+<tr class="separator:ad7e412502f859486d462d13938572025"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22722f6ed2e4aaa22d2e65af4c9c9970"><td class="memItemLeft" align="right" valign="top"><a id="a22722f6ed2e4aaa22d2e65af4c9c9970"></a>
 std::multimap&lt; double, std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a22722f6ed2e4aaa22d2e65af4c9c9970">queue_</a></td></tr>
 <tr class="memdesc:a22722f6ed2e4aaa22d2e65af4c9c9970"><td class="mdescLeft">&#160;</td><td class="mdescRight">event queue <br /></td></tr>
@@ -243,7 +259,7 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="separator:a89f08ed941405ca6283f847326b36124"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9ad7cc98294f4eb422bd0d9a52e74b8"><td class="memItemLeft" align="right" valign="top"><a id="aa9ad7cc98294f4eb422bd0d9a52e74b8"></a>
 std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_coord.html">Coord</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8">coord_func_</a></td></tr>
-<tr class="memdesc:aa9ad7cc98294f4eb422bd0d9a52e74b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call set_coord() once. <br /></td></tr>
+<tr class="memdesc:aa9ad7cc98294f4eb422bd0d9a52e74b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialized in <a class="el" href="classtumopp_1_1_tissue.html#a9703dfdce43531876171cff79bf1fea8" title="Set coord_func_. ">init_coord()</a> or <a class="el" href="classtumopp_1_1_tissue.html#aca8b469b2c1b3f7810a0ddf2675eb059" title="Set coord_func_ for testing. ">init_coord_test()</a> <br /></td></tr>
 <tr class="separator:aa9ad7cc98294f4eb422bd0d9a52e74b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa8e7986051ceb65c6676707583fdf1a"><td class="memItemLeft" align="right" valign="top"><a id="afa8e7986051ceb65c6676707583fdf1a"></a>
 std::ostringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#afa8e7986051ceb65c6676707583fdf1a">specimens_</a></td></tr>
@@ -262,19 +278,19 @@ std::ostringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:a998d38921a5651554e5a5acacae3b5da"><td class="memItemLeft" align="right" valign="top"><a id="a998d38921a5651554e5a5acacae3b5da"></a>
 static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a998d38921a5651554e5a5acacae3b5da">DIMENSIONS_</a></td></tr>
-<tr class="memdesc:a998d38921a5651554e5a5acacae3b5da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dimensions: {1, 2, 3}. <br /></td></tr>
+<tr class="memdesc:a998d38921a5651554e5a5acacae3b5da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dimensions: {2, 3}. <br /></td></tr>
 <tr class="separator:a998d38921a5651554e5a5acacae3b5da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af98d394951db537743ed9d096f802039"><td class="memItemLeft" align="right" valign="top"><a id="af98d394951db537743ed9d096f802039"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#af98d394951db537743ed9d096f802039">COORDINATE_</a></td></tr>
-<tr class="memdesc:af98d394951db537743ed9d096f802039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordinate system. <br /></td></tr>
+<tr class="memdesc:af98d394951db537743ed9d096f802039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordinate/neighborhood system {neumann, moore, hex}. <br /></td></tr>
 <tr class="separator:af98d394951db537743ed9d096f802039"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a900ece5313454d1cb05e6373d30910ca"><td class="memItemLeft" align="right" valign="top"><a id="a900ece5313454d1cb05e6373d30910ca"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a900ece5313454d1cb05e6373d30910ca">LOCAL_DENSITY_EFFECT_</a></td></tr>
-<tr class="memdesc:a900ece5313454d1cb05e6373d30910ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">{const, step, linear} <br /></td></tr>
+<tr class="memdesc:a900ece5313454d1cb05e6373d30910ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">E2 {const, step, linear}. <br /></td></tr>
 <tr class="separator:a900ece5313454d1cb05e6373d30910ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5b317bb2a3c766acc7fa9b8fa4ffa1e"><td class="memItemLeft" align="right" valign="top"><a id="ad5b317bb2a3c766acc7fa9b8fa4ffa1e"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ad5b317bb2a3c766acc7fa9b8fa4ffa1e">DISPLACEMENT_PATH_</a></td></tr>
-<tr class="memdesc:ad5b317bb2a3c766acc7fa9b8fa4ffa1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">{random, mindrag, minstraight} <br /></td></tr>
+<tr class="memdesc:ad5b317bb2a3c766acc7fa9b8fa4ffa1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}. <br /></td></tr>
 <tr class="separator:ad5b317bb2a3c766acc7fa9b8fa4ffa1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af85c4032a112b092353da51ef0b65cd5"><td class="memItemLeft" align="right" valign="top"><a id="af85c4032a112b092353da51ef0b65cd5"></a>
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#af85c4032a112b092353da51ef0b65cd5">SIGMA_E_</a></td></tr>
@@ -301,9 +317,9 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <tr class="separator:a44785d9eb8dbb90abeb3e5fed9c040f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>a mass of cancer cells </p>
+<div class="textblock"><p>Population of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="tissue_8hpp_source.html#l00063">63</a> of file <a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tissue_8hpp_source.html#l00032">32</a> of file <a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="tissue_8hpp_source.html">tissue.hpp</a></li>
 <li>src/<a class="el" href="tissue_8cpp_source.html">tissue.cpp</a></li>

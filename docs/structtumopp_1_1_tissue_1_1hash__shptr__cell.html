@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>tumopp: Tumor growth simulator in C++: std::hash&lt; std::valarray&lt; int &gt; &gt; Struct Template Reference</title>
+<title>tumopp: Tumor growth simulator in C++: tumopp::Tissue::hash_shptr_cell Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -43,37 +43,32 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>std</b></li><li class="navelem"><a class="el" href="structstd_1_1hash_3_01std_1_1valarray_3_01int_01_4_01_4.html">hash&lt; std::valarray&lt; int &gt; &gt;</a></li>  </ul>
+<li class="navelem"><b>tumopp</b></li><li class="navelem"><a class="el" href="classtumopp_1_1_tissue.html">Tissue</a></li><li class="navelem"><a class="el" href="structtumopp_1_1_tissue_1_1hash__shptr__cell.html">hash_shptr_cell</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structstd_1_1hash_3_01std_1_1valarray_3_01int_01_4_01_4-members.html">List of all members</a>  </div>
+<a href="structtumopp_1_1_tissue_1_1hash__shptr__cell-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">std::hash&lt; std::valarray&lt; int &gt; &gt; Struct Template Reference</div>  </div>
+<div class="title">tumopp::Tissue::hash_shptr_cell Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>hash function for cell coord  
- <a href="structstd_1_1hash_3_01std_1_1valarray_3_01int_01_4_01_4.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>&gt;</code></p>
+<p>Hashing function object for shptr&lt;Cell&gt;  
+ <a href="structtumopp_1_1_tissue_1_1hash__shptr__cell.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af31545f30f7e40efa17fe91e41b49aa4"><td class="memItemLeft" align="right" valign="top"><a id="af31545f30f7e40efa17fe91e41b49aa4"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1hash_3_01std_1_1valarray_3_01int_01_4_01_4.html#af31545f30f7e40efa17fe91e41b49aa4">operator()</a> (const std::valarray&lt; int &gt; &amp;v) const</td></tr>
-<tr class="memdesc:af31545f30f7e40efa17fe91e41b49aa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">hash function for cell coord <br /></td></tr>
-<tr class="separator:af31545f30f7e40efa17fe91e41b49aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc075af690d736936e996d93c8437850"><td class="memItemLeft" align="right" valign="top"><a id="adc075af690d736936e996d93c8437850"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtumopp_1_1_tissue_1_1hash__shptr__cell.html#adc075af690d736936e996d93c8437850">operator()</a> (const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">tumopp::Cell</a> &gt; &amp;x) const</td></tr>
+<tr class="memdesc:adc075af690d736936e996d93c8437850"><td class="mdescLeft">&#160;</td><td class="mdescRight">hash function <br /></td></tr>
+<tr class="separator:adc075af690d736936e996d93c8437850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;&gt;<br />
-struct std::hash&lt; std::valarray&lt; int &gt; &gt;</h3>
+<div class="textblock"><p>Hashing function object for shptr&lt;Cell&gt; </p>
 
-<p>hash function for cell coord </p>
-
-<p class="definition">Definition at line <a class="el" href="tissue_8hpp_source.html#l00032">32</a> of file <a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tissue_8hpp_source.html#l00165">165</a> of file <a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>.</p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/<a class="el" href="tissue_8hpp_source.html">tissue.hpp</a></li>
 </ul>

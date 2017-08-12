@@ -19,46 +19,15 @@
 #include <memory>
 #include <string>
 
-/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
-
 namespace boost {
     namespace program_options {
         class options_description;
     }
 }
 
-namespace std {
-  //! hash function for cell coord
-  template <> struct hash<std::valarray<int>> {
-    //! hash function for cell coord
-    size_t operator() (const std::valarray<int>& v) const {
-        return boost::hash_range(std::begin(v), std::end(v));
-    }
-  };
-  //! hash function for cell coord
-  template <> struct hash<std::shared_ptr<tumopp::Cell>> {
-    //! hash function for cell coord
-    size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
-        return std::hash<std::valarray<int>>()(x->coord());
-    }
-  };
-}
-
-/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
-
 namespace tumopp {
 
-//! Compare cell coord
-class equal_shptr_cell {
-  public:
-    //! Compare cell coord
-    bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
-                     const std::shared_ptr<tumopp::Cell>& rhs) const {
-        return (lhs->coord() == rhs->coord()).min();
-    }
-};
-
-/*! a mass of cancer cells
+/*! @brief Population of Cell
 */
 class Tissue {
   public:
@@ -113,13 +82,13 @@ class Tissue {
     static boost::program_options::options_description opt_description();
 
   private:
-    //! Dimensions: {1, 2, 3}
+    //! Dimensions: {2, 3}
     static unsigned int DIMENSIONS_;
-    //! Coordinate system
+    //! Coordinate/neighborhood system {neumann, moore, hex}
     static std::string COORDINATE_;
-    //! {const, step, linear}
+    //! E2 {const, step, linear}
     static std::string LOCAL_DENSITY_EFFECT_;
-    //! {random, mindrag, minstraight}
+    //! Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}
     static std::string DISPLACEMENT_PATH_;
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
@@ -134,7 +103,7 @@ class Tissue {
     void init();
     //! Set #coord_func_
     void init_coord();
-    //! Check LOCAL_DENSITY_EFFECT_ and DISPLACEMENT_PATH_ and set function
+    //! Set #insert function according to #LOCAL_DENSITY_EFFECT_ and #DISPLACEMENT_PATH_
     void init_insert_function();
     //! initialized in init_insert_function()
     std::function<bool(const std::shared_ptr<Cell>&)> insert;
@@ -182,12 +151,40 @@ class Tissue {
     void write(std::ostream&, const Cell&) const;
 
     /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+    // Function object for tumor_
+
+    //! Hashing function object for cell coord
+    struct hash_valarray_int {
+        //! hash function
+        size_t operator() (const std::valarray<int>& v) const {
+            return boost::hash_range(std::begin(v), std::end(v));
+        }
+    };
+
+    //! Hashing function object for shptr<Cell>
+    struct hash_shptr_cell {
+        //! hash function
+        size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
+            return hash_valarray_int()(x->coord());
+        }
+    };
+
+    //! Equal function object for shptr<Cell>
+    struct equal_shptr_cell {
+        //! Compare cell coord
+        bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
+                         const std::shared_ptr<tumopp::Cell>& rhs) const {
+            return (lhs->coord() == rhs->coord()).min();
+        }
+    };
+
+    /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
     //! cells
     std::unordered_set<
         std::shared_ptr<Cell>,
-        std::hash<std::shared_ptr<Cell>>,
+        hash_shptr_cell,
         equal_shptr_cell> tumor_;
 
     //! event queue
@@ -199,7 +196,7 @@ class Tissue {
     //! incremented when a new cell is born
     size_t id_tail_ = 0;
 
-    //! Call set_coord() once
+    //! initialized in init_coord() or init_coord_test()
     std::unique_ptr<Coord> coord_func_;
 
     //! record all cells existed
