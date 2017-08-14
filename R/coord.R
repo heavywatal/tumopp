@@ -22,7 +22,7 @@ trans_coord_hex_xy = function(.tbl) {
 #' @rdname coord
 trans_coord_hcc = function(.tbl) {
     trans_coord_hex_xy(.tbl) %>%
-    dplyr::mutate(x= .data$x + ifelse(.data$z %% 2 == 1, sqrt(3) / 3, 0)) %>%
+    dplyr::mutate(x= .data$x + ifelse(.data$z %% 2L == 1L, sqrt(3) / 3, 0)) %>%
     dplyr::mutate(z= .data$z * sqrt(2.0 / 3.0))
 }
 

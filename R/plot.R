@@ -87,7 +87,7 @@ save_serial_section = function(.tbl, filename='serial_section.gif', ..., width=7
     section_plots = dplyr::group_by(.tbl, .data$z) %>%
         dplyr::do(plt={
             plot_lattice2d(., ..., limit=.lim)+
-            ggplot2::geom_hline(yintercept=.$z[1])+
+            ggplot2::geom_hline(yintercept=.$z[1L])+
             wtl::theme_wtl()
         })
     animation::saveGIF({for (p in section_plots$plt) {print(p)}},

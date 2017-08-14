@@ -12,7 +12,7 @@ df2img(mtrx)
 
 img2df(img)
 
-get_se(coord = c("moore", "neumann", "hex"), dimensions = 3)
+get_se(coord = c("moore", "neumann", "hex"), dimensions = 3L)
 
 filter_surface(img, se)
 

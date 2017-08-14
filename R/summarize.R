@@ -23,8 +23,8 @@ within_between_samples = function(population, ncell=100L, npair=1L) {
         purrr::map_df(seq_len(npair), ~within_between_samples(population, ncell))
     } else {
         .extant = filter_extant(population)
-        .o1 = dplyr::sample_n(.extant, 1)
-        .o2 = dplyr::sample_n(.extant, 1)
+        .o1 = dplyr::sample_n(.extant, 1L)
+        .o2 = dplyr::sample_n(.extant, 1L)
         .nodes1 = sample_bulk(.extant, .o1, ncell)$id
         .nodes2 = sample_bulk(.extant, .o2, ncell)$id
         .within1 = mean_branch_length(population, .nodes1)

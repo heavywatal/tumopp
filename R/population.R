@@ -12,7 +12,7 @@ modify_population = function(..., num_clades=4L) {
     if (result$coord == 'hex') {
         population = trans_coord_hex(population)
     }
-    result$max_phi = c(hex=12, moore=27, neumann=6)[result$coord]
+    result$max_phi = c(hex=12L, moore=27L, neumann=6L)[result$coord]
     result$population = population %>%
         dplyr::mutate(r= dist_euclidean(.), phi= .data$phi / result$max_phi) %>%
         set_clades(num_clades) %>%

@@ -10,10 +10,10 @@ df2img = function(mtrx) {
         {expand.grid(x= seq(.$x_min, .$x_max),
                      y= seq(.$y_min, .$y_max),
                      z= seq(.$z_min, .$z_max))} %>% tibble::as_tibble()
-    joined = dplyr::left_join(.grid, mtrx %>% dplyr::mutate(v=1), by=vars)
-    joined = tidyr::replace_na(joined, list(v=0))
-    arr = reshape2::acast(joined, x ~ y ~ z, `[`, 1, value.var='v', fill=0)
-    dim(arr) = c(dim(arr), 1)
+    joined = dplyr::left_join(.grid, mtrx %>% dplyr::mutate(v=1L), by=vars)
+    joined = tidyr::replace_na(joined, list(v=0L))
+    arr = reshape2::acast(joined, x ~ y ~ z, `[`, 1L, value.var='v', fill=0L)
+    dim(arr) = c(dim(arr), 1L)
     arr
 }
 
@@ -24,7 +24,7 @@ df2img = function(mtrx) {
 #' @export
 img2df = function(img) {
     img %>%
-    {dim(.) = utils::head(dim(.), 3); .} %>%
+    {dim(.) = utils::head(dim(.), 3L); .} %>%
     reshape2::melt(c('x', 'y', 'z')) %>%
     tibble::as_tibble()
 }
@@ -35,9 +35,9 @@ img2df = function(img) {
 #' @return structuring element as a binary array
 #' @rdname morphology
 #' @export
-get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
+get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3L) {
      coord = match.arg(coord)
-     df = tibble::tibble(x=c(-1, 0, 1)) %>%
+     df = tibble::tibble(x=c(-1L, 0L, 1L)) %>%
          dplyr::mutate(y= .data$x, z= .data$x) %>%
          tidyr::expand_(dots=c('x', 'y', 'z'))
      if (coord == 'neumann') {
@@ -45,8 +45,8 @@ get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3) {
      } else if (coord == 'hex') {
          df = dplyr::filter(df, (trans_coord_hex(df) %>% dist_euclidean()) < 1.1)
      }
-     if (dimensions < 3) {
-         df = dplyr::filter(df, .data$z == 0)
+     if (dimensions < 3L) {
+         df = dplyr::filter(df, .data$z == 0L)
      }
      df2img(df)
 }
@@ -70,9 +70,9 @@ detect_surface = function(mtrx, se) {
     mins = dplyr::summarise_at(mtrx, axes, dplyr::funs(min))
     img = df2img(mtrx) %>% filter_surface(se)
     product = img2df(img) %>% dplyr::transmute(
-        x= .data$x + mins$x - 1,
-        y= .data$y + mins$y - 1,
-        z= .data$z + mins$z - 1,
-        surface= .data$value > 0)
+        x= .data$x + mins$x - 1L,
+        y= .data$y + mins$y - 1L,
+        z= .data$z + mins$z - 1L,
+        surface= .data$value > 0L)
     dplyr::left_join(mtrx, product, by=axes)
 }

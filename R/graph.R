@@ -55,13 +55,13 @@ mean_branch_length.igraph = function(graph, from=igraph::V(graph), to=from) {
 # Slow; do not use
 mean_branch_length.R = function(genealogy) {
     .len = length(genealogy)
-    .sum_lengths = sum(lengths(genealogy, FALSE)) * (.len - 1)
+    .sum_lengths = sum(lengths(genealogy, FALSE)) * (.len - 1L)
     .sum_intersects = tidyr::crossing(from=seq_len(.len), to=seq_len(.len)) %>%
         dplyr::filter(.data$from < .data$to) %>%
         purrr::pmap_int(function(from, to) {
             length(intersect(genealogy[[from]], genealogy[[to]]))
         }) %>% sum()
-    (.sum_lengths - 2 * .sum_intersects) / choose(.len, 2)
+    (.sum_lengths - 2 * .sum_intersects) / choose(.len, 2L)
 }
 
 #' Set coordinates of nodes and edges for plotting
