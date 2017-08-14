@@ -139,7 +139,7 @@ void Simulation::run() {HERE;
 void Simulation::write() const {HERE;
     std::cout << "tumopp " << COMMAND_ARGS << "\n" << SEED << "\n";
 
-    if (Tissue::DIMENSIONS() == 3) {
+    if (Tissue::DIMENSIONS() == 3U) {
         for (size_t i=0; i<HOWMANY; ++i) {
             tissue_.write_segsites(std::cout, tissue_.sample_section(NSAM));
         }

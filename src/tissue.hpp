@@ -31,14 +31,16 @@ namespace tumopp {
 */
 class Tissue {
   public:
-    //! getter of DIMENSIONS_
-    static unsigned int DIMENSIONS() {return DIMENSIONS_;}
-
     //! Constructor
     Tissue() = default;
 
     //! main function
     bool grow(const size_t max_size, const double plateau=0.0);
+
+    //! getter of #DIMENSIONS_
+    static unsigned int DIMENSIONS() {return DIMENSIONS_;}
+    //! Shortcut of tumor_.size()
+    size_t size() const {return tumor_.size();};
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
@@ -58,47 +60,21 @@ class Tissue {
 
     //! Write all cells
     void write(std::ostream&) const;
-
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
-
-    //! Shortcut of tumor_.size()
-    size_t size() const {return tumor_.size();};
-    //! Shortcut of coord.radius(tumor_.size())
-    double radius() const {return coord_func_->radius(tumor_.size());}
-    //! Relative distance from the origin
-    double relative_pos(std::shared_ptr<Cell> x) const {
-        return coord_func_->euclidean_distance(x->coord()) / radius();
-    }
-
-    //! Set #coord_func_ for testing
-    template <class FuncObj>
-    void init_coord_test() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
-    //! getter of #coord_func_
-    const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
 
     //! Unit test
     static void test();
+    //! Shortcut of coord.radius(tumor_.size())
+    double radius() const {return coord_func_->radius(tumor_.size());}
+    //! getter of #coord_func_
+    const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
+    //! Set #coord_func_ for testing
+    template <class FuncObj>
+    void init_coord_test() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
 
     static boost::program_options::options_description opt_description();
 
   private:
-    //! Dimensions: {2, 3}
-    static unsigned int DIMENSIONS_;
-    //! Coordinate/neighborhood system {neumann, moore, hex}
-    static std::string COORDINATE_;
-    //! E2 {const, step, linear}
-    static std::string LOCAL_DENSITY_EFFECT_;
-    //! Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}
-    static std::string DISPLACEMENT_PATH_;
-    //! 0: flat, +: peripheral growth
-    static double SIGMA_E_;
-    //! initial population size
-    static size_t INITIAL_SIZE_;
-    //! a flag
-    static size_t RECORDING_EARLY_GROWTH_;
-    //! Time (tumor_.size()) to introduce a driver mutation
-    static size_t MUTATION_TIMING_;
-
     //! Initializer is separated from constructor for restarting
     void init();
     //! Set #coord_func_
@@ -110,7 +86,6 @@ class Tissue {
 
     //! Swap with a random neighbor
     void migrate(const std::shared_ptr<Cell>&);
-
     //! Emplace daughter cell and push other cells to the direction
     void push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
     //! Push through the minimum drag path
@@ -150,7 +125,7 @@ class Tissue {
     //! TSV
     void write(std::ostream&, const Cell&) const;
 
-    /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+    /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for tumor_
 
     //! Hashing function object for cell coord
@@ -178,23 +153,38 @@ class Tissue {
         }
     };
 
-    /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+    /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
+
+    //! Dimensions: {2, 3}
+    static unsigned int DIMENSIONS_;
+    //! Coordinate/neighborhood system {neumann, moore, hex}
+    static std::string COORDINATE_;
+    //! E2 {const, step, linear}
+    static std::string LOCAL_DENSITY_EFFECT_;
+    //! Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}
+    static std::string DISPLACEMENT_PATH_;
+    //! 0: flat, +: peripheral growth
+    static double SIGMA_E_;
+    //! initial population size
+    static size_t INITIAL_SIZE_;
+    //! a flag
+    static size_t RECORDING_EARLY_GROWTH_;
+    //! Time (tumor_.size()) to introduce a driver mutation
+    static size_t MUTATION_TIMING_;
 
     //! cells
     std::unordered_set<
         std::shared_ptr<Cell>,
         hash_shptr_cell,
         equal_shptr_cell> tumor_;
+    //! incremented when a new cell is born
+    size_t id_tail_ = 0;
 
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;
-
     //! continuous time
     double time_ = 0.0;
-
-    //! incremented when a new cell is born
-    size_t id_tail_ = 0;
 
     //! initialized in init_coord() or init_coord_test()
     std::unique_ptr<Coord> coord_func_;

@@ -53,6 +53,9 @@ class Simulation {
     //! Print help message and exit
     void help_and_exit();
 
+    /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+    // Data member
+
     //! Tissue instance
     Tissue tissue_;
 

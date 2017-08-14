@@ -86,12 +86,6 @@ class Cell {
     void set_time_of_death(const double t) {time_of_death_ = t;}
     //! Increment and return #frustration_
     uint_fast8_t frustration() {return ++frustration_;}
-    //! setter of #birth_rate_
-    void set_birth_rate(const double x) {birth_rate_ = x;}
-    //! setter of #death_rate_
-    void set_death_rate(const double x) {death_rate_ = x;}
-    //! setter of #migra_rate_
-    void set_migra_rate(const double x) {migra_rate_ = x;}
 
     //! getter of #birth_rate_
     double birth_rate() const {return birth_rate_;}
@@ -112,7 +106,6 @@ class Cell {
     std::ostream& write(std::ostream& ost) const;
     //! TSV
     std::string str() const;
-    //! TSV
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Initialize probability distributions for events
@@ -124,6 +117,9 @@ class Cell {
     static boost::program_options::options_description opt_description();
 
   private:
+    /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+    // Data member
+
     //! \f$\beta_0\f$
     static double BIRTH_RATE_;
     //! \f$\delta_0\f$
