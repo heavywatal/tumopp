@@ -73,7 +73,7 @@ population %>%
     population %>%
         sample_glands() %>%
         summarize_glands()
-}, .id='sampling') %>% tbl_df() %>% print()
+}, .id='sampling') %>% as_tibble() %>% print()
 write_tsv(.repeated, "samples.tsv.gz")
 
 .p = .repeated %>%

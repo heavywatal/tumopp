@@ -70,7 +70,7 @@ gprint(.gg)
 ggsave('sample_phylogeny_Pifany.png', .gg, width=2, height=1, scale=6)
 
 .n = 40
-purrr::map_df(seq_len(.n), ~within_between_samples(.population)) %>%
+purrr::map_dfr(seq_len(.n), ~within_between_samples(.population)) %>%
     dplyr::mutate(fst=fst_HBK(within, between)) %>%
     ggplot(aes(euclidean, fst))+
     geom_point()+
