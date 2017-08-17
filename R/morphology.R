@@ -36,19 +36,18 @@ img2df = function(img) {
 #' @rdname morphology
 #' @export
 get_se = function(coord=c('moore', 'neumann', 'hex'), dimensions=3L) {
-     coord = match.arg(coord)
-     df = tibble::tibble(x=c(-1L, 0L, 1L)) %>%
-         dplyr::mutate(y= .data$x, z= .data$x) %>%
-         tidyr::expand_(dots=c('x', 'y', 'z'))
-     if (coord == 'neumann') {
-         df = dplyr::filter(df, abs(.data$x) + abs(.data$y) + abs(.data$z) < 2)
-     } else if (coord == 'hex') {
-         df = dplyr::filter(df, (trans_coord_hex(df) %>% dist_euclidean()) < 1.1)
-     }
-     if (dimensions < 3L) {
-         df = dplyr::filter(df, .data$z == 0L)
-     }
-     df2img(df)
+    coord = match.arg(coord)
+    v = c(-1L, 0L, 1L)
+    df = tidyr::crossing(x=v, y=v, z=v)
+    if (coord == 'neumann') {
+        df = dplyr::filter(df, abs(.data$x) + abs(.data$y) + abs(.data$z) < 2)
+    } else if (coord == 'hex') {
+        df = dplyr::filter(df, (trans_coord_hex(df) %>% dist_euclidean()) < 1.1)
+    }
+    if (dimensions < 3L) {
+        df = dplyr::filter(df, .data$z == 0L)
+    }
+    df2img(df)
 }
 
 #' Filter img by surface

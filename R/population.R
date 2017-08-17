@@ -89,7 +89,7 @@ count_descendants = function(population) {
 #' @export
 extract_demography = function(population) {population %>%
     dplyr::select(.data$birth, .data$death) %>%
-    tidyr::gather_('event', 'time', c('birth', 'death')) %>%
+    tidyr::gather('event', 'time', c('birth', 'death')) %>%
     dplyr::filter(!(.data$time == 0 & .data$event == 'death')) %>%  # alive
     dplyr::mutate(event= factor(.data$event, levels=c('death', 'birth'))) %>%
     dplyr::arrange(.data$time, .data$event) %>%
