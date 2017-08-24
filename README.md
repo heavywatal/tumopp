@@ -41,4 +41,5 @@ tumopp -N20000 -D3 -Chex -k100 -d0.1 -m0.5 -w -o OUTPUT
 
 Watal M. Iwasaki and Hideki Innan (2017)
 "Simulation Framework for Generating Intratumor Heterogeneity Patterns in a Cancer Cell Population"
+*PLOS ONE (in press)*
 [*bioRxive preprint*](https://doi.org/10.1101/109801)
