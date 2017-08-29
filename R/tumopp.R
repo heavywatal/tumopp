@@ -10,7 +10,7 @@ tumopp = function(args=character(0L), npair=0L) {
     } else {
         message(paste(args, collapse=' '))
         nsam_nrep = c('0', '0')
-        result = cpp_tumopp(c(args, nsam_nrep), npair)
+        result = cpp_tumopp(c(nsam_nrep, args), npair)
         .out = wtl::read_boost_ini(result[1L]) %>%
             dplyr::mutate(population=list(readr::read_tsv(result[2L]))) %>%
             purrr::pmap_dfr(modify_population)
