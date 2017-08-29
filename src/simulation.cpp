@@ -161,7 +161,7 @@ void Simulation::write() const {HERE;
         wtl::ozfstream{"drivers.tsv.gz"}
             << tissue_.drivers();
         wtl::ozfstream{"distance.tsv.gz"}
-            << tissue_.pairwise_distance(std::min(200UL, tissue_.size()));
+            << tissue_.pairwise_distance(std::min(200UL, tissue_.size() / 2U));
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
 }
