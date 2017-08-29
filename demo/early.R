@@ -5,17 +5,20 @@ library(wtl)
 library(tumorr)
 #########1#########2#########3#########4#########5#########6#########7#########
 
+# tumopp -D2 -Cmoore -O4 -R128 -N128 -w 0 0
+
 (.args = wtl::command_args())
 indir = .args$args[1]
 if (!is.na(indir)) {
     setwd(indir)
 }
 
-snapshots = tumorr::read_snapshots()$snapshots[[1]]
+snapshots = tumorr::read_snapshots()
 norigins = snapshots %>% dplyr::filter(time == 0) %>% nrow()
 nclades = max(4L, norigins)
-founders = snapshots %>% group_by(time) %>% dplyr::filter(n() == nclades) %>% {.$id}
-roots = snapshots %>% dplyr::filter(id < max(founders)) %>% {.$id} %>% setdiff(founders)
+founders = head(snapshots, nclades)$id %>% print()
+roots = head(snapshots, nclades)$genealogy %>%
+    flatten_int() %>% unique() %>% setdiff(founders) %>% print()
 
 .tbl = snapshots %>% dplyr::mutate(
     clade= purrr::map_int(.data$genealogy, ~{setdiff(.x, roots)[1L]}),
@@ -23,25 +26,26 @@ roots = snapshots %>% dplyr::filter(id < max(founders)) %>% {.$id} %>% setdiff(f
 
 .lim = max_abs_xyz(snapshots)
 
-plot_snapshot = function(.tbl) {
-    .t = .tbl$time[1]
-    .N = nrow(.tbl)
-    plot_lattice2d(.tbl, 'clade', limit=.lim)+
-    labs(title=sprintf('t = %.5f, N =%4d', .t, .N))+
+plot_snapshot = function(data, time) {
+    .N = nrow(data)
+    plot_lattice2d(data, 'clade', limit=.lim)+
+    labs(title=sprintf('t = %.5f, N =%4d', time, .N))+
     theme(legend.position='none')
 }
 
 if (FALSE) {
     .tbl %>%
-    dplyr::filter(time==sample(unique(time), 1)) %>%
-    plot_snapshot()
+    tidyr::nest(-time) %>%
+    dplyr::sample_n(1) %>%
+    {plot_snapshot(.$data[[1]], .$time)}
 }
 
 .out = .tbl %>%
-    dplyr::group_by(time) %>%
-    dplyr::do(plt={plot_snapshot(.)})
+    tidyr::nest(-time) %>%
+    dplyr::mutate(plt=purrr::pmap(., plot_snapshot)) %>%
+    print()
 
-animation::saveGIF({for (.p in .out$plt[-1]) {print(.p)}},
+animation::saveGIF({for (.p in .out$plt) {print(.p)}},
     'earlysteps.gif', outdir=getwd(),
     interval=0.15, ani.width=400, ani.height=400, loop=TRUE, autobrowse=FALSE)
 
