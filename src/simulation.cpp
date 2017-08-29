@@ -26,8 +26,8 @@ namespace po = boost::program_options;
 inline po::options_description general_desc() {HERE;
     po::options_description description("General");
     description.add_options()
-        ("help,h", po::value<bool>()->default_value(false)->implicit_value(true), "print this help")
-        ("verbose,v", po::value<bool>()->default_value(false)->implicit_value(true), "verbose output")
+        ("help,h", po::bool_switch(), "print this help")
+        ("verbose,v", po::bool_switch(), "verbose output")
         ("test", po::value<int>()->default_value(0)->implicit_value(1));
     return description;
 }
@@ -49,7 +49,7 @@ po::options_description Simulation::options_desc() {HERE;
     description.add_options()
         ("max,N", po::value(&MAX_SIZE)->default_value(MAX_SIZE))
         ("plateau,T", po::value(&PLATEAU_TIME)->default_value(PLATEAU_TIME))
-        ("write,w", po::value(&WRITE_TO_FILES)->default_value(WRITE_TO_FILES)->implicit_value(true))
+        ("write,w", po::bool_switch(&WRITE_TO_FILES))
         ("out_dir,o", po::value(&OUT_DIR)->default_value(OUT_DIR))
         ("seed", po::value(&SEED)->default_value(SEED));
     description.add(Cell::opt_description());
