@@ -87,6 +87,7 @@ void Tissue::init() {HERE;
             if (tumor_.size() >= INITIAL_SIZE_) break;
         }
     }
+    write(snapshots_);
 }
 
 void Tissue::init_coord() {HERE;
@@ -112,11 +113,6 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
     const size_t max_time = static_cast<size_t>(std::log2(max_size) * 10);
     size_t i = 0;
     while (true) {
-        if (tumor_.size() < RECORDING_EARLY_GROWTH_) {
-            write(snapshots_);
-        } else {
-            RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
-        }
         if (tumor_.size() >= max_size && time_stopped == 0.0) {
             // only the first time that tumor_.size() has reached max_size
             success = true;
@@ -163,6 +159,11 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
         } else {
             migrate(mother);
             queue_push(mother);
+        }
+        if (tumor_.size() < RECORDING_EARLY_GROWTH_) {
+            write(snapshots_);
+        } else {
+            RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
         }
     }
     DCERR(std::endl);
