@@ -23,7 +23,6 @@ Imports:
     Rcpp,
     wtl
 Suggests:
-    animation,
     gridExtra,
     igraph,
     rgl

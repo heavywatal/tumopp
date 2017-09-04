@@ -71,26 +71,27 @@ plot_bar_age = function(.tbl, xmax=max(.tbl$ageend), alpha=1.0, ...) {
 
 #########1#########2#########3#########4#########5#########6#########7#########
 
-#' Write animation GIF for serial sections of 3D tumor
+#' Plot serial sections of 3D tumor
 #' @param .tbl tbl with extant cells
-#' @param filename string
-#' @param ... passed to gglattice2d
-#' @param width integer
-#' @param height integer
-#' @rdname plot-animation
+#' @inheritParams ggplot2::ggsave
+#' @param ... passed to plot_lattice2d
+#' @rdname plot-section
 #' @export
-save_serial_section = function(.tbl, filename='serial_section.gif', ..., width=720, height=640) {
-    if (!requireNamespace('animation', quietly=TRUE)) {
-        stop('ERROR: animation is not installed')
-    }
+save_serial_section = function(.tbl, filename='png/section_%03d.png', scale=6, dpi=72, ...) {
     .lim = max_abs_xyz(.tbl)
-    section_plots = dplyr::group_by(.tbl, .data$z) %>%
-        dplyr::do(plt={
-            plot_lattice2d(., ..., limit=.lim)+
-            ggplot2::geom_hline(yintercept=.$z[1L])+
-            wtl::theme_wtl()
-        })
-    animation::saveGIF({for (p in section_plots$plt) {print(p)}},
-        filename, outdir=getwd(), interval=0.15,
-        ani.width=width, ani.height=height, loop=TRUE, autobrowse=FALSE)
+    tidyr::nest(.tbl, -.data$z) %>%
+    dplyr::arrange(.data$z) %>%
+    dplyr::mutate(i=seq_len(nrow(.))) %>%
+    purrr::pwalk(function(z, data, i) {
+        .outfile = sprintf(filename, i)
+        # TODO: fix color for each lineage
+        .p = plot_lattice2d(data, ..., limit=.lim)+
+            ggplot2::geom_hline(yintercept=z[1L], colour='#999999', size=1.5)+
+            ggplot2::labs(title=sprintf('z =%4.1f', z))+
+            wtl::theme_wtl()+
+            ggplot2::theme(legend.position='none',
+                axis.text=ggplot2::element_blank(),
+                axis.ticks=ggplot2::element_blank())
+        ggplot2::ggsave(.outfile, .p, width=1, height=1, scale=scale, dpi=dpi)
+    })
 }
