@@ -12,8 +12,8 @@ rgl::clear3d()
 rgl::view3d(70, 5, 60)
 axes3d()
 .r = 2
-seq(-.r, .r) %>%
-    (expand.grid(x=., y=., z=.)) %>%
+tibble(x=seq(-.r, .r), y=x, z=x) %>%
+    tidyr::expand(x, y, z) %>%
     tumorr:::trans_coord_hcc() %>%
     # tumorr:::trans_coord_fcc() %>%
     dplyr::mutate(r= sqrt(x*x+y*y+z*z)) %>%

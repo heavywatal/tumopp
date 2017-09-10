@@ -75,7 +75,7 @@ layout_genealogy = function(population) {
         stats::setNames(c('pos', 'age')) %>%
         dplyr::mutate(id= igraph::V(graph)$name)
     .extant = population %>%
-        dplyr::transmute(id= as.character(.data$id), extant= .data$death == 0)
+        dplyr::transmute(id= as.character(.data$id), extant= .data$death == 0, .data$clade)
     .children = dplyr::select(nodes, posend= .data$pos, ageend= .data$age, .data$id) %>%
         dplyr::left_join(.extant, by='id')
     make_edgelist(graph) %>%

@@ -4,12 +4,12 @@ library(wtl)
 library(tumorr)
 #########1#########2#########3#########4#########5#########6#########7#########
 
-# tumopp -D2 -Cmoore -Lconst -O4 -R256 -N256 -w 0 0 -o Cmoore_Lconst
-# tumopp -D2 -Cmoore -Lstep -O4 -R256 -N256 -w 0 0 -o Cmoore_Lstep
-# tumopp -D2 -Cmoore -Llinear -O4 -R256 -N256 -w 0 0 -o Cmoore_Llinear
-# tumopp -D2 -Chex -Lconst -O4 -R256 -N256 -w 0 0 -o Chex_Lconst
-# tumopp -D2 -Chex -Lstep -O4 -R256 -N256 -w 0 0 -o Chex_Lstep
-# tumopp -D2 -Chex -Llinear -O4 -R256 -N256 -w 0 0 -o Chex_Llinear
+# tumopp -D2 -k100 -Cmoore -Lconst -O4 -R256 -N256 -w 0 0 -o Cmoore_Lconst
+# tumopp -D2 -k100 -Cmoore -Lstep -O4 -R256 -N256 -w 0 0 -o Cmoore_Lstep
+# tumopp -D2 -k100 -Cmoore -Llinear -O4 -R256 -N256 -w 0 0 -o Cmoore_Llinear
+# tumopp -D2 -k100 -Chex -Lconst -O4 -R256 -N256 -w 0 0 -o Chex_Lconst
+# tumopp -D2 -k100 -Chex -Lstep -O4 -R256 -N256 -w 0 0 -o Chex_Lstep
+# tumopp -D2 -k100 -Chex -Llinear -O4 -R256 -N256 -w 0 0 -o Chex_Llinear
 
 (.args = wtl::command_args())
 indir = .args$args[1]
@@ -32,10 +32,12 @@ roots = head(snapshots, nclades)$genealogy %>%
 
 plot_snapshot = function(data, time) {
     .N = nrow(data)
-    tumorr::plot_lattice2d(data, 'clade', limit=.lim)+
-    labs(title=sprintf('t = %.5f, N =%4d', time, .N))+
-    theme(legend.position='none',
-        axis.text=element_blank(), axis.ticks=element_blank())
+    tumorr::plot_lattice2d(data, 'clade', alpha=1.0, limit=.lim)+
+    scale_color_brewer(palette='Spectral')+
+    # labs(title=sprintf('t = %.5f, N =%4d', time, .N))+
+    # theme_void()+
+    theme(axis.text=element_blank(), axis.ticks=element_blank())+
+    theme(legend.position='none')
 }
 
 .out = .tbl %>%
