@@ -5,10 +5,12 @@ citEntry(entry = "Article",
   author       = personList(as.person("Watal M. Iwasaki"), as.person("Hideki Innan")),
   journal      = "PLOS ONE",
   year         = "2017",
-  volume       = "in press",
-  url          = "http://www.biorxiv.org/content/early/2017/02/19/109801",
+  volume       = "12",
+  number       = "9",
+  pages        = "e0184229",
+  url          = "https://doi.org/10.1371/journal.pone.0184229",
 
   textVersion  = paste("W. M. Iwasaki and H. Innan (2017).",
                  "Simulation Framework for Generating Intratumor Heterogeneity Patterns in a Cancer Cell Population.",
-                 "PLOS ONE (in press)")
+                 "PLOS ONE 12(9): e0184229")
 )
