@@ -35,7 +35,7 @@ class Simulation {
     //! Top level function that should be called once from main()
     void run();
 
-    //! Write ms-like sequence and files (if WRITE_TO_FILES)
+    //! Write ms-like sequence and files (if #WRITE_TO_FILES)
     void write() const;
 
     //! getter of #tissue_ for tumorr
@@ -72,11 +72,11 @@ class Simulation {
     //! Seed for random number generator
     unsigned int SEED = std::random_device{}();
 
-    //! Target directory to which the contents in WORK_DIR are moved
+    //! Output directory is created if #WRITE_TO_FILES
     std::string OUT_DIR;
     //! Command line arguments
     std::string COMMAND_ARGS;
-    //! Writen to program_options.conf
+    //! Writen to "program_options.conf"
     std::string CONFIG_STRING;
 };
 

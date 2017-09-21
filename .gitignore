@@ -1,9 +1,4 @@
-*.out
-*.png
-*.pdf
 *.trace
-lib*.a
-lib*.so
-build/
-html/
-Dependfile
+/build/
+/docs/*.png
+/docs/*md_source.html
