@@ -42,7 +42,7 @@ class Simulation {
     const Tissue& tissue() const {return tissue_;}
 
     //! getter of #CONFIG_STRING for tumorr
-    std::string conf() const {return CONFIG_STRING;}
+    const std::string& conf() const {return CONFIG_STRING;}
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
