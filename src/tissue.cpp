@@ -173,7 +173,7 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
 
 void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
     double dt = x->delta_time(positional_value(x->coord()));
-    queue_.insert(queue_.end(), std::make_pair(dt += time_, x));
+    queue_.emplace_hint(queue_.end(), dt += time_, x);
 }
 
 void Tissue::init_insert_function() {
