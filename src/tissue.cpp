@@ -110,7 +110,7 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
     init();
     bool success = false;
     double time_stopped = 0.0;
-    const size_t max_time = static_cast<size_t>(std::log2(max_size) * 10);
+    const size_t max_time = static_cast<size_t>(std::log2(max_size) * 100);
     size_t i = 0;
     while (true) {
         if (tumor_.size() >= max_size && time_stopped == 0.0) {
@@ -147,7 +147,6 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
                 queue_push(mother);
                 queue_push(daughter);
             } else {
-                if (mother->frustration() > 250U) break;
                 queue_push(mother);
                 continue;  // skip write()
             }

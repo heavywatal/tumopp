@@ -80,12 +80,9 @@ class Cell {
         time_of_birth_ = t;
         genealogy_.push_back(i);
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
-        frustration_ = 0;
     }
     //! setter of #time_of_death_
     void set_time_of_death(const double t) {time_of_death_ = t;}
-    //! Increment and return #frustration_
-    uint_fast8_t frustration() {return ++frustration_;}
 
     //! getter of #birth_rate_
     double birth_rate() const {return birth_rate_;}
@@ -177,8 +174,6 @@ class Cell {
     Event next_event_ = Event::birth;
     //! elapsed time by migration
     double elapsed_ = 0.0;
-    //! become quiescent after some failures
-    uint_fast8_t frustration_ = 0;
 
     //! ancestor IDs
     std::vector<size_t> genealogy_;
