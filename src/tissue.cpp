@@ -165,7 +165,7 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
             RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
         }
     }
-    DCERR(std::endl);
+    DCERR("\r" << tumor_.size() << std::endl);
     write(specimens_);
     return success;
 }
