@@ -21,7 +21,7 @@ sample_bulk = function(population, center, size=100L) {
 #' @rdname sample
 #' @export
 make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NULL) {
-    samples = sample(genealogy, nsam)
+    samples = sample(genealogy, nsam, replace=FALSE)
     common_ancs = purrr::reduce(samples, intersect)
     nodes = purrr::flatten_int(samples) %>% unique() %>% setdiff(common_ancs)
     if (is.null(segsites)) {
