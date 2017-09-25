@@ -8,6 +8,9 @@ tumopp = function(args=character(0L), npair=0L) {
     if (is.list(args)) {
         purrr::map_dfr(args, tumopp, .id='args')
     } else {
+        if (length(args) == 1L) {
+            args = stringr::str_split(args, '\\s+') %>% purrr::flatten_chr()
+        }
         message(paste(args, collapse=' '))
         nsam_nrep = c('0', '0')
         result = cpp_tumopp(c(nsam_nrep, args), npair)
