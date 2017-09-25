@@ -20,14 +20,10 @@ make_edgelist = function(obj) {
 
 #' Make igraph from raw population tbl
 #' @param population tbl
-#' @param ids integer vector
 #' @return tibble
 #' @rdname graph
 #' @export
-make_igraph = function(population, ids=integer(0L)) {
-    if (length(ids) > 0L) {
-        population = filter_connected(population, ids)
-    }
+make_igraph = function(population) {
     igraph::graph_from_data_frame(make_edgelist(population))
 }
 
@@ -37,8 +33,10 @@ make_igraph = function(population, ids=integer(0L)) {
 #' @rdname graph
 #' @export
 mean_branch_length = function(population, from=integer(0L), to=from) {
-    graph = make_igraph(population, union(from, to))
-    mean_branch_length.igraph(graph, as.character(from), as.character(to))
+    population %>%
+    filter_connected(union(from, to)) %>%
+    make_igraph() %>%
+    mean_branch_length.igraph(as.character(from), as.character(to))
 }
 
 #' Mean branch length within/between sub-graphs

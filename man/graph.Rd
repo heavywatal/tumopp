@@ -10,7 +10,7 @@
 \usage{
 make_edgelist(obj)
 
-make_igraph(population, ids = integer(0L))
+make_igraph(population)
 
 mean_branch_length(population, from = integer(0L), to = from)
 
@@ -22,8 +22,6 @@ layout_genealogy(population)
 \item{obj}{population tbl or igraph}
 
 \item{population}{tbl}
-
-\item{ids}{integer vector}
 
 \item{from, to}{node id}
 
