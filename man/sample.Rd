@@ -13,7 +13,7 @@ make_samples(genealogy, nsam = length(genealogy), mu = NULL,
 \arguments{
 \item{population}{tibble of extant cells}
 
-\item{center}{named vector or single-row tbl}
+\item{center}{named (x, y, z) vector, list, or tibble}
 
 \item{size}{number of cells}
 
