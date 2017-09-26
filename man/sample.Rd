@@ -2,13 +2,12 @@
 % Please edit documentation in R/sample.R
 \name{sample_bulk}
 \alias{sample_bulk}
-\alias{make_samples}
+\alias{sprinkle_mutations}
 \title{Sample bulk of cells near the specified coord}
 \usage{
 sample_bulk(population, center, size = 100L)
 
-make_samples(genealogy, nsam = length(genealogy), mu = NULL,
-  segsites = NULL)
+sprinkle_mutations(genealogy, mu = NULL, segsites = NULL)
 }
 \arguments{
 \item{population}{tibble of extant cells}
@@ -18,8 +17,6 @@ make_samples(genealogy, nsam = length(genealogy), mu = NULL,
 \item{size}{number of cells}
 
 \item{genealogy}{list of int vectors}
-
-\item{nsam}{number of samples}
 
 \item{mu}{mutation rate per cell division (ignored if segsites is given)}
 
@@ -33,5 +30,5 @@ int matrix [nsam x segsites]
 \description{
 Sample bulk of cells near the specified coord
 
-Make ms-like matrix from genealogy column of population
+Make ms-like neutral variation matrix from genealogy column of extant cells
 }

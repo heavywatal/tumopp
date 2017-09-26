@@ -16,7 +16,7 @@ within_between_samples(population, ncell = 100L, npair = 1L)
 morphological_stats(extant)
 }
 \arguments{
-\item{msout}{tibble from `make_samples()`}
+\item{msout}{tibble from `sprinkle_mutations()`}
 
 \item{lowerbound}{to discard peripheral branches}
 
