@@ -26,15 +26,18 @@ sample_bulk = function(population, center, size=100L) {
 #' @rdname sample
 #' @export
 make_samples = function(genealogy, nsam=length(genealogy), mu=NULL, segsites=NULL) {
-    samples = sample(genealogy, nsam, replace=FALSE)
-    common_ancs = purrr::reduce(samples, intersect)
-    nodes = purrr::flatten_int(samples) %>% unique() %>% setdiff(common_ancs)
+    if (nsam < length(genealogy)) {
+        indices = sample.int(length(genealogy), nsam, replace=FALSE)
+        genealogy = genealogy[sort(indices)]
+    }
+    common_ancs = purrr::reduce(genealogy, intersect)
+    nodes = purrr::flatten_int(genealogy) %>% unique() %>% setdiff(common_ancs)
     if (is.null(segsites)) {
         if (is.null(mu)) stop('specify either mu or segsites')
         segsites = stats::rpois(1L, length(nodes) * mu)
     } else if (!is.null(mu)) warning('mu is ignored if segsites is given')
     mutant_ids = sample(nodes, segsites, replace=TRUE)
-    samples %>%
+    genealogy %>%
         purrr::map(~ mutant_ids %in% .) %>%
         purrr::flatten_int() %>%
         matrix(nrow=nsam, byrow=TRUE)
