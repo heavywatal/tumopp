@@ -12,7 +12,7 @@ a tumor growth simulator in C++.
 
 3.  Create `~/.R/Makevars` to specify the location of tumopp and boost libraries:
     ```
-    CPPFLAGS = -I${HOME}/local/include -L/usr/local/include
+    CPPFLAGS = -I${HOME}/local/include -I/usr/local/include
     LDFLAGS = -L${HOME}/local/lib -L/usr/local/lib
     ```
 
