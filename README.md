@@ -21,8 +21,8 @@ mkdir build-tumopp
 cd build-tumopp/
 export BOOST_ROOT=${HOME}/local
 cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ../tumopp
-make
-make install
+cmake --build .
+cmake --build . --target install
 ```
 
 ## Usage
