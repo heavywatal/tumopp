@@ -1,4 +1,3 @@
-// -*- mode: c++; coding: utf-8 -*-
 /*! @file simulation.cpp
     @brief Implementation of Simulation class
     @defgroup params Parameters

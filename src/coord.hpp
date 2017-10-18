@@ -1,4 +1,3 @@
-// -*- mode: c++; coding: utf-8 -*-
 /*! @file coord.hpp
     @brief Coordinate system
 */

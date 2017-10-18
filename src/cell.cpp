@@ -1,4 +1,3 @@
-// -*- mode: c++; coding: utf-8 -*-
 /*! @file cell.cpp
     @brief Implementation of Cell class
 */

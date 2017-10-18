@@ -1,4 +1,3 @@
-// -*- mode: c++; coding: utf-8 -*-
 /*! @file cell.hpp
     @brief Interface of Cell class
 */

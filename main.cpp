@@ -1,4 +1,3 @@
-// -*- mode: c++; coding: utf-8 -*-
 /*! @file main.cpp
     @brief Only defines tiny main()
 */
