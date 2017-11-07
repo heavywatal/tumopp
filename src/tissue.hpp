@@ -39,7 +39,7 @@ class Tissue {
     //! getter of #DIMENSIONS_
     static unsigned int DIMENSIONS() {return DIMENSIONS_;}
     //! Shortcut of tumor_.size()
-    size_t size() const {return tumor_.size();};
+    size_t size() const {return tumor_.size();}
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
@@ -67,9 +67,6 @@ class Tissue {
     double radius() const {return coord_func_->radius(tumor_.size());}
     //! getter of #coord_func_
     const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
-    //! Set #coord_func_ for testing
-    template <class FuncObj>
-    void init_coord_test() {coord_func_ = std::make_unique<FuncObj>(DIMENSIONS_);}
 
     static boost::program_options::options_description opt_description();
 

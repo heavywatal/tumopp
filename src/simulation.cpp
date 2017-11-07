@@ -64,7 +64,7 @@ po::options_description Simulation::positional_desc() {HERE;
     return description;
 }
 
-void Simulation::help_and_exit() {HERE;
+[[noreturn]] void Simulation::help_and_exit() {HERE;
     auto description = general_desc();
     description.add(options_desc());
     // do not print positional arguments as options

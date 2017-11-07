@@ -399,7 +399,7 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Cell>> section;
-    section.reserve(coord_func_->cross_section(tumor_.size()));
+    section.reserve(static_cast<size_t>(coord_func_->cross_section(tumor_.size())));
     for (const auto& p: tumor_) {
         if (p->coord()[2] == 0) {section.push_back(p);}
     }
@@ -452,7 +452,7 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
 //! Test coordinate system
 template <class T> inline
 void test_coordinate(const std::valarray<int>& v) {HERE;
-    T coord(v.size());
+    T coord(static_cast<unsigned int>(v.size()));
     std::cerr << coord.core() << std::endl;
     std::cerr << coord.sphere(20) << std::endl;
     for (auto x: coord.directions()) {
@@ -461,17 +461,8 @@ void test_coordinate(const std::valarray<int>& v) {HERE;
     std::cerr << coord.neighbors(v) << std::endl;
     std::cerr << coord.graph_distance(v) << std::endl;
     std::cerr << coord.euclidean_distance(v) << std::endl;
-}
-
-//! Test radius function
-template <class T> inline
-void test_radius() {HERE;
-    Tissue tissue;
-    tissue.init_coord_test<T>();
-    tissue.grow(100);
-    std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
-    tissue.grow(1000);
-    std::cerr << tissue.size() << ": " << tissue.radius() << std::endl;
+    std::cerr << coord.radius(100) << std::endl;
+    std::cerr << coord.radius(1000) << std::endl;
 }
 
 void Tissue::test() {HERE;
@@ -492,9 +483,6 @@ void Tissue::test() {HERE;
     test_coordinate<Neumann>(v3);
     test_coordinate<Moore>(v3);
     test_coordinate<Hexagonal>(v3);
-
-    test_radius<Moore>();
-    test_radius<Hexagonal>();
 }
 
 } // namespace tumopp

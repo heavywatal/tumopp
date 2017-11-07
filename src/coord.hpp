@@ -5,22 +5,20 @@
 #ifndef COORD_HPP_
 #define COORD_HPP_
 
-#include <boost/math/constants/constants.hpp>
-
-#include <cmath>
-#include <cstdlib> // std::abs for int
 #include <stdexcept>
 #include <valarray>
 #include <vector>
-#include <bitset>
-#include <numeric>
 #include <random>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
 
-//! Mathematical constant
-constexpr double PI = boost::math::constants::pi<double>();
+//! constexpr pow function for integers
+constexpr size_t ipow(size_t base, size_t exponent) noexcept {
+  return exponent <= 0u ? 1u
+       : exponent == 1u ? base
+       : base * ipow(base, --exponent);
+}
 
 /*! @brief Base class of coordinate system
 */
@@ -44,7 +42,7 @@ class Coord {
     //! Choose a random neighbor
     template <class RNG> inline
     std::valarray<int> random_direction(RNG& rng) {
-        return directions_[uniform_int_dist_(rng)];
+        return directions_[dist_direction_(rng)];
     }
     //! Choose a random neighbor of the specified site
     template <class RNG> inline
@@ -60,9 +58,7 @@ class Coord {
         });
     }
     //! Area of cross section
-    double cross_section(size_t vol) const {
-        return std::pow((9.0 / 16.0) * PI * (vol *= vol), 1.0 / 3.0);
-    }
+    double cross_section(size_t nodes) const;
 
     // virtual methods
     //! Graph distance
@@ -72,69 +68,11 @@ class Coord {
         return _euclidean_distance(v);
     }
     //! Estimate radius from volume
-    virtual double radius(const size_t points) const {
-        double x = points;
-        x /= PI;
-        if (dimensions_ == 2U) {
-            // S = pi r^2
-            return std::sqrt(x);
-        } else {
-            // V = 4/3 pi r^3
-            return std::pow(x *= (3.0 / 4.0), 1.0 / 3.0);
-        }
-    }
+    virtual double radius(const size_t nodes) const;
     //! square or cube
-    virtual std::vector<std::valarray<int>> core() const {
-        const size_t n = std::pow(2, dimensions_);
-        std::vector<std::valarray<int>> output;
-        output.reserve(n);
-        for (size_t i=0; i<n; ++i) {
-            std::bitset<3> bs(i);
-            std::valarray<int> v(dimensions_);
-            for (size_t j=0; j<dimensions_; ++j) {
-                v[j] = static_cast<int>(bs[j]);
-            }
-            output.push_back(v);
-        }
-        return output;
-    }
+    virtual std::vector<std::valarray<int>> core() const;
     //! sphere coordinates with inside-out direction
-    std::vector<std::valarray<int>> sphere(const size_t n) const {
-        std::vector<std::valarray<int>> output;
-        if (dimensions_ == 2U) {
-            const int lim = 9;
-            // radius 9: regular: 253, hex: 281
-            output.reserve(281);
-            for (int x=-lim; x<=lim; ++x) {
-                for (int y=-lim; y<=lim; ++y) {
-                    std::valarray<int> v = {x, y};
-                    if (euclidean_distance(v) <= lim) {
-                        output.push_back(v);
-                    }
-                }
-            }
-        } else {
-            const int lim = 4;
-            // radius 4: regular: 257, hex: 357
-            output.reserve(357);
-            for (int x=-lim; x<=lim; ++x) {
-                for (int y=-lim; y<=lim; ++y) {
-                    for (int z=-lim; z<=lim; ++z) {
-                        std::valarray<int> v = {x, y, z};
-                        if (euclidean_distance(v) <= lim) {
-                            output.push_back(v);
-                        }
-                    }
-                }
-            }
-        }
-        std::sort(output.begin(), output.end(),
-            [this](const std::valarray<int>& lhs, const std::valarray<int>& rhs){
-                return euclidean_distance(lhs) < euclidean_distance(rhs);
-        });
-        output.resize(n);
-        return output;
-    }
+    std::vector<std::valarray<int>> sphere(const size_t n) const;
     //! Destructor
     virtual ~Coord() = default;
 
@@ -162,7 +100,7 @@ class Coord {
     //! initialized in derived class constructor
     std::vector<std::valarray<int>> directions_;
     //! initialized in derived class constructor
-    std::uniform_int_distribution<ptrdiff_t> uniform_int_dist_;
+    std::uniform_int_distribution<unsigned int> dist_direction_;
 };
 
 /*! @brief Derived class of Coord
@@ -171,7 +109,7 @@ class Neumann final: public Coord {
   public:
     Neumann() = delete;
     //! Constructor
-    explicit Neumann(const size_t d): Coord(d) {
+    explicit Neumann(const unsigned int d): Coord(d) {
         directions_.reserve(2U * dimensions_);
         std::valarray<int> v(dimensions_);
         v[v.size() - 1] += 1;
@@ -183,14 +121,12 @@ class Neumann final: public Coord {
         do {
             directions_.push_back(v);
         } while (std::next_permutation(std::begin(v), std::end(v)));
-        uniform_int_dist_ = std::uniform_int_distribution<ptrdiff_t>(0, directions_.size() - 1);
+        auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+        dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
     }
     ~Neumann() = default;
     //! Manhattan distance
-    virtual int graph_distance(const std::valarray<int>& v) const override {
-        const std::valarray<int> absv = std::abs(v);
-        return absv.sum();
-    }
+    int graph_distance(const std::valarray<int>& v) const override;
 };
 
 /*! @brief Derived class of Coord
@@ -201,8 +137,8 @@ class Moore final: public Coord {
   public:
     Moore() = delete;
     //! Constructor
-    explicit Moore(const size_t d): Coord(d) {
-        directions_.reserve(std::pow(3, dimensions_) - 1);
+    explicit Moore(const unsigned int d): Coord(d) {
+        directions_.reserve(ipow(3u, dimensions_) - 1u);
         for (const int x: {-1, 0, 1}) {
             for (const int y: {-1, 0, 1}) {
                 if (dimensions_ == 2U) {
@@ -216,13 +152,12 @@ class Moore final: public Coord {
                 }
             }
         }
-        uniform_int_dist_ = std::uniform_int_distribution<ptrdiff_t>(0, directions_.size() - 1);
+        auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+        dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
     }
     ~Moore() = default;
     //! Chebyshev/chessboard distance
-    virtual int graph_distance(const std::valarray<int>& v) const override {
-        return std::abs(v).max();
-    }
+    int graph_distance(const std::valarray<int>& v) const override;
 };
 
 /*! @brief Derived class of Coord
@@ -231,7 +166,7 @@ class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;
     //! Constructor
-    explicit Hexagonal(const size_t d): Coord(d) {
+    explicit Hexagonal(const unsigned int d): Coord(d) {
         std::valarray<int> v{-1, 0, 1};
         directions_.reserve(6 * (dimensions_ - 1));
         if (dimensions_ == 2U) {
@@ -250,44 +185,14 @@ class Hexagonal final: public Coord {
             directions_.push_back({-1, 0, 1});
             directions_.push_back({-1, 1, 1});
         }
-        uniform_int_dist_ = std::uniform_int_distribution<ptrdiff_t>(0, directions_.size() - 1);
+        auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+        dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
     }
     ~Hexagonal() = default;
-    virtual int graph_distance(const std::valarray<int>& v) const override {
-        int d = std::max(std::abs(v).max(), std::abs(v[0] + v[1]));
-        if (dimensions_ > 2U) {
-            return std::max(d, std::abs(v[0] + v[2]));
-        }
-        return d;
-    }
-    virtual double euclidean_distance(const std::valarray<int>& v) const override {
-        std::valarray<double> true_pos(dimensions_);
-        true_pos[0] += static_cast<double>(v[0]);
-        true_pos[1] += static_cast<double>(v[1]);
-        true_pos[1] += true_pos[0] * 0.5;
-        true_pos[0] *= std::sqrt(3.0 / 4.0);
-        if (dimensions_ > 2U) {
-            true_pos[2] += static_cast<double>(v[2]);
-            true_pos[0] += true_pos[2] / sqrt(3.0);
-            true_pos[2] *= std::sqrt(2.0 / 3.0);
-        }
-        return _euclidean_distance(true_pos);
-    }
-    virtual double radius(const size_t volume) const override {
-        if (dimensions_ == 2U) {
-            return Coord::radius(volume * std::sqrt(3.0 / 4.0));
-        } else {
-            return Coord::radius(volume * std::sqrt(0.5));
-        }
-    }
-    virtual std::vector<std::valarray<int>> core() const override {
-        std::vector<std::valarray<int>> output = Neumann(dimensions_).core();
-        if (dimensions_ == 3U) {
-            output.resize(3);
-            output.push_back({1, 0, -1});
-        }
-        return output;
-    }
+    int graph_distance(const std::valarray<int>& v) const override;
+    double euclidean_distance(const std::valarray<int>& v) const override;
+    double radius(const size_t nodes) const override;
+    std::vector<std::valarray<int>> core() const override;
 };
 
 } // namespace tumopp

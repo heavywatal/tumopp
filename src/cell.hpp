@@ -167,7 +167,7 @@ class Cell {
     //! C1 cell type
     CellType type_ = CellType::stem;
     //! \f$\omega\f$
-    uint_fast8_t proliferation_capacity_ = MAX_PROLIFERATION_CAPACITY_;
+    uint_fast8_t proliferation_capacity_ = static_cast<uint_fast8_t>(MAX_PROLIFERATION_CAPACITY_);
 
     //! next event: birth, death, or migration
     Event next_event_ = Event::birth;
