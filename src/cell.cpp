@@ -233,7 +233,7 @@ std::ostream& Cell::write(std::ostream& ost) const {
     int z = (coord_.size() > 2U) ? coord_[2] : 0;
     return ost
         << coord_[0] << "\t" << coord_[1] << "\t" << z << "\t"
-        << wtl::join(genealogy_, ":") << "\t"
+        << wtl::str_join(genealogy_, ":") << "\t"
         << time_of_birth_ << "\t" << time_of_death_ << "\t"
         << birth_rate_ << "\t"
         << death_rate_ << "\t" << death_prob_ << "\t"

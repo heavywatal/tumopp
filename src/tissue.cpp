@@ -384,10 +384,10 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
     ost << "\n//\nsegsites: " << s << "\n";
     if (s > 0U) {
         segsites = wtl::transpose(segsites);
-        ost << "positions: "
-            << wtl::join(std::vector<int>(s), " ") << "\n";
+        ost << "positions: ";
+        wtl::join(std::vector<int>(s), ost, " ") << "\n";
         for (const auto& x: segsites) {
-            ost << wtl::join(x, "") << "\n";
+            wtl::join(x, ost, "") << "\n";
         }
     } else {ost << "\n";}
     return ost;

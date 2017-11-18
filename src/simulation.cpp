@@ -7,6 +7,7 @@
 
 #include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
+#include <wtl/chrono.hpp>
 #include <wtl/getopt.hpp>
 #include <wtl/zfstream.hpp>
 #include <sfmt.hpp>
