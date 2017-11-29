@@ -4,7 +4,7 @@
 #include "tissue.hpp"
 
 #include <sfmt.hpp>
-#include <wtl/prandom.hpp>
+#include <wtl/random.hpp>
 #include <wtl/iostr.hpp>
 #include <wtl/debug.hpp>
 #include <wtl/math.hpp>
