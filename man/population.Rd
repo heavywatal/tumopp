@@ -44,7 +44,7 @@ tibble
 
 tibble
 
-tibble with $id and $discendants
+tibble with $id and $descendants
 
 tibble
 }

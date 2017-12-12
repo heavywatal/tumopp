@@ -35,5 +35,5 @@ Run C++ simulation
 
 Run C++ simulation
 
-Make argment list for tumopp()
+Make argument list for tumopp()
 }

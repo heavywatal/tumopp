@@ -69,7 +69,7 @@ set_clades = function(population, num_clades) {
 }
 
 #' Add a column of living descendants number
-#' @return tibble with $id and $discendants
+#' @return tibble with $id and $descendants
 #' @rdname population
 count_descendants = function(population) {
     if (nrow(population) == 0L) {

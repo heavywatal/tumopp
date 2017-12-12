@@ -1,4 +1,4 @@
-#' Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele freqneucies
+#' Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies
 #' @inheritParams stats::mad
 #' @return numeric
 #' @rdname frequency

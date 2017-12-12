@@ -26,7 +26,7 @@ tumopp = function(args=character(0L), npair=0L) {
     }
 }
 
-#' Make argment list for tumopp()
+#' Make argument list for tumopp()
 #' @param alt named list of altered arguments
 #' @param const unnamed vector of constant arguments
 #' @param nreps number of repeats

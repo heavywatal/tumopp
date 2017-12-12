@@ -59,7 +59,7 @@ filter_surface = function(img, se) {
     img - mmand::erode(img, se)
 }
 
-#' extract cells on suface
+#' extract cells on surface
 #' @return tibble with surface column
 #' @rdname morphology
 #' @export

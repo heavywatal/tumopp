@@ -3,7 +3,7 @@
 \name{math_score}
 \alias{math_score}
 \alias{descfreqs}
-\title{Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele freqneucies}
+\title{Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies}
 \usage{
 math_score(x, constant = 1.4826, na.rm = FALSE)
 
@@ -27,7 +27,7 @@ numeric
 numeric vector applicable to math_score
 }
 \description{
-Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele freqneucies
+Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies
 
 Translate descendant numbers to frequencies
 }

@@ -49,5 +49,5 @@ Structuring element (kernel)
 
 Filter img by surface
 
-extract cells on suface
+extract cells on surface
 }
