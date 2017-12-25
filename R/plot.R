@@ -3,11 +3,11 @@
 #' @rdname plot
 #' @export
 histogram_freqspec = function(freqs) {
-    tibble::tibble(x=freqs) %>%
-    ggplot2::ggplot(ggplot2::aes_(~x, ~..density..))+
-    ggplot2::geom_histogram(bins=25)+
-    ggplot2::coord_cartesian(xlim=c(0, 1))+
-    ggplot2::labs(x='frequency of alleles (or living descendants)')+
+  tibble::tibble(x = freqs) %>%
+    ggplot2::ggplot(ggplot2::aes_(~x, ~..density..)) +
+    ggplot2::geom_histogram(bins = 25) +
+    ggplot2::coord_cartesian(xlim = c(0, 1)) +
+    ggplot2::labs(x = "frequency of alleles (or living descendants)") +
     wtl::theme_wtl()
 }
 
@@ -19,15 +19,15 @@ histogram_freqspec = function(freqs) {
 #' @param limit for value range
 #' @rdname plot
 #' @export
-plot_lattice2d = function(.tbl, colour='clade', alpha=0.66, size=1, limit=max_abs_xyz(.tbl)) {
-    ggplot2::ggplot(.tbl, ggplot2::aes_(~x, ~y))+
-    ggplot2::geom_point(ggplot2::aes_string(colour=colour), alpha=alpha, size=size*80/limit)+
-    ggplot2::coord_equal(xlim=limit * c(-1, 1), ylim=limit * c(-1, 1))+
-    wtl::theme_wtl()+
-    ggplot2::theme(axis.title=ggplot2::element_blank())
+plot_lattice2d = function(.tbl, colour="clade", alpha=0.66, size=1, limit=max_abs_xyz(.tbl)) {
+  ggplot2::ggplot(.tbl, ggplot2::aes_(~x, ~y)) +
+    ggplot2::geom_point(ggplot2::aes_string(colour = colour), alpha = alpha, size = size * 80 / limit) +
+    ggplot2::coord_equal(xlim = limit * c(-1, 1), ylim = limit * c(-1, 1)) +
+    wtl::theme_wtl() +
+    ggplot2::theme(axis.title = ggplot2::element_blank())
 }
 
-#########1#########2#########3#########4#########5#########6#########7#########
+######### 1#########2#########3#########4#########5#########6#########7#########
 
 #' Plot genealogy
 #' @param .tbl tbl from layout_genealogy()
@@ -36,18 +36,21 @@ plot_lattice2d = function(.tbl, colour='clade', alpha=0.66, size=1, limit=max_ab
 #' @return gg
 #' @rdname plot-igraph
 #' @export
-plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour='dodgerblue') {
-    ggplot2::ggplot(.tbl)+
-    ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend=~ageend, yend=~posend), alpha=0.3, size=0.3)+
-    ggplot2::geom_point(data=dplyr::filter(.tbl, .data$extant),
-        ggplot2::aes_(x=~ageend, y=~posend), size=0.8, colour=colour, alpha=0.2)+
-    ggplot2::coord_cartesian(xlim=c(0, xmax), expand=FALSE)+
-    wtl::theme_wtl()+
+plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour="dodgerblue") {
+  ggplot2::ggplot(.tbl) +
+    ggplot2::geom_segment(ggplot2::aes_(~age, ~pos, xend = ~ageend, yend = ~posend), alpha = 0.3, size = 0.3) +
+    ggplot2::geom_point(
+      data = dplyr::filter(.tbl, .data$extant),
+      ggplot2::aes_(x = ~ageend, y = ~posend), size = 0.8, colour = colour, alpha = 0.2
+    ) +
+    ggplot2::coord_cartesian(xlim = c(0, xmax), expand = FALSE) +
+    wtl::theme_wtl() +
     ggplot2::theme(
-        axis.title.y=ggplot2::element_blank(),
-        axis.text.y=ggplot2::element_blank(),
-        axis.ticks.y=ggplot2::element_blank(),
-        panel.grid.major.y=ggplot2::element_blank())
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_blank()
+    )
 }
 
 #' Plot age histogram
@@ -57,19 +60,20 @@ plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour='dodgerblue') {
 #' @rdname plot-igraph
 #' @export
 plot_bar_age = function(.tbl, xmax=max(.tbl$ageend), alpha=1.0, ...) {
-    dplyr::filter(.tbl, .data$extant) %>%
-    ggplot2::ggplot(ggplot2::aes_(~ageend, ...))+
-    ggplot2::geom_bar(alpha=alpha)+
-    ggplot2::coord_cartesian(xlim=c(0, xmax))+
-    wtl::theme_wtl()+
+  dplyr::filter(.tbl, .data$extant) %>%
+    ggplot2::ggplot(ggplot2::aes_(~ageend, ...)) +
+    ggplot2::geom_bar(alpha = alpha) +
+    ggplot2::coord_cartesian(xlim = c(0, xmax)) +
+    wtl::theme_wtl() +
     ggplot2::theme(
-        axis.title=ggplot2::element_blank(),
-        axis.text.y=ggplot2::element_blank(),
-        axis.ticks.y=ggplot2::element_blank(),
-        panel.grid.major.y=ggplot2::element_blank())
+      axis.title = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_blank()
+    )
 }
 
-#########1#########2#########3#########4#########5#########6#########7#########
+######### 1#########2#########3#########4#########5#########6#########7#########
 
 #' Plot serial sections of 3D tumor
 #' @param .tbl tbl with extant cells
@@ -77,21 +81,23 @@ plot_bar_age = function(.tbl, xmax=max(.tbl$ageend), alpha=1.0, ...) {
 #' @param ... passed to plot_lattice2d
 #' @rdname plot-section
 #' @export
-save_serial_section = function(.tbl, filename='png/section_%03d.png', scale=6, dpi=72, ...) {
-    .lim = max_abs_xyz(.tbl)
-    tidyr::nest(.tbl, -.data$z) %>%
+save_serial_section = function(.tbl, filename="png/section_%03d.png", scale=6, dpi=72, ...) {
+  .lim = max_abs_xyz(.tbl)
+  tidyr::nest(.tbl, -.data$z) %>%
     dplyr::arrange(.data$z) %>%
-    dplyr::mutate(i=seq_len(nrow(.))) %>%
+    dplyr::mutate(i = seq_len(nrow(.))) %>%
     purrr::pwalk(function(z, data, i) {
-        .outfile = sprintf(filename, i)
-        # TODO: fix color for each lineage
-        .p = plot_lattice2d(data, ..., limit=.lim)+
-            ggplot2::geom_hline(yintercept=z[1L], colour='#999999', size=1.5)+
-            ggplot2::labs(title=sprintf('z =%4.1f', z))+
-            wtl::theme_wtl()+
-            ggplot2::theme(legend.position='none',
-                axis.text=ggplot2::element_blank(),
-                axis.ticks=ggplot2::element_blank())
-        ggplot2::ggsave(.outfile, .p, width=1, height=1, scale=scale, dpi=dpi)
+      .outfile = sprintf(filename, i)
+      # TODO: fix color for each lineage
+      .p = plot_lattice2d(data, ..., limit = .lim) +
+        ggplot2::geom_hline(yintercept = z[1L], colour = "#999999", size = 1.5) +
+        ggplot2::labs(title = sprintf("z =%4.1f", z)) +
+        wtl::theme_wtl() +
+        ggplot2::theme(
+          legend.position = "none",
+          axis.text = ggplot2::element_blank(),
+          axis.ticks = ggplot2::element_blank()
+        )
+      ggplot2::ggsave(.outfile, .p, width = 1, height = 1, scale = scale, dpi = dpi)
     })
 }

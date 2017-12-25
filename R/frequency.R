@@ -4,9 +4,9 @@
 #' @rdname frequency
 #' @export
 math_score = function(x, constant=1.4826, na.rm=FALSE) {
-    med = stats::median(x, na.rm=na.rm)
-    mad = stats::mad(x, center=med, constant=constant, na.rm=na.rm)
-    mad / med
+  med = stats::median(x, na.rm = na.rm)
+  mad = stats::mad(x, center = med, constant = constant, na.rm = na.rm)
+  mad / med
 }
 
 #' Translate descendant numbers to frequencies
@@ -16,6 +16,6 @@ math_score = function(x, constant=1.4826, na.rm=FALSE) {
 #' @rdname frequency
 #' @export
 descfreqs = function(descendants, lowerbound=0) {
-    frac = descendants / max(descendants, na.rm=TRUE)
-    dplyr::if_else((lowerbound < frac) & (frac < 1), frac, as.double(NA))
+  frac = descendants / max(descendants, na.rm = TRUE)
+  dplyr::if_else((lowerbound < frac) & (frac < 1), frac, as.double(NA))
 }
