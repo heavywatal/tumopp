@@ -5,7 +5,7 @@ Tumor growth simulator in C++.
 ## Dependencies
 
 - Unix-like OS (macOS, Linux, etc.)
-- C++14 compiler (clang++ >= Apple LLVM 9.0, g++ >= 5.5)
+- C++14 compiler (clang++ >= Apple LLVM 9.0, g++ >= 5.3)
 - [CMake](https://cmake.org/)
 - [Boost C++ Libraries](http://www.boost.org/) (>= 1.66.0)
 - [sfmt-class](https://github.com/heavywatal/sfmt-class)
@@ -13,7 +13,13 @@ Tumor growth simulator in C++.
 
 ## Installation
 
-Use `BOOST_ROOT` environment variable so that CMake can find your boost library,
+The latest CMake and Boost can be easily installed via [Homebrew](https://brew.sh/)/[Linuxbrew](http://linuxbrew.sh/).
+
+```sh
+brew install cmake boost
+```
+
+If needed, set `BOOST_ROOT` environment variable so that CMake can find your boost library,
 e.g., `export BOOST_ROOT=$(brew --prefix)`
 
 ```sh
