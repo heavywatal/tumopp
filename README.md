@@ -13,23 +13,25 @@ Tumor growth simulator in C++.
 
 ## Installation
 
-The latest CMake and Boost can be easily installed via [Homebrew](https://brew.sh/)/[Linuxbrew](http://linuxbrew.sh/).
-
+The easiest way is to use [Homebrew](https://brew.sh/)/[Linuxbrew](http://linuxbrew.sh/).
+The following command installs tumopp and all the dependencies:
 ```sh
-brew install cmake boost
+brew install --HEAD heavywatal/tap/tumopp
 ```
 
-If needed, set `BOOST_ROOT` environment variable so that CMake can find your boost library,
-e.g., `export BOOST_ROOT=$(brew --prefix)`
-
+Alternatively, you can get the source code from GitHub manually:
 ```sh
 git clone https://github.com/heavywatal/tumopp.git
 mkdir build-tumopp
 cd build-tumopp/
-cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ../tumopp
-cmake --build .
-cmake --build . --target install
+YOUR_PREFIX=${HOME}/local  # or /usr/local
+cmake -DCMAKE_INSTALL_PREFIX=$YOUR_PREFIX ..
+make -j2
+make install
 ```
+
+If needed, set `BOOST_ROOT` environment variable so that CMake can find your boost library,
+e.g., `export BOOST_ROOT=$(brew --prefix)`
 
 ## Usage
 
