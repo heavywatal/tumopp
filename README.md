@@ -30,8 +30,9 @@ make -j2
 make install
 ```
 
-If needed, set `BOOST_ROOT` environment variable so that CMake can find your boost library,
-e.g., `export BOOST_ROOT=$(brew --prefix)`
+If needed, set `CMAKE_PREFIX_PATH` or `BOOST_ROOT` variable so that CMake can find your libraries,
+e.g., `cmake -DCMAKE_INSTALL_PREFIX=$(brew --prefix) ..`
+
 
 ## Usage
 
