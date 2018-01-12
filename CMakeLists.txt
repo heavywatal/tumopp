@@ -16,10 +16,8 @@ else()
 endif()
 add_compile_options(-O3 -march=native -Wall -Wextra -Wpedantic)
 
-find_package(wtl REQUIRED)
-link_libraries(wtl)
-find_package(sfmt REQUIRED)
-link_libraries(sfmt)
+find_package(wtl)
+find_package(sfmt)
 
 set(Boost_NO_BOOST_CMAKE TRUE)
 find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams system)
@@ -27,18 +25,21 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
-message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+if(${CMAKE_INSTALL_PREFIX} MATCHES linuxbrew)
+  set(CMAKE_INSTALL_LIBDIR lib)
+endif()
+
+set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
+set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 aux_source_directory(src srcfiles)
 message("Source files: ${srcfiles}")
 
-set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
-
 add_library(sharedlib SHARED ${srcfiles})
-target_link_libraries(sharedlib ${Boost_LIBRARIES} wtl sfmt)
+target_link_libraries(sharedlib wtl sfmt ${Boost_LIBRARIES})
 set_target_properties(sharedlib PROPERTIES
   OUTPUT_NAME ${PROJECT_NAME}
 )
