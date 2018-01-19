@@ -7,7 +7,7 @@ Tumor growth simulator in C++.
 - Unix-like OS (macOS, Linux, etc.)
 - C++14 compiler (clang++ >= Apple LLVM 9.0, g++ >= 5.3)
 - [CMake](https://cmake.org/)
-- [Boost C++ Libraries](http://www.boost.org/) (>= 1.66.0)
+- [Boost C++ Libraries](http://www.boost.org/) (>= 1.65.0)
 - [sfmt-class](https://github.com/heavywatal/sfmt-class)
 - [cxxwtl](https://github.com/heavywatal/cxxwtl)
 
@@ -22,16 +22,17 @@ brew install --HEAD heavywatal/tap/tumopp
 Alternatively, you can get the source code from GitHub manually:
 ```sh
 git clone https://github.com/heavywatal/tumopp.git
-mkdir build-tumopp
-cd build-tumopp/
-YOUR_PREFIX=${HOME}/local  # or /usr/local
-cmake -DCMAKE_INSTALL_PREFIX=$YOUR_PREFIX ..
+cd tumopp/
+mkdir build
+cd build/
+DESTINATION=${HOME}/local
+cmake -DCMAKE_INSTALL_PREFIX=$DESTINATION ..
 make -j2
 make install
 ```
 
-If needed, set `CMAKE_PREFIX_PATH` or `BOOST_ROOT` variable so that CMake can find your libraries,
-e.g., `cmake -DCMAKE_INSTALL_PREFIX=$(brew --prefix) ..`
+If needed, set `CMAKE_PREFIX_PATH` or `BOOST_ROOT` variable so that CMake can find prerequisite libraries,
+e.g., `cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..`
 
 
 ## Usage
@@ -41,7 +42,7 @@ Run tumopp in R via [`tumorr` package](https://github.com/heavywatal/tumorr)
 Alternatively, it can be executed as a command-line program:
 ```sh
 tumopp -h
-tumopp -N20000 -D3 -Chex -k100 -d0.1 -m0.5 -w -o OUTPUT
+tumopp -N20000 -D3 -Chex -k100 -d0.1 -m0.5 -o OUTPUT_DIR
 ```
 
 - [Online documentation generated with doxygen](https://heavywatal.github.io/tumopp/)
