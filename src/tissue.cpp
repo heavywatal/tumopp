@@ -12,8 +12,6 @@
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
 
-#include <boost/program_options.hpp>
-
 #include <iostream>
 #include <sstream>
 

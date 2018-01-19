@@ -8,17 +8,12 @@
 #include "tissue.hpp"
 
 #include <wtl/exception.hpp>
+#include <boost/program_options.hpp>
 
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <random>
-
-namespace boost {
-    namespace program_options {
-        class options_description;
-    }
-}
 
 namespace tumopp {
 

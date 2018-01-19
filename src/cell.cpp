@@ -6,8 +6,6 @@
 #include <sfmt.hpp>
 #include <wtl/iostr.hpp>
 
-#include <boost/program_options.hpp>
-
 #include <iostream>
 #include <sstream>
 
