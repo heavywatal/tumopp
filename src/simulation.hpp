@@ -29,14 +29,14 @@ class Simulation {
     //! Top level function that should be called once from main()
     void run();
 
-    //! Write ms-like sequence and files (if #WRITE_TO_FILES)
+    //! Write ms-like sequence and files
     void write() const;
 
     //! getter of #tissue_ for tumorr
     const Tissue& tissue() const {return tissue_;}
 
-    //! getter of #CONFIG_STRING for tumorr
-    const std::string& conf() const {return CONFIG_STRING;}
+    //! getter of #config_string_ for tumorr
+    const std::string& conf() const {return config_string_;}
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
@@ -54,24 +54,22 @@ class Simulation {
     Tissue tissue_;
 
     //! Number of samples
-    size_t NSAM = 20;
+    size_t nsam_ = 20;
     //! Number of repeats
-    size_t HOWMANY = 1;
+    size_t howmany_ = 1;
     //! Max tumor size to stop simulation
-    size_t MAX_SIZE = 16384;
+    size_t max_size_ = 16384;
     //! Duration of turnover phase after log growth
-    double PLATEAU_TIME = 0.0;
-    //! -w
-    bool WRITE_TO_FILES = false;
+    double plateau_time_ = 0.0;
     //! Seed for random number generator
-    unsigned int SEED = std::random_device{}();
+    unsigned int seed_ = std::random_device{}();
 
-    //! Output directory is created if #WRITE_TO_FILES
-    std::string OUT_DIR;
+    //! Output directory
+    std::string out_dir_;
     //! Command line arguments
-    std::string COMMAND_ARGS;
+    std::string command_args_;
     //! Writen to "program_options.conf"
-    std::string CONFIG_STRING;
+    std::string config_string_;
 };
 
 } // namespace tumopp

@@ -22,6 +22,9 @@ namespace tumopp {
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
+//! predefined name of output directory for -w option
+const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
+
 //! Options description for general purpose
 inline po::options_description general_desc() {HERE;
     po::options_description description("General");
@@ -38,20 +41,19 @@ inline po::options_description general_desc() {HERE;
 
     Command line option | Symbol         | Variable
     ------------------- | -------------- | -------------------------
-    `-N,--max`          | \f$N_\max\f$   | Simulation::MAX_SIZE
-    `-T,--plateau`      | -              | Simulation::PLATEAU_TIME
-    `-w,--write`        | -              | Simulation::WRITE_TO_FILES
-    `-o,--out_dir`      | -              | Simulation::OUT_DIR
-    `--seed`            | -              | Simulation::SEED
+    `-N,--max`          | \f$N_\max\f$   | Simulation::max_size_
+    `-T,--plateau`      | -              | Simulation::plateau_time_
+    `-o,--outdir`       | -              | Simulation::out_dir_
+    `--seed`            | -              | Simulation::seed_
 */
 po::options_description Simulation::options_desc() {HERE;
     po::options_description description("Simulation");
     description.add_options()
-        ("max,N", po::value(&MAX_SIZE)->default_value(MAX_SIZE))
-        ("plateau,T", po::value(&PLATEAU_TIME)->default_value(PLATEAU_TIME))
-        ("write,w", po::bool_switch(&WRITE_TO_FILES))
-        ("out_dir,o", po::value(&OUT_DIR)->default_value(OUT_DIR))
-        ("seed", po::value(&SEED)->default_value(SEED));
+      ("max,N", po::value(&max_size_)->default_value(max_size_))
+      ("plateau,T", po::value(&plateau_time_)->default_value(plateau_time_))
+      ("outdir-predefined,w", po::bool_switch(), OUT_DIR.c_str())
+      ("outdir,o", po::value(&out_dir_))
+      ("seed", po::value(&seed_)->default_value(seed_));
     description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
     return description;
@@ -60,8 +62,8 @@ po::options_description Simulation::options_desc() {HERE;
 po::options_description Simulation::positional_desc() {HERE;
     po::options_description description("Positional");
     description.add_options()
-        ("nsam", po::value(&NSAM)->default_value(NSAM))
-        ("howmany", po::value(&HOWMANY)->default_value(HOWMANY));
+        ("nsam", po::value(&nsam_)->default_value(nsam_))
+        ("howmany", po::value(&howmany_)->default_value(howmany_));
     return description;
 }
 
@@ -79,8 +81,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     std::cin.tie(0);
     std::cout.precision(15);
     std::cerr.precision(6);
-    COMMAND_ARGS = wtl::str_join(arguments, " ");
-    OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
+    command_args_ = wtl::str_join(arguments, " ");
 
     auto description = general_desc();
     description.add(options_desc());
@@ -95,50 +96,55 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     if (vm["help"].as<bool>()) {help_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
-    wtl::sfmt64().seed(SEED);
+    wtl::sfmt64().seed(seed_);
 
-    CONFIG_STRING = wtl::flags_into_string(vm);
+    config_string_ = wtl::flags_into_string(vm);
     if (vm["verbose"].as<bool>()) {
         std::cerr << wtl::iso8601datetime() << std::endl;
-        std::cerr << CONFIG_STRING << std::endl;
+        std::cerr << config_string_ << std::endl;
     }
-    if (NSAM > vm["max"].as<size_t>()) {
+    if (nsam_ > vm["max"].as<size_t>()) {
         std::ostringstream oss;
-        oss << "NSAM=" << NSAM
+        oss << "nsam_=" << nsam_
             << " is larger than final tumor size "
             << vm["max"].as<size_t>();
         throw std::runtime_error(oss.str());
     }
-    OUT_DIR = fs::system_complete(OUT_DIR).string();
+    if (vm["outdir-predefined"].as<bool>()) {
+        if (vm.count("outdir")) {
+            throw std::runtime_error("cannot use -o and -w at the same time");
+        }
+        out_dir_ = fs::system_complete(OUT_DIR).string();
+    }
 }
 
 void Simulation::run() {HERE;
     for (size_t i=0; i<10; ++i) {
-        if (tissue_.grow(MAX_SIZE, PLATEAU_TIME)) break;
+        if (tissue_.grow(max_size_, plateau_time_)) break;
     }
-    if (tissue_.size() != MAX_SIZE) {
+    if (tissue_.size() != max_size_) {
         std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
     }
 }
 
 void Simulation::write() const {HERE;
-    std::cout << "tumopp " << COMMAND_ARGS << "\n" << SEED << "\n";
+    std::cout << "tumopp " << command_args_ << "\n" << seed_ << "\n";
 
     if (Tissue::DIMENSIONS() == 3U) {
-        for (size_t i=0; i<HOWMANY; ++i) {
-            tissue_.write_segsites(std::cout, tissue_.sample_section(NSAM));
+        for (size_t i=0; i<howmany_; ++i) {
+            tissue_.write_segsites(std::cout, tissue_.sample_section(nsam_));
         }
     } else {
-        for (size_t i=0; i<HOWMANY; ++i) {
-            tissue_.write_segsites(std::cout, tissue_.sample_random(NSAM));
+        for (size_t i=0; i<howmany_; ++i) {
+            tissue_.write_segsites(std::cout, tissue_.sample_random(nsam_));
         }
     }
 
-    if (WRITE_TO_FILES) {
-        DCERR("mkdir && cd to " << OUT_DIR << std::endl);
-        fs::create_directory(OUT_DIR);
-        fs::current_path(OUT_DIR);
-        wtl::make_ofs("program_options.conf") << CONFIG_STRING;
+    if (!out_dir_.empty()) {
+        DCERR("mkdir && cd to " << out_dir_ << std::endl);
+        fs::create_directory(out_dir_);
+        fs::current_path(out_dir_);
+        wtl::make_ofs("program_options.conf") << config_string_;
         wtl::ozfstream{"population.tsv.gz"}
             << tissue_.specimens();
         wtl::ozfstream{"snapshots.tsv.gz"}
