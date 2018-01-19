@@ -107,9 +107,6 @@ class Cell {
     //! Initialize probability distributions for events
     static void init_distributions();
 
-    //! Unit test
-    static void test();
-
     static boost::program_options::options_description opt_description();
 
   private:

@@ -28,7 +28,7 @@ inline po::options_description general_desc() {HERE;
     description.add_options()
         ("help,h", po::bool_switch(), "print this help")
         ("verbose,v", po::bool_switch(), "verbose output")
-        ("test", po::value<int>()->default_value(0)->implicit_value(1));
+    ;
     return description;
 }
 
@@ -74,20 +74,6 @@ po::options_description Simulation::positional_desc() {HERE;
     throw wtl::ExitSuccess();
 }
 
-//! Unit test for each class
-inline void test(const int flg) {HERE;
-    switch (flg) {
-      case 0:
-        break;
-      case 1:
-        Cell::test();
-        Tissue::test();
-        throw wtl::ExitSuccess();
-      default:
-        throw std::runtime_error("Unknown argument for --test");
-    }
-}
-
 Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
@@ -116,7 +102,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
         std::cerr << wtl::iso8601datetime() << std::endl;
         std::cerr << CONFIG_STRING << std::endl;
     }
-    test(vm["test"].as<int>());
     if (NSAM > vm["max"].as<size_t>()) {
         std::ostringstream oss;
         oss << "NSAM=" << NSAM

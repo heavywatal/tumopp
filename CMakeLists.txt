@@ -62,3 +62,8 @@ install(DIRECTORY src/
 install(EXPORT ${PROJECT_NAME}-config
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
 )
+
+include(CTest)
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()

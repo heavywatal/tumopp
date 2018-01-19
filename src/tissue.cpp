@@ -19,14 +19,14 @@
 
 namespace tumopp {
 
-unsigned int Tissue::DIMENSIONS_;
-std::string Tissue::COORDINATE_;
-std::string Tissue::LOCAL_DENSITY_EFFECT_;
-std::string Tissue::DISPLACEMENT_PATH_;
-double Tissue::SIGMA_E_;
-size_t Tissue::INITIAL_SIZE_;
-size_t Tissue::RECORDING_EARLY_GROWTH_;
-size_t Tissue::MUTATION_TIMING_;
+unsigned int Tissue::DIMENSIONS_ = 3u;
+std::string Tissue::COORDINATE_ = "moore";
+std::string Tissue::LOCAL_DENSITY_EFFECT_ = "const";
+std::string Tissue::DISPLACEMENT_PATH_ = "default";
+double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
+size_t Tissue::INITIAL_SIZE_ = 1u;
+size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
+size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
 
 //! Program options
 /*! @ingroup params
@@ -47,14 +47,14 @@ boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
     po::options_description desc{"Tissue"};
     desc.add_options()
-        ("dimensions,D", po::value(&DIMENSIONS_)->default_value(3))
-        ("coord,C", po::value(&COORDINATE_)->default_value("moore"))
-        ("local,L", po::value(&LOCAL_DENSITY_EFFECT_)->default_value("const"))
-        ("path,P", po::value(&DISPLACEMENT_PATH_)->default_value("default"))
-        ("peripheral,g", po::value(&SIGMA_E_)->default_value(std::numeric_limits<double>::infinity()))
-        ("origin,O", po::value(&INITIAL_SIZE_)->default_value(1))
-        ("record,R", po::value(&RECORDING_EARLY_GROWTH_)->default_value(0))
-        ("mutate,U", po::value(&MUTATION_TIMING_)->default_value(std::numeric_limits<size_t>::max()))
+        ("dimensions,D", po::value(&DIMENSIONS_)->default_value(DIMENSIONS_))
+        ("coord,C", po::value(&COORDINATE_)->default_value(COORDINATE_))
+        ("local,L", po::value(&LOCAL_DENSITY_EFFECT_)->default_value(LOCAL_DENSITY_EFFECT_))
+        ("path,P", po::value(&DISPLACEMENT_PATH_)->default_value(DISPLACEMENT_PATH_))
+        ("peripheral,g", po::value(&SIGMA_E_)->default_value(SIGMA_E_))
+        ("origin,O", po::value(&INITIAL_SIZE_)->default_value(INITIAL_SIZE_))
+        ("record,R", po::value(&RECORDING_EARLY_GROWTH_)->default_value(RECORDING_EARLY_GROWTH_))
+        ("mutate,U", po::value(&MUTATION_TIMING_)->default_value(MUTATION_TIMING_))
     ;
     return desc;
 }
@@ -447,42 +447,6 @@ std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
         ost << *p << "\n";
     }
     return ost;
-}
-
-//! Test coordinate system
-template <class T> inline
-void test_coordinate(const std::valarray<int>& v) {HERE;
-    T coord(static_cast<unsigned int>(v.size()));
-    std::cerr << coord.core() << std::endl;
-    std::cerr << coord.sphere(20) << std::endl;
-    for (auto x: coord.directions()) {
-        std::cerr << x  << ": " << coord.euclidean_distance(x) << std::endl;
-    }
-    std::cerr << coord.neighbors(v) << std::endl;
-    std::cerr << coord.graph_distance(v) << std::endl;
-    std::cerr << coord.euclidean_distance(v) << std::endl;
-    std::cerr << coord.radius(100) << std::endl;
-    std::cerr << coord.radius(1000) << std::endl;
-}
-
-void Tissue::test() {HERE;
-    std::cerr.precision(15);
-
-    Tissue tissue;
-    tissue.grow(10);
-    std::cerr << tissue << std::endl;
-    std::cerr << tissue.header();
-    tissue.write(std::cerr);
-
-    const std::valarray<int> v2{3, -2};
-    test_coordinate<Neumann>(v2);
-    test_coordinate<Moore>(v2);
-    test_coordinate<Hexagonal>(v2);
-
-    const std::valarray<int> v3{3, -2, 1};
-    test_coordinate<Neumann>(v3);
-    test_coordinate<Moore>(v3);
-    test_coordinate<Hexagonal>(v3);
 }
 
 } // namespace tumopp

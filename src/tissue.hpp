@@ -57,12 +57,14 @@ class Tissue {
     //! Make TSV of pairwise distance
     std::string pairwise_distance(const size_t npair) const;
 
+    //! TSV header
+    std::string header() const;
+    //! TSV
+    void write(std::ostream&, const Cell&) const;
     //! Write all cells
     void write(std::ostream&) const;
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
-    //! Unit test
-    static void test();
     //! Shortcut of coord.radius(tumor_.size())
     double radius() const {return coord_func_->radius(tumor_.size());}
     //! getter of #coord_func_
@@ -115,11 +117,6 @@ class Tissue {
 
     //! Put random mutations on genealogy
     std::vector<size_t> generate_neutral_mutations() const;
-
-    //! TSV header
-    std::string header() const;
-    //! TSV
-    void write(std::ostream&, const Cell&) const;
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for tumor_
