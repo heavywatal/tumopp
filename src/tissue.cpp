@@ -180,7 +180,7 @@ void Tissue::init_insert_function() {
     std::unordered_map<std::string, map_sf> swtch;
 
     swtch["const"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
-        push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        push(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
     };
     swtch["const"]["mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
@@ -196,12 +196,12 @@ void Tissue::init_insert_function() {
         return true;
     };
     swtch["const"]["stroll"] = [this](const std::shared_ptr<Cell>& daughter) {
-        stroll(daughter, coord_func_->random_direction(wtl::sfmt()));
+        stroll(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
     };
     swtch["step"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
         if (num_empty_neighbors(daughter->coord()) == 0U) {return false;}
-        push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        push(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
     };
     swtch["step"]["mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
@@ -209,12 +209,12 @@ void Tissue::init_insert_function() {
     };
     swtch["linear"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
         const double prob = proportion_empty_neighbors(daughter->coord());
-        if (!std::bernoulli_distribution(prob)(wtl::sfmt())) {return false;}
-        push(daughter, coord_func_->random_direction(wtl::sfmt()));
+        if (!std::bernoulli_distribution(prob)(wtl::sfmt64())) {return false;}
+        push(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
     };
     swtch["linear"]["mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
-        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt()));
+        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt64()));
         return tumor_.insert(daughter).second;
     };
     swtch["const"]["default"] = swtch["const"]["random"];
@@ -257,7 +257,7 @@ void Tissue::stroll(std::shared_ptr<Cell> moving, const std::valarray<int>& dire
 bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
-    std::shuffle(neighbors.begin(), neighbors.end(), wtl::sfmt());
+    std::shuffle(neighbors.begin(), neighbors.end(), wtl::sfmt64());
     for (auto& x: neighbors) {
         moving->set_coord(x);
         if (tumor_.insert(moving).second) {
@@ -285,7 +285,7 @@ bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
 void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
     tumor_.erase(moving);
     const auto orig_pos = moving->coord();
-    moving->set_coord(coord_func_->random_neighbor(moving->coord(), wtl::sfmt()));
+    moving->set_coord(coord_func_->random_neighbor(moving->coord(), wtl::sfmt64()));
     auto result = tumor_.insert(moving);
     if (!result.second) {
         std::shared_ptr<Cell> existing = std::move(*result.first);
@@ -310,7 +310,7 @@ std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, c
     size_t least_steps = std::numeric_limits<size_t>::max();
     std::valarray<int> best_direction;
     auto directions = coord_func_->directions();
-    std::shuffle(directions.begin(), directions.end(), wtl::sfmt());
+    std::shuffle(directions.begin(), directions.end(), wtl::sfmt64());
     if (search_max < directions.size()) directions.resize(search_max);
     for (const auto& d: directions) {
         auto n = steps_to_empty(current, d);
@@ -324,14 +324,14 @@ std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, c
 
 std::valarray<int> Tissue::roulette_direction(const std::valarray<int>& current) const {
     auto directions = coord_func_->directions();
-    std::shuffle(directions.begin(), directions.end(), wtl::sfmt());
+    std::shuffle(directions.begin(), directions.end(), wtl::sfmt64());
     std::vector<double> roulette;
     for (const auto& d: directions) {
         const auto l = steps_to_empty(current, d);
         if (l == 0U) {return d;}
         roulette.push_back(1.0 / l);
     }
-    return directions[wtl::roulette_select(roulette, wtl::sfmt())];
+    return directions[wtl::roulette_select(roulette, wtl::sfmt64())];
 }
 
 uint_fast8_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
@@ -355,12 +355,12 @@ double Tissue::positional_value(const std::valarray<int>& coord) const {
 
 std::vector<size_t> Tissue::generate_neutral_mutations() const {
     std::poisson_distribution<unsigned int> poisson(Cell::MUTATION_RATE() * id_tail_);
-    const unsigned int num_mutants = poisson(wtl::sfmt());
+    const unsigned int num_mutants = poisson(wtl::sfmt64());
     std::uniform_int_distribution<size_t> uniform(0, id_tail_);
     std::vector<size_t> mutants;
     mutants.reserve(num_mutants);
     for (unsigned int i=0; i<num_mutants; ++i) {
-        mutants.push_back(uniform(wtl::sfmt()));
+        mutants.push_back(uniform(wtl::sfmt64()));
     }
     return mutants;
 }
@@ -394,7 +394,7 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
 }
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
-    return wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt());
+    return wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt64());
 }
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const {HERE;
@@ -403,14 +403,14 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
     for (const auto& p: tumor_) {
         if (p->coord()[2] == 0) {section.push_back(p);}
     }
-    return wtl::sample(section, n, wtl::sfmt());
+    return wtl::sample(section, n, wtl::sfmt64());
 }
 
 std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     auto oss = wtl::make_oss(6);
     oss << "genealogy\tgraph\teuclidean\n";
     auto samples = sample_random(2 * npair);
-    std::shuffle(samples.begin(), samples.end(), wtl::sfmt());
+    std::shuffle(samples.begin(), samples.end(), wtl::sfmt64());
     //TODO: should be randam sampling from all possible pairs
     const auto end = samples.cend();
     for (auto it=samples.cbegin(); it!=end; ++it) {

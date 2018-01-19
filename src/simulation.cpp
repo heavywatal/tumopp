@@ -95,7 +95,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
     if (vm["help"].as<bool>()) {help_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
-    wtl::sfmt().seed(SEED);
+    wtl::sfmt64().seed(SEED);
 
     CONFIG_STRING = wtl::flags_into_string(vm);
     if (vm["verbose"].as<bool>()) {

@@ -108,7 +108,7 @@ Cell::Cell(const Cell& other):
     proliferation_capacity_(other.proliferation_capacity_),
     genealogy_(other.genealogy_) {
     if (type_ == CellType::stem) {
-        if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt())) {
+        if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt64())) {
             type_ = CellType::nonstem;
         }
     }
@@ -116,19 +116,19 @@ Cell::Cell(const Cell& other):
 
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
-    if (BERN_BIRTH(wtl::sfmt())) {
-        double s = GAUSS_BIRTH(wtl::sfmt());
+    if (BERN_BIRTH(wtl::sfmt64())) {
+        double s = GAUSS_BIRTH(wtl::sfmt64());
         oss << genealogy_.back() << "\tbirth\t" << s << "\n";
         birth_rate_ *= (s += 1.0);
     }
-    if (BERN_DEATH(wtl::sfmt())) {
-        double s = GAUSS_DEATH(wtl::sfmt());
+    if (BERN_DEATH(wtl::sfmt64())) {
+        double s = GAUSS_DEATH(wtl::sfmt64());
         oss << genealogy_.back() << "\tdeath\t" << s << "\n";
         death_rate_ *= (s += 1.0);
         death_prob_ *= (s += 1.0);
     }
-    if (BERN_MIGRA(wtl::sfmt())) {
-        double s = GAUSS_MIGRA(wtl::sfmt());
+    if (BERN_MIGRA(wtl::sfmt64())) {
+        double s = GAUSS_MIGRA(wtl::sfmt64());
         oss << genealogy_.back() << "\tmigra\t" << s << "\n";
         migra_rate_ *= (s += 1.0);
     }
@@ -164,20 +164,20 @@ double Cell::delta_time(const double positional_value) {
         mu -= elapsed_;
         double theta = std::max(mu / GAMMA_SHAPE_, 0.0);
         std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
-        t_birth = gamma(wtl::sfmt());
+        t_birth = gamma(wtl::sfmt64());
     }
     if (death_rate_ > 0.0) {
         std::exponential_distribution<double> exponential(death_rate_);
-        t_death = exponential(wtl::sfmt());
+        t_death = exponential(wtl::sfmt64());
     }
     if (migra_rate_ > 0.0) {
         std::exponential_distribution<double> exponential(migra_rate_);
-        t_migra = exponential(wtl::sfmt());
+        t_migra = exponential(wtl::sfmt64());
     }
 
     if (t_birth < t_death && t_birth < t_migra) {
         std::bernoulli_distribution bern_death(death_prob_);
-        if (bern_death(wtl::sfmt())) {
+        if (bern_death(wtl::sfmt64())) {
             next_event_ = Event::death;
         } else {
             next_event_ = Event::birth;
