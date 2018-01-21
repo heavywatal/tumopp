@@ -12,6 +12,71 @@ namespace tumopp {
 //! Mathematical constant
 constexpr double PI = boost::math::constants::pi<double>();
 
+//! constexpr pow function for integers
+constexpr size_t ipow(size_t base, size_t exponent) noexcept {
+  return exponent <= 0u ? 1u
+       : exponent == 1u ? base
+       : base * ipow(base, --exponent);
+}
+
+Neumann::Neumann(const unsigned int d): Coord(d) {
+    directions_.reserve(2U * dimensions_);
+    std::valarray<int> v(dimensions_);
+    v[v.size() - 1] += 1;
+    do {
+        directions_.push_back(v);
+    } while (std::next_permutation(std::begin(v), std::end(v)));
+    v = 0;
+    v[0] -= 1;
+    do {
+        directions_.push_back(v);
+    } while (std::next_permutation(std::begin(v), std::end(v)));
+    auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+    dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
+}
+
+Moore::Moore(const unsigned int d): Coord(d) {
+    directions_.reserve(ipow(3u, dimensions_) - 1u);
+    for (const int x: {-1, 0, 1}) {
+        for (const int y: {-1, 0, 1}) {
+            if (dimensions_ == 2U) {
+                if (x == 0 && y == 0) continue;
+                directions_.push_back({x, y});
+                continue;
+            }
+            for (const int z: {-1, 0, 1}) {
+                if (x == 0 && y == 0 && z == 0) continue;
+                directions_.push_back({x, y, z});
+            }
+        }
+    }
+    auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+    dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
+}
+
+Hexagonal::Hexagonal(const unsigned int d): Coord(d) {
+    std::valarray<int> v{-1, 0, 1};
+    directions_.reserve(6 * (dimensions_ - 1));
+    if (dimensions_ == 2U) {
+        do {
+            directions_.push_back({v[0], v[1]});
+        } while (std::next_permutation(std::begin(v), std::end(v)));
+    }
+    else {
+        do {
+            directions_.push_back({v[0], v[1], 0});
+        } while (std::next_permutation(std::begin(v), std::end(v)));
+        directions_.push_back({0, 0, -1});
+        directions_.push_back({1, 0, -1});
+        directions_.push_back({1, -1, -1});
+        directions_.push_back({0, 0, 1});
+        directions_.push_back({-1, 0, 1});
+        directions_.push_back({-1, 1, 1});
+    }
+    auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+    dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
+}
+
 int Neumann::graph_distance(const std::valarray<int>& v) const {
     const std::valarray<int> absv = std::abs(v);
     return absv.sum();
