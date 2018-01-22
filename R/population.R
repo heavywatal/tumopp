@@ -29,18 +29,6 @@ filter_extant = function(population) {
   dplyr::filter(population, .data$death == 0)
 }
 
-#' Filter connected cells
-#' @param ids integer vector of extant/sample cells
-#' @return tibble
-#' @rdname population
-#' @export
-filter_connected = function(population, ids) {
-  ids = dplyr::filter(population, .data$id %in% ids)$genealogy %>%
-    purrr::flatten_int() %>%
-    unique()
-  dplyr::filter(population, .data$id %in% ids)
-}
-
 #' Add age and clade column
 #' @return tibble
 #' @rdname population
@@ -52,7 +40,7 @@ set_graph_property = function(population) {
   .out = dplyr::mutate(population,
     age = igraph::distances(.graph, nodes, '1', mode='in', algorithm='unweighted')[,1L],
     age = as.integer(.data$age),
-    descendants = igraph::neighborhood.size(.graph, order=65535L, nodes=nodes, mode='out'),
+    descendants = igraph::neighborhood.size(.graph, order=1073741824L, nodes=nodes, mode='out'),
     descendants = as.integer(.data$descendants)
   )
   founders = list_clade_founders(.out, 4L)

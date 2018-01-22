@@ -7,7 +7,7 @@
 \usage{
 sample_bulk(population, center, size = 100L)
 
-sprinkle_mutations(genealogy, mu = NULL, segsites = NULL)
+sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 }
 \arguments{
 \item{population}{tibble of extant cells}
@@ -16,7 +16,7 @@ sprinkle_mutations(genealogy, mu = NULL, segsites = NULL)
 
 \item{size}{number of cells}
 
-\item{genealogy}{list of int vectors}
+\item{nsam}{number of cells to sample}
 
 \item{mu}{mutation rate per cell division (ignored if segsites is given)}
 
@@ -30,5 +30,5 @@ int matrix [nsam x segsites]
 \description{
 Sample bulk of cells near the specified coord
 
-Make ms-like neutral variation matrix from genealogy column of extant cells
+Make ms-like neutral variation matrix
 }

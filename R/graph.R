@@ -10,7 +10,7 @@ make_edgelist = function(obj) {
   } else {
     dplyr::filter(obj, .data$age > 0L) %>%
       dplyr::transmute(
-        from = purrr::map2_int(.data$genealogy, .data$age, `[[`),
+        from = .data$ancestor,
         to = .data$id
       ) %>%
       dplyr::arrange(.data$to) %>%
@@ -34,7 +34,6 @@ make_igraph = function(population) {
 #' @export
 mean_branch_length = function(population, from=integer(0L), to=from) {
   population %>%
-    filter_connected(union(from, to)) %>%
     make_igraph() %>%
     mean_branch_length.igraph(as.character(from), as.character(to))
 }
@@ -48,19 +47,6 @@ mean_branch_length.igraph = function(graph, from=igraph::V(graph), to=from) {
   .d = igraph::distances(graph, from, to, mode = "all", weights = NA)
   .n = length(from) * length(to) - length(intersect(from, to))
   sum(.d) / .n
-}
-
-# Slow; do not use
-mean_branch_length.R = function(genealogy) {
-  .len = length(genealogy)
-  .sum_lengths = sum(lengths(genealogy, FALSE)) * (.len - 1L)
-  .sum_intersects = tidyr::crossing(from = seq_len(.len), to = seq_len(.len)) %>%
-    dplyr::filter(.data$from < .data$to) %>%
-    purrr::pmap_int(function(from, to) {
-      length(intersect(genealogy[[from]], genealogy[[to]]))
-    }) %>%
-    sum()
-  (.sum_lengths - 2 * .sum_intersects) / choose(.len, 2L)
 }
 
 #' Set coordinates of nodes and edges for plotting

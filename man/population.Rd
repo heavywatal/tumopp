@@ -3,7 +3,6 @@
 \name{modify_population}
 \alias{modify_population}
 \alias{filter_extant}
-\alias{filter_connected}
 \alias{set_graph_property}
 \alias{list_clade_founders}
 \alias{extract_demography}
@@ -12,8 +11,6 @@
 modify_population(..., num_clades = 4L)
 
 filter_extant(population)
-
-filter_connected(population, ids)
 
 set_graph_property(population)
 
@@ -27,12 +24,8 @@ extract_demography(population)
 \item{num_clades}{integer}
 
 \item{population}{tibble including ancestors}
-
-\item{ids}{integer vector of extant/sample cells}
 }
 \value{
-tibble
-
 tibble
 
 tibble
@@ -47,8 +40,6 @@ tibble
 Modify population table
 
 Filter extant cells
-
-Filter connected cells
 
 Add age and clade column
 
