@@ -1,27 +1,26 @@
 #' Modify population table
-#' @param ... a row of nested tibble
+#' @param population tibble
+#' @param coord string
+#' @param dimensions integer
+#' @param ... ignored
 #' @return tibble
 #' @rdname population
-modify_population = function(..., num_clades=4L) {
-  result = list(...)
-  population = result$population %>% set_graph_property()
+modify_population = function(population, coord, dimensions, ..., num_clades=4L) {
   extant = filter_extant(population)
-  strelem = get_se(result$coord, result$dimensions)
+  strelem = get_se(coord, dimensions)
   col_surface = detect_surface(extant, strelem) %>%
     dplyr::select(.data$id, .data$surface)
-  if (result$coord == "hex") {
+  if (coord == "hex") {
     population = trans_coord_hex(population)
   }
-  result$max_phi = c(hex = 12L, moore = 27L, neumann = 6L)[result$coord]
-  result$population = population %>%
-    dplyr::mutate(r = dist_euclidean(.), phi = .data$phi / result$max_phi) %>%
-    dplyr::left_join(col_surface, by = "id") %>%
-    list()
-  result
+  max_phi = c(hex = 12L, moore = 27L, neumann = 6L)[coord]
+  population %>%
+    set_graph_property() %>%
+    dplyr::mutate(r = dist_euclidean(.), phi = .data$phi / max_phi) %>%
+    dplyr::left_join(col_surface, by = "id")
 }
 
 #' Filter extant cells
-#' @param population tibble including ancestors
 #' @return tibble
 #' @rdname population
 #' @export

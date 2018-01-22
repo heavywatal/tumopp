@@ -8,7 +8,7 @@
 \alias{extract_demography}
 \title{Modify population table}
 \usage{
-modify_population(..., num_clades = 4L)
+modify_population(population, coord, dimensions, ..., num_clades = 4L)
 
 filter_extant(population)
 
@@ -19,11 +19,15 @@ list_clade_founders(population, num_clades)
 extract_demography(population)
 }
 \arguments{
-\item{...}{a row of nested tibble}
+\item{population}{tibble}
+
+\item{coord}{string}
+
+\item{dimensions}{integer}
+
+\item{...}{ignored}
 
 \item{num_clades}{integer}
-
-\item{population}{tibble including ancestors}
 }
 \value{
 tibble
