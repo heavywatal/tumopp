@@ -32,14 +32,12 @@ filter_extant = function(population) {
 #' @return tibble
 #' @rdname population
 set_graph_property = function(population) {
-  .graph = population %>%
-    dplyr::select(.data$ancestor, .data$id) %>%
-    igraph::graph_from_data_frame()
-  nodes = as.character(population$id)
+  .graph = make_igraph(population)
+  .nodes = as.character(population$id)
   .out = dplyr::mutate(population,
-    age = igraph::distances(.graph, nodes, '1', mode='in', algorithm='unweighted')[,1L],
+    age = igraph::distances(.graph, .nodes, '1', mode='in', algorithm='unweighted')[,1L],
     age = as.integer(.data$age),
-    descendants = igraph::neighborhood.size(.graph, order=1073741824L, nodes=nodes, mode='out'),
+    descendants = igraph::neighborhood.size(.graph, order=1073741824L, nodes=.nodes, mode='out'),
     descendants = as.integer(.data$descendants)
   )
   founders = list_clade_founders(.out, 4L)

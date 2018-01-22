@@ -8,7 +8,7 @@ make_edgelist = function(obj) {
     igraph::as_data_frame(obj, "edges") %>%
       tibble::as_tibble()
   } else {
-    dplyr::filter(obj, .data$age > 0L) %>%
+    dplyr::filter(obj, .data$ancestor > 0L) %>%
       dplyr::transmute(
         from = .data$ancestor,
         to = .data$id
