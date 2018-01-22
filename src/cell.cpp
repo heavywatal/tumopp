@@ -104,7 +104,9 @@ Cell::Cell(const Cell& other):
     migra_rate_(other.migra_rate_),
     type_(other.type_),
     proliferation_capacity_(other.proliferation_capacity_),
-    genealogy_(other.genealogy_) {
+    id_(other.id_),
+    ancestor_(other.ancestor_),
+    time_of_birth_(other.time_of_birth_) {
     if (type_ == CellType::stem) {
         if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt64())) {
             type_ = CellType::nonstem;
@@ -116,18 +118,18 @@ std::string Cell::mutate() {
     auto oss = wtl::make_oss();
     if (BERN_BIRTH(wtl::sfmt64())) {
         double s = GAUSS_BIRTH(wtl::sfmt64());
-        oss << genealogy_.back() << "\tbirth\t" << s << "\n";
+        oss << id_ << "\tbirth\t" << s << "\n";
         birth_rate_ *= (s += 1.0);
     }
     if (BERN_DEATH(wtl::sfmt64())) {
         double s = GAUSS_DEATH(wtl::sfmt64());
-        oss << genealogy_.back() << "\tdeath\t" << s << "\n";
+        oss << id_ << "\tdeath\t" << s << "\n";
         death_rate_ *= (s += 1.0);
         death_prob_ *= (s += 1.0);
     }
     if (BERN_MIGRA(wtl::sfmt64())) {
         double s = GAUSS_MIGRA(wtl::sfmt64());
-        oss << genealogy_.back() << "\tmigra\t" << s << "\n";
+        oss << id_ << "\tmigra\t" << s << "\n";
         migra_rate_ *= (s += 1.0);
     }
     return oss.str();
@@ -138,11 +140,10 @@ std::string Cell::force_mutate() {
     death_rate_ *= (1.0 + DRIVER_MEAN_DEATH_);
     death_prob_ *= (1.0 + DRIVER_MEAN_DEATH_);
     migra_rate_ *= (1.0 + DRIVER_MEAN_MIGRA_);
-    const size_t id = genealogy_.back();
     auto oss = wtl::make_oss();
-    oss << id << "\tbirth\t" << DRIVER_MEAN_BIRTH_ << "\n"
-        << id << "\tdeath\t" << DRIVER_MEAN_DEATH_ << "\n"
-        << id << "\tmigra\t" << DRIVER_MEAN_MIGRA_ << "\n";
+    oss << id_ << "\tbirth\t" << DRIVER_MEAN_BIRTH_ << "\n"
+        << id_ << "\tdeath\t" << DRIVER_MEAN_DEATH_ << "\n"
+        << id_ << "\tmigra\t" << DRIVER_MEAN_MIGRA_ << "\n";
     return oss.str();
 }
 
@@ -194,33 +195,19 @@ double Cell::delta_time(const double positional_value) {
 
 std::vector<unsigned int> Cell::has_mutations_of(const std::vector<size_t>& mutants) {
     std::vector<unsigned int> genotype;
-    genotype.reserve(mutants.size());
-    for (const auto mut: mutants) {
-        if (std::find(genealogy_.begin(), genealogy_.end(), mut) != genealogy_.end()) {
-            genotype.push_back(1U);
-        } else {
-            genotype.push_back(0U);
-        }
-    }
+    // TODO
     return genotype;
 }
 
 size_t Cell::branch_length(const Cell& other) const {
-    const size_t this_len = genealogy_.size();
-    const size_t other_len = other.genealogy_.size();
-    const size_t shorter = std::min(this_len, other_len);
-    size_t branch = this_len + other_len;
-    for (size_t i=0; i<shorter; ++i) {
-        if (genealogy_[i] != other.genealogy_[i]) break;
-        branch -= 2;
-    }
-    return branch;
+    // TODO
+    return 0u;
 }
 
 std::string Cell::header() {
     std::ostringstream oss;
     oss << "x\ty\tz\t"
-        << "genealogy\t"
+        << "id\tancestor\t"
         << "birth\tdeath\t"
         << "beta\tdelta\talpha\trho\t"
         << "type\tomega";
@@ -231,7 +218,8 @@ std::ostream& Cell::write(std::ostream& ost) const {
     int z = (coord_.size() > 2U) ? coord_[2] : 0;
     return ost
         << coord_[0] << "\t" << coord_[1] << "\t" << z << "\t"
-        << wtl::str_join(genealogy_, ":") << "\t"
+        << id_ << "\t"
+        << (ancestor_ ? ancestor_->id_ : 0u) << "\t"
         << time_of_birth_ << "\t" << time_of_death_ << "\t"
         << birth_rate_ << "\t"
         << death_rate_ << "\t" << death_prob_ << "\t"

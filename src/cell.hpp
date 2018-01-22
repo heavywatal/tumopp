@@ -35,9 +35,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::valarray<int>& v, const size_t i=0): coord_(v) {
-        genealogy_.push_back(i);
-    }
+    Cell(const std::valarray<int>& v, const size_t i=0): coord_(v), id_(i) {}
     //! Copy constructor
     Cell(const Cell& other);
     //! Destructor
@@ -69,9 +67,10 @@ class Cell {
     //! setter of #coord_
     void set_coord(const std::valarray<int>& v) {coord_ = v;}
     //! setter of #time_of_birth_; reset other properties
-    void set_time_of_birth(const double t, const size_t i) {
+    void set_time_of_birth(double t, uint_fast32_t i, const std::shared_ptr<Cell>& ancestor) {
         time_of_birth_ = t;
-        genealogy_.push_back(i);
+        id_ = i;
+        ancestor_ = ancestor;
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
     //! setter of #time_of_death_
@@ -165,8 +164,10 @@ class Cell {
     //! elapsed time by migration
     double elapsed_ = 0.0;
 
-    //! ancestor IDs
-    std::vector<size_t> genealogy_;
+    //! ID
+    uint_fast32_t id_;
+    //! ancestor's ID
+    std::shared_ptr<Cell> ancestor_ = 0;
     //! time of birth
     double time_of_birth_ = 0.0;
     //! time of death

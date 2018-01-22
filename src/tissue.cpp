@@ -74,12 +74,14 @@ void Tissue::init() {HERE;
     while (tumor_.size() < INITIAL_SIZE_) {
         for (const auto& mother: tumor_) {
             const auto daughter = std::make_shared<Cell>(*mother);
-            mother->set_time_of_death(0.0);
-            write(specimens_, *mother);
-            mother->set_time_of_birth(0.0, ++id_tail_);
-            daughter->set_time_of_birth(0.0, ++id_tail_);
+            const auto ancestor = std::make_shared<Cell>(*mother);
+            ancestor->set_time_of_death(0.0);
+            write(specimens_, *ancestor);
+            mother->set_time_of_birth(0.0, ++id_tail_, ancestor);
+            daughter->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_coord(initial_coords[tumor_.size()]);
             tumor_.insert(daughter);
+            // queue_push(mother);
             queue_push(daughter);
             if (tumor_.size() >= INITIAL_SIZE_) break;
         }
@@ -130,11 +132,11 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
         if (mother->next_event() == Event::birth) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
-                mother->set_time_of_death(time_);
-                write(specimens_, *mother);
-                mother->set_time_of_death(0.0);
-                mother->set_time_of_birth(time_, ++id_tail_);
-                daughter->set_time_of_birth(time_, ++id_tail_);
+                const auto ancestor = std::make_shared<Cell>(*mother);
+                ancestor->set_time_of_death(time_);
+                write(specimens_, *ancestor);
+                mother->set_time_of_birth(time_, ++id_tail_, ancestor);
+                daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 drivers_ << mother->mutate();
                 drivers_ << daughter->mutate();
                 if (tumor_.size() > MUTATION_TIMING_) {  // once
