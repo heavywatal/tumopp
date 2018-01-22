@@ -10,6 +10,7 @@ LazyData: true
 Imports:
     dplyr (>= 0.7),
     ggplot2,
+    igraph,
     magrittr,
     mmand,
     purrr (>= 0.2.3),
@@ -24,7 +25,6 @@ Imports:
     wtl
 Suggests:
     gridExtra,
-    igraph,
     rgl
 URL: https://github.com/heavywatal/tumorr
 BugReports: https://github.com/heavywatal/tumorr/issues

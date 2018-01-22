@@ -43,6 +43,6 @@ read_snapshots = function(indirs=getwd()) {
       .x = list(...)
       .d = readr::read_tsv(file.path(.x$directory, "snapshots.tsv.gz"))
       if (.x$coord == "hex") .d = trans_coord_hex(.d)
-      set_id(.d)
+      set_graph_property(.d)
     }, .to = "snapshots")
 }

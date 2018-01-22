@@ -4,7 +4,7 @@
 #' @rdname population
 modify_population = function(..., num_clades=4L) {
   result = list(...)
-  population = result$population %>% set_id()
+  population = result$population %>% set_graph_property()
   extant = filter_extant(population)
   strelem = get_se(result$coord, result$dimensions)
   col_surface = detect_surface(extant, strelem) %>%
@@ -15,8 +15,6 @@ modify_population = function(..., num_clades=4L) {
   result$max_phi = c(hex = 12L, moore = 27L, neumann = 6L)[result$coord]
   result$population = population %>%
     dplyr::mutate(r = dist_euclidean(.), phi = .data$phi / result$max_phi) %>%
-    set_clades(num_clades) %>%
-    dplyr::left_join(count_descendants(extant), by = "id") %>%
     dplyr::left_join(col_surface, by = "id") %>%
     list()
   result
@@ -43,50 +41,43 @@ filter_connected = function(population, ids) {
   dplyr::filter(population, .data$id %in% ids)
 }
 
-#' Extract age and id from genealogy column
+#' Add age and clade column
 #' @return tibble
 #' @rdname population
-set_id = function(population) {
-  dplyr::mutate(
-    population,
-    genealogy = stringr::str_split(.data$genealogy, ":") %>% purrr::map(as.integer),
-    age = lengths(.data$genealogy) - 1L,
-    id = purrr::map2_int(.data$genealogy, .data$age + 1L, `[`)
+set_graph_property = function(population) {
+  .graph = population %>%
+    dplyr::select(.data$ancestor, .data$id) %>%
+    igraph::graph_from_data_frame()
+  nodes = as.character(population$id)
+  .out = dplyr::mutate(population,
+    age = igraph::distances(.graph, nodes, '1', mode='in', algorithm='unweighted')[,1L],
+    age = as.integer(.data$age),
+    descendants = igraph::neighborhood.size(.graph, order=65535L, nodes=nodes, mode='out'),
+    descendants = as.integer(.data$descendants)
   )
+  founders = list_clade_founders(.out, 4L)
+  clade_data = founders %>%
+    as.character() %>%
+    rlang::set_names() %>%
+    purrr::map_dfr(~{
+      tibble::tibble(id = igraph::subcomponent(.graph, .x, mode='out')$name)
+    }, .id = 'clade') %>%
+    dplyr::mutate(
+      id = as.integer(.data$id),
+      clade = factor(.data$clade, levels = as.character(founders))
+    )
+  dplyr::left_join(.out, clade_data, by='id')
 }
 
-#' Add a column of ancestor ids by which branches are classified
 #' @param num_clades integer
-#' @return tibble
+#' @return ids of clade founders
 #' @rdname population
-set_clades = function(population, num_clades) {
+list_clade_founders = function(population, num_clades) {
   origin = sum(population$age == 0L)
   stopifnot(num_clades >= origin)
   num_divisions = num_clades - origin
   roots = utils::head(population$id, num_divisions)
-  founders = seq_len(num_divisions + num_clades) %>% setdiff(roots)
-  dplyr::mutate(
-    population,
-    clade = purrr::map_int(.data$genealogy, ~{
-      setdiff(.x, roots)[1L]
-    }),
-    clade = factor(.data$clade, levels = founders)
-  )
-}
-
-#' Add a column of living descendants number
-#' @return tibble with $id and $descendants
-#' @rdname population
-count_descendants = function(population) {
-  if (nrow(population) == 0L) {
-    return(tibble::tibble(id = integer(0L), descendants = integer(0L)))
-  }
-  population$genealogy %>%
-    purrr::flatten_int() %>%
-    table() %>%
-    tibble::as_tibble() %>%
-    stats::setNames(c("id", "descendants")) %>%
-    dplyr::mutate(id = as.integer(.data$id))
+  seq_len(num_divisions + num_clades) %>% setdiff(roots)
 }
 
 #' Extract demography from raw population data

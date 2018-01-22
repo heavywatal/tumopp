@@ -4,9 +4,8 @@
 \alias{modify_population}
 \alias{filter_extant}
 \alias{filter_connected}
-\alias{set_id}
-\alias{set_clades}
-\alias{count_descendants}
+\alias{set_graph_property}
+\alias{list_clade_founders}
 \alias{extract_demography}
 \title{Modify population table}
 \usage{
@@ -16,11 +15,9 @@ filter_extant(population)
 
 filter_connected(population, ids)
 
-set_id(population)
+set_graph_property(population)
 
-set_clades(population, num_clades)
-
-count_descendants(population)
+list_clade_founders(population, num_clades)
 
 extract_demography(population)
 }
@@ -42,9 +39,7 @@ tibble
 
 tibble
 
-tibble
-
-tibble with $id and $descendants
+ids of clade founders
 
 tibble
 }
@@ -55,11 +50,7 @@ Filter extant cells
 
 Filter connected cells
 
-Extract age and id from genealogy column
-
-Add a column of ancestor ids by which branches are classified
-
-Add a column of living descendants number
+Add age and clade column
 
 Extract demography from raw population data
 }
