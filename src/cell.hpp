@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <vector>
 #include <valarray>
+#include <unordered_set>
 #include <string>
 #include <random>
 
@@ -59,7 +60,7 @@ class Cell {
     double delta_time(const double positional_value);
 
     //! Check mutant ancestors on #genealogy_
-    std::vector<unsigned int> has_mutations_of(const std::vector<size_t>&);
+    std::vector<unsigned int> has_mutations_of(const std::vector<size_t>&) const;
 
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
@@ -103,6 +104,7 @@ class Cell {
     static boost::program_options::options_description opt_description();
 
   private:
+    std::unordered_set<uint_fast32_t> traceback() const;
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 

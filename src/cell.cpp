@@ -193,15 +193,47 @@ double Cell::delta_time(const double positional_value) {
     }
 }
 
-std::vector<unsigned int> Cell::has_mutations_of(const std::vector<size_t>& mutants) {
+std::unordered_set<uint_fast32_t> Cell::traceback() const {
+    std::unordered_set<uint_fast32_t> genealogy;
+    genealogy.emplace(id_);
+    for (std::shared_ptr<Cell> p = ancestor_; p; p = p->ancestor_) {
+        genealogy.emplace(p->id_);
+    }
+    return genealogy;
+}
+
+std::vector<unsigned int> Cell::has_mutations_of(const std::vector<size_t>& mutants) const {
+    // const auto genealogy = traceback();
+    const auto genealogy = traceback();
+    std::cout << genealogy << std::endl;
     std::vector<unsigned int> genotype;
-    // TODO
+    genotype.reserve(mutants.size());
+    for (const auto mut: mutants) {
+        if (genealogy.find(mut) != genealogy.end()) {
+            genotype.push_back(1u);
+        } else {
+            genotype.push_back(0u);
+        }
+    }
     return genotype;
 }
 
 size_t Cell::branch_length(const Cell& other) const {
-    // TODO
-    return 0u;
+    if (id_ == other.id_) return 0u;
+    size_t length = 2u;
+    uint_fast32_t mrca = 1u;
+    const auto genealogy = traceback();
+    for (std::shared_ptr<Cell> p = other.ancestor_; p; p = p->ancestor_) {
+        if (genealogy.find(p->id_) != genealogy.end()) {
+            mrca = p->id_;
+            break;
+        }
+        ++length;
+    }
+    for (std::shared_ptr<Cell> p = ancestor_; p->id_ > mrca; p = p->ancestor_) {
+        ++length;
+    }
+    return length;
 }
 
 std::string Cell::header() {
