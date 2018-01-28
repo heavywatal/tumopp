@@ -5,10 +5,10 @@
 #ifndef COORD_HPP_
 #define COORD_HPP_
 
-#include <stdexcept>
 #include <valarray>
 #include <vector>
 #include <random>
+#include <algorithm>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
@@ -73,11 +73,7 @@ class Coord {
     //! Default constructor is deleted
     Coord() = delete;
     //! Constructor: initialize and check #dimensions_
-    explicit Coord(const unsigned int d): dimensions_(d) {
-        if (d < 2U || 3U < d) {
-            throw std::runtime_error("Invalid value for dimensions");
-        }
-    }
+    explicit Coord(unsigned int d);
 
     //! Euclidean distance
     template <class T> inline

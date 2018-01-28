@@ -5,14 +5,14 @@
 #ifndef CELL_HPP_
 #define CELL_HPP_
 
-#include <boost/program_options.hpp>
-
 #include <cstdint>
 #include <vector>
 #include <valarray>
 #include <unordered_set>
 #include <string>
-#include <random>
+#include <memory>
+
+namespace boost {namespace program_options {class options_description;}}
 
 namespace tumopp {
 

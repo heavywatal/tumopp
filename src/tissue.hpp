@@ -8,16 +8,18 @@
 #include "coord.hpp"
 #include "cell.hpp"
 
-#include <boost/program_options.hpp>
 #include <boost/functional/hash.hpp>
 
 #include <cstdint>
-#include <iostream>
+#include <iosfwd>
 #include <vector>
 #include <valarray>
 #include <unordered_set>
+#include <map>
 #include <memory>
 #include <string>
+
+namespace boost {namespace program_options {class options_description;}}
 
 namespace tumopp {
 

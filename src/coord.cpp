@@ -4,8 +4,8 @@
 
 #include <cmath>
 #include <cstdlib> // std::abs for int
-#include <iostream>
 #include <bitset>
+#include <stdexcept>
 
 namespace tumopp {
 
@@ -17,6 +17,12 @@ constexpr size_t ipow(size_t base, size_t exponent) noexcept {
   return exponent <= 0u ? 1u
        : exponent == 1u ? base
        : base * ipow(base, --exponent);
+}
+
+Coord::Coord(unsigned int d): dimensions_(d) {
+    if (d < 2U || 3U < d) {
+        throw std::runtime_error("Invalid value for dimensions");
+    }
 }
 
 Neumann::Neumann(const unsigned int d): Coord(d) {

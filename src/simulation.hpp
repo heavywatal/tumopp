@@ -7,13 +7,10 @@
 
 #include "tissue.hpp"
 
-#include <wtl/exception.hpp>
-#include <boost/program_options.hpp>
-
-#include <iostream>
-#include <sstream>
 #include <vector>
-#include <random>
+#include <string>
+
+namespace boost {namespace program_options {class options_description;}}
 
 namespace tumopp {
 
@@ -62,7 +59,7 @@ class Simulation {
     //! Duration of turnover phase after log growth
     double plateau_time_ = 0.0;
     //! Seed for random number generator
-    unsigned int seed_ = std::random_device{}();
+    unsigned int seed_;
 
     //! Output directory
     std::string out_dir_;

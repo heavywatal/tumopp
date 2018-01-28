@@ -9,13 +9,12 @@
 #include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
 #include <wtl/getopt.hpp>
+#include <wtl/exception.hpp>
 #include <wtl/zfstream.hpp>
 #include <sfmt.hpp>
 
+#include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
-
-#include <cstdlib>
-#include <algorithm>
 
 namespace tumopp {
 
@@ -76,7 +75,8 @@ po::options_description Simulation::positional_desc() {HERE;
     throw wtl::ExitSuccess();
 }
 
-Simulation::Simulation(const std::vector<std::string>& arguments) {HERE;
+Simulation::Simulation(const std::vector<std::string>& arguments)
+: seed_(std::random_device{}()) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(15);

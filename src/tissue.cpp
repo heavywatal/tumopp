@@ -3,7 +3,6 @@
 */
 #include "tissue.hpp"
 
-#include <sfmt.hpp>
 #include <wtl/random.hpp>
 #include <wtl/iostr.hpp>
 #include <wtl/debug.hpp>
@@ -11,9 +10,8 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
-
-#include <iostream>
-#include <sstream>
+#include <sfmt.hpp>
+#include <boost/program_options.hpp>
 
 namespace tumopp {
 

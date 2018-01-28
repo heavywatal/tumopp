@@ -3,11 +3,9 @@
 */
 #include "cell.hpp"
 
-#include <sfmt.hpp>
 #include <wtl/iostr.hpp>
-
-#include <iostream>
-#include <sstream>
+#include <sfmt.hpp>
+#include <boost/program_options.hpp>
 
 namespace tumopp {
 
