@@ -2,22 +2,20 @@
 
 #include <wtl/iostr.hpp>
 
-#include <iostream>
-
 //! Test coordinate system
 template <class T> inline
 void test_coordinate(const std::valarray<int>& v) {
     T coord(static_cast<unsigned int>(v.size()));
-    std::cout << coord.core() << std::endl;
-    std::cout << coord.sphere(20) << std::endl;
+    std::cout << coord.core() << "\n";
+    std::cout << coord.sphere(20) << "\n";
     for (auto x: coord.directions()) {
-        std::cout << x  << ": " << coord.euclidean_distance(x) << std::endl;
+        std::cout << x  << ": " << coord.euclidean_distance(x) << "\n";
     }
-    std::cout << coord.neighbors(v) << std::endl;
-    std::cout << coord.graph_distance(v) << std::endl;
-    std::cout << coord.euclidean_distance(v) << std::endl;
-    std::cout << coord.radius(100) << std::endl;
-    std::cout << coord.radius(1000) << std::endl;
+    std::cout << coord.neighbors(v) << "\n";
+    std::cout << coord.graph_distance(v) << "\n";
+    std::cout << coord.euclidean_distance(v) << "\n";
+    std::cout << coord.radius(100) << "\n";
+    std::cout << coord.radius(1000) << "\n";
 }
 
 int main() {
@@ -26,7 +24,7 @@ int main() {
 
     tumopp::Tissue tissue;
     tissue.grow(10);
-    std::cout << tissue << std::endl;
+    std::cout << tissue << "\n";
     std::cout << tissue.header();
     tissue.write(std::cout);
 
