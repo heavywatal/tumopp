@@ -21,10 +21,7 @@ find_package(sfmt)
 
 set(Boost_NO_BOOST_CMAKE TRUE)
 find_package(Boost REQUIRED COMPONENTS program_options filesystem iostreams system)
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
 message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
-message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
 
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 if(${CMAKE_INSTALL_PREFIX} MATCHES linuxbrew)
@@ -38,19 +35,23 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 aux_source_directory(src srcfiles)
 message("Source files: ${srcfiles}")
 
-add_library(sharedlib SHARED ${srcfiles})
-target_link_libraries(sharedlib wtl sfmt ${Boost_LIBRARIES})
-set_target_properties(sharedlib PROPERTIES
+add_library(${PROJECT_NAME} SHARED ${srcfiles})
+target_include_directories(${PROJECT_NAME} BEFORE
+  PRIVATE ${Boost_INCLUDE_DIRS}
+  INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE wtl sfmt ${Boost_LIBRARIES})
+
+add_executable(${PROJECT_NAME}-exe main.cpp)
+target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME})
+if(PROFILE)
+  target_link_libraries(${PROJECT_NAME}-exe PRIVATE profiler)
+endif()
+set_target_properties(${PROJECT_NAME}-exe PROPERTIES
   OUTPUT_NAME ${PROJECT_NAME}
 )
 
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} sharedlib)
-if(PROFILE)
-  target_link_libraries(${PROJECT_NAME} profiler)
-endif()
-
-install(TARGETS ${PROJECT_NAME} sharedlib
+install(TARGETS ${PROJECT_NAME}-exe ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}-config
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
