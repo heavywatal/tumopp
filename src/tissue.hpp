@@ -8,10 +8,8 @@
 #include "coord.hpp"
 #include "cell.hpp"
 
-#include <boost/functional/hash.hpp>
-
 #include <cstdint>
-#include <iosfwd>
+#include <sstream>
 #include <vector>
 #include <valarray>
 #include <unordered_set>
@@ -118,19 +116,11 @@ class Tissue {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for tumor_
 
-    //! Hashing function object for cell coord
-    struct hash_valarray_int {
-        //! hash function
-        size_t operator() (const std::valarray<int>& v) const {
-            return boost::hash_range(std::begin(v), std::end(v));
-        }
-    };
-
     //! Hashing function object for shptr<Cell>
     struct hash_shptr_cell {
         //! hash function
         size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
-            return hash_valarray_int()(x->coord());
+            return Coord::hash(x->coord());
         }
     };
 

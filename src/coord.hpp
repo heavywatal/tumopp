@@ -17,6 +17,9 @@ namespace tumopp {
 */
 class Coord {
   public:
+    //! hash coordinates for std::unordered_* container
+    static size_t hash(const std::valarray<int>&);
+
     //! getter of #directions_
     const std::vector<std::valarray<int>>& directions() const {return directions_;}
 

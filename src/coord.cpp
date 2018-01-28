@@ -1,6 +1,7 @@
 #include "coord.hpp"
 
 #include <boost/math/constants/constants.hpp>
+#include <boost/functional/hash.hpp>
 
 #include <cmath>
 #include <cstdlib> // std::abs for int
@@ -200,6 +201,10 @@ std::vector<std::valarray<int>> Coord::sphere(const size_t n) const {
     });
     output.resize(n);
     return output;
+}
+
+size_t Coord::hash(const std::valarray<int>& v) {
+    return boost::hash_range(std::begin(v), std::end(v));
 }
 
 }
