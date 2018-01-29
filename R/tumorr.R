@@ -5,3 +5,5 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 NULL
+# to suppress NOTE
+utils::globalVariables(c(".", "n"))
