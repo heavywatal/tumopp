@@ -1,7 +1,0 @@
-# You may need to create ~/.R/Makevars to locate tumopp and boost
-# CPPFLAGS = -I/path/to/libraries
-# LDFLAGS = -L/path/to/libraries
-
-CXX_STD = CXX14
-PKG_CPPFLAGS = -DSTRICT_R_HEADERS
-PKG_LIBS = -ltumopp
