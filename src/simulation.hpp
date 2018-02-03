@@ -9,8 +9,12 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
-namespace boost {namespace program_options {class options_description;}}
+namespace boost {namespace program_options {
+  class options_description;
+  class variables_map;
+}}
 
 namespace tumopp {
 
@@ -22,6 +26,9 @@ class Simulation {
   public:
     //! Parse command arguments
     Simulation(const std::vector<std::string>& args);
+
+    //! Non-default destructor for forward declaration
+    ~Simulation();
 
     //! Top level function that should be called once from main()
     void run();
@@ -50,19 +57,8 @@ class Simulation {
     //! Tissue instance
     Tissue tissue_;
 
-    //! Number of samples
-    size_t nsam_ = 20;
-    //! Number of repeats
-    size_t howmany_ = 1;
-    //! Max tumor size to stop simulation
-    size_t max_size_ = 16384;
-    //! Duration of turnover phase after log growth
-    double plateau_time_ = 0.0;
-    //! Seed for random number generator
-    unsigned int seed_;
-
-    //! Output directory
-    std::string out_dir_;
+    //! optional variables
+    std::unique_ptr<boost::program_options::variables_map> vars_;
     //! Command line arguments
     std::string command_args_;
     //! Writen to "program_options.conf"

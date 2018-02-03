@@ -11,6 +11,7 @@
 #include <wtl/getopt.hpp>
 #include <wtl/exception.hpp>
 #include <wtl/zfstream.hpp>
+#include <wtl/random.hpp>
 #include <sfmt.hpp>
 
 #include <boost/program_options.hpp>
@@ -20,9 +21,6 @@ namespace tumopp {
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
-
-//! predefined name of output directory for -w option
-const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M_") + std::to_string(::getpid());
 
 //! Options description for general purpose
 inline po::options_description general_desc() {HERE;
@@ -40,19 +38,19 @@ inline po::options_description general_desc() {HERE;
 
     Command line option | Symbol         | Variable
     ------------------- | -------------- | -------------------------
-    `-N,--max`          | \f$N_\max\f$   | Simulation::max_size_
-    `-T,--plateau`      | -              | Simulation::plateau_time_
-    `-o,--outdir`       | -              | Simulation::out_dir_
-    `--seed`            | -              | Simulation::seed_
+    `-N,--max`          | \f$N_\max\f$   |
+    `-T,--plateau`      | -              |
+    `-o,--outdir`       | -              |
+    `--seed`            | -              |
 */
 po::options_description Simulation::options_desc() {HERE;
+    const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
     po::options_description description("Simulation");
     description.add_options()
-      ("max,N", po::value(&max_size_)->default_value(max_size_))
-      ("plateau,T", po::value(&plateau_time_)->default_value(plateau_time_))
-      ("outdir-predefined,w", po::bool_switch(), OUT_DIR.c_str())
-      ("outdir,o", po::value(&out_dir_))
-      ("seed", po::value(&seed_)->default_value(seed_));
+      ("max,N", po::value<size_t>()->default_value(16384u))
+      ("plateau,T", po::value<double>()->default_value(0.0))
+      ("outdir,o", po::value<std::string>()->default_value("")->implicit_value(OUT_DIR))
+      ("seed", po::value<size_t>()->default_value(wtl::random_device_64{}()));
     description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
     return description;
@@ -61,8 +59,8 @@ po::options_description Simulation::options_desc() {HERE;
 po::options_description Simulation::positional_desc() {HERE;
     po::options_description description("Positional");
     description.add_options()
-        ("nsam", po::value(&nsam_)->default_value(nsam_))
-        ("howmany", po::value(&howmany_)->default_value(howmany_));
+        ("nsam", po::value<size_t>()->default_value(20u))
+        ("howmany", po::value<size_t>()->default_value(1u));
     return description;
 }
 
@@ -76,7 +74,7 @@ po::options_description Simulation::positional_desc() {HERE;
 }
 
 Simulation::Simulation(const std::vector<std::string>& arguments)
-: seed_(std::random_device{}()) {HERE;
+: vars_(std::make_unique<po::variables_map>()) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(15);
@@ -89,61 +87,66 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     po::positional_options_description positional;
     positional.add("nsam", 1)
               .add("howmany", 1);
-    po::variables_map vm;
+    auto& vm = *vars_;
     po::store(po::command_line_parser(arguments).
               options(description).
               positional(positional).run(), vm);
     if (vm["help"].as<bool>()) {help_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
-    wtl::sfmt64().seed(seed_);
+    wtl::sfmt64().seed(vm["seed"].as<size_t>());
 
     config_string_ = wtl::flags_into_string(vm);
     if (vm["verbose"].as<bool>()) {
         std::cerr << wtl::iso8601datetime() << std::endl;
         std::cerr << config_string_ << std::endl;
     }
-    if (nsam_ > vm["max"].as<size_t>()) {
+    if (vm["nsam"].as<size_t>() > vm["max"].as<size_t>()) {
         std::ostringstream oss;
-        oss << "nsam_=" << nsam_
+        oss << "nsam_=" << vm["nsam"].as<size_t>()
             << " is larger than final tumor size "
             << vm["max"].as<size_t>();
         throw std::runtime_error(oss.str());
     }
-    if (vm["outdir-predefined"].as<bool>()) {
-        if (vm.count("outdir")) {
-            throw std::runtime_error("cannot use -o and -w at the same time");
-        }
-        out_dir_ = fs::system_complete(OUT_DIR).string();
-    }
 }
 
+Simulation::~Simulation() {HERE;}
+
 void Simulation::run() {HERE;
+    auto& vm = *vars_;
+    const auto max_size = vm["max"].as<size_t>();
+    const auto plateau_time = vm["plateau"].as<double>();
+
     for (size_t i=0; i<10; ++i) {
-        if (tissue_.grow(max_size_, plateau_time_)) break;
+        if (tissue_.grow(max_size, plateau_time)) break;
     }
-    if (tissue_.size() != max_size_) {
+    if (tissue_.size() != max_size) {
         std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
     }
 }
 
 void Simulation::write() const {HERE;
-    std::cout << "tumopp " << command_args_ << "\n" << seed_ << "\n";
+    auto& vm = *vars_;
+    const auto nsam = vm["nsam"].as<size_t>();
+    const auto howmany = vm["howmany"].as<size_t>();
+    const auto outdir = vm["outdir"].as<std::string>();
+    const auto seed = vm["seed"].as<size_t>();
+    std::cout << "tumopp " << command_args_ << "\n" << seed << "\n";
 
     if (Tissue::DIMENSIONS() == 3U) {
-        for (size_t i=0; i<howmany_; ++i) {
-            tissue_.write_segsites(std::cout, tissue_.sample_section(nsam_));
+        for (size_t i=0; i<howmany; ++i) {
+            tissue_.write_segsites(std::cout, tissue_.sample_section(nsam));
         }
     } else {
-        for (size_t i=0; i<howmany_; ++i) {
-            tissue_.write_segsites(std::cout, tissue_.sample_random(nsam_));
+        for (size_t i=0; i<howmany; ++i) {
+            tissue_.write_segsites(std::cout, tissue_.sample_random(nsam));
         }
     }
 
-    if (!out_dir_.empty()) {
-        DCERR("mkdir && cd to " << out_dir_ << std::endl);
-        fs::create_directory(out_dir_);
-        fs::current_path(out_dir_);
+    if (!outdir.empty()) {
+        DCERR("mkdir && cd to " << outdir << std::endl);
+        fs::create_directory(outdir);
+        fs::current_path(outdir);
         wtl::make_ofs("program_options.conf") << config_string_;
         wtl::ozfstream{"population.tsv.gz"}
             << tissue_.specimens();
