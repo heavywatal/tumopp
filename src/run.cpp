@@ -9,9 +9,5 @@
 std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, const size_t npair=0) {
     tumopp::Simulation sim(args);
     sim.run();
-    return {
-        sim.conf(),
-        sim.tissue().specimens(),
-        sim.tissue().drivers(),
-        sim.tissue().pairwise_distance(npair)};
+    return sim.results();
 }
