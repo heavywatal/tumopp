@@ -55,6 +55,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
@@ -115,10 +116,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a97dded28a5f87126660c7edf17bd1d8b">delta_time</a> (const double positional_value)</td></tr>
 <tr class="memdesc:a97dded28a5f87126660c7edf17bd1d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calc dt and set <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a>. <br /></td></tr>
 <tr class="separator:a97dded28a5f87126660c7edf17bd1d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9b3c1f0cb1f24a3000f7ef90e75065"><td class="memItemLeft" align="right" valign="top"><a id="aea9b3c1f0cb1f24a3000f7ef90e75065"></a>
-std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aea9b3c1f0cb1f24a3000f7ef90e75065">has_mutations_of</a> (const std::vector&lt; size_t &gt; &amp;)</td></tr>
-<tr class="memdesc:aea9b3c1f0cb1f24a3000f7ef90e75065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check mutant ancestors on <a class="el" href="classtumopp_1_1_cell.html#aa4f3f61ed6ddb761295cbd5720d4b1b3" title="ancestor IDs ">genealogy_</a>. <br /></td></tr>
-<tr class="separator:aea9b3c1f0cb1f24a3000f7ef90e75065"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c80c01aca09f0e29785fcad15a68071"><td class="memItemLeft" align="right" valign="top"><a id="a2c80c01aca09f0e29785fcad15a68071"></a>
+std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a2c80c01aca09f0e29785fcad15a68071">has_mutations_of</a> (const std::vector&lt; size_t &gt; &amp;) const</td></tr>
+<tr class="memdesc:a2c80c01aca09f0e29785fcad15a68071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check mutant ancestors. <br /></td></tr>
+<tr class="separator:a2c80c01aca09f0e29785fcad15a68071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78601a1e05730081b55865d068e2e6b2"><td class="memItemLeft" align="right" valign="top"><a id="a78601a1e05730081b55865d068e2e6b2"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a78601a1e05730081b55865d068e2e6b2">branch_length</a> (const <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &amp;) const</td></tr>
 <tr class="memdesc:a78601a1e05730081b55865d068e2e6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Branch length (# of divisions) between two cells. <br /></td></tr>
@@ -127,10 +128,10 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a201436fa7d2f90f5703d87ea01de8c87">set_coord</a> (const std::valarray&lt; int &gt; &amp;v)</td></tr>
 <tr class="memdesc:a201436fa7d2f90f5703d87ea01de8c87"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a3bc6d8b7ac792d0df5b9bb9a8f28ce36" title="Position in a tumor. ">coord_</a> <br /></td></tr>
 <tr class="separator:a201436fa7d2f90f5703d87ea01de8c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac60aa169bf89353369ae22393909dc27"><td class="memItemLeft" align="right" valign="top"><a id="ac60aa169bf89353369ae22393909dc27"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ac60aa169bf89353369ae22393909dc27">set_time_of_birth</a> (const double t, const size_t i)</td></tr>
-<tr class="memdesc:ac60aa169bf89353369ae22393909dc27"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b" title="time of birth ">time_of_birth_</a>; reset other properties <br /></td></tr>
-<tr class="separator:ac60aa169bf89353369ae22393909dc27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1b2b2f2d045d321332956483fcdd4e5"><td class="memItemLeft" align="right" valign="top"><a id="aa1b2b2f2d045d321332956483fcdd4e5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aa1b2b2f2d045d321332956483fcdd4e5">set_time_of_birth</a> (double t, uint_fast32_t i, const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &amp;ancestor)</td></tr>
+<tr class="memdesc:aa1b2b2f2d045d321332956483fcdd4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b" title="time of birth ">time_of_birth_</a>; reset other properties <br /></td></tr>
+<tr class="separator:aa1b2b2f2d045d321332956483fcdd4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ef0208c305ab34f10cbf8241d249c84"><td class="memItemLeft" align="right" valign="top"><a id="a3ef0208c305ab34f10cbf8241d249c84"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a3ef0208c305ab34f10cbf8241d249c84">set_time_of_death</a> (const double t)</td></tr>
 <tr class="memdesc:a3ef0208c305ab34f10cbf8241d249c84"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475" title="time of death ">time_of_death_</a> <br /></td></tr>
@@ -182,6 +183,13 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memdesc:ga9eff67d457d523902fb1ac3660ac0b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Program options.  <a href="group__params.html#ga9eff67d457d523902fb1ac3660ac0b42">More...</a><br /></td></tr>
 <tr class="separator:ga9eff67d457d523902fb1ac3660ac0b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a3904587bf9342cb2b98182fa293cf982"><td class="memItemLeft" align="right" valign="top"><a id="a3904587bf9342cb2b98182fa293cf982"></a>
+std::unordered_set&lt; uint_fast32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a3904587bf9342cb2b98182fa293cf982">traceback</a> () const</td></tr>
+<tr class="memdesc:a3904587bf9342cb2b98182fa293cf982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate ancestral <a class="el" href="classtumopp_1_1_cell.html#abeabea4f2a931d8a5cb0bafee9792a4e" title="ID. ">id_</a>. <br /></td></tr>
+<tr class="separator:a3904587bf9342cb2b98182fa293cf982"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a3bc6d8b7ac792d0df5b9bb9a8f28ce36"><td class="memItemLeft" align="right" valign="top"><a id="a3bc6d8b7ac792d0df5b9bb9a8f28ce36"></a>
@@ -220,10 +228,14 @@ uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a85882b8a52b2e5dbf929b96307174279">elapsed_</a> = 0.0</td></tr>
 <tr class="memdesc:a85882b8a52b2e5dbf929b96307174279"><td class="mdescLeft">&#160;</td><td class="mdescRight">elapsed time by migration <br /></td></tr>
 <tr class="separator:a85882b8a52b2e5dbf929b96307174279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="memItemLeft" align="right" valign="top"><a id="aa4f3f61ed6ddb761295cbd5720d4b1b3"></a>
-std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aa4f3f61ed6ddb761295cbd5720d4b1b3">genealogy_</a></td></tr>
-<tr class="memdesc:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">ancestor IDs <br /></td></tr>
-<tr class="separator:aa4f3f61ed6ddb761295cbd5720d4b1b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeabea4f2a931d8a5cb0bafee9792a4e"><td class="memItemLeft" align="right" valign="top"><a id="abeabea4f2a931d8a5cb0bafee9792a4e"></a>
+uint_fast32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#abeabea4f2a931d8a5cb0bafee9792a4e">id_</a></td></tr>
+<tr class="memdesc:abeabea4f2a931d8a5cb0bafee9792a4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ID. <br /></td></tr>
+<tr class="separator:abeabea4f2a931d8a5cb0bafee9792a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="memItemLeft" align="right" valign="top"><a id="a4fbc103da88fbed6f71bf01f4bd7ea75"></a>
+std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4fbc103da88fbed6f71bf01f4bd7ea75">ancestor_</a> = 0</td></tr>
+<tr class="memdesc:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="mdescLeft">&#160;</td><td class="mdescRight">ancestor's ID <br /></td></tr>
+<tr class="separator:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0718cb9386cc15ecd9b29dd24e7a923b"><td class="memItemLeft" align="right" valign="top"><a id="a0718cb9386cc15ecd9b29dd24e7a923b"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b">time_of_birth_</a> = 0.0</td></tr>
 <tr class="memdesc:a0718cb9386cc15ecd9b29dd24e7a923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">time of birth <br /></td></tr>

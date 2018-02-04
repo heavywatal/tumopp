@@ -73,6 +73,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#afe9b371937a72968cdc3645f8bad7170">Simulation</a> (const std::vector&lt; std::string &gt; &amp;args)</td></tr>
 <tr class="memdesc:afe9b371937a72968cdc3645f8bad7170"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse command arguments. <br /></td></tr>
 <tr class="separator:afe9b371937a72968cdc3645f8bad7170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb5215193921bccd4225561e9f614a12"><td class="memItemLeft" align="right" valign="top"><a id="aeb5215193921bccd4225561e9f614a12"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#aeb5215193921bccd4225561e9f614a12">~Simulation</a> ()</td></tr>
+<tr class="memdesc:aeb5215193921bccd4225561e9f614a12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-default destructor for forward declaration. <br /></td></tr>
+<tr class="separator:aeb5215193921bccd4225561e9f614a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae236d9546df26f6f14c319553a8502d3"><td class="memItemLeft" align="right" valign="top"><a id="ae236d9546df26f6f14c319553a8502d3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#ae236d9546df26f6f14c319553a8502d3">run</a> ()</td></tr>
 <tr class="memdesc:ae236d9546df26f6f14c319553a8502d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top level function that should be called once from <a class="el" href="main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Just instantiate and run Simulation. ">main()</a> <br /></td></tr>
@@ -81,14 +85,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a058bbc69ca044f8604879488b50b2e69">write</a> () const</td></tr>
 <tr class="memdesc:a058bbc69ca044f8604879488b50b2e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write ms-like sequence and files. <br /></td></tr>
 <tr class="separator:a058bbc69ca044f8604879488b50b2e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10dac85a5492d0ca877a04e4b391f696"><td class="memItemLeft" align="right" valign="top"><a id="a10dac85a5492d0ca877a04e4b391f696"></a>
-const <a class="el" href="classtumopp_1_1_tissue.html">Tissue</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a10dac85a5492d0ca877a04e4b391f696">tissue</a> () const</td></tr>
-<tr class="memdesc:a10dac85a5492d0ca877a04e4b391f696"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_simulation.html#a22e40186cde121900ea8ad7c94aa0b75" title="Tissue instance. ">tissue_</a> for tumorr <br /></td></tr>
-<tr class="separator:a10dac85a5492d0ca877a04e4b391f696"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee56d4bd74033c27e7e058e6d3228061"><td class="memItemLeft" align="right" valign="top"><a id="aee56d4bd74033c27e7e058e6d3228061"></a>
-const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#aee56d4bd74033c27e7e058e6d3228061">conf</a> () const</td></tr>
-<tr class="memdesc:aee56d4bd74033c27e7e058e6d3228061"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_simulation.html#a20cf0d516fcd0bcdb306b01896332ac0" title="Writen to &quot;program_options.conf&quot;. ">config_string_</a> for tumorr <br /></td></tr>
-<tr class="separator:aee56d4bd74033c27e7e058e6d3228061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2d28a8e227c69afbed0a54d941bed07"><td class="memItemLeft" align="right" valign="top"><a id="aa2d28a8e227c69afbed0a54d941bed07"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#aa2d28a8e227c69afbed0a54d941bed07">results</a> (size_t npair=0u) const</td></tr>
+<tr class="memdesc:aa2d28a8e227c69afbed0a54d941bed07"><td class="mdescLeft">&#160;</td><td class="mdescRight">for tumorr <br /></td></tr>
+<tr class="separator:aa2d28a8e227c69afbed0a54d941bed07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -106,34 +106,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a22e40186cde121900ea8ad7c94aa0b75"><td class="memItemLeft" align="right" valign="top"><a id="a22e40186cde121900ea8ad7c94aa0b75"></a>
-<a class="el" href="classtumopp_1_1_tissue.html">Tissue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a22e40186cde121900ea8ad7c94aa0b75">tissue_</a></td></tr>
-<tr class="memdesc:a22e40186cde121900ea8ad7c94aa0b75"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtumopp_1_1_tissue.html" title="Population of Cell. ">Tissue</a> instance. <br /></td></tr>
-<tr class="separator:a22e40186cde121900ea8ad7c94aa0b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad08ade2046736b5d0c4ad0394ef12910"><td class="memItemLeft" align="right" valign="top"><a id="ad08ade2046736b5d0c4ad0394ef12910"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#ad08ade2046736b5d0c4ad0394ef12910">nsam_</a> = 20</td></tr>
-<tr class="memdesc:ad08ade2046736b5d0c4ad0394ef12910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of samples. <br /></td></tr>
-<tr class="separator:ad08ade2046736b5d0c4ad0394ef12910"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6baf7c995bde2f208081bd13b816eb72"><td class="memItemLeft" align="right" valign="top"><a id="a6baf7c995bde2f208081bd13b816eb72"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a6baf7c995bde2f208081bd13b816eb72">howmany_</a> = 1</td></tr>
-<tr class="memdesc:a6baf7c995bde2f208081bd13b816eb72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of repeats. <br /></td></tr>
-<tr class="separator:a6baf7c995bde2f208081bd13b816eb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ad14edc511081849ab98577fb27fa5c"><td class="memItemLeft" align="right" valign="top"><a id="a0ad14edc511081849ab98577fb27fa5c"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a0ad14edc511081849ab98577fb27fa5c">max_size_</a> = 16384</td></tr>
-<tr class="memdesc:a0ad14edc511081849ab98577fb27fa5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max tumor size to stop simulation. <br /></td></tr>
-<tr class="separator:a0ad14edc511081849ab98577fb27fa5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37dc112dab3f1cf2f47af65ee2079054"><td class="memItemLeft" align="right" valign="top"><a id="a37dc112dab3f1cf2f47af65ee2079054"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a37dc112dab3f1cf2f47af65ee2079054">plateau_time_</a> = 0.0</td></tr>
-<tr class="memdesc:a37dc112dab3f1cf2f47af65ee2079054"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duration of turnover phase after log growth. <br /></td></tr>
-<tr class="separator:a37dc112dab3f1cf2f47af65ee2079054"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00a18efa7581c45d4054027888eb52be"><td class="memItemLeft" align="right" valign="top"><a id="a00a18efa7581c45d4054027888eb52be"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a00a18efa7581c45d4054027888eb52be">seed_</a> = std::random_device{}()</td></tr>
-<tr class="memdesc:a00a18efa7581c45d4054027888eb52be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seed for random number generator. <br /></td></tr>
-<tr class="separator:a00a18efa7581c45d4054027888eb52be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af34433ea9d5d494a51fae30f4841029e"><td class="memItemLeft" align="right" valign="top"><a id="af34433ea9d5d494a51fae30f4841029e"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#af34433ea9d5d494a51fae30f4841029e">out_dir_</a></td></tr>
-<tr class="memdesc:af34433ea9d5d494a51fae30f4841029e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output directory. <br /></td></tr>
-<tr class="separator:af34433ea9d5d494a51fae30f4841029e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5d4d6b5a0a682727f8ee793113dbf11"><td class="memItemLeft" align="right" valign="top"><a id="ab5d4d6b5a0a682727f8ee793113dbf11"></a>
+std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_tissue.html">Tissue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#ab5d4d6b5a0a682727f8ee793113dbf11">tissue_</a></td></tr>
+<tr class="memdesc:ab5d4d6b5a0a682727f8ee793113dbf11"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtumopp_1_1_tissue.html" title="Population of Cell. ">Tissue</a> instance. <br /></td></tr>
+<tr class="separator:ab5d4d6b5a0a682727f8ee793113dbf11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81492d5e2d1fc46324461dfa982ae382"><td class="memItemLeft" align="right" valign="top"><a id="a81492d5e2d1fc46324461dfa982ae382"></a>
+std::unique_ptr&lt; boost::program_options::variables_map &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a81492d5e2d1fc46324461dfa982ae382">vars_</a></td></tr>
+<tr class="memdesc:a81492d5e2d1fc46324461dfa982ae382"><td class="mdescLeft">&#160;</td><td class="mdescRight">optional variables <br /></td></tr>
+<tr class="separator:a81492d5e2d1fc46324461dfa982ae382"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a279a2eefb18c5e0d6eac4f7d8aa700d8"><td class="memItemLeft" align="right" valign="top"><a id="a279a2eefb18c5e0d6eac4f7d8aa700d8"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a279a2eefb18c5e0d6eac4f7d8aa700d8">command_args_</a></td></tr>
 <tr class="memdesc:a279a2eefb18c5e0d6eac4f7d8aa700d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command line arguments. <br /></td></tr>

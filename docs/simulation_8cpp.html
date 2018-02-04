@@ -53,8 +53,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">simulation.cpp File Reference</div>  </div>
 </div><!--header-->
@@ -63,16 +62,18 @@ $(function() {
 <p>Implementation of Simulation class.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="simulation_8hpp_source.html">simulation.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cell_8hpp_source.html">cell.hpp</a>&quot;</code><br />
 <code>#include &lt;wtl/debug.hpp&gt;</code><br />
 <code>#include &lt;wtl/iostr.hpp&gt;</code><br />
 <code>#include &lt;wtl/chrono.hpp&gt;</code><br />
 <code>#include &lt;wtl/getopt.hpp&gt;</code><br />
+<code>#include &lt;wtl/exception.hpp&gt;</code><br />
 <code>#include &lt;wtl/zfstream.hpp&gt;</code><br />
+<code>#include &lt;wtl/random.hpp&gt;</code><br />
 <code>#include &lt;sfmt.hpp&gt;</code><br />
+<code>#include &lt;boost/program_options.hpp&gt;</code><br />
 <code>#include &lt;boost/filesystem.hpp&gt;</code><br />
-<code>#include &lt;cstdlib&gt;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -80,13 +81,6 @@ Functions</h2></td></tr>
 po::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simulation_8cpp.html#aa67f6fca7fa21ba5c00a15f20a1b37b2">tumopp::general_desc</a> ()</td></tr>
 <tr class="memdesc:aa67f6fca7fa21ba5c00a15f20a1b37b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options description for general purpose. <br /></td></tr>
 <tr class="separator:aa67f6fca7fa21ba5c00a15f20a1b37b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a8e52b75d68047c91c4fb438f43a3e567"><td class="memItemLeft" align="right" valign="top"><a id="a8e52b75d68047c91c4fb438f43a3e567"></a>
-const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simulation_8cpp.html#a8e52b75d68047c91c4fb438f43a3e567">tumopp::OUT_DIR</a> = wtl::strftime(&quot;tumopp_%Y%m%d_%H%M_&quot;) + std::to_string(::getpid())</td></tr>
-<tr class="memdesc:a8e52b75d68047c91c4fb438f43a3e567"><td class="mdescLeft">&#160;</td><td class="mdescRight">predefined name of output directory for -w option <br /></td></tr>
-<tr class="separator:a8e52b75d68047c91c4fb438f43a3e567"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of Simulation class. </p>
