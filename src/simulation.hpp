@@ -5,8 +5,6 @@
 #ifndef SIMULATION_HPP_
 #define SIMULATION_HPP_
 
-#include "tissue.hpp"
-
 #include <vector>
 #include <string>
 #include <memory>
@@ -36,11 +34,8 @@ class Simulation {
     //! Write ms-like sequence and files
     void write() const;
 
-    //! getter of #tissue_ for tumorr
-    const Tissue& tissue() const {return tissue_;}
-
-    //! getter of #config_string_ for tumorr
-    const std::string& conf() const {return config_string_;}
+    //! for tumorr
+    std::vector<std::string> results(size_t npair=0u) const;
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
@@ -55,7 +50,7 @@ class Simulation {
     // Data member
 
     //! Tissue instance
-    Tissue tissue_;
+    std::unique_ptr<Tissue> tissue_;
 
     //! optional variables
     std::unique_ptr<boost::program_options::variables_map> vars_;

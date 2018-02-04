@@ -3,6 +3,7 @@
     @defgroup params Parameters
 */
 #include "simulation.hpp"
+#include "tissue.hpp"
 #include "cell.hpp"
 
 #include <wtl/debug.hpp>
@@ -74,7 +75,8 @@ po::options_description Simulation::positional_desc() {HERE;
 }
 
 Simulation::Simulation(const std::vector<std::string>& arguments)
-: vars_(std::make_unique<po::variables_map>()) {HERE;
+: tissue_(std::make_unique<Tissue>()),
+  vars_(std::make_unique<po::variables_map>()) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(15);
@@ -117,11 +119,11 @@ void Simulation::run() {HERE;
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
 
-    for (size_t i=0; i<10; ++i) {
-        if (tissue_.grow(max_size, plateau_time)) break;
+    for (size_t i=0; i<10u; ++i) {
+        if (tissue_->grow(max_size, plateau_time)) break;
     }
-    if (tissue_.size() != max_size) {
-        std::cerr << "Warning: tissue_.size() " << tissue_.size() << std::endl;
+    if (tissue_->size() != max_size) {
+        std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;
     }
 }
 
@@ -135,11 +137,11 @@ void Simulation::write() const {HERE;
 
     if (Tissue::DIMENSIONS() == 3U) {
         for (size_t i=0; i<howmany; ++i) {
-            tissue_.write_segsites(std::cout, tissue_.sample_section(nsam));
+            tissue_->write_segsites(std::cout, tissue_->sample_section(nsam));
         }
     } else {
         for (size_t i=0; i<howmany; ++i) {
-            tissue_.write_segsites(std::cout, tissue_.sample_random(nsam));
+            tissue_->write_segsites(std::cout, tissue_->sample_random(nsam));
         }
     }
 
@@ -149,15 +151,24 @@ void Simulation::write() const {HERE;
         fs::current_path(outdir);
         wtl::make_ofs("program_options.conf") << config_string_;
         wtl::ozfstream{"population.tsv.gz"}
-            << tissue_.specimens();
+            << tissue_->specimens();
         wtl::ozfstream{"snapshots.tsv.gz"}
-            << tissue_.snapshots();
+            << tissue_->snapshots();
         wtl::ozfstream{"drivers.tsv.gz"}
-            << tissue_.drivers();
+            << tissue_->drivers();
         wtl::ozfstream{"distance.tsv.gz"}
-            << tissue_.pairwise_distance(std::min(200UL, tissue_.size() / 2U));
+            << tissue_->pairwise_distance(std::min(200UL, tissue_->size() / 2U));
         std::cerr << wtl::iso8601datetime() << std::endl;
     }
+}
+
+std::vector<std::string> Simulation::results(size_t npair) const {
+    return {
+        config_string_,
+        tissue_->specimens(),
+        tissue_->drivers(),
+        tissue_->pairwise_distance(npair)
+    };
 }
 
 } // namespace tumopp
