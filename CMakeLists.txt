@@ -32,12 +32,10 @@ set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-aux_source_directory(src srcfiles)
-message("Source files: ${srcfiles}")
+add_subdirectory(src)
 
-add_library(${PROJECT_NAME} SHARED ${srcfiles})
+add_library(${PROJECT_NAME} SHARED $<TARGET_OBJECTS:obj>)
 target_include_directories(${PROJECT_NAME} BEFORE
-  PRIVATE ${Boost_INCLUDE_DIRS}
   INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE wtl sfmt ${Boost_LIBRARIES})
