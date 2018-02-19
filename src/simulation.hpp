@@ -34,7 +34,7 @@ class Simulation {
     //! Write ms-like sequence and files
     void write() const;
 
-    //! for tumorr
+    //! for R
     std::vector<std::string> results(size_t npair=0u) const;
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////

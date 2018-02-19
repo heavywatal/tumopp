@@ -37,7 +37,7 @@ e.g., `cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..`
 
 ## Usage
 
-Run tumopp in R via [`tumorr` package](https://github.com/heavywatal/tumorr)
+Run tumopp via [R package](https://github.com/heavywatal/tumopp/tree/master/r)
 
 Alternatively, it can be executed as a command-line program:
 ```sh

@@ -1,7 +1,7 @@
 # !/usr/bin/env Rscript
 library(tidyverse)
 library(wtl)
-library(tumorr)
+library(tumopp)
 
 tumopp("-h")
 result = tumopp("-D3 -Chex -k1e9 -Lstep -a0.2 -m1.0" %>% wtl::split_chr())

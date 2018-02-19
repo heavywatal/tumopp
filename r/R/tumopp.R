@@ -1,3 +1,13 @@
+#' R interface of tumopp, tumor growth simulator in C++
+#' @docType package
+#' @name tumopp
+#' @useDynLib tumopp
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+NULL
+# to suppress NOTE
+utils::globalVariables(c(".", "n"))
+
 #' Run C++ simulation
 #' @param args command line arguments as a string vector or list of strings
 #' @param npair number of samples to measure genetic and physical distance

@@ -1,8 +1,8 @@
-Package: tumorr
-Title: R interface of tumopp
+Package: tumopp
+Title: R interface of tumopp, a tumor growth simulator in C++
 Version: 0.0.0.9000
 Authors@R: person('Watal M.', 'Iwasaki', email='heavy.watal@gmail.com', role=c('aut', 'cre'))
-Description: R interface of tumopp.
+Description: R interface of tumopp, a tumor growth simulator in C++.
 Depends:
     R (>= 3.4.0)
 License: MIT + file LICENSE
@@ -26,8 +26,8 @@ Imports:
 Suggests:
     gridExtra,
     rgl
-URL: https://github.com/heavywatal/tumorr
-BugReports: https://github.com/heavywatal/tumorr/issues
+URL: https://github.com/heavywatal/tumopp
+BugReports: https://github.com/heavywatal/tumopp/issues
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
 SystemRequirements: C++14

@@ -1,4 +1,4 @@
-citHeader("To cite tumopp/tumorr in publications use:")
+citHeader("To cite tumopp in publications use:")
 
 citEntry(entry = "Article",
   title        = "Simulation Framework for Generating Intratumor Heterogeneity Patterns in a Cancer Cell Population",

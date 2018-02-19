@@ -1,6 +1,6 @@
 library(tidyverse)
 library(wtl)
-library(tumorr)
+library(tumopp)
 
 .o = tibble(x = 0, y = 0, z = 0)
 .n = 20

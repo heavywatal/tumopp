@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // cpp_tumopp
 std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, const size_t npair);
-RcppExport SEXP _tumorr_cpp_tumopp(SEXP argsSEXP, SEXP npairSEXP) {
+RcppExport SEXP _tumopp_cpp_tumopp(SEXP argsSEXP, SEXP npairSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,11 +19,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tumorr_cpp_tumopp", (DL_FUNC) &_tumorr_cpp_tumopp, 2},
+    {"_tumopp_cpp_tumopp", (DL_FUNC) &_tumopp_cpp_tumopp, 2},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_tumorr(DllInfo *dll) {
+RcppExport void R_init_tumopp(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

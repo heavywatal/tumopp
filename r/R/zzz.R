@@ -1,4 +1,4 @@
 .onUnload = function(libpath) {
-  message("Unloading tumorr")
-  library.dynam.unload("tumorr", libpath)
+  message("Unloading tumopp")
+  library.dynam.unload("tumopp", libpath)
 }

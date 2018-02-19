@@ -1,7 +1,7 @@
 # !/usr/bin/env Rscript
 library(tidyverse)
 library(rgl)
-library(tumorr)
+library(tumopp)
 
 ######## 1#########2#########3#########4#########5#########6#########7#########
 ## transformation
@@ -16,8 +16,8 @@ axes3d()
 .r = 2
 tibble(x = seq(-.r, .r), y = x, z = x) %>%
   tidyr::expand(x, y, z) %>%
-  tumorr:::trans_coord_hcc() %>%
-  # tumorr:::trans_coord_fcc() %>%
+  tumopp:::trans_coord_hcc() %>%
+  # tumopp:::trans_coord_fcc() %>%
   dplyr::mutate(r = sqrt(x * x + y * y + z * z)) %>%
   with(spheres3d(x, y, z, color = "#009999", radius = 0.51, alpha = 0.6))
 title3d("", "", "x", "y", "z")
@@ -55,7 +55,7 @@ axes3d()
   bind_rows(.hex_xy %>% dplyr::filter(x > 0 | (x == 0 & y == 0)) %>% mutate(z = -1)) %>%
   bind_rows(.hex_xy %>% dplyr::filter(x < 0 | (x == 0 & y == 0)) %>% mutate(z = 1)) %>%
   print() %>%
-  tumorr:::trans_coord_fcc() %>%
+  tumopp:::trans_coord_fcc() %>%
   with(spheres3d(x, y, z, color = "#009999", radius = 0.51, alpha = 0.6))
 title3d("", "", "x", "y", "z")
 
@@ -74,6 +74,6 @@ axes3d()
   bind_rows(.hex_xy %>% mutate(z = 5)) %>%
   bind_rows(.hex_xy %>% mutate(z = 4) %>% dplyr::filter(x > 0 | (x == 0 & y == 0))) %>%
   bind_rows(.hex_xy %>% mutate(z = 6) %>% dplyr::filter(x > 0 | (x == 0 & y == 0))) %>%
-  tumorr:::trans_coord_hcc() %>%
+  tumopp:::trans_coord_hcc() %>%
   with(spheres3d(x, y, z, color = "#009999", radius = 0.51, alpha = 0.6))
 title3d("", "", "x", "y", "z")

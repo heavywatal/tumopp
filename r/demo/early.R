@@ -1,6 +1,6 @@
 library(tidyverse)
 library(wtl)
-library(tumorr)
+library(tumopp)
 
 # tumopp -D2 -k100 -Cmoore -Lconst -O4 -R256 -N256 -w 0 0 -o Cmoore_Lconst
 # tumopp -D2 -k100 -Cmoore -Lstep -O4 -R256 -N256 -w 0 0 -o Cmoore_Lstep
@@ -15,7 +15,7 @@ if (!is.na(indir)) {
   setwd(indir)
 }
 
-snapshots = tumorr::read_snapshots()
+snapshots = tumopp::read_snapshots()
 norigins = snapshots %>% dplyr::filter(time == 0) %>% nrow()
 nclades = max(4L, norigins)
 founders = head(snapshots, nclades)$id %>% print()
@@ -32,11 +32,11 @@ roots = head(snapshots, nclades)$genealogy %>%
   clade = factor(.data$clade, levels = founders)
 ) %>% print()
 
-.lim = tumorr::max_abs_xyz(snapshots)
+.lim = tumopp::max_abs_xyz(snapshots)
 
 plot_snapshot = function(data, time) {
   .N = nrow(data)
-  tumorr::plot_lattice2d(data, "clade", alpha = 1.0, limit = .lim) +
+  tumopp::plot_lattice2d(data, "clade", alpha = 1.0, limit = .lim) +
     scale_color_brewer(palette = "Spectral") +
     # labs(title=sprintf('t = %.5f, N =%4d', time, .N))+
     # theme_void()+

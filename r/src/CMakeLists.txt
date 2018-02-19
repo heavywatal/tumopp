@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(tumorr CXX)
+project(tumoppr CXX)
 
 set(CXX_PROJECT tumopp)
 find_package(${CXX_PROJECT} REQUIRED CONFIG)

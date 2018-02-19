@@ -1,8 +1,8 @@
 library(tidyverse)
 library(wtl)
-library(tumorr)
+library(tumopp)
 
-refresh("tumorr")
+refresh("tumopp/r")
 
 (.result = tumopp(str_split("-D3 -Chex -k24 -Lstep", " ")[[1]]))
 (.population = .result$population[[1]])
