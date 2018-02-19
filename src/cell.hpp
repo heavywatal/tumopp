@@ -36,7 +36,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::valarray<int>& v, const size_t i=0): coord_(v), id_(i) {}
+    Cell(const std::valarray<int>& v, uint_fast32_t i=0): coord_(v), id_(i) {}
     //! Copy constructor
     Cell(const Cell& other);
     //! Destructor
@@ -60,7 +60,7 @@ class Cell {
     double delta_time(const double positional_value);
 
     //! Check mutant ancestors
-    std::vector<unsigned int> has_mutations_of(const std::vector<size_t>&) const;
+    std::vector<uint_fast32_t> has_mutations_of(const std::vector<uint_fast32_t>&) const;
 
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;

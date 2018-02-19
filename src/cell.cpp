@@ -200,9 +200,9 @@ std::unordered_set<uint_fast32_t> Cell::traceback() const {
     return genealogy;
 }
 
-std::vector<unsigned int> Cell::has_mutations_of(const std::vector<size_t>& mutants) const {
+std::vector<uint_fast32_t> Cell::has_mutations_of(const std::vector<uint_fast32_t>& mutants) const {
     const auto genealogy = traceback();
-    std::vector<unsigned int> genotype;
+    std::vector<uint_fast32_t> genotype;
     genotype.reserve(mutants.size());
     for (const auto mut: mutants) {
         if (genealogy.find(mut) != genealogy.end()) {

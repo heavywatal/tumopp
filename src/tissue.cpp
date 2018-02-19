@@ -351,11 +351,11 @@ double Tissue::positional_value(const std::valarray<int>& coord) const {
     return std::exp(-exponent);
 }
 
-std::vector<size_t> Tissue::generate_neutral_mutations() const {
+std::vector<uint_fast32_t> Tissue::generate_neutral_mutations() const {
     std::poisson_distribution<unsigned int> poisson(Cell::MUTATION_RATE() * id_tail_);
     const unsigned int num_mutants = poisson(wtl::sfmt64());
-    std::uniform_int_distribution<size_t> uniform(0, id_tail_);
-    std::vector<size_t> mutants;
+    std::uniform_int_distribution<uint_fast32_t> uniform(0, id_tail_);
+    std::vector<uint_fast32_t> mutants;
     mutants.reserve(num_mutants);
     for (unsigned int i=0; i<num_mutants; ++i) {
         mutants.push_back(uniform(wtl::sfmt64()));
