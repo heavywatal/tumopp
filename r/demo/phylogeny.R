@@ -29,8 +29,8 @@ refresh("tumopp/r")
 (.tt = (.tb + .ts) / 2)
 
 # Fst
-fst_HBK(.ts, .tb)
-fst_HSM(.ts, .tb)
+wtl::fst_HBK(.ts, .tb)
+wtl::fst_HSM(.ts, .tb)
 
 ######## 1#########2#########3#########4#########5#########6#########7#########
 
@@ -63,7 +63,7 @@ loadNamespace("cowplot")
   .extant = filter_extant(population)
   .specimen1 = sample_bulk(.extant, o1, size)
   .specimen2 = sample_bulk(.extant, o2, size)
-  .plat = gglattice2d(.extant %>% dplyr::filter(-1 <= z, z < 1), "z", , 0.5) +
+  .plat = plot_lattice2d(.extant %>% dplyr::filter(-1 <= z, z < 1), "z", , 0.5) +
     geom_point(data = .specimen1 %>% dplyr::filter(-1 <= z, z < 1), colour = "tomato", alpha = 0.7) +
     geom_point(data = .specimen2 %>% dplyr::filter(-1 <= z, z < 1), colour = "turquoise", alpha = 0.7)
   .nodes1 = as.character(.specimen1$id)
@@ -76,9 +76,11 @@ loadNamespace("cowplot")
 gprint(.gg)
 ggsave("sample_phylogeny_Pifany.png", .gg, width = 2, height = 1, scale = 6)
 
-.n = 40
-purrr::map_dfr(seq_len(.n), ~within_between_samples(.population)) %>%
-  dplyr::mutate(fst = fst_HBK(within, between)) %>%
+.distances = within_between_samples(.population, nsam = 10L) %>%
+  dplyr::mutate(fst = wtl::fst_HBK(within, between)) %>%
+  print()
+
+.distances %>%
   ggplot(aes(euclidean, fst)) +
   geom_point() +
   theme_wtl()
