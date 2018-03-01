@@ -11,7 +11,7 @@ sample_stats(msout, lowerbound = 0)
 
 genetic_stats(extant)
 
-within_between_samples(population, ncell = 100L, npair = 1L)
+within_between_samples(population, ncell = 100L, nsam = 2L)
 
 morphological_stats(extant)
 }
@@ -26,7 +26,7 @@ morphological_stats(extant)
 
 \item{ncell}{number of cells per specimen}
 
-\item{npair}{number of pairs and output rows}
+\item{nsam}{number of samples}
 }
 \value{
 tibble
@@ -42,7 +42,7 @@ Summary statistics of neutral mutations
 
 Summary statistics of genealogy
 
-Sample two specimens and measure mean branch lengths
+Sample specimens and measure mean branch lengths
 
 Summary statistics of morphology
 }
