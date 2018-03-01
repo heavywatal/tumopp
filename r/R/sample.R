@@ -6,14 +6,10 @@
 #' @rdname sample
 #' @export
 sample_bulk = function(population, center, size=100L) {
-  if (is.list(center)) {
-    return(purrr::pmap_dfr(center, function(x, y, z, ...) {
-      sample_bulk(population, center = c(x = x, y = y, z = z), size = size)
-    }))
-  }
   population %>%
-    dplyr::mutate(dist = dist_euclidean(., center)) %>%
-    dplyr::arrange(.data$dist) %>%
+    dplyr::mutate(r_sample = dist_euclidean(., center)) %>%
+    dplyr::top_n(-size, .data$r_sample) %>%
+    dplyr::arrange(.data$r_sample) %>%
     utils::head(size)
 }
 
