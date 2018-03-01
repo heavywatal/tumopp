@@ -34,10 +34,11 @@ filter_extant = function(population) {
 set_graph_property = function(population) {
   .graph = make_igraph(population)
   .nodes = as.character(population$id)
-  .out = dplyr::mutate(population,
-    age = igraph::distances(.graph, .nodes, '1', mode='in', algorithm='unweighted')[,1L],
+  .out = dplyr::mutate(
+    population,
+    age = igraph::distances(.graph, .nodes, "1", mode = "in", algorithm = "unweighted")[, 1L],
     age = as.integer(.data$age),
-    descendants = igraph::neighborhood.size(.graph, order=1073741824L, nodes=.nodes, mode='out'),
+    descendants = igraph::neighborhood.size(.graph, order = 1073741824L, nodes = .nodes, mode = "out"),
     descendants = as.integer(.data$descendants)
   )
   founders = list_clade_founders(.out, 4L)
@@ -45,13 +46,13 @@ set_graph_property = function(population) {
     as.character() %>%
     rlang::set_names() %>%
     purrr::map_dfr(~{
-      tibble::tibble(id = igraph::subcomponent(.graph, .x, mode='out')$name)
-    }, .id = 'clade') %>%
+      tibble::tibble(id = igraph::subcomponent(.graph, .x, mode = "out")$name)
+    }, .id = "clade") %>%
     dplyr::mutate(
       id = as.integer(.data$id),
       clade = factor(.data$clade, levels = as.character(founders))
     )
-  dplyr::left_join(.out, clade_data, by='id')
+  dplyr::left_join(.out, clade_data, by = "id")
 }
 
 #' @param num_clades integer

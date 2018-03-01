@@ -23,7 +23,7 @@ sample_bulk = function(population, center, size=100L) {
 sprinkle_mutations = function(population, nsam, mu=NULL, segsites=NULL) {
   graph = make_igraph(population)
   samples = sample(filter_extant(population)$id, nsam) %>% as.character()
-  lineages = igraph::neighborhood(graph, order=1073741824L, nodes=samples, mode='in') %>%
+  lineages = igraph::neighborhood(graph, order = 1073741824L, nodes = samples, mode = "in") %>%
     purrr::map(~ .x$name)
   common_ancs = purrr::reduce(lineages, intersect)
   nodes = purrr::flatten_chr(lineages) %>% unique() %>% setdiff(common_ancs)
