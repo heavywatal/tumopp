@@ -38,7 +38,7 @@ set_graph_property = function(population) {
     population,
     age = igraph::distances(.graph, .nodes, "1", mode = "in", algorithm = "unweighted")[, 1L],
     age = as.integer(.data$age),
-    descendants = igraph::neighborhood.size(.graph, order = 1073741824L, nodes = .nodes, mode = "out"),
+    descendants = igraph::ego_size(.graph, order = 1073741824L, nodes = .nodes, mode = "out"),
     descendants = as.integer(.data$descendants)
   )
   founders = list_clade_founders(.out, 4L)
