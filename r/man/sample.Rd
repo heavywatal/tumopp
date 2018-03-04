@@ -2,19 +2,28 @@
 % Please edit documentation in R/sample.R
 \name{sample_bulk}
 \alias{sample_bulk}
+\alias{make_ancestor_union}
 \alias{sprinkle_mutations}
 \title{Sample bulk of cells near the specified coord}
 \usage{
-sample_bulk(population, center, size = 100L)
+sample_bulk(extant, center, size = 100L)
+
+make_ancestor_union(population, samples, origin = 1L)
 
 sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 }
 \arguments{
-\item{population}{tibble of extant cells}
+\item{extant}{tibble of extant cells}
 
 \item{center}{named (x, y, z) vector, list, or tibble}
 
 \item{size}{number of cells}
+
+\item{population}{tibble of raw population}
+
+\item{samples}{vector of IDs}
+
+\item{origin}{ID of common ancestor}
 
 \item{nsam}{number of cells to sample}
 
@@ -25,10 +34,14 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 \value{
 tibble
 
+union of IDs
+
 int matrix [nsam x segsites]
 }
 \description{
 Sample bulk of cells near the specified coord
+
+Traceback ancestors and calculate union of the IDs
 
 Make ms-like neutral variation matrix
 }

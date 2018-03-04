@@ -1,16 +1,31 @@
 #' Sample bulk of cells near the specified coord
-#' @param population tibble of extant cells
+#' @param extant tibble of extant cells
 #' @param center named (x, y, z) vector, list, or tibble
 #' @param size number of cells
 #' @return tibble
 #' @rdname sample
 #' @export
-sample_bulk = function(population, center, size=100L) {
-  population %>%
+sample_bulk = function(extant, center, size=100L) {
+  extant %>%
     dplyr::mutate(r_sample = dist_euclidean(., center)) %>%
     dplyr::top_n(-size, .data$r_sample) %>%
     dplyr::arrange(.data$r_sample) %>%
     utils::head(size)
+}
+
+#' Traceback ancestors and calculate union of the IDs
+#' @param population tibble of raw population
+#' @param samples vector of IDs
+#' @param origin ID of common ancestor
+#' @return union of IDs
+#' @rdname sample
+#' @export
+make_ancestor_union = function (population, samples, origin=1L) {
+  .graph = make_igraph(population)
+  igraph::all_simple_paths(.graph, origin, samples, mode='out') %>%
+    purrr::map(~as.integer(.x$name)) %>%
+    purrr::flatten_int() %>%
+    unique()
 }
 
 #' Make ms-like neutral variation matrix
