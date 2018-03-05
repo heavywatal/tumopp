@@ -57,21 +57,19 @@ within_between_samples = function(regions, graph) {
 }
 
 #' Traceback ancestors and calculate union of the IDs
-#' @param population tibble of raw population
-#' @param samples vector of IDs
-#' @param origin ID of common ancestor
+#' @param nodes igraph vertices
 #' @return union of IDs
 #' @rdname sample
 #' @export
-make_ancestor_union = function (population, samples, origin=1L) {
-  .graph = make_igraph(population)
-  igraph::all_simple_paths(.graph, origin, samples, mode='out') %>%
+make_ancestor_union = function (graph, nodes) {
+  igraph::all_simple_paths(graph, from="1", to = nodes, mode = "out") %>%
     purrr::map(~as.integer(.x$name)) %>%
     purrr::flatten_int() %>%
     unique()
 }
 
 #' Make ms-like neutral variation matrix
+#' @param population tibble of raw population
 #' @param nsam number of cells to sample
 #' @param mu mutation rate per cell division (ignored if segsites is given)
 #' @param segsites number of segregating sites

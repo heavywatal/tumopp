@@ -14,7 +14,7 @@ sample_random_regions(extant, nsam = 2L, ncell = 10L)
 
 within_between_samples(regions, graph)
 
-make_ancestor_union(population, samples, origin = 1L)
+make_ancestor_union(graph, nodes)
 
 sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 }
@@ -33,11 +33,9 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{graph}{igraph}
 
+\item{nodes}{igraph vertices}
+
 \item{population}{tibble of raw population}
-
-\item{samples}{vector of IDs}
-
-\item{origin}{ID of common ancestor}
 
 \item{mu}{mutation rate per cell division (ignored if segsites is given)}
 
