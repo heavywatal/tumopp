@@ -2,10 +2,13 @@
 % Please edit documentation in R/frequency.R
 \name{math_score}
 \alias{math_score}
+\alias{count_descendants}
 \alias{descfreqs}
 \title{Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies}
 \usage{
 math_score(x, constant = 1.4826, na.rm = FALSE)
+
+count_descendants(graph, nodes)
 
 descfreqs(descendants, lowerbound = 0)
 }
@@ -17,6 +20,10 @@ descfreqs(descendants, lowerbound = 0)
 \item{na.rm}{if \code{TRUE} then \code{NA} values are stripped
     from \code{x} before computation takes place.}
 
+\item{graph}{The input graph.}
+
+\item{nodes}{The vertices for which the calculation is performed.}
+
 \item{descendants}{column of raw population including ancestors}
 
 \item{lowerbound}{to discard peripheral branches}
@@ -24,10 +31,14 @@ descfreqs(descendants, lowerbound = 0)
 \value{
 numeric
 
+integer
+
 numeric vector applicable to math_score
 }
 \description{
 Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies
+
+Count number of extant descendants
 
 Translate descendant numbers to frequencies
 }

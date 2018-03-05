@@ -9,6 +9,16 @@ math_score = function(x, constant=1.4826, na.rm=FALSE) {
   mad / med
 }
 
+#' Count number of extant descendants
+#' @inheritParams igraph::ego_size
+#' @return integer
+#' @rdname frequency
+#' @export
+count_descendants = function(graph, nodes) {
+  x = igraph::ego_size(graph, order = 1073741824L, nodes = nodes, mode = "out")
+  as.integer(x + 1L) %/% 2L
+}
+
 #' Translate descendant numbers to frequencies
 #' @param descendants column of raw population including ancestors
 #' @param lowerbound to discard peripheral branches
@@ -17,5 +27,5 @@ math_score = function(x, constant=1.4826, na.rm=FALSE) {
 #' @export
 descfreqs = function(descendants, lowerbound=0) {
   frac = descendants / max(descendants, na.rm = TRUE)
-  dplyr::if_else((lowerbound < frac) & (frac < 1), frac, as.double(NA))
+  dplyr::if_else(frac < lowerbound, NA_real_, frac)
 }
