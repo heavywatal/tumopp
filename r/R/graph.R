@@ -1,30 +1,17 @@
-#' Make parent-child list from raw population tbl or igraph
-#' @param obj population tbl or igraph
-#' @return tibble
-#' @rdname graph
-#' @export
-make_edgelist = function(obj) {
-  if (igraph::is_igraph(obj)) {
-    igraph::as_data_frame(obj, "edges") %>%
-      tibble::as_tibble()
-  } else {
-    dplyr::filter(obj, .data$ancestor > 0L) %>%
-      dplyr::transmute(
-        from = .data$ancestor,
-        to = .data$id
-      ) %>%
-      dplyr::arrange(.data$to) %>%
-      dplyr::mutate_all(as.character)
-  }
-}
-
 #' Make igraph from raw population tbl
 #' @param population tbl
 #' @return tibble
 #' @rdname graph
 #' @export
 make_igraph = function(population) {
-  igraph::graph_from_data_frame(make_edgelist(population))
+  dplyr::filter(population, .data$ancestor > 0L) %>%
+    dplyr::transmute(
+      from = .data$ancestor,
+      to = .data$id
+    ) %>%
+    dplyr::arrange(.data$to) %>%
+    dplyr::mutate_all(as.character) %>%
+    igraph::graph_from_data_frame()
 }
 
 #' Mean branch length within/between sub-graphs
@@ -63,7 +50,8 @@ layout_genealogy = function(population) {
     dplyr::transmute(id = as.character(.data$id), extant = .data$death == 0, .data$clade)
   .children = dplyr::select(nodes, posend = .data$pos, ageend = .data$age, .data$id) %>%
     dplyr::left_join(.extant, by = "id")
-  make_edgelist(graph) %>%
+  igraph::as_data_frame(graph, "edges") %>%
+    tibble::as_tibble() %>%
     dplyr::left_join(nodes, by = c(from = "id")) %>%
     dplyr::left_join(.children, by = c(to = "id"))
 }
