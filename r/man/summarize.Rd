@@ -3,15 +3,12 @@
 \name{sample_stats}
 \alias{sample_stats}
 \alias{genetic_stats}
-\alias{within_between_samples}
 \alias{morphological_stats}
 \title{Summary statistics of neutral mutations}
 \usage{
 sample_stats(msout, lowerbound = 0)
 
 genetic_stats(extant)
-
-within_between_samples(population, ncell = 100L, nsam = 2L)
 
 morphological_stats(extant)
 }
@@ -21,16 +18,8 @@ morphological_stats(extant)
 \item{lowerbound}{to discard peripheral branches}
 
 \item{extant}{tibble}
-
-\item{population}{tibble}
-
-\item{ncell}{number of cells per specimen}
-
-\item{nsam}{number of samples}
 }
 \value{
-tibble
-
 tibble
 
 tibble
@@ -41,8 +30,6 @@ tibble
 Summary statistics of neutral mutations
 
 Summary statistics of genealogy
-
-Sample specimens and measure mean branch lengths
 
 Summary statistics of morphology
 }

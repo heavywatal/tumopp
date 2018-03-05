@@ -2,11 +2,17 @@
 % Please edit documentation in R/sample.R
 \name{sample_bulk}
 \alias{sample_bulk}
+\alias{sample_random_regions}
+\alias{within_between_samples}
 \alias{make_ancestor_union}
 \alias{sprinkle_mutations}
 \title{Sample bulk of cells near the specified coord}
 \usage{
 sample_bulk(extant, center, size = 100L)
+
+sample_random_regions(extant, nsam = 2L, ncell = 10L)
+
+within_between_samples(regions, graph)
 
 make_ancestor_union(population, samples, origin = 1L)
 
@@ -19,13 +25,19 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{size}{number of cells}
 
+\item{nsam}{number of cells to sample}
+
+\item{ncell}{number of cells per specimen}
+
+\item{regions}{output of sample_random_regions()}
+
+\item{graph}{igraph}
+
 \item{population}{tibble of raw population}
 
 \item{samples}{vector of IDs}
 
 \item{origin}{ID of common ancestor}
-
-\item{nsam}{number of cells to sample}
 
 \item{mu}{mutation rate per cell division (ignored if segsites is given)}
 
@@ -34,12 +46,20 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 \value{
 tibble
 
+nested tibble
+
+tibble
+
 union of IDs
 
 int matrix [nsam x segsites]
 }
 \description{
 Sample bulk of cells near the specified coord
+
+Sample multiple regions from extant cells
+
+Sample specimens and measure mean branch lengths
 
 Traceback ancestors and calculate union of the IDs
 
