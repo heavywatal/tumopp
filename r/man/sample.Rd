@@ -12,7 +12,7 @@ sample_bulk(extant, center, size = 100L)
 
 sample_random_regions(extant, nsam = 2L, ncell = 10L)
 
-within_between_samples(regions, graph)
+within_between_samples(graph, regions)
 
 make_ancestor_union(graph, nodes)
 
@@ -29,9 +29,9 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{ncell}{number of cells per specimen}
 
-\item{regions}{output of sample_random_regions()}
-
 \item{graph}{igraph}
+
+\item{regions}{output of sample_random_regions()}
 
 \item{nodes}{igraph vertices}
 

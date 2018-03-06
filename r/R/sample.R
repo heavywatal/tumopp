@@ -29,12 +29,12 @@ sample_random_regions = function(extant, nsam=2L, ncell=10L) {
 }
 
 #' Sample specimens and measure mean branch lengths
-#' @param regions output of sample_random_regions()
 #' @param graph igraph
+#' @param regions output of sample_random_regions()
 #' @return tibble
 #' @rdname sample
 #' @export
-within_between_samples = function(regions, graph) {
+within_between_samples = function(graph, regions) {
   regions %>%
     dplyr::mutate(
       within = purrr::map_dbl(.data$samples, ~mean_branch_length.igraph(graph, as.character(.x)))
