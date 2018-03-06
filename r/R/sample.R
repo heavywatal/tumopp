@@ -40,7 +40,7 @@ within_between_samples = function(regions, graph) {
       within = purrr::map_dbl(.data$samples, ~mean_branch_length.igraph(graph, as.character(.x)))
     ) %>%
     purrr::transpose() %>%
-    purrr::cross2(.x=., .y=., .filter=~.x$id >= .y$id) %>%
+    purrr::cross2(.x = ., .y = ., .filter = ~.x$id >= .y$id) %>%
     purrr::map_dfr(~{
       row_i = .x[[1L]]
       row_j = .x[[2L]]
@@ -61,8 +61,8 @@ within_between_samples = function(regions, graph) {
 #' @return union of IDs
 #' @rdname sample
 #' @export
-make_ancestor_union = function (graph, nodes) {
-  igraph::all_simple_paths(graph, from="1", to = nodes, mode = "out") %>%
+make_ancestor_union = function(graph, nodes) {
+  igraph::all_simple_paths(graph, from = "1", to = nodes, mode = "out") %>%
     purrr::map(~as.integer(.x$name)) %>%
     purrr::flatten_int() %>%
     unique()
