@@ -50,7 +50,7 @@ within_between_samples = function(regions, graph) {
         within_i = row_i$within,
         within_j = row_j$within,
         euclidean = dist_euclidean(row_i, row_j),
-        between = mean_branch_length.igraph(.graph, as.character(row_i$samples[[1L]]), as.character(row_j$samples[[1L]]))
+        between = mean_branch_length.igraph(.graph, as.character(row_i$samples), as.character(row_j$samples))
       )
     }) %>%
     dplyr::mutate(within = 0.5 * (.data$within_i + .data$within_j))
