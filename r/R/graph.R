@@ -4,11 +4,12 @@
 #' @rdname graph
 #' @export
 make_igraph = function(population) {
-  dplyr::filter(population, .data$ancestor > 0L) %>%
+  population %>%
     dplyr::transmute(
       from = .data$ancestor,
       to = .data$id
     ) %>%
+    dplyr::filter(.data$from > 0L) %>%
     dplyr::arrange(.data$to) %>%
     dplyr::mutate_all(as.character) %>%
     igraph::graph_from_data_frame()
@@ -31,8 +32,8 @@ mean_branch_length = function(population, from=integer(0L), to=from) {
 #' @rdname graph
 #' @export
 mean_branch_length.igraph = function(graph, from=igraph::V(graph), to=from) {
-  .d = igraph::distances(graph, from, to, mode = "all", weights = NA)
-  .n = length(from) * length(to) - length(intersect(from, to))
+  .d = igraph::distances(graph, from, to, mode = "all", weights = NA, algorithm = "unweighted")
+  .n = length(from) * length(to) - sum(from %in% to)
   sum(.d) / .n
 }
 
