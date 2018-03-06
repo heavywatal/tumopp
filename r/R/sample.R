@@ -28,6 +28,29 @@ sample_random_regions = function(extant, nsam=2L, ncell=10L) {
     }))
 }
 
+# Make union of integers from list
+union_int = function(x) {
+  unique(purrr::flatten_int(x))
+}
+
+# Shortcut with different defaults
+combn_int_list = function(x, m, FUN=union_int, simplify=FALSE, ...) {
+  utils::combn(x, m, FUN = FUN, simplify = simplify, ...)
+}
+
+#' Make combinations of cell IDs for various number of samples
+#' @param nodes
+#' @return nested tibble
+#' @rdname sample
+#' @export
+combn_sample_ids = function(nodes, nsam=seq_along(nodes)) {
+  tibble::tibble(
+    nsam = nsam,
+    nodes = purrr::map(nsam, ~combn_int_list(nodes, .x))
+  ) %>%
+    tidyr::unnest()
+}
+
 #' Sample specimens and measure mean branch lengths
 #' @param graph igraph
 #' @param regions output of sample_random_regions()

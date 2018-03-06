@@ -3,6 +3,7 @@
 \name{sample_bulk}
 \alias{sample_bulk}
 \alias{sample_random_regions}
+\alias{combn_sample_ids}
 \alias{within_between_samples}
 \alias{make_ancestor_union}
 \alias{sprinkle_mutations}
@@ -11,6 +12,8 @@
 sample_bulk(extant, center, size = 100L)
 
 sample_random_regions(extant, nsam = 2L, ncell = 10L)
+
+combn_sample_ids(nodes, nsam = seq_along(nodes))
 
 within_between_samples(graph, regions)
 
@@ -29,11 +32,11 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{ncell}{number of cells per specimen}
 
+\item{nodes}{igraph vertices}
+
 \item{graph}{igraph}
 
 \item{regions}{output of sample_random_regions()}
-
-\item{nodes}{igraph vertices}
 
 \item{population}{tibble of raw population}
 
@@ -43,6 +46,8 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 }
 \value{
 tibble
+
+nested tibble
 
 nested tibble
 
@@ -56,6 +61,8 @@ int matrix [nsam x segsites]
 Sample bulk of cells near the specified coord
 
 Sample multiple regions from extant cells
+
+Make combinations of cell IDs for various number of samples
 
 Sample specimens and measure mean branch lengths
 

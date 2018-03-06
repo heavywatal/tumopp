@@ -4,13 +4,16 @@
 \alias{math_score}
 \alias{count_descendants}
 \alias{descfreqs}
+\alias{detectable_ancestors}
 \title{Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies}
 \usage{
 math_score(x, constant = 1.4826, na.rm = FALSE)
 
 count_descendants(graph, nodes)
 
-descfreqs(descendants, lowerbound = 0)
+descfreqs(descendants)
+
+detectable_ancestors(population, threshold = 0.01)
 }
 \arguments{
 \item{x}{a numeric vector.}
@@ -26,7 +29,9 @@ descfreqs(descendants, lowerbound = 0)
 
 \item{descendants}{column of raw population including ancestors}
 
-\item{lowerbound}{to discard peripheral branches}
+\item{population}{tibble with descendants and id column}
+
+\item{threshold}{lowerbound of detectable allele frequency}
 }
 \value{
 numeric
@@ -34,6 +39,8 @@ numeric
 integer
 
 numeric vector applicable to math_score
+
+integer IDs
 }
 \description{
 Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele frequencies
@@ -41,4 +48,6 @@ Calculate MATH (mutant-allele tumor heterogeneity) score from variant allele fre
 Count number of extant descendants
 
 Translate descendant numbers to frequencies
+
+Extract ancestors whose descendants frequency is above threshold
 }

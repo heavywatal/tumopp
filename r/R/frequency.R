@@ -21,11 +21,19 @@ count_descendants = function(graph, nodes) {
 
 #' Translate descendant numbers to frequencies
 #' @param descendants column of raw population including ancestors
-#' @param lowerbound to discard peripheral branches
 #' @return numeric vector applicable to math_score
 #' @rdname frequency
 #' @export
-descfreqs = function(descendants, lowerbound=0) {
-  frac = descendants / max(descendants, na.rm = TRUE)
-  dplyr::if_else(frac < lowerbound, NA_real_, frac)
+descfreqs = function(descendants) {
+  descendants / max(descendants)
+}
+
+#' Extract ancestors whose descendants frequency is above threshold
+#' @param population tibble with descendants and id column
+#' @param threshold lowerbound of detectable allele frequency
+#' @return integer IDs
+#' @rdname frequency
+#' @export
+detectable_ancestors = function(population, threshold = 0.01) {
+  population$id[descfreqs(population$descendants) > threshold]
 }
