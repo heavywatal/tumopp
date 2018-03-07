@@ -27,7 +27,7 @@ plot_lattice2d = function(.tbl, colour="clade", alpha=0.66, size=1, limit=max_ab
     ggplot2::theme(axis.title = ggplot2::element_blank())
 }
 
-######### 1#########2#########3#########4#########5#########6#########7#########
+# #######1#########2#########3#########4#########5#########6#########7#########
 
 #' Plot genealogy
 #' @param .tbl tbl from layout_genealogy()
@@ -73,7 +73,22 @@ plot_bar_age = function(.tbl, xmax=max(.tbl$ageend), alpha=1.0, ...) {
     )
 }
 
-######### 1#########2#########3#########4#########5#########6#########7#########
+# #######1#########2#########3#########4#########5#########6#########7#########
+
+#' Plot capture_rate ~ nsam of biopsy
+#' @param data tbl from summarize_capture_rate()
+#' @rdname plot-biopsy
+#' @export
+plot_capture_rate = function(data) {
+  ggplot2::ggplot(data, ggplot2::aes_(~nsam, ~capture_rate)) +
+    ggplot2::stat_summary(fun.y = mean, geom = "bar", alpha = 0.6) +
+    ggplot2::geom_jitter(size = 2, alpha = 0.3, width = 0.25, height = 0, colour = "dodgerblue") +
+    ggplot2::stat_summary(fun.data = wtl::mean_sd, geom = "errorbar", width = 0.2) +
+    ggplot2::coord_cartesian(ylim = c(0, 1)) +
+    ggplot2::theme_bw()
+}
+
+# #######1#########2#########3#########4#########5#########6#########7#########
 
 #' Plot serial sections of 3D tumor
 #' @param .tbl tbl with extant cells

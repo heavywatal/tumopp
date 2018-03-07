@@ -39,16 +39,33 @@ combn_int_list = function(x, m, FUN=union_int, simplify=FALSE, ...) {
 }
 
 #' Make combinations of cell IDs for various number of samples
-#' @param nodes list of ID vectors
+#' @param ids list of ID vectors
 #' @return nested tibble
 #' @rdname sample
 #' @export
-combn_sample_ids = function(nodes, nsam=seq_along(nodes)) {
+combn_sample_ids = function(ids, nsam=seq_along(ids)) {
   tibble::tibble(
     nsam = nsam,
-    nodes = purrr::map(nsam, ~combn_int_list(nodes, .x))
+    nodes = purrr::map(nsam, ~combn_int_list(ids, .x))
   ) %>%
     tidyr::unnest()
+}
+
+#' Calculate expected allele capture rate on various combinations of samples
+#' @param combinations nested tibble from combn_sample_ids()
+#' @inheritParams detectable_ancestors
+#' @return tibble
+#' @rdname sample
+#' @export
+summarize_capture_rate = function(combinations, population, threshold = 0.01) {
+  ids = detectable_ancestors(population, threshold)
+  len_ids = length(ids)
+  dplyr::transmute(
+    combinations,
+    threshold,
+    .data$nsam,
+    capture_rate = purrr::map_dbl(.data$nodes, ~sum(.x %in% ids)) / len_ids
+  )
 }
 
 #' Sample specimens and measure mean branch lengths
@@ -78,7 +95,7 @@ within_between_samples = function(graph, regions) {
     }) %>%
     dplyr::mutate(
       within = 0.5 * (.data$within_i + .data$within_j),
-      fst = wtl::fst_HBK(within, between)
+      fst = wtl::fst_HBK(.data$within, .data$between)
     )
 }
 
