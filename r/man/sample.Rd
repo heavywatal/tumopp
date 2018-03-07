@@ -32,7 +32,7 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{ncell}{number of cells per specimen}
 
-\item{nodes}{igraph vertices}
+\item{nodes}{list of ID vectors}
 
 \item{graph}{igraph}
 
@@ -43,6 +43,8 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 \item{mu}{mutation rate per cell division (ignored if segsites is given)}
 
 \item{segsites}{number of segregating sites}
+
+\item{nodes}{igraph vertices}
 }
 \value{
 tibble

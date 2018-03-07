@@ -39,7 +39,7 @@ combn_int_list = function(x, m, FUN=union_int, simplify=FALSE, ...) {
 }
 
 #' Make combinations of cell IDs for various number of samples
-#' @param nodes
+#' @param nodes list of ID vectors
 #' @return nested tibble
 #' @rdname sample
 #' @export
@@ -76,7 +76,10 @@ within_between_samples = function(graph, regions) {
         between = mean_branch_length.igraph(.graph, as.character(row_i$samples), as.character(row_j$samples))
       )
     }) %>%
-    dplyr::mutate(within = 0.5 * (.data$within_i + .data$within_j))
+    dplyr::mutate(
+      within = 0.5 * (.data$within_i + .data$within_j),
+      fst = wtl::fst_HBK(within, between)
+    )
 }
 
 #' Traceback ancestors and calculate union of the IDs
