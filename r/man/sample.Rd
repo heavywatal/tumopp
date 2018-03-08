@@ -6,7 +6,6 @@
 \alias{combn_sample_ids}
 \alias{summarize_capture_rate}
 \alias{within_between_samples}
-\alias{make_ancestor_union}
 \alias{sprinkle_mutations}
 \title{Sample bulk of cells near the specified coord}
 \usage{
@@ -19,8 +18,6 @@ combn_sample_ids(ids, nsam = seq_along(ids))
 summarize_capture_rate(combinations, population, threshold = 0.01)
 
 within_between_samples(graph, regions)
-
-make_ancestor_union(graph, nodes)
 
 sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 }
@@ -47,8 +44,6 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{regions}{output of sample_random_regions()}
 
-\item{nodes}{igraph vertices}
-
 \item{mu}{mutation rate per cell division (ignored if segsites is given)}
 
 \item{segsites}{number of segregating sites}
@@ -64,8 +59,6 @@ tibble
 
 tibble
 
-union of IDs
-
 int matrix [nsam x segsites]
 }
 \description{
@@ -78,8 +71,6 @@ Make combinations of cell IDs for various number of samples
 Calculate expected allele capture rate on various combinations of samples
 
 Sample specimens and measure mean branch lengths
-
-Traceback ancestors and calculate union of the IDs
 
 Make ms-like neutral variation matrix
 }

@@ -53,12 +53,12 @@ combn_sample_ids = function(ids, nsam=seq_along(ids)) {
 
 #' Calculate expected allele capture rate on various combinations of samples
 #' @param combinations nested tibble from combn_sample_ids()
-#' @inheritParams detectable_ancestors
+#' @inheritParams detectable_mutants_all
 #' @return tibble
 #' @rdname sample
 #' @export
 summarize_capture_rate = function(combinations, population, threshold = 0.01) {
-  ids = detectable_ancestors(population, threshold)
+  ids = detectable_mutants_all(population, threshold)
   len_ids = length(ids)
   dplyr::transmute(
     combinations,
@@ -97,18 +97,6 @@ within_between_samples = function(graph, regions) {
       within = 0.5 * (.data$within_i + .data$within_j),
       fst = wtl::fst_HBK(.data$within, .data$between)
     )
-}
-
-#' Traceback ancestors and calculate union of the IDs
-#' @param nodes igraph vertices
-#' @return union of IDs
-#' @rdname sample
-#' @export
-make_ancestor_union = function(graph, nodes) {
-  igraph::all_simple_paths(graph, from = "1", to = nodes, mode = "out") %>%
-    purrr::map(~as.integer(.x$name)) %>%
-    purrr::flatten_int() %>%
-    unique()
 }
 
 #' Make ms-like neutral variation matrix

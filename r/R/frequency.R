@@ -9,31 +9,34 @@ math_score = function(x, constant=1.4826, na.rm=FALSE) {
   mad / med
 }
 
-#' Count number of extant descendants
+#' Calculate expected allele frequencies in the extant cells
 #' @inheritParams igraph::ego_size
 #' @return integer
 #' @rdname frequency
 #' @export
-count_descendants = function(graph, nodes) {
+allele_freqs = function(graph, nodes) {
+  stopifnot("1" %in% nodes)
   x = igraph::ego_size(graph, order = 1073741824L, nodes = nodes, mode = "out")
-  as.integer(x + 1L) %/% 2L
+  x = as.integer(x + 1L) %/% 2L
+  x / max(x)
 }
 
-#' Translate descendant numbers to frequencies
-#' @param descendants column of raw population including ancestors
-#' @return numeric vector applicable to math_score
-#' @rdname frequency
-#' @export
-descfreqs = function(descendants) {
-  descendants / max(descendants)
-}
-
-#' Extract ancestors whose descendants frequency is above threshold
+#' Extract cells whose expected allele frequencies are above threshold
 #' @param population tibble with descendants and id column
 #' @param threshold lowerbound of detectable allele frequency
 #' @return integer IDs
 #' @rdname frequency
 #' @export
-detectable_ancestors = function(population, threshold = 0.01) {
-  population$id[descfreqs(population$descendants) > threshold]
+detectable_mutants_all = function(population, threshold) {
+  population$id[population$allelefreq > threshold]
+}
+
+#' @rdname frequency
+#' @export
+detectable_mutants = function(graph, nodes, threshold) {
+  n = length(nodes)
+  counts = paths_to_origin(graph, nodes) %>%
+    purrr::flatten_int() %>%
+    table()
+  counts[(counts / n) > threshold] %>% names() %>% as.integer()
 }

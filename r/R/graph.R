@@ -15,6 +15,16 @@ make_igraph = function(population) {
     igraph::graph_from_data_frame()
 }
 
+distances_from_origin = function(graph, nodes=character(0L)) {
+  igraph::distances(graph, "1", nodes, mode = "out", weights = NA, algorithm = "unweighted") %>%
+    as.integer()
+}
+
+paths_to_origin = function(graph, nodes=character(0L)) {
+  igraph::shortest_paths(graph, from = "1", to = nodes, mode = "out", weights = NA, output = "vpath")$vpath %>%
+    purrr::map(~as.integer(.x$name))
+}
+
 #' Mean branch length within/between sub-graphs
 #' @param from,to node id
 #' @return numeric

@@ -36,9 +36,8 @@ set_graph_property = function(population) {
   .nodes = as.character(population$id)
   .out = dplyr::mutate(
     population,
-    age = igraph::distances(.graph, .nodes, "1", mode = "in", algorithm = "unweighted")[, 1L],
-    age = as.integer(.data$age),
-    descendants = count_descendants(.graph, .nodes)
+    age = distances_from_origin(.graph, .nodes),
+    allelefreq = allele_freqs(.graph, .nodes)
   )
   founders = list_clade_founders(.out, 4L)
   clade_data = founders %>%
