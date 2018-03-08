@@ -6,7 +6,6 @@
 \alias{combn_sample_ids}
 \alias{summarize_capture_rate}
 \alias{within_between_samples}
-\alias{sprinkle_mutations}
 \title{Sample bulk of cells near the specified coord}
 \usage{
 sample_bulk(extant, center, size = 100L)
@@ -18,8 +17,6 @@ combn_sample_ids(ids, nsam = seq_along(ids))
 summarize_capture_rate(combinations, population, threshold = 0.01)
 
 within_between_samples(graph, regions)
-
-sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 }
 \arguments{
 \item{extant}{tibble of extant cells}
@@ -28,7 +25,7 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{size}{number of cells}
 
-\item{nsam}{number of cells to sample}
+\item{nsam}{number of regions to sample}
 
 \item{ncell}{number of cells per specimen}
 
@@ -36,17 +33,13 @@ sprinkle_mutations(population, nsam, mu = NULL, segsites = NULL)
 
 \item{combinations}{nested tibble from combn_sample_ids()}
 
-\item{population}{tibble of raw population}
+\item{population}{tibble with descendants and id column}
 
 \item{threshold}{lowerbound of detectable allele frequency}
 
 \item{graph}{igraph}
 
 \item{regions}{output of sample_random_regions()}
-
-\item{mu}{mutation rate per cell division (ignored if segsites is given)}
-
-\item{segsites}{number of segregating sites}
 }
 \value{
 tibble
@@ -58,8 +51,6 @@ nested tibble
 tibble
 
 tibble
-
-int matrix [nsam x segsites]
 }
 \description{
 Sample bulk of cells near the specified coord
@@ -71,6 +62,4 @@ Make combinations of cell IDs for various number of samples
 Calculate expected allele capture rate on various combinations of samples
 
 Sample specimens and measure mean branch lengths
-
-Make ms-like neutral variation matrix
 }
