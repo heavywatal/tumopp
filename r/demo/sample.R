@@ -1,91 +1,64 @@
 library(tidyverse)
+library(wtl)
+library(tumopp)
 
-sample_glands = function(popultion) {
-  population %>%
-    mutate(half = ifelse(x < 1, "left", "right")) %>%
-    group_by(half) %>%
-    sample_n(5) %>%
-    mutate(serial = seq_len(n()))
+refresh("tumopp/r")
+
+(.result = tumopp(str_split("-N40000 -D3 -Chex -k24 -Lstep", " ")[[1]]))
+(.population = .result$population[[1]])
+(.extant = .population %>% filter_extant())
+(.graph = make_igraph(.population))
+
+# #######1#########2#########3#########4#########5#########6#########7#########
+
+.regions = sample_random_regions(.extant, nsam=8L, ncell=120L) %>% print()
+
+.threshold = 0.05
+
+.combn_biopsy = .regions$samples %>%
+  purrr::map(~detectable_mutants(.graph, .x, .threshold)) %>%
+  combn_sample_ids() %>%
+  print()
+
+summarize_capture_rate(.combn_biopsy, .population, .threshold) %>%
+  print() %>%
+  plot_capture_rate()
+
+c(0.01, 0.03, 0.05) %>%
+  purrr::map_dfr(~summarize_capture_rate(.combn_biopsy, .population, .x)) %>%
+  tidyr::unnest() %>%
+  print() %>%
+  plot_capture_rate() +
+  facet_wrap(~threshold)
+
+detectable_mutants_all(.population, .threshold)
+
+.plot_allelefreq_biopsy = function(population, sample_ancestors, threshold) {
+  .df = population %>%
+    dplyr::filter(.data$allelefreq >= threshold) %>%
+    dplyr::transmute(
+      .data$id,
+      .data$allelefreq,
+      captured = .data$id %in% sample_ancestors
+    )
+  ggplot(.df, aes(allelefreq, group=captured))+
+    geom_histogram(aes(fill=captured), binwidth=0.02)+
+    theme_bw()
 }
+.plot_allelefreq_biopsy(.population, .combn_biopsy$nodes[[3]], .threshold)
 
-unnest_ = function(samples) {
-  samples %>%
-    mutate(site = strsplit(sites, ":"), sites = NULL) %>%
-    unnest(site) %>%
-    mutate(site = as.integer(site))
-}
+# #######1#########2#########3#########4
 
-binarize = function(unnested) {
-  unnested %>%
-    (~ .sites = unique(.$site)) %>%
-    group_by(half, serial) %>%
-    do(data.frame(site = .sites, exists = .sites %in% .$site)) %>%
-    ungroup() %>%
-    arrange(site)
-}
+Rprof()
+.distances = within_between_samples(.graph, .regions) %>% print()
+Rprof(NULL)
+summaryRprof()
 
-# summary statistics
-##  the number of distinct CNAs (different strings)
-##  the total number of alterations
-##  Shannon index of binary patterns
-##  the number of variegated alterations
-##  the number of side-variegated alterations
-
-summarize_alt = function(binary) {
-  binary %>%
-    group_by(site) %>%
-    summarise(alterations = sum(exists), p = alterations / n()) %>%
-    summarise(distinct = n(), alterations = sum(alterations), entropy = sum(-p * log(p) - (1 - p) * log(1 - p)))
-}
-
-#  lhs rhs
-#  --- ---: ERROR
-#  --- any: regional
-#  --- all: side-specific
-#  any any: variegated
-#  any all: side-variegated
-#  all all: public
-summarize_pattern = function(binary) {
-  binary %>%
-    group_by(site, half) %>%
-    summarise(any = any(exists), all = all(exists)) %>%
-    group_by(site) %>%
-    summarise(
-      public = all(all),
-      side_variegated = (!public) & any(all) & all(any),
-      variegated = (!any(all)) & all(any),
-      side_specific = (!public) & (!any(any)) & any(all),
-      regional = (!any(all)) & (!variegated) & any(any)
-    ) %>%
-    summarise_at(vars(-site), sum)
-}
-
-summarize_glands = function(samples) {
-  .binary = samples %>%
-    unnest_() %>%
-    binarize()
-  bind_cols(summarize_alt(.binary), summarize_pattern(.binary))
-}
-
-population %>%
-  sample_glands() %>%
-  summarize_glands()
-
-######## 1#########2#########3#########4#########5#########6#########7#########
-
-.repeated = rdply(100, {
-  population %>%
-    sample_glands() %>%
-    summarize_glands()
-}, .id = "sampling") %>% as_tibble() %>% print()
-write_tsv(.repeated, "samples.tsv.gz")
-
-.p = .repeated %>%
-  gather(variable, value, -sampling) %>%
-  ggplot(aes(value)) +
-  geom_histogram() +
-  facet_wrap(~variable) +
-  theme_bw() +
-  theme(panel.grid.minor = element_blank())
-# .p
-ggsave("repeated_sampling.png", .p, width = 7, height = 7)
+.xmax = max(.distances$euclidean)
+.ymax = max(max(.distances$fst), 0.6)
+.distances %>%
+  ggplot(aes(euclidean, fst)) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y ~ x + 0) +
+  coord_cartesian(xlim = c(0, .xmax), ylim = c(0, .ymax)) +
+  theme_wtl()
