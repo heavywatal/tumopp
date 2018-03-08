@@ -78,7 +78,7 @@ summarize_capture_rate = function(combinations, population, threshold = 0.01) {
 within_between_samples = function(graph, regions) {
   regions %>%
     dplyr::mutate(
-      within = purrr::map_dbl(.data$samples, ~mean_branch_length.igraph(graph, as.character(.x)))
+      within = purrr::map_dbl(.data$samples, ~mean_branch_length(graph, as.character(.x)))
     ) %>%
     purrr::transpose() %>%
     purrr::cross2(.x = ., .y = ., .filter = ~.x$id >= .y$id) %>%
@@ -91,7 +91,7 @@ within_between_samples = function(graph, regions) {
         within_i = row_i$within,
         within_j = row_j$within,
         euclidean = dist_euclidean(row_i, row_j),
-        between = mean_branch_length.igraph(.graph, as.character(row_i$samples), as.character(row_j$samples))
+        between = mean_branch_length(.graph, as.character(row_i$samples), as.character(row_j$samples))
       )
     }) %>%
     dplyr::mutate(

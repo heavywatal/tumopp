@@ -26,22 +26,12 @@ paths_to_origin = function(graph, nodes=character(0L)) {
 }
 
 #' Mean branch length within/between sub-graphs
-#' @param from,to node id
-#' @return numeric
-#' @rdname graph
-#' @export
-mean_branch_length = function(population, from=integer(0L), to=from) {
-  population %>%
-    make_igraph() %>%
-    mean_branch_length.igraph(as.character(from), as.character(to))
-}
-
-#' Mean branch length within/between sub-graphs
 #' @param graph igraph
+#' @param from,to igraph vertices
 #' @return numeric
 #' @rdname graph
 #' @export
-mean_branch_length.igraph = function(graph, from=igraph::V(graph), to=from) {
+mean_branch_length = function(graph, from=igraph::V(graph), to=from) {
   .d = igraph::distances(graph, from, to, mode = "all", weights = NA, algorithm = "unweighted")
   .n = length(from) * length(to) - sum(from %in% to)
   sum(.d) / .n

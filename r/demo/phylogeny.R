@@ -4,9 +4,10 @@ library(tumopp)
 
 refresh("tumopp/r")
 
-(.result = tumopp(str_split("-D3 -Chex -k24 -Lstep", " ")[[1]]))
+(.result = tumopp(str_split("-N40000 -D3 -Chex -k24 -Lstep", " ")[[1]]))
 (.population = .result$population[[1]])
 (.extant = .population %>% filter_extant())
+(.graph = make_igraph(.population))
 
 .n = 100
 .o1 = dplyr::sample_n(.extant %>% dplyr::filter(z == 0), 1) %>% print()
@@ -15,12 +16,12 @@ refresh("tumopp/r")
 .specimen2 = sample_bulk(.extant, .o2, .n)
 
 # T_S
-(.ts1 = mean_branch_length(.population, .specimen1$id))
-(.ts2 = mean_branch_length(.population, .specimen2$id))
+(.ts1 = mean_branch_length(.graph, as.character(.specimen1$id)))
+(.ts2 = mean_branch_length(.graph, as.character(.specimen2$id)))
 (.ts = mean(c(.ts1, .ts2)))
 
 # T_B
-(.tb = mean_branch_length(.population, .specimen1$id, .specimen2$id))
+(.tb = mean_branch_length(.graph, as.character(.specimen1$id), as.character(.specimen2$id)))
 
 # T_D
 (.td = .tb - .ts)
@@ -75,16 +76,6 @@ loadNamespace("cowplot")
 .gg = cowplot::plot_grid(plotlist = .plts)
 gprint(.gg)
 ggsave("sample_phylogeny_Pifany.png", .gg, width = 2, height = 1, scale = 6)
-
-.distances = within_between_samples(.population, nsam = 10L) %>%
-  dplyr::mutate(fst = wtl::fst_HBK(within, between)) %>%
-  print()
-
-.distances %>%
-  ggplot(aes(euclidean, fst)) +
-  geom_point() +
-  theme_wtl()
-
 
 ######## 1#########2#########3#########4#########5#########6#########7#########
 ## Draw random tree

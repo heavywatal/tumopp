@@ -3,29 +3,24 @@
 \name{make_igraph}
 \alias{make_igraph}
 \alias{mean_branch_length}
-\alias{mean_branch_length.igraph}
 \alias{layout_genealogy}
 \title{Make igraph from raw population tbl}
 \usage{
 make_igraph(population)
 
-mean_branch_length(population, from = integer(0L), to = from)
-
-mean_branch_length.igraph(graph, from = igraph::V(graph), to = from)
+mean_branch_length(graph, from = igraph::V(graph), to = from)
 
 layout_genealogy(population)
 }
 \arguments{
 \item{population}{tbl}
 
-\item{from, to}{node id}
-
 \item{graph}{igraph}
+
+\item{from, to}{igraph vertices}
 }
 \value{
 tibble
-
-numeric
 
 numeric
 
@@ -33,8 +28,6 @@ tibble
 }
 \description{
 Make igraph from raw population tbl
-
-Mean branch length within/between sub-graphs
 
 Mean branch length within/between sub-graphs
 
