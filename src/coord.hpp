@@ -64,11 +64,11 @@ class Coord {
         return _euclidean_distance(v);
     }
     //! Estimate radius from volume
-    virtual double radius(const size_t nodes) const;
+    virtual double radius(size_t nodes) const;
     //! square or cube
     virtual std::vector<std::valarray<int>> core() const;
     //! sphere coordinates with inside-out direction
-    std::vector<std::valarray<int>> sphere(const size_t n) const;
+    std::vector<std::valarray<int>> sphere(size_t n) const;
     //! Destructor
     virtual ~Coord() = default;
 
@@ -131,7 +131,7 @@ class Hexagonal final: public Coord {
     ~Hexagonal() = default;
     int graph_distance(const std::valarray<int>& v) const override;
     double euclidean_distance(const std::valarray<int>& v) const override;
-    double radius(const size_t nodes) const override;
+    double radius(size_t nodes) const override;
     std::vector<std::valarray<int>> core() const override;
 };
 

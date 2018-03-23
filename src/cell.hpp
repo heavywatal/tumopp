@@ -57,7 +57,7 @@ class Cell {
     void increase_death_rate();
 
     //! Calc dt and set #next_event_
-    double delta_time(const double positional_value);
+    double delta_time(double positional_value);
 
     //! Check mutant ancestors
     std::vector<uint_fast32_t> has_mutations_of(const std::vector<uint_fast32_t>&) const;
@@ -75,7 +75,7 @@ class Cell {
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
     //! setter of #time_of_death_
-    void set_time_of_death(const double t) {time_of_death_ = t;}
+    void set_time_of_death(double t) {time_of_death_ = t;}
 
     //! getter of #birth_rate_
     double birth_rate() const {return birth_rate_;}

@@ -29,7 +29,7 @@ class Tissue {
     Tissue() = default;
 
     //! main function
-    bool grow(const size_t max_size, const double plateau=0.0);
+    bool grow(size_t max_size, double plateau=0.0);
 
     //! getter of #DIMENSIONS_
     static unsigned int DIMENSIONS() {return DIMENSIONS_;}
@@ -39,9 +39,9 @@ class Tissue {
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
     //! sample cells
-    std::vector<std::shared_ptr<Cell>> sample_random(const size_t) const;
+    std::vector<std::shared_ptr<Cell>> sample_random(size_t) const;
     //! sample cells in a cross section
-    std::vector<std::shared_ptr<Cell>> sample_section(const size_t) const;
+    std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
 
     //! Stringify #specimens_
     std::string specimens() const {return specimens_.str();}
@@ -50,7 +50,7 @@ class Tissue {
     //! Stringify #drivers_
     std::string drivers() const {return drivers_.str();}
     //! Make TSV of pairwise distance
-    std::string pairwise_distance(const size_t npair) const;
+    std::string pairwise_distance(size_t npair) const;
 
     //! TSV header
     std::string header() const;
