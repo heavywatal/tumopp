@@ -36,11 +36,11 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::valarray<int>& v, uint_fast32_t i=0): coord_(v), id_(i) {}
+    Cell(const std::valarray<int>& v, uint_fast32_t i=0) noexcept: coord_(v), id_(i) {}
     //! Copy constructor
-    Cell(const Cell& other);
+    Cell(const Cell& other) noexcept;
     //! Destructor
-    ~Cell() = default;
+    ~Cell() noexcept = default;
     //! Copy assignment operator
     Cell& operator=(const Cell&) = delete;
     //! Move constructor
@@ -54,7 +54,7 @@ class Cell {
     std::string force_mutate();
 
     //! Set death rate to simulate Moran-like model
-    void increase_death_rate();
+    void increase_death_rate() noexcept;
 
     //! Calc dt and set #next_event_
     double delta_time(double positional_value);
@@ -66,29 +66,29 @@ class Cell {
     size_t branch_length(const Cell&) const;
 
     //! setter of #coord_
-    void set_coord(const std::valarray<int>& v) {coord_ = v;}
+    void set_coord(const std::valarray<int>& v) noexcept {coord_ = v;}
     //! setter of #time_of_birth_; reset other properties
-    void set_time_of_birth(double t, uint_fast32_t i, const std::shared_ptr<Cell>& ancestor) {
+    void set_time_of_birth(double t, uint_fast32_t i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;
         id_ = i;
         ancestor_ = ancestor;
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
     //! setter of #time_of_death_
-    void set_time_of_death(double t) {time_of_death_ = t;}
+    void set_time_of_death(double t) noexcept {time_of_death_ = t;}
 
     //! getter of #birth_rate_
-    double birth_rate() const {return birth_rate_;}
+    double birth_rate() const noexcept {return birth_rate_;}
     //! getter of #death_rate_
-    double death_rate() const {return death_rate_;}
+    double death_rate() const noexcept {return death_rate_;}
     //! getter of #migra_rate_
-    double migra_rate() const {return migra_rate_;}
+    double migra_rate() const noexcept {return migra_rate_;}
     //! getter of #next_event_
-    Event next_event() const {return next_event_;}
+    Event next_event() const noexcept {return next_event_;}
     //! getter of #coord_
-    const std::valarray<int>& coord() const {return coord_;}
+    const std::valarray<int>& coord() const noexcept {return coord_;}
     //! getter of #MUTATION_RATE_
-    static double MUTATION_RATE() {return MUTATION_RATE_;}
+    static double MUTATION_RATE() noexcept {return MUTATION_RATE_;}
 
     //! TSV header
     static std::string header();
@@ -170,7 +170,7 @@ class Cell {
     //! ID
     uint_fast32_t id_;
     //! ancestor's ID
-    std::shared_ptr<Cell> ancestor_ = 0;
+    std::shared_ptr<Cell> ancestor_;
     //! time of birth
     double time_of_birth_ = 0.0;
     //! time of death

@@ -32,9 +32,9 @@ class Tissue {
     bool grow(size_t max_size, double plateau=0.0);
 
     //! getter of #DIMENSIONS_
-    static unsigned int DIMENSIONS() {return DIMENSIONS_;}
+    static unsigned int DIMENSIONS() noexcept {return DIMENSIONS_;}
     //! Shortcut of tumor_.size()
-    size_t size() const {return tumor_.size();}
+    size_t size() const noexcept {return tumor_.size();}
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
@@ -63,7 +63,7 @@ class Tissue {
     //! Shortcut of coord.radius(tumor_.size())
     double radius() const {return coord_func_->radius(tumor_.size());}
     //! getter of #coord_func_
-    const std::unique_ptr<Coord>& coord_func() const {return coord_func_;}
+    const std::unique_ptr<Coord>& coord_func() const noexcept {return coord_func_;}
 
     static boost::program_options::options_description opt_description();
 
@@ -119,7 +119,7 @@ class Tissue {
     //! Hashing function object for shptr<Cell>
     struct hash_shptr_cell {
         //! hash function
-        size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const {
+        size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const noexcept {
             return Coord::hash(x->coord());
         }
     };
@@ -128,7 +128,7 @@ class Tissue {
     struct equal_shptr_cell {
         //! Compare cell coord
         bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
-                         const std::shared_ptr<tumopp::Cell>& rhs) const {
+                         const std::shared_ptr<tumopp::Cell>& rhs) const noexcept {
             return (lhs->coord() == rhs->coord()).min();
         }
     };

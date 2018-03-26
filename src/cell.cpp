@@ -7,6 +7,8 @@
 #include <sfmt.hpp>
 #include <boost/program_options.hpp>
 
+#include <type_traits>
+
 namespace tumopp {
 
 double Cell::BIRTH_RATE_ = 1.0;
@@ -94,7 +96,10 @@ void Cell::init_distributions() {
     GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_));
 }
 
-Cell::Cell(const Cell& other):
+static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
+static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
+
+Cell::Cell(const Cell& other) noexcept:
     coord_(other.coord_),
     birth_rate_(other.birth_rate_),
     death_rate_(other.death_rate_),
@@ -145,7 +150,7 @@ std::string Cell::force_mutate() {
     return oss.str();
 }
 
-void Cell::increase_death_rate() {
+void Cell::increase_death_rate() noexcept {
     death_rate_ = birth_rate_;
     elapsed_ = 0.0;
 }
