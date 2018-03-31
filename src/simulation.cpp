@@ -112,7 +112,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     }
 }
 
-Simulation::~Simulation() {HERE;}
+Simulation::~Simulation() = default;
 
 void Simulation::run() {HERE;
     auto& vm = *vars_;
