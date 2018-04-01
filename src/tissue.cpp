@@ -176,51 +176,51 @@ void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
 }
 
 void Tissue::init_insert_function() {
-    typedef std::function<bool(const std::shared_ptr<Cell>&)> func_t;
-    typedef std::unordered_map<std::string, func_t> map_sf;
+    using func_t = std::function<bool(const std::shared_ptr<Cell>&)>;
+    using map_sf = std::unordered_map<std::string, func_t>;
     std::unordered_map<std::string, map_sf> swtch;
 
-    swtch["const"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
+    swtch["const"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         push(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
-    };
-    swtch["const"]["mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["const"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
         push_minimum_drag(daughter);
         return true;
-    };
-    swtch["const"]["minstraight"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["const"].emplace("minstraight", [this](const std::shared_ptr<Cell>& daughter) {
         push(daughter, to_nearest_empty(daughter->coord()));
         return true;
-    };
-    swtch["const"]["roulette"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["const"].emplace("roulette", [this](const std::shared_ptr<Cell>& daughter) {
         push(daughter, roulette_direction(daughter->coord()));
         return true;
-    };
-    swtch["const"]["stroll"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["const"].emplace("stroll", [this](const std::shared_ptr<Cell>& daughter) {
         stroll(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
-    };
-    swtch["step"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["step"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         if (num_empty_neighbors(daughter->coord()) == 0U) {return false;}
         push(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
-    };
-    swtch["step"]["mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["step"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
         return insert_adjacent(daughter);
-    };
-    swtch["linear"]["random"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["linear"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         const double prob = proportion_empty_neighbors(daughter->coord());
         if (!std::bernoulli_distribution(prob)(wtl::sfmt64())) {return false;}
         push(daughter, coord_func_->random_direction(wtl::sfmt64()));
         return true;
-    };
-    swtch["linear"]["mindrag"] = [this](const std::shared_ptr<Cell>& daughter) {
+    });
+    swtch["linear"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
         daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt64()));
         return tumor_.insert(daughter).second;
-    };
-    swtch["const"]["default"] = swtch["const"]["random"];
-    swtch["step"]["default"] = swtch["step"]["mindrag"];
-    swtch["linear"]["default"] = swtch["linear"]["mindrag"];
+    });
+    swtch["const"].emplace("default", swtch["const"]["random"]);
+    swtch["step"].emplace("default", swtch["step"]["mindrag"]);
+    swtch["linear"].emplace("default", swtch["linear"]["mindrag"]);
     try {
         insert = swtch.at(LOCAL_DENSITY_EFFECT_).at(DISPLACEMENT_PATH_);
     } catch (std::exception& e) {
