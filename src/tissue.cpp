@@ -61,7 +61,7 @@ void Tissue::init() {HERE;
     time_ = 0.0;
     id_tail_ = 0;
     (specimens_ = wtl::make_oss()) << header();
-    (snapshots_ = wtl::make_oss()) << header();
+    (snapshots_ = wtl::make_oss()) << "time\t" << header();
     (drivers_ = wtl::make_oss()) << "id\ttype\tcoef\n";
     init_coord();
     init_insert_function();
@@ -84,7 +84,7 @@ void Tissue::init() {HERE;
             if (tumor_.size() >= INITIAL_SIZE_) break;
         }
     }
-    write(snapshots_);
+    write_snapshot();
 }
 
 void Tissue::init_coord() {HERE;
@@ -160,13 +160,15 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
             queue_push(mother);
         }
         if (tumor_.size() < RECORDING_EARLY_GROWTH_) {
-            write(snapshots_);
+            write_snapshot();
         } else {
             RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
         }
     }
     DCERR("\r" << tumor_.size() << std::endl);
-    write(specimens_);
+    for (const auto& p: tumor_) {
+        write(specimens_, *p);
+    }
     return success;
 }
 
@@ -425,20 +427,18 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     return oss.str();
 }
 
-std::string Tissue::header() const {HERE;
-    auto oss = wtl::make_oss();
-    oss << "time\t" << Cell::header() << "\tphi\n";
-    return oss.str();
+std::string Tissue::header() const {
+    return Cell::header() + "\tphi\n";
 }
 
 void Tissue::write(std::ostream& ost, const Cell& cell) const {
-    cell.write(ost << time_ << "\t") << "\t"
+    cell.write(ost) << "\t"
        << static_cast<unsigned int>(num_empty_neighbors(cell.coord())) << "\n";
 }
 
-void Tissue::write(std::ostream& ost) const {
+void Tissue::write_snapshot() {
     for (const auto& p: tumor_) {
-        write(ost, *p);
+        write(snapshots_ << time_ << "\t", *p);
     }
 }
 

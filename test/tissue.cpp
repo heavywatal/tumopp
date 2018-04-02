@@ -25,8 +25,7 @@ int main() {
     tumopp::Tissue tissue;
     tissue.grow(10);
     std::cout << tissue << "\n";
-    std::cout << tissue.header();
-    tissue.write(std::cout);
+    std::cout << tissue.specimens();
 
     const std::valarray<int> v2{3, -2};
     test_coordinate<tumopp::Neumann>(v2);

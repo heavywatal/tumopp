@@ -57,7 +57,7 @@ class Tissue {
     //! TSV
     void write(std::ostream&, const Cell&) const;
     //! Write all cells
-    void write(std::ostream&) const;
+    void write_snapshot();
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! Shortcut of coord.radius(tumor_.size())
