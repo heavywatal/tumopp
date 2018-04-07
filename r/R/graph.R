@@ -42,17 +42,10 @@ mean_branch_length = function(graph, from=igraph::V(graph), to=from) {
 #' @rdname graph
 #' @export
 layout_genealogy = function(population) {
-  graph = make_igraph(population)
-  nodes = igraph::layout_as_tree(graph, flip.y = FALSE) %>%
-    tibble::as_tibble() %>%
-    stats::setNames(c("pos", "age")) %>%
-    dplyr::mutate(id = igraph::V(graph)$name)
-  .extant = population %>%
-    dplyr::transmute(id = as.character(.data$id), extant = .data$death == 0, .data$clade)
-  .children = dplyr::select(nodes, posend = .data$pos, ageend = .data$age, .data$id) %>%
-    dplyr::left_join(.extant, by = "id")
-  igraph::as_data_frame(graph, "edges") %>%
-    tibble::as_tibble() %>%
-    dplyr::left_join(nodes, by = c(from = "id")) %>%
-    dplyr::left_join(.children, by = c(to = "id"))
+  extra_cols = population %>%
+    dplyr::transmute(name = as.character(.data$id), extant = .data$death == 0, .data$clade)
+  make_igraph(population) %>%
+    wtl::igraph_layout(igraph::as_tree(flip.y = FALSE)) %>%
+    dplyr::rename(pos = "x", age = "y", posend = "xend", ageend = "yend") %>%
+    dplyr::left_join(extra_cols, by = c(to = "name"))
 }
