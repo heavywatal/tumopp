@@ -18,7 +18,7 @@ MathJax.Hub.Config({
   showProcessingMessages: false,
   messageStyle: "none"
 });
-</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
+</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -86,26 +86,26 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a06b43f679ea3dc8522a8d7bb27e3cd05">Tissue</a> ()=default</td></tr>
 <tr class="memdesc:a06b43f679ea3dc8522a8d7bb27e3cd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
 <tr class="separator:a06b43f679ea3dc8522a8d7bb27e3cd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48ebb3cabef8edc6bb177497f1ab8547"><td class="memItemLeft" align="right" valign="top"><a id="a48ebb3cabef8edc6bb177497f1ab8547"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a48ebb3cabef8edc6bb177497f1ab8547">grow</a> (const size_t max_size, const double plateau=0.0)</td></tr>
-<tr class="memdesc:a48ebb3cabef8edc6bb177497f1ab8547"><td class="mdescLeft">&#160;</td><td class="mdescRight">main function <br /></td></tr>
-<tr class="separator:a48ebb3cabef8edc6bb177497f1ab8547"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5a492f3ff30296b26e08628216a1a9e"><td class="memItemLeft" align="right" valign="top"><a id="ad5a492f3ff30296b26e08628216a1a9e"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ad5a492f3ff30296b26e08628216a1a9e">size</a> () const</td></tr>
-<tr class="memdesc:ad5a492f3ff30296b26e08628216a1a9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut of tumor_.size() <br /></td></tr>
-<tr class="separator:ad5a492f3ff30296b26e08628216a1a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09b7e1cf9f197c994a796f71888b179f"><td class="memItemLeft" align="right" valign="top"><a id="a09b7e1cf9f197c994a796f71888b179f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a09b7e1cf9f197c994a796f71888b179f">grow</a> (size_t max_size, double plateau=0.0)</td></tr>
+<tr class="memdesc:a09b7e1cf9f197c994a796f71888b179f"><td class="mdescLeft">&#160;</td><td class="mdescRight">main function <br /></td></tr>
+<tr class="separator:a09b7e1cf9f197c994a796f71888b179f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae505196bae0b40708e3d324bfb271369"><td class="memItemLeft" align="right" valign="top"><a id="ae505196bae0b40708e3d324bfb271369"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ae505196bae0b40708e3d324bfb271369">size</a> () const noexcept</td></tr>
+<tr class="memdesc:ae505196bae0b40708e3d324bfb271369"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut of tumor_.size() <br /></td></tr>
+<tr class="separator:ae505196bae0b40708e3d324bfb271369"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c0c05d87ab13c8ade9cd426d75317c5"><td class="memItemLeft" align="right" valign="top"><a id="a3c0c05d87ab13c8ade9cd426d75317c5"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a3c0c05d87ab13c8ade9cd426d75317c5">write_segsites</a> (std::ostream &amp;, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;&gt; &amp;) const</td></tr>
 <tr class="memdesc:a3c0c05d87ab13c8ade9cd426d75317c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write ms-like binary sequence. <br /></td></tr>
 <tr class="separator:a3c0c05d87ab13c8ade9cd426d75317c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecd55af040587fba59370208034f5757"><td class="memItemLeft" align="right" valign="top"><a id="aecd55af040587fba59370208034f5757"></a>
-std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aecd55af040587fba59370208034f5757">sample_random</a> (const size_t) const</td></tr>
-<tr class="memdesc:aecd55af040587fba59370208034f5757"><td class="mdescLeft">&#160;</td><td class="mdescRight">sample cells <br /></td></tr>
-<tr class="separator:aecd55af040587fba59370208034f5757"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af28de60ae29dab0db92b10bc8dc86bef"><td class="memItemLeft" align="right" valign="top"><a id="af28de60ae29dab0db92b10bc8dc86bef"></a>
-std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#af28de60ae29dab0db92b10bc8dc86bef">sample_section</a> (const size_t) const</td></tr>
-<tr class="memdesc:af28de60ae29dab0db92b10bc8dc86bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">sample cells in a cross section <br /></td></tr>
-<tr class="separator:af28de60ae29dab0db92b10bc8dc86bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dff3ad54373bdfad7daf6eb62b72545"><td class="memItemLeft" align="right" valign="top"><a id="a7dff3ad54373bdfad7daf6eb62b72545"></a>
+std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a7dff3ad54373bdfad7daf6eb62b72545">sample_random</a> (size_t) const</td></tr>
+<tr class="memdesc:a7dff3ad54373bdfad7daf6eb62b72545"><td class="mdescLeft">&#160;</td><td class="mdescRight">sample cells <br /></td></tr>
+<tr class="separator:a7dff3ad54373bdfad7daf6eb62b72545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e32a270f5cd912c7ac843843dffebb0"><td class="memItemLeft" align="right" valign="top"><a id="a2e32a270f5cd912c7ac843843dffebb0"></a>
+std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a2e32a270f5cd912c7ac843843dffebb0">sample_section</a> (size_t) const</td></tr>
+<tr class="memdesc:a2e32a270f5cd912c7ac843843dffebb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">sample cells in a cross section <br /></td></tr>
+<tr class="separator:a2e32a270f5cd912c7ac843843dffebb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c361bdb45910160e99f6eb3683b7690"><td class="memItemLeft" align="right" valign="top"><a id="a1c361bdb45910160e99f6eb3683b7690"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a1c361bdb45910160e99f6eb3683b7690">specimens</a> () const</td></tr>
 <tr class="memdesc:a1c361bdb45910160e99f6eb3683b7690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stringify <a class="el" href="classtumopp_1_1_tissue.html#afa8e7986051ceb65c6676707583fdf1a" title="record all cells existed ">specimens_</a>. <br /></td></tr>
@@ -118,10 +118,10 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a19132f7bf1a714cc2e33341ae2ff65e3">drivers</a> () const</td></tr>
 <tr class="memdesc:a19132f7bf1a714cc2e33341ae2ff65e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stringify <a class="el" href="classtumopp_1_1_tissue.html#aa0a9bdb2b6792ba1dcec02faf2f52ef8" title="record driver mutations ">drivers_</a>. <br /></td></tr>
 <tr class="separator:a19132f7bf1a714cc2e33341ae2ff65e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a162c2988c1308db5652a9ed2615a96ac"><td class="memItemLeft" align="right" valign="top"><a id="a162c2988c1308db5652a9ed2615a96ac"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a162c2988c1308db5652a9ed2615a96ac">pairwise_distance</a> (const size_t npair) const</td></tr>
-<tr class="memdesc:a162c2988c1308db5652a9ed2615a96ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make TSV of pairwise distance. <br /></td></tr>
-<tr class="separator:a162c2988c1308db5652a9ed2615a96ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59139afbb7df1c22e7ccfa08b5c48125"><td class="memItemLeft" align="right" valign="top"><a id="a59139afbb7df1c22e7ccfa08b5c48125"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a59139afbb7df1c22e7ccfa08b5c48125">pairwise_distance</a> (size_t npair) const</td></tr>
+<tr class="memdesc:a59139afbb7df1c22e7ccfa08b5c48125"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make TSV of pairwise distance. <br /></td></tr>
+<tr class="separator:a59139afbb7df1c22e7ccfa08b5c48125"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab33d489cebf1eb40991ac7a1d57221d3"><td class="memItemLeft" align="right" valign="top"><a id="ab33d489cebf1eb40991ac7a1d57221d3"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ab33d489cebf1eb40991ac7a1d57221d3">header</a> () const</td></tr>
 <tr class="memdesc:ab33d489cebf1eb40991ac7a1d57221d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TSV header. <br /></td></tr>
@@ -130,25 +130,25 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a9715f51f774b78a1e9dab514bee02c59">write</a> (std::ostream &amp;, const <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &amp;) const</td></tr>
 <tr class="memdesc:a9715f51f774b78a1e9dab514bee02c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">TSV. <br /></td></tr>
 <tr class="separator:a9715f51f774b78a1e9dab514bee02c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a4068443d3c31d13cfa801de7157919"><td class="memItemLeft" align="right" valign="top"><a id="a8a4068443d3c31d13cfa801de7157919"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a8a4068443d3c31d13cfa801de7157919">write</a> (std::ostream &amp;) const</td></tr>
-<tr class="memdesc:a8a4068443d3c31d13cfa801de7157919"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all cells. <br /></td></tr>
-<tr class="separator:a8a4068443d3c31d13cfa801de7157919"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1496acc7c4c11646d2d27a51d78d2545"><td class="memItemLeft" align="right" valign="top"><a id="a1496acc7c4c11646d2d27a51d78d2545"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a1496acc7c4c11646d2d27a51d78d2545">write_snapshot</a> ()</td></tr>
+<tr class="memdesc:a1496acc7c4c11646d2d27a51d78d2545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all cells. <br /></td></tr>
+<tr class="separator:a1496acc7c4c11646d2d27a51d78d2545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36ff79a99ff6641f670ed77d97663fe5"><td class="memItemLeft" align="right" valign="top"><a id="a36ff79a99ff6641f670ed77d97663fe5"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a36ff79a99ff6641f670ed77d97663fe5">radius</a> () const</td></tr>
 <tr class="memdesc:a36ff79a99ff6641f670ed77d97663fe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut of coord.radius(tumor_.size()) <br /></td></tr>
 <tr class="separator:a36ff79a99ff6641f670ed77d97663fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="memItemLeft" align="right" valign="top"><a id="ad4a9d89742e26b5f4721f26ad7c53d33"></a>
-const std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_coord.html">Coord</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ad4a9d89742e26b5f4721f26ad7c53d33">coord_func</a> () const</td></tr>
-<tr class="memdesc:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="initialized in init_coord() or init_coord_test() ">coord_func_</a> <br /></td></tr>
-<tr class="separator:ad4a9d89742e26b5f4721f26ad7c53d33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae18fa891257444cca035901264b2786c"><td class="memItemLeft" align="right" valign="top"><a id="ae18fa891257444cca035901264b2786c"></a>
+const std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_coord.html">Coord</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#ae18fa891257444cca035901264b2786c">coord_func</a> () const noexcept</td></tr>
+<tr class="memdesc:ae18fa891257444cca035901264b2786c"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8" title="initialized in init_coord() or init_coord_test() ">coord_func_</a> <br /></td></tr>
+<tr class="separator:ae18fa891257444cca035901264b2786c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a1f9af3e41060da88e655dfeadd58a87a"><td class="memItemLeft" align="right" valign="top"><a id="a1f9af3e41060da88e655dfeadd58a87a"></a>
-static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a1f9af3e41060da88e655dfeadd58a87a">DIMENSIONS</a> ()</td></tr>
-<tr class="memdesc:a1f9af3e41060da88e655dfeadd58a87a"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_tissue.html#a998d38921a5651554e5a5acacae3b5da" title="Dimensions: {2, 3}. ">DIMENSIONS_</a> <br /></td></tr>
-<tr class="separator:a1f9af3e41060da88e655dfeadd58a87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf1f89b4d403310a1ebb23b84909b0ad"><td class="memItemLeft" align="right" valign="top"><a id="abf1f89b4d403310a1ebb23b84909b0ad"></a>
+static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#abf1f89b4d403310a1ebb23b84909b0ad">DIMENSIONS</a> () noexcept</td></tr>
+<tr class="memdesc:abf1f89b4d403310a1ebb23b84909b0ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_tissue.html#a998d38921a5651554e5a5acacae3b5da" title="Dimensions: {2, 3}. ">DIMENSIONS_</a> <br /></td></tr>
+<tr class="separator:abf1f89b4d403310a1ebb23b84909b0ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3d66163e9850f52a23fc6d7b6bbe83ce"><td class="memItemLeft" align="right" valign="top">static boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga3d66163e9850f52a23fc6d7b6bbe83ce">opt_description</a> ()</td></tr>
 <tr class="memdesc:ga3d66163e9850f52a23fc6d7b6bbe83ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Program options.  <a href="group__params.html#ga3d66163e9850f52a23fc6d7b6bbe83ce">More...</a><br /></td></tr>
 <tr class="separator:ga3d66163e9850f52a23fc6d7b6bbe83ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,7 +209,7 @@ uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="separator:a231cd9947945c6d451f5ffc764c38606"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ed8f1a1c992649f06fbd75fba495cb4"><td class="memItemLeft" align="right" valign="top"><a id="a9ed8f1a1c992649f06fbd75fba495cb4"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a9ed8f1a1c992649f06fbd75fba495cb4">proportion_empty_neighbors</a> (const std::valarray&lt; int &gt; &amp;coord) const</td></tr>
-<tr class="memdesc:a9ed8f1a1c992649f06fbd75fba495cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtumopp_1_1_tissue.html#a231cd9947945c6d451f5ffc764c38606" title="Count adjacent empty sites. ">num_empty_neighbors()</a> / directions().<a class="el" href="classtumopp_1_1_tissue.html#ad5a492f3ff30296b26e08628216a1a9e" title="Shortcut of tumor_.size() ">size()</a> <br /></td></tr>
+<tr class="memdesc:a9ed8f1a1c992649f06fbd75fba495cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtumopp_1_1_tissue.html#a231cd9947945c6d451f5ffc764c38606" title="Count adjacent empty sites. ">num_empty_neighbors()</a> / directions().<a class="el" href="classtumopp_1_1_tissue.html#ae505196bae0b40708e3d324bfb271369" title="Shortcut of tumor_.size() ">size()</a> <br /></td></tr>
 <tr class="separator:a9ed8f1a1c992649f06fbd75fba495cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add7d2311158ad1e33a0bdcb48f71a531"><td class="memItemLeft" align="right" valign="top"><a id="add7d2311158ad1e33a0bdcb48f71a531"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#add7d2311158ad1e33a0bdcb48f71a531">queue_push</a> (const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &amp;)</td></tr>
@@ -256,7 +256,7 @@ std::ostringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <tr class="separator:afa8e7986051ceb65c6676707583fdf1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d1f7dc8fd8062ae90d731e8e6bdef52"><td class="memItemLeft" align="right" valign="top"><a id="a0d1f7dc8fd8062ae90d731e8e6bdef52"></a>
 std::ostringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a0d1f7dc8fd8062ae90d731e8e6bdef52">snapshots_</a></td></tr>
-<tr class="memdesc:a0d1f7dc8fd8062ae90d731e8e6bdef52"><td class="mdescLeft">&#160;</td><td class="mdescRight">record state when <a class="el" href="classtumopp_1_1_tissue.html#ad5a492f3ff30296b26e08628216a1a9e" title="Shortcut of tumor_.size() ">size()</a> &lt; <a class="el" href="classtumopp_1_1_tissue.html#a9be743d3d93aebaeb7de1d0ff1472c16" title="a flag ">RECORDING_EARLY_GROWTH_</a> <br /></td></tr>
+<tr class="memdesc:a0d1f7dc8fd8062ae90d731e8e6bdef52"><td class="mdescLeft">&#160;</td><td class="mdescRight">record state when <a class="el" href="classtumopp_1_1_tissue.html#ae505196bae0b40708e3d324bfb271369" title="Shortcut of tumor_.size() ">size()</a> &lt; <a class="el" href="classtumopp_1_1_tissue.html#a9be743d3d93aebaeb7de1d0ff1472c16" title="a flag ">RECORDING_EARLY_GROWTH_</a> <br /></td></tr>
 <tr class="separator:a0d1f7dc8fd8062ae90d731e8e6bdef52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0a9bdb2b6792ba1dcec02faf2f52ef8"><td class="memItemLeft" align="right" valign="top"><a id="aa0a9bdb2b6792ba1dcec02faf2f52ef8"></a>
 std::ostringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aa0a9bdb2b6792ba1dcec02faf2f52ef8">drivers_</a></td></tr>
