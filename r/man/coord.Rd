@@ -6,7 +6,6 @@
 \alias{trans_coord_hcc}
 \alias{trans_coord_fcc}
 \alias{trans_coord_hex}
-\alias{centering}
 \alias{rotate}
 \alias{dist_euclidean}
 \title{get max value for plot limits}
@@ -20,8 +19,6 @@ trans_coord_hcc(.tbl)
 trans_coord_fcc(.tbl)
 
 trans_coord_hex(.tbl)
-
-centering(.tbl)
 
 rotate(.tbl, theta, axis = c("z", "x", "y"))
 
@@ -49,8 +46,6 @@ transformed matrix
 
 modified data.frame
 
-modified data.frame
-
 numeric vector
 }
 \description{
@@ -63,8 +58,6 @@ get max value for plot limits
 3D transformation (face centered cubic, cubic close packed)
 
 2D/3D transformation into hexagonal grid
-
-Translate cells to minimize the range of symmetric axes
 
 Rotate
 
