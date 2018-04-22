@@ -8,3 +8,4 @@ add_library(obj OBJECT ${srcfiles})
 target_include_directories(obj BEFORE
   PRIVATE ${Boost_INCLUDE_DIRS} ${wtl_INCLUDE_DIRS} ${sfmt_INCLUDE_DIRS}
 )
+set_property(TARGET obj PROPERTY POSITION_INDEPENDENT_CODE TRUE)
