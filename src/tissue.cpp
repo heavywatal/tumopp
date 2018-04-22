@@ -371,13 +371,13 @@ std::vector<uint_fast32_t> Tissue::generate_neutral_mutations() const {
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
     const size_t sample_size = samples.size();
     const auto mutants = generate_neutral_mutations();
-    std::vector<std::vector<unsigned int>> flags;
+    std::vector<std::vector<uint_fast32_t>> flags;
     flags.reserve(sample_size);
     for (const auto& cell: samples) {
-        flags.push_back(cell->has_mutations_of(mutants));
+        flags.emplace_back(cell->has_mutations_of(mutants));
     }
     flags = wtl::transpose(flags);
-    std::vector<std::vector<unsigned int>> segsites;
+    std::vector<std::vector<uint_fast32_t>> segsites;
     segsites.reserve(flags.size());
     for (size_t i=0; i<flags.size(); ++i) {
         const auto daf = wtl::sum(flags[i]);
