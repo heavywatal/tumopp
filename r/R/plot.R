@@ -7,8 +7,7 @@ histogram_freqspec = function(freqs) {
     ggplot2::ggplot(ggplot2::aes_(~x, ~..density..)) +
     ggplot2::geom_histogram(bins = 25) +
     ggplot2::coord_cartesian(xlim = c(0, 1)) +
-    ggplot2::labs(x = "frequency of alleles (or living descendants)") +
-    wtl::theme_wtl()
+    ggplot2::labs(x = "frequency of alleles (or living descendants)")
 }
 
 #' ggplot for 2D lattice
@@ -19,12 +18,11 @@ histogram_freqspec = function(freqs) {
 #' @param limit for value range
 #' @rdname plot
 #' @export
-plot_lattice2d = function(.tbl, colour="clade", alpha=0.66, size=1, limit=max_abs_xyz(.tbl)) {
+plot_lattice2d = function(.tbl, colour="clade", alpha=1, size=1, limit=max_abs_xyz(.tbl)) {
+  size = size * 96 / (limit - 0.5)
   ggplot2::ggplot(.tbl, ggplot2::aes_(~x, ~y)) +
-    ggplot2::geom_point(ggplot2::aes_string(colour = colour), alpha = alpha, size = size * 80 / limit) +
-    ggplot2::coord_equal(xlim = limit * c(-1, 1), ylim = limit * c(-1, 1)) +
-    wtl::theme_wtl() +
-    ggplot2::theme(axis.title = ggplot2::element_blank())
+    ggplot2::geom_point(ggplot2::aes_string(colour = colour), alpha = alpha, size = size) +
+    ggplot2::coord_equal(xlim = limit * c(-1, 1), ylim = limit * c(-1, 1))
 }
 
 # #######1#########2#########3#########4#########5#########6#########7#########
@@ -43,14 +41,7 @@ plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour="dodgerblue") {
       data = dplyr::filter(.tbl, .data$extant),
       ggplot2::aes_(x = ~ageend, y = ~posend), size = 0.8, colour = colour, alpha = 0.2
     ) +
-    ggplot2::coord_cartesian(xlim = c(0, xmax), expand = FALSE) +
-    wtl::theme_wtl() +
-    ggplot2::theme(
-      axis.title.y = ggplot2::element_blank(),
-      axis.text.y = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      panel.grid.major.y = ggplot2::element_blank()
-    )
+    ggplot2::coord_cartesian(xlim = c(0, xmax), expand = FALSE)
 }
 
 #' Plot age histogram
@@ -63,14 +54,7 @@ plot_bar_age = function(.tbl, xmax=max(.tbl$ageend), alpha=1.0, ...) {
   dplyr::filter(.tbl, .data$extant) %>%
     ggplot2::ggplot(ggplot2::aes_(~ageend, ...)) +
     ggplot2::geom_bar(alpha = alpha) +
-    ggplot2::coord_cartesian(xlim = c(0, xmax)) +
-    wtl::theme_wtl() +
-    ggplot2::theme(
-      axis.title = ggplot2::element_blank(),
-      axis.text.y = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      panel.grid.major.y = ggplot2::element_blank()
-    )
+    ggplot2::coord_cartesian(xlim = c(0, xmax))
 }
 
 # #######1#########2#########3#########4#########5#########6#########7#########
@@ -84,8 +68,7 @@ plot_capture_rate = function(data) {
     ggplot2::stat_summary(fun.y = mean, geom = "bar", alpha = 0.6) +
     ggplot2::geom_jitter(size = 2, alpha = 0.3, width = 0.25, height = 0, colour = "dodgerblue") +
     ggplot2::stat_summary(fun.data = wtl::mean_sd, geom = "errorbar", width = 0.2) +
-    ggplot2::coord_cartesian(ylim = c(0, 1)) +
-    ggplot2::theme_bw()
+    ggplot2::coord_cartesian(ylim = c(0, 1))
 }
 
 # #######1#########2#########3#########4#########5#########6#########7#########
@@ -107,7 +90,7 @@ save_serial_section = function(.tbl, filename="png/section_%03d.png", scale=6, d
       .p = plot_lattice2d(data, ..., limit = .lim) +
         ggplot2::geom_hline(yintercept = z[1L], colour = "#999999", size = 1.5) +
         ggplot2::labs(title = sprintf("z =%4.1f", z)) +
-        wtl::theme_wtl() +
+        ggplot2::theme_bw() +
         ggplot2::theme(
           legend.position = "none",
           axis.text = ggplot2::element_blank(),

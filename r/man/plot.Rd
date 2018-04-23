@@ -7,7 +7,7 @@
 \usage{
 histogram_freqspec(freqs)
 
-plot_lattice2d(.tbl, colour = "clade", alpha = 0.66, size = 1,
+plot_lattice2d(.tbl, colour = "clade", alpha = 1, size = 1,
   limit = max_abs_xyz(.tbl))
 }
 \arguments{
