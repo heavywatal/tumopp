@@ -12,7 +12,7 @@ message(STATUS "LIBDIR: ${CXX_LIBDIR}")
 
 message(STATUS "Configure Makevars")
 set(CPPFLAGS "-I${CXX_INCLUDEDIR}")
-set(LDFLAGS "-L${CXX_LIBDIR}")
+set(LDFLAGS "-L${CXX_LIBDIR} -Wl,-rpath,${CXX_LIBDIR}")
 set(LDLIBS "-l${CXX_PROJECT}")
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/Makevars.in
