@@ -16,7 +16,7 @@ Tumor growth simulator in C++.
 The easiest way is to use [Homebrew](https://brew.sh/)/[Linuxbrew](http://linuxbrew.sh/).
 The following command installs tumopp and all the dependencies:
 ```sh
-brew install --HEAD heavywatal/tap/tumopp
+brew install heavywatal/tap/tumopp
 ```
 
 Alternatively, you can get the source code from GitHub manually:
