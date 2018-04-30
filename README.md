@@ -1,11 +1,13 @@
 # tumopp
 
+[![Build Status](https://travis-ci.org/heavywatal/tumopp.svg?branch=master)](https://travis-ci.org/heavywatal/tumopp)
+
 Tumor growth simulator in C++.
 
 ## Dependencies
 
 - Unix-like OS (macOS, Linux, etc.)
-- C++14 compiler (clang++ >= Apple LLVM 9.0, g++ >= 5.3)
+- C++14 compiler (clang++ >= Apple LLVM 8.1, g++ >= 5.3)
 - [CMake](https://cmake.org/)
 - [Boost C++ Libraries](http://www.boost.org/) (>= 1.65.0)
 - [sfmt-class](https://github.com/heavywatal/sfmt-class)
