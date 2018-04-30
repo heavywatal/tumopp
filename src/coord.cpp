@@ -4,7 +4,6 @@
 #include <boost/functional/hash.hpp>
 
 #include <cmath>
-#include <cstdlib> // std::abs for int
 #include <bitset>
 #include <stdexcept>
 

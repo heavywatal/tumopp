@@ -5,6 +5,7 @@
 #ifndef COORD_HPP_
 #define COORD_HPP_
 
+#include <cstdlib> // std::abs for int; must be here for old compilers
 #include <valarray>
 #include <vector>
 #include <random>
