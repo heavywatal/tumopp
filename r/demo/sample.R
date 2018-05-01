@@ -4,6 +4,8 @@ library(tumopp)
 
 refresh("tumopp/r")
 
+.result = tumopp::read_results('tumopp_20180501_182513') %>% print()
+
 (.result = tumopp(str_split("-N40000 -D3 -Chex -k24 -Lstep", " ")[[1]]))
 (.population = .result$population[[1]])
 (.extant = .population %>% filter_extant())
@@ -11,25 +13,27 @@ refresh("tumopp/r")
 
 # #######1#########2#########3#########4#########5#########6#########7#########
 
-.regions = sample_random_regions(.extant, nsam=8L, ncell=120L) %>% print()
+.regions = sample_random_regions(.extant, nsam=8L, ncell=100L) %>% print()
 
-.threshold = 0.05
+.threshold = 0.01
 
-.combn_biopsy = .regions$samples %>%
-  purrr::map(~detectable_mutants(.graph, .x, .threshold)) %>%
-  combn_sample_ids() %>%
-  print()
+.detectable = .regions$samples %>% purrr::map(~detectable_mutants(.graph, .x, .threshold))
+.combn_biopsy = .detectable %>% combn_sample_ids() %>% print()
+.tbl = summarize_capture_rate(.combn_biopsy, .population, .threshold) %>% print()
+.tbl %>% plot_capture_rate()
 
-summarize_capture_rate(.combn_biopsy, .population, .threshold) %>%
-  print() %>%
-  plot_capture_rate()
+.do = function(threshold, samples = .regions$samples, graph=.graph, population=.population) {
+  samples %>%
+    purrr::map(~detectable_mutants(graph, .x, threshold)) %>%
+    combn_sample_ids() %>%
+    summarize_capture_rate(population, threshold)
+}
+.tbl_capture = c(0.01, 0.03, 0.05) %>% wtl::mcmap_dfr(.do) %>% print()
 
-c(0.01, 0.03, 0.05) %>%
-  purrr::map_dfr(~summarize_capture_rate(.combn_biopsy, .population, .x)) %>%
-  tidyr::unnest() %>%
-  print() %>%
+.tbl_capture %>%
   plot_capture_rate() +
-  facet_wrap(~threshold)
+  facet_wrap(~threshold) +
+  theme_bw()
 
 detectable_mutants_all(.population, .threshold)
 
