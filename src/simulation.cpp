@@ -65,12 +65,13 @@ po::options_description Simulation::positional_desc() {HERE;
     return description;
 }
 
-void Simulation::print_help() {HERE;
+[[noreturn]] void Simulation::help_and_exit() {HERE;
     auto description = general_desc();
     description.add(options_desc());
     // do not print positional arguments as options
     std::cout << "Usage: tumopp [options] nsam howmany\n" << std::endl;
     description.print(std::cout);
+    throw wtl::ExitSuccess();
 }
 
 Simulation::Simulation(const std::vector<std::string>& arguments)
@@ -92,6 +93,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     po::store(po::command_line_parser(arguments).
               options(description).
               positional(positional).run(), vm);
+    if (vm["help"].as<bool>()) {help_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
     wtl::sfmt64().seed(vm["seed"].as<size_t>());
@@ -114,10 +116,6 @@ Simulation::~Simulation() = default;
 
 void Simulation::run() {HERE;
     auto& vm = *vars_;
-    if (vm["help"].as<bool>()) {
-        print_help();
-        return;
-    }
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
 
@@ -130,7 +128,6 @@ void Simulation::run() {HERE;
 }
 
 void Simulation::write() const {HERE;
-    if (tissue_->size() == 0u) return;
     auto& vm = *vars_;
     const auto nsam = vm["nsam"].as<size_t>();
     const auto howmany = vm["howmany"].as<size_t>();

@@ -7,7 +7,12 @@
 //' @rdname tumopp
 // [[Rcpp::export]]
 std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, const size_t npair=0) {
-    tumopp::Simulation sim(args);
-    sim.run();
-    return sim.results();
+    try {
+        tumopp::Simulation simulation(args);
+        simulation.run();
+        return simulation.results();
+    } catch (const std::runtime_error& e) {
+        Rcpp::Rcerr << e.what() << "\n";
+    }
+    return {};
 }
