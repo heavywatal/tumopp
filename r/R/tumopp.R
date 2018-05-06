@@ -24,10 +24,13 @@ tumopp = function(args=character(0L), npair=0L) {
     message(paste(args, collapse = " "))
     nsam_nrep = c("0", "0")
     result = cpp_tumopp(c(nsam_nrep, args), npair)
-    .out = wtl::read_boost_ini(result[1L]) %>%
-      dplyr::mutate(population = list(readr::read_tsv(result[2L]))) %>%
-      dplyr::mutate(population = purrr::pmap(., modify_population)) %>%
-      dplyr::mutate(drivers = list(readr::read_tsv(result[3L])))
+    .out = wtl::read_boost_ini(result[1L])
+    if (nzchar(result[2L])) {
+      .out = .out %>%
+        dplyr::mutate(population = list(readr::read_tsv(result[2L]))) %>%
+        dplyr::mutate(population = purrr::pmap(., modify_population)) %>%
+        dplyr::mutate(drivers = list(readr::read_tsv(result[3L])))
+    }
     if (npair > 0L) {
       .dist = readr::read_tsv(result[4L])
       .out = .out %>% dplyr::mutate(distances = list(.dist))
