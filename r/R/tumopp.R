@@ -23,7 +23,7 @@ tumopp = function(args=character(0L), npair=0L) {
     }
     message(paste(args, collapse = " "))
     nsam_nrep = c("0", "0")
-    result = cpp_tumopp(c(nsam_nrep, args), npair)
+    result = cpp_tumopp(c(nsam_nrep, args), npair = npair)
     if (length(result) == 0L) return(invisible(NULL))
     .out = wtl::read_boost_ini(result[1L]) %>%
       dplyr::mutate(population = list(readr::read_tsv(result[2L]))) %>%
