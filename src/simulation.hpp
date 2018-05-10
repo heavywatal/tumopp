@@ -5,6 +5,7 @@
 #ifndef SIMULATION_HPP_
 #define SIMULATION_HPP_
 
+#include <iosfwd>
 #include <vector>
 #include <string>
 #include <memory>
@@ -31,8 +32,11 @@ class Simulation {
     //! Top level function that should be called once from main()
     void run();
 
-    //! Write ms-like sequence and files
+    //! Write files unless `--outdir` is empty
     void write() const;
+
+    //! Make samples and write ms-like output
+    void ms(std::ostream&) const;
 
     //! for R
     std::vector<std::string> results(size_t npair=0u) const;

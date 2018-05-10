@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
         tumopp::Simulation simulation(arguments);
         simulation.run();
         simulation.write();
+        simulation.ms(std::cout);
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
     }

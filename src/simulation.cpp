@@ -129,36 +129,38 @@ void Simulation::run() {HERE;
 
 void Simulation::write() const {HERE;
     auto& vm = *vars_;
+    const auto outdir = vm["outdir"].as<std::string>();
+    if (outdir.empty()) return;
+    DCERR("mkdir && cd to " << outdir << std::endl);
+    fs::create_directory(outdir);
+    fs::current_path(outdir);
+    wtl::make_ofs("program_options.conf") << config_string_;
+    wtl::ozfstream{"population.tsv.gz"}
+        << tissue_->specimens();
+    wtl::ozfstream{"snapshots.tsv.gz"}
+        << tissue_->snapshots();
+    wtl::ozfstream{"drivers.tsv.gz"}
+        << tissue_->drivers();
+    wtl::ozfstream{"distance.tsv.gz"}
+        << tissue_->pairwise_distance(std::min(200UL, tissue_->size() / 2U));
+    std::cerr << wtl::iso8601datetime() << std::endl;
+}
+
+void Simulation::ms(std::ostream& ost) const {HERE;
+    auto& vm = *vars_;
     const auto nsam = vm["nsam"].as<size_t>();
     const auto howmany = vm["howmany"].as<size_t>();
-    const auto outdir = vm["outdir"].as<std::string>();
     const auto seed = vm["seed"].as<size_t>();
-    std::cout << "tumopp " << command_args_ << "\n" << seed << "\n";
+    ost << "tumopp " << command_args_ << "\n" << seed << "\n";
 
     if (Tissue::DIMENSIONS() == 3U) {
         for (size_t i=0; i<howmany; ++i) {
-            tissue_->write_segsites(std::cout, tissue_->sample_section(nsam));
+            tissue_->write_segsites(ost, tissue_->sample_section(nsam));
         }
     } else {
         for (size_t i=0; i<howmany; ++i) {
-            tissue_->write_segsites(std::cout, tissue_->sample_random(nsam));
+            tissue_->write_segsites(ost, tissue_->sample_random(nsam));
         }
-    }
-
-    if (!outdir.empty()) {
-        DCERR("mkdir && cd to " << outdir << std::endl);
-        fs::create_directory(outdir);
-        fs::current_path(outdir);
-        wtl::make_ofs("program_options.conf") << config_string_;
-        wtl::ozfstream{"population.tsv.gz"}
-            << tissue_->specimens();
-        wtl::ozfstream{"snapshots.tsv.gz"}
-            << tissue_->snapshots();
-        wtl::ozfstream{"drivers.tsv.gz"}
-            << tissue_->drivers();
-        wtl::ozfstream{"distance.tsv.gz"}
-            << tissue_->pairwise_distance(std::min(200UL, tissue_->size() / 2U));
-        std::cerr << wtl::iso8601datetime() << std::endl;
     }
 }
 
