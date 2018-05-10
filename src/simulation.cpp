@@ -164,13 +164,13 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     }
 }
 
-std::vector<std::string> Simulation::results(size_t npair) const {
-    return {
-        config_string_,
-        tissue_->specimens(),
-        tissue_->drivers(),
-        tissue_->pairwise_distance(npair)
-    };
+std::string Simulation::specimens() const {return tissue_->specimens();}
+std::string Simulation::drivers() const {return tissue_->drivers();}
+std::string Simulation::pairwise_distance(size_t npair) const {return tissue_->pairwise_distance(npair);}
+std::string Simulation::ms() const {
+    std::ostringstream oss;
+    ms(oss);
+    return oss.str();
 }
 
 } // namespace tumopp

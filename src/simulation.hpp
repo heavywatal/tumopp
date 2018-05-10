@@ -38,8 +38,13 @@ class Simulation {
     //! Make samples and write ms-like output
     void ms(std::ostream&) const;
 
-    //! for R
-    std::vector<std::string> results(size_t npair=0u) const;
+    //! @cond
+    std::string config_string() const {return config_string_;}
+    std::string specimens() const;
+    std::string drivers() const;
+    std::string pairwise_distance(size_t npair) const;
+    std::string ms() const;
+    //! @endcond
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
