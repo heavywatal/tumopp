@@ -9,9 +9,9 @@
 \alias{make_args}
 \title{Run C++ simulation}
 \usage{
-cpp_tumopp(args, npair = 0L)
+cpp_tumopp(args, npair = 0L, nsam = 0L)
 
-tumopp(args = character(0L), npair = 0L)
+tumopp(args = character(0L), npair = 0L, nsam = 0L)
 
 make_args(alt, const = NULL, nreps = 1L)
 }
@@ -19,6 +19,8 @@ make_args(alt, const = NULL, nreps = 1L)
 \item{args}{command line arguments as a string vector or list of strings}
 
 \item{npair}{number of samples to measure genetic and physical distance}
+
+\item{nsam}{number of samples for ms-like output}
 
 \item{alt}{named list of altered arguments}
 

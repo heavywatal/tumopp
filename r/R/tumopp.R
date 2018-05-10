@@ -11,10 +11,11 @@ utils::globalVariables(c(".", "n"))
 #' Run C++ simulation
 #' @param args command line arguments as a string vector or list of strings
 #' @param npair number of samples to measure genetic and physical distance
+#' @param nsam number of samples for ms-like output
 #' @return nested tibble
 #' @rdname tumopp
 #' @export
-tumopp = function(args=character(0L), npair=0L) {
+tumopp = function(args=character(0L), npair=0L, nsam=0L) {
   if (is.list(args)) {
     purrr::map_dfr(args, tumopp, .id = "args")
   } else {
@@ -22,8 +23,8 @@ tumopp = function(args=character(0L), npair=0L) {
       args = stringr::str_split(args, "\\s+") %>% purrr::flatten_chr()
     }
     message(paste(args, collapse = " "))
-    nsam_nrep = c("0", "0")
-    result = cpp_tumopp(c(nsam_nrep, args), npair = npair)
+    nrep = as.integer(nsam > 0L)
+    result = cpp_tumopp(c(nsam, nrep, args), npair = npair, nsam = nsam)
     if (length(result) == 0L) return(invisible(NULL))
     .out = wtl::read_boost_ini(result[1L]) %>%
       dplyr::mutate(population = list(readr::read_tsv(result[2L]))) %>%
@@ -32,6 +33,9 @@ tumopp = function(args=character(0L), npair=0L) {
     if (npair > 0L) {
       .dist = readr::read_tsv(result[4L])
       .out = .out %>% dplyr::mutate(distances = list(.dist))
+    }
+    if (nsam > 0L) {
+      .out$ms = wtl::parse_ms(strsplit(result[5L], "\n")[[1]])
     }
     .out
   }
