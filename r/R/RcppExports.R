@@ -4,7 +4,12 @@
 #' Run C++ simulation
 #' @return conf and population as strings
 #' @rdname tumopp
-cpp_tumopp <- function(args, npair = 0L, nsam = 0L) {
-    .Call('_tumopp_cpp_tumopp', PACKAGE = 'tumopp', args, npair, nsam)
+cpp_tumopp <- function(args, npair = 0L) {
+    .Call('_tumopp_cpp_tumopp', PACKAGE = 'tumopp', args, npair)
+}
+
+#' @rdname tumopp
+cpp_tumopp_ms <- function(nsam, args) {
+    .Call('_tumopp_cpp_tumopp_ms', PACKAGE = 'tumopp', nsam, args)
 }
 

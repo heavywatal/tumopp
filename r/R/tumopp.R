@@ -24,7 +24,7 @@ tumopp = function(args=character(0L), npair=0L, nsam=0L) {
     }
     message(paste(args, collapse = " "))
     nrep = as.integer(nsam > 0L)
-    result = cpp_tumopp(c(nsam, nrep, args), npair = npair, nsam = nsam)
+    result = cpp_tumopp(c(nsam, nrep, args), npair = npair)
     if (length(result) == 0L) return(invisible(NULL))
     .out = wtl::read_boost_ini(result["config"]) %>%
       dplyr::mutate(population = list(readr::read_tsv(result["specimens"]))) %>%
@@ -35,10 +35,16 @@ tumopp = function(args=character(0L), npair=0L, nsam=0L) {
       .out = .out %>% dplyr::mutate(distances = list(.dist))
     }
     if (nsam > 0L) {
-      .out$ms = wtl::parse_ms(strsplit(result["ms"], "\n")[[1]])
+      .out$ms = wtl::parse_ms(strsplit(result["ms"], "\n")[[1L]])
     }
     .out
   }
+}
+
+#' @rdname tumopp
+#' @export
+ms = function(nsam=20L, args=character(0L)) {
+  strsplit(cpp_tumopp_ms(nsam, args), "\n")[[1L]]
 }
 
 #' Make argument list for tumopp()

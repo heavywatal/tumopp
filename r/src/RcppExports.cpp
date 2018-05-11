@@ -6,21 +6,33 @@
 using namespace Rcpp;
 
 // cpp_tumopp
-Rcpp::CharacterVector cpp_tumopp(const std::vector<std::string>& args, unsigned int npair, unsigned int nsam);
-RcppExport SEXP _tumopp_cpp_tumopp(SEXP argsSEXP, SEXP npairSEXP, SEXP nsamSEXP) {
+Rcpp::CharacterVector cpp_tumopp(const std::vector<std::string>& args, unsigned int npair);
+RcppExport SEXP _tumopp_cpp_tumopp(SEXP argsSEXP, SEXP npairSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::vector<std::string>& >::type args(argsSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type npair(npairSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_tumopp(args, npair));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_tumopp_ms
+Rcpp::CharacterVector cpp_tumopp_ms(unsigned int nsam, const std::vector<std::string>& args);
+RcppExport SEXP _tumopp_cpp_tumopp_ms(SEXP nsamSEXP, SEXP argsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< unsigned int >::type nsam(nsamSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_tumopp(args, npair, nsam));
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type args(argsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_tumopp_ms(nsam, args));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tumopp_cpp_tumopp", (DL_FUNC) &_tumopp_cpp_tumopp, 3},
+    {"_tumopp_cpp_tumopp", (DL_FUNC) &_tumopp_cpp_tumopp, 2},
+    {"_tumopp_cpp_tumopp_ms", (DL_FUNC) &_tumopp_cpp_tumopp_ms, 2},
     {NULL, NULL, 0}
 };
 

@@ -3,15 +3,21 @@
 \docType{package}
 \name{cpp_tumopp}
 \alias{cpp_tumopp}
+\alias{cpp_tumopp_ms}
 \alias{tumopp}
 \alias{tumopp-package}
 \alias{tumopp}
+\alias{ms}
 \alias{make_args}
 \title{Run C++ simulation}
 \usage{
-cpp_tumopp(args, npair = 0L, nsam = 0L)
+cpp_tumopp(args, npair = 0L)
+
+cpp_tumopp_ms(nsam, args)
 
 tumopp(args = character(0L), npair = 0L, nsam = 0L)
+
+ms(nsam = 20L, args = character(0L))
 
 make_args(alt, const = NULL, nreps = 1L)
 }
