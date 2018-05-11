@@ -89,6 +89,8 @@ class Cell {
     const std::valarray<int>& coord() const noexcept {return coord_;}
     //! getter of #MUTATION_RATE_
     static double MUTATION_RATE() noexcept {return MUTATION_RATE_;}
+    //! getter of #HAS_AT_LEAST_1_MUTATION_PER_DIVISION_
+    static bool HAS_AT_LEAST_1_MUTATION_PER_DIVISION() noexcept {return HAS_AT_LEAST_1_MUTATION_PER_DIVISION_;}
 
     //! TSV header
     static std::string header();
@@ -124,8 +126,6 @@ class Cell {
     //! \f$\omega_\text{max}\f$
     static unsigned int MAX_PROLIFERATION_CAPACITY_;
 
-    //! \f$\mu\f$ per cell division
-    static double MUTATION_RATE_;
     //! \f$\mu_\beta\f$
     static double DRIVER_RATE_BIRTH_;
     //! \f$\mu_\delta\f$
@@ -144,6 +144,11 @@ class Cell {
     static double DRIVER_SD_DEATH_;
     //! \f$\sigma_\rho\f$
     static double DRIVER_SD_MIGRA_;
+
+    //! \f$\mu\f$: neutral mutation rate per cell division
+    static double MUTATION_RATE_;
+    //! for testing tree inference from ms-like output
+    static bool HAS_AT_LEAST_1_MUTATION_PER_DIVISION_;
 
     //! Position in a tumor
     std::valarray<int> coord_;

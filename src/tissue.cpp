@@ -361,7 +361,12 @@ std::vector<uint_fast32_t> Tissue::generate_neutral_mutations() const {
     const unsigned int num_mutants = poisson(wtl::sfmt64());
     std::uniform_int_distribution<uint_fast32_t> uniform(0, id_tail_);
     std::vector<uint_fast32_t> mutants;
-    mutants.reserve(num_mutants);
+    if (Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION()) {
+        mutants.reserve(id_tail_ + num_mutants);
+        for (uint_fast32_t i=0; i<id_tail_; ++i) mutants.push_back(i);
+    } else {
+        mutants.reserve(num_mutants);
+    }
     for (unsigned int i=0; i<num_mutants; ++i) {
         mutants.push_back(uniform(wtl::sfmt64()));
     }

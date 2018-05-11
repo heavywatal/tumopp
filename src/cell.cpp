@@ -18,7 +18,6 @@ double Cell::MIGRATION_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
 double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
 unsigned int Cell::MAX_PROLIFERATION_CAPACITY_ = 10u;
-double Cell::MUTATION_RATE_ = 1e-1;
 double Cell::DRIVER_RATE_BIRTH_ = 0.0;
 double Cell::DRIVER_RATE_DEATH_ = 0.0;
 double Cell::DRIVER_RATE_MIGRA_ = 0.0;
@@ -28,6 +27,8 @@ double Cell::DRIVER_MEAN_MIGRA_ = 0.0;
 double Cell::DRIVER_SD_BIRTH_ = 0.0;
 double Cell::DRIVER_SD_DEATH_ = 0.0;
 double Cell::DRIVER_SD_MIGRA_ = 0.0;
+double Cell::MUTATION_RATE_ = 1e-1;
+bool Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_ = false;
 
 namespace {
     std::bernoulli_distribution BERN_BIRTH(0.0);
@@ -51,7 +52,6 @@ namespace {
     `-k,--shape`        | \f$k\f$             | Cell::GAMMA_SHAPE_
     `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
     `-r,--prolif`       | \f$\omega_{\max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
-    `-u,--mutation`     | \f$\mu\f$           | Cell::MUTATION_RATE_
     `--ub`              | \f$\mu_\beta\f$     | Cell::DRIVER_RATE_BIRTH_
     `--ud`              | \f$\mu_\delta\f$    | Cell::DRIVER_RATE_DEATH_
     `--um`              | \f$\mu_\rho\f$      | Cell::DRIVER_RATE_MIGRA_
@@ -61,6 +61,8 @@ namespace {
     `--sb`              | \f$\sigma_\beta\f$  | Cell::DRIVER_SD_BIRTH_
     `--sd`              | \f$\sigma_\delta\f$ | Cell::DRIVER_SD_DEATH_
     `--sm`              | \f$\sigma_\rho\f$   | Cell::DRIVER_SD_MIGRA_
+    `-u,--mutation`     | \f$\mu\f$           | Cell::MUTATION_RATE_
+    `--ms1mut`          |                     | Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_
 */
 boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;
@@ -73,7 +75,6 @@ boost::program_options::options_description Cell::opt_description() {
         ("shape,k", po::value(&GAMMA_SHAPE_)->default_value(GAMMA_SHAPE_))
         ("symmetric,p", po::value(&PROB_SYMMETRIC_DIVISION_)->default_value(PROB_SYMMETRIC_DIVISION_))
         ("prolif,r", po::value(&MAX_PROLIFERATION_CAPACITY_)->default_value(MAX_PROLIFERATION_CAPACITY_))
-        ("mutation,u", po::value(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
         ("ub", po::value(&DRIVER_RATE_BIRTH_)->default_value(DRIVER_RATE_BIRTH_))
         ("ud", po::value(&DRIVER_RATE_DEATH_)->default_value(DRIVER_RATE_DEATH_))
         ("um", po::value(&DRIVER_RATE_MIGRA_)->default_value(DRIVER_RATE_MIGRA_))
@@ -83,6 +84,8 @@ boost::program_options::options_description Cell::opt_description() {
         ("sb", po::value(&DRIVER_SD_BIRTH_)->default_value(DRIVER_SD_BIRTH_))
         ("sd", po::value(&DRIVER_SD_DEATH_)->default_value(DRIVER_SD_DEATH_))
         ("sm", po::value(&DRIVER_SD_MIGRA_)->default_value(DRIVER_SD_MIGRA_))
+        ("mutation,u", po::value(&MUTATION_RATE_)->default_value(MUTATION_RATE_))
+        ("ms1mut", po::bool_switch(&HAS_AT_LEAST_1_MUTATION_PER_DIVISION_))
     ;
     return desc;
 }
