@@ -12,7 +12,6 @@
 #include <wtl/getopt.hpp>
 #include <wtl/exception.hpp>
 #include <wtl/zfstream.hpp>
-#include <wtl/random.hpp>
 #include <sfmt.hpp>
 
 #include <boost/program_options.hpp>
@@ -51,7 +50,7 @@ po::options_description Simulation::options_desc() {HERE;
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
       ("outdir,o", po::value<std::string>()->default_value("")->implicit_value(OUT_DIR))
-      ("seed", po::value<size_t>()->default_value(wtl::random_device_64{}()));
+      ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
     description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
     return description;
@@ -96,7 +95,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     if (vm["help"].as<bool>()) {help_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
-    wtl::sfmt64().seed(vm["seed"].as<size_t>());
+    wtl::sfmt64().seed(vm["seed"].as<uint32_t>());
 
     config_string_ = wtl::flags_into_string(vm);
     if (vm["verbose"].as<bool>()) {
@@ -150,7 +149,7 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     auto& vm = *vars_;
     const auto nsam = vm["nsam"].as<size_t>();
     const auto howmany = vm["howmany"].as<size_t>();
-    const auto seed = vm["seed"].as<size_t>();
+    const auto seed = vm["seed"].as<uint32_t>();
     ost << "tumopp " << command_args_ << "\n" << seed << "\n";
 
     if (Tissue::DIMENSIONS() == 3U) {
