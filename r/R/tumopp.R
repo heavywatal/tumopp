@@ -26,16 +26,16 @@ tumopp = function(args=character(0L), npair=0L, nsam=0L) {
     nrep = as.integer(nsam > 0L)
     result = cpp_tumopp(c(nsam, nrep, args), npair = npair, nsam = nsam)
     if (length(result) == 0L) return(invisible(NULL))
-    .out = wtl::read_boost_ini(result[1L]) %>%
-      dplyr::mutate(population = list(readr::read_tsv(result[2L]))) %>%
+    .out = wtl::read_boost_ini(result["config"]) %>%
+      dplyr::mutate(population = list(readr::read_tsv(result["specimens"]))) %>%
       dplyr::mutate(population = purrr::pmap(., modify_population)) %>%
-      dplyr::mutate(drivers = list(readr::read_tsv(result[3L])))
+      dplyr::mutate(drivers = list(readr::read_tsv(result["drivers"])))
     if (npair > 0L) {
-      .dist = readr::read_tsv(result[4L])
+      .dist = readr::read_tsv(result["distances"])
       .out = .out %>% dplyr::mutate(distances = list(.dist))
     }
     if (nsam > 0L) {
-      .out$ms = wtl::parse_ms(strsplit(result[5L], "\n")[[1]])
+      .out$ms = wtl::parse_ms(strsplit(result["ms"], "\n")[[1]])
     }
     .out
   }

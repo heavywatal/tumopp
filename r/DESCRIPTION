@@ -21,7 +21,7 @@ Imports:
     tibble,
     tidyr (>= 0.7),
     RColorBrewer,
-    Rcpp,
+    Rcpp (>= 0.12.16),
     wtl
 Suggests:
     gridExtra,

@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // cpp_tumopp
-std::vector<std::string> cpp_tumopp(const std::vector<std::string>& args, unsigned int npair, unsigned int nsam);
+Rcpp::CharacterVector cpp_tumopp(const std::vector<std::string>& args, unsigned int npair, unsigned int nsam);
 RcppExport SEXP _tumopp_cpp_tumopp(SEXP argsSEXP, SEXP npairSEXP, SEXP nsamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
