@@ -43,7 +43,7 @@ tumopp = function(args=character(0L), npair=0L, nsam=0L) {
 
 #' @rdname tumopp
 #' @export
-ms = function(nsam=20L, args=character(0L)) {
+mslike = function(nsam=20L, args=character(0L)) {
   strsplit(cpp_tumopp_ms(nsam, args), "\n")[[1L]]
 }
 

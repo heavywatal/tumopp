@@ -7,7 +7,7 @@
 \alias{tumopp}
 \alias{tumopp-package}
 \alias{tumopp}
-\alias{ms}
+\alias{mslike}
 \alias{make_args}
 \title{Run C++ simulation}
 \usage{
@@ -17,7 +17,7 @@ cpp_tumopp_ms(nsam, args)
 
 tumopp(args = character(0L), npair = 0L, nsam = 0L)
 
-ms(nsam = 20L, args = character(0L))
+mslike(nsam = 20L, args = character(0L))
 
 make_args(alt, const = NULL, nreps = 1L)
 }
