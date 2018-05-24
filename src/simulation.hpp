@@ -38,13 +38,16 @@ class Simulation {
     //! Make samples and write ms-like output
     void ms(std::ostream&) const;
 
-    //! @cond
-    std::string config_string() const {return config_string_;}
+    //! Shortcut of Tissue.specimens() for R
     std::string specimens() const;
+    //! Shortcut of Tissue.drivers() for R
     std::string drivers() const;
+    //! Shortcut of Tissue.pairwise_distance() for R
     std::string pairwise_distance(size_t npair) const;
+    //! Shortcut of ms() as std::string for R
     std::string ms() const;
-    //! @endcond
+    //! getter of #config_string_
+    std::string config_string() const {return config_string_;}
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:

@@ -43,8 +43,8 @@ namespace {
 /*! @ingroup params
     @return Program options description
 
-    Command line option | Symbol              | Variable
-    ------------------- | ------------------- | -------------------------
+    Command line option | Symbol              | Variable                  |
+    ------------------- | ------------------- | ------------------------- |
     `-b,--beta0`        | \f$\beta_0\f$       | Cell::BIRTH_RATE_
     `-d,--delta0`       | \f$\delta_0\f$      | Cell::DEATH_RATE_
     `-a,--alpha0`       | \f$\alpha_0\f$      | Cell::DEATH_PROB_

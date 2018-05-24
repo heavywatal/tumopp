@@ -28,8 +28,8 @@ size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
 /*! @ingroup params
     @return Program options description
 
-    Command line option | Symbol         | Variable
-    ------------------- | -------------- | -------------------------------
+    Command line option | Symbol         | Variable                        |
+    ------------------- | -------------- | ------------------------------- |
     `-D,--dimensions`   | -              | Tissue::DIMENSIONS_
     `-C,--coord`        | -              | Tissue::COORDINATE_
     `-L,--local`        | \f$E_2\f$      | Tissue::LOCAL_DENSITY_EFFECT_

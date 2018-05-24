@@ -169,8 +169,12 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a15738ec7036887b3fd78ea99ca0db5c6"><td class="memItemLeft" align="right" valign="top"><a id="a15738ec7036887b3fd78ea99ca0db5c6"></a>
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a15738ec7036887b3fd78ea99ca0db5c6">MUTATION_RATE</a> () noexcept</td></tr>
-<tr class="memdesc:a15738ec7036887b3fd78ea99ca0db5c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374" title=" per cell division ">MUTATION_RATE_</a> <br /></td></tr>
+<tr class="memdesc:a15738ec7036887b3fd78ea99ca0db5c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374" title=": neutral mutation rate per cell division ">MUTATION_RATE_</a> <br /></td></tr>
 <tr class="separator:a15738ec7036887b3fd78ea99ca0db5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fd5a87ae01193256b50553e9196764d"><td class="memItemLeft" align="right" valign="top"><a id="a9fd5a87ae01193256b50553e9196764d"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a9fd5a87ae01193256b50553e9196764d">HAS_AT_LEAST_1_MUTATION_PER_DIVISION</a> () noexcept</td></tr>
+<tr class="memdesc:a9fd5a87ae01193256b50553e9196764d"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#a152627c9328ff58cc397410a662fdcd2" title="for testing tree inference from ms-like output ">HAS_AT_LEAST_1_MUTATION_PER_DIVISION_</a> <br /></td></tr>
+<tr class="separator:a9fd5a87ae01193256b50553e9196764d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf294699568ae816353bd9fec8de604a"><td class="memItemLeft" align="right" valign="top"><a id="adf294699568ae816353bd9fec8de604a"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#adf294699568ae816353bd9fec8de604a">header</a> ()</td></tr>
 <tr class="memdesc:adf294699568ae816353bd9fec8de604a"><td class="mdescLeft">&#160;</td><td class="mdescRight">TSV header. <br /></td></tr>
@@ -275,10 +279,6 @@ static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a2cb92b5229434ec2e242a592466b9f5e">MAX_PROLIFERATION_CAPACITY_</a> = 10u</td></tr>
 <tr class="memdesc:a2cb92b5229434ec2e242a592466b9f5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\omega_\text{max}\) <br /></td></tr>
 <tr class="separator:a2cb92b5229434ec2e242a592466b9f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec36cb1072b4c52cb6134412f0c87374"><td class="memItemLeft" align="right" valign="top"><a id="aec36cb1072b4c52cb6134412f0c87374"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374">MUTATION_RATE_</a> = 1e-1</td></tr>
-<tr class="memdesc:aec36cb1072b4c52cb6134412f0c87374"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu\) per cell division <br /></td></tr>
-<tr class="separator:aec36cb1072b4c52cb6134412f0c87374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a73051fce9cce124250aadb5bd6ad1e"><td class="memItemLeft" align="right" valign="top"><a id="a7a73051fce9cce124250aadb5bd6ad1e"></a>
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7a73051fce9cce124250aadb5bd6ad1e">DRIVER_RATE_BIRTH_</a> = 0.0</td></tr>
 <tr class="memdesc:a7a73051fce9cce124250aadb5bd6ad1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\beta\) <br /></td></tr>
@@ -315,6 +315,14 @@ static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4c82812fcc104e8aa1b4b449a45c8880">DRIVER_SD_MIGRA_</a> = 0.0</td></tr>
 <tr class="memdesc:a4c82812fcc104e8aa1b4b449a45c8880"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\rho\) <br /></td></tr>
 <tr class="separator:a4c82812fcc104e8aa1b4b449a45c8880"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec36cb1072b4c52cb6134412f0c87374"><td class="memItemLeft" align="right" valign="top"><a id="aec36cb1072b4c52cb6134412f0c87374"></a>
+static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374">MUTATION_RATE_</a> = 1e-1</td></tr>
+<tr class="memdesc:aec36cb1072b4c52cb6134412f0c87374"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu\): neutral mutation rate per cell division <br /></td></tr>
+<tr class="separator:aec36cb1072b4c52cb6134412f0c87374"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a152627c9328ff58cc397410a662fdcd2"><td class="memItemLeft" align="right" valign="top"><a id="a152627c9328ff58cc397410a662fdcd2"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a152627c9328ff58cc397410a662fdcd2">HAS_AT_LEAST_1_MUTATION_PER_DIVISION_</a> = false</td></tr>
+<tr class="memdesc:a152627c9328ff58cc397410a662fdcd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">for testing tree inference from ms-like output <br /></td></tr>
+<tr class="separator:a152627c9328ff58cc397410a662fdcd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>

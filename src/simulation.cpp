@@ -36,12 +36,12 @@ inline po::options_description general_desc() {HERE;
 /*! @ingroup params
     @return Program options description
 
-    Command line option | Symbol         | Variable
-    ------------------- | -------------- | -------------------------
-    `-N,--max`          | \f$N_\max\f$   |
-    `-T,--plateau`      | -              |
-    `-o,--outdir`       | -              |
-    `--seed`            | -              |
+    Command line option | Symbol         | Variable                  |
+    ------------------- | -------------- | ------------------------- |
+    `-N,--max`          | \f$N_\max\f$   | -
+    `-T,--plateau`      | -              | -
+    `-o,--outdir`       | -              | -
+    `--seed`            | -              | -
 */
 po::options_description Simulation::options_desc() {HERE;
     const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
