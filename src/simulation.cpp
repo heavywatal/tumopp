@@ -5,6 +5,7 @@
 #include "simulation.hpp"
 #include "tissue.hpp"
 #include "cell.hpp"
+#include "version.hpp"
 
 #include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
@@ -27,6 +28,7 @@ inline po::options_description general_desc() {HERE;
     po::options_description description("General");
     description.add_options()
         ("help,h", po::bool_switch(), "print this help")
+        ("version", po::bool_switch(), "print version")
         ("verbose,v", po::bool_switch(), "verbose output")
     ;
     return description;
@@ -68,8 +70,15 @@ po::options_description Simulation::positional_desc() {HERE;
     auto description = general_desc();
     description.add(options_desc());
     // do not print positional arguments as options
-    std::cout << "Usage: tumopp [options] nsam howmany\n" << std::endl;
+    std::cout << "Usage: tumopp [options] nsam howmany\n\n";
     description.print(std::cout);
+    throw wtl::ExitSuccess();
+}
+
+[[noreturn]] void Simulation::version_and_exit() {HERE;
+    std::cout << GIT_COMMIT_HASH
+              << " [" << GIT_BRANCH << "] "
+              << GIT_COMMIT_TIME << std::endl;
     throw wtl::ExitSuccess();
 }
 
@@ -93,6 +102,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
               options(description).
               positional(positional).run(), vm);
     if (vm["help"].as<bool>()) {help_and_exit();}
+    if (vm["version"].as<bool>()) {version_and_exit();}
     po::notify(vm);
     Cell::init_distributions();
     wtl::sfmt64().seed(vm["seed"].as<uint32_t>());

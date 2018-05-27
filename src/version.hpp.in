@@ -1,0 +1,9 @@
+#pragma once
+#ifndef TUMOPP_VERSION_HPP
+#define TUMOPP_VERSION_HPP
+
+constexpr char static GIT_BRANCH[] = "@GIT_BRANCH@";
+constexpr char static GIT_COMMIT_HASH[] = "@GIT_COMMIT_HASH@";
+constexpr char static GIT_COMMIT_TIME[] = "@GIT_COMMIT_TIME@";
+
+#endif//TUMOPP_VERSION_HPP
