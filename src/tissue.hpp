@@ -35,6 +35,10 @@ class Tissue {
     static unsigned int DIMENSIONS() noexcept {return DIMENSIONS_;}
     //! Shortcut of tumor_.size()
     size_t size() const noexcept {return tumor_.size();}
+    //! Shortcut of tumor_.begin()
+    auto begin() noexcept {return tumor_.begin();}
+    //! Shortcut of tumor_.end()
+    auto end() noexcept {return tumor_.end();}
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
