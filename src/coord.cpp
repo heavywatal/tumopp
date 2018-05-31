@@ -92,15 +92,7 @@ int Moore::graph_distance(const std::valarray<int>& v) const {
     return std::abs(v).max();
 }
 
-int Hexagonal::graph_distance(const std::valarray<int>& v) const {
-    int d = std::max(std::abs(v).max(), std::abs(v[0] + v[1]));
-    if (dimensions_ > 2U) {
-        return std::max(d, std::abs(v[0] + v[2]));
-    }
-    return d;
-}
-
-double Hexagonal::euclidean_distance(const std::valarray<int>& v) const {
+std::valarray<double> Hexagonal::continuous(const std::valarray<int>& v) const {
     std::valarray<double> true_pos(dimensions_);
     true_pos[0] += static_cast<double>(v[0]);
     true_pos[1] += static_cast<double>(v[1]);
@@ -111,7 +103,15 @@ double Hexagonal::euclidean_distance(const std::valarray<int>& v) const {
         true_pos[0] += true_pos[2] / sqrt(3.0);
         true_pos[2] *= std::sqrt(2.0 / 3.0);
     }
-    return _euclidean_distance(true_pos);
+    return true_pos;
+}
+
+int Hexagonal::graph_distance(const std::valarray<int>& v) const {
+    int d = std::max(std::abs(v).max(), std::abs(v[0] + v[1]));
+    if (dimensions_ > 2U) {
+        return std::max(d, std::abs(v[0] + v[2]));
+    }
+    return d;
 }
 
 std::vector<std::valarray<int>> Coord::core() const {

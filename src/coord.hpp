@@ -58,6 +58,12 @@ class Coord {
     double cross_section(size_t nodes) const;
 
     // virtual methods
+    //! Convert coordinates into continuous scale
+    virtual std::valarray<double> continuous(const std::valarray<int>& v) const {
+        std::valarray<double> out(v.size());
+        std::copy(std::begin(v), std::end(v), std::begin(out));
+        return out;
+    }
     //! Graph distance
     virtual int graph_distance(const std::valarray<int>& v) const = 0;
     //! Euclidean distance
@@ -130,8 +136,11 @@ class Hexagonal final: public Coord {
     //! Constructor
     explicit Hexagonal(const unsigned int d);
     ~Hexagonal() = default;
+    std::valarray<double> continuous(const std::valarray<int>& v) const override;
     int graph_distance(const std::valarray<int>& v) const override;
-    double euclidean_distance(const std::valarray<int>& v) const override;
+    double euclidean_distance(const std::valarray<int>& v) const override {
+        return _euclidean_distance(continuous(v));
+    }
     double radius(size_t nodes) const override;
     std::vector<std::valarray<int>> core() const override;
 };
