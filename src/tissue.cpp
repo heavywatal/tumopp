@@ -10,6 +10,7 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
+#include <wtl/cluster.hpp>
 #include <sfmt.hpp>
 #include <boost/program_options.hpp>
 
@@ -399,6 +400,22 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
         }
     } else {ost << "\n";}
     return ost;
+}
+
+std::vector<std::shared_ptr<Cell>> Tissue::sample_medoids(const size_t n) const {HERE;
+    std::vector<std::shared_ptr<Cell>> cells(tumor_.begin(), tumor_.end());
+    std::vector<std::valarray<double>> points;
+    points.reserve(n);
+    for (const auto& p: cells) {
+        points.emplace_back(coord_func_->continuous(p->coord()));
+    }
+    auto clusters = wtl::cluster::pam(points, n, wtl::sfmt64());
+    std::vector<std::shared_ptr<Cell>> sampled;
+    sampled.reserve(n);
+    for (const auto i: clusters.medoids()) {
+        sampled.emplace_back(cells[i]);
+    }
+    return sampled;
 }
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
