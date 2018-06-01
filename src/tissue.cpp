@@ -402,7 +402,23 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
     return ost;
 }
 
-std::vector<std::shared_ptr<Cell>> Tissue::sample_medoids(const size_t n) const {HERE;
+std::vector<std::shared_ptr<Cell>>
+Tissue::sample_bulk(const std::shared_ptr<Cell>& center, const size_t n) const {
+    std::multimap<double, std::shared_ptr<Cell>> ordered;
+    for (const auto& p: tumor_) {
+        ordered.emplace(coord_func_->euclidean_distance(p->coord() - center->coord()), p);
+    }
+    std::vector<std::shared_ptr<Cell>> sampled;
+    sampled.reserve(n);
+    for (const auto& p: ordered) {
+        sampled.emplace_back(p.second);
+        if (sampled.size() >= n) break;
+    }
+    return sampled;
+}
+
+std::vector<std::shared_ptr<Cell>>
+Tissue::sample_medoids(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Cell>> cells(tumor_.begin(), tumor_.end());
     std::vector<std::valarray<double>> points;
     points.reserve(n);

@@ -42,9 +42,11 @@ class Tissue {
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
-    //! sample cells
+    //! sample cells around the given cell
+    std::vector<std::shared_ptr<Cell>> sample_bulk(const std::shared_ptr<Cell>&, size_t) const;
+    //! sample cells uniformly
     std::vector<std::shared_ptr<Cell>> sample_medoids(size_t) const;
-    //! sample cells
+    //! sample cells randomly
     std::vector<std::shared_ptr<Cell>> sample_random(size_t) const;
     //! sample cells in a cross section
     std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
