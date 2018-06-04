@@ -10,12 +10,13 @@
 
 #include <cstdint>
 #include <sstream>
+#include <string>
 #include <vector>
 #include <valarray>
 #include <unordered_set>
 #include <map>
 #include <memory>
-#include <string>
+#include <functional>
 
 namespace boost {namespace program_options {class options_description;}}
 
