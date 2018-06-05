@@ -14,7 +14,7 @@ histogram_freqspec = function(freqs) {
 #' @param .tbl tbl with extant cells
 #' @param colour column name to colorcode
 #' @param size relative size of points
-#' @param alpha opacity [0, 1]
+#' @param alpha opacity `[0, 1]`
 #' @param limit for value range
 #' @rdname plot
 #' @export
@@ -45,7 +45,7 @@ plot_genealogy = function(.tbl, xmax=max(.tbl$ageend), colour="dodgerblue") {
 }
 
 #' Plot age histogram
-#' @param alpha opacity [0, 1]
+#' @param alpha opacity `[0, 1]`
 #' @param ... passed to aes_()
 #' @return gg
 #' @rdname plot-igraph

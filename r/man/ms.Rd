@@ -18,12 +18,12 @@ sample_stats(msout, lowerbound = 0)
 
 \item{segsites}{number of segregating sites}
 
-\item{msout}{tibble from `sprinkle_mutations()`}
+\item{msout}{tibble from \code{sprinkle_mutations()}}
 
 \item{lowerbound}{to discard peripheral branches}
 }
 \value{
-int matrix [nsam x segsites]
+int matrix (nsam x segsites)
 
 tibble
 }

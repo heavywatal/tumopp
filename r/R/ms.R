@@ -3,7 +3,7 @@
 #' @param nsam number of cells to sample
 #' @param mu mutation rate per cell division (ignored if segsites is given)
 #' @param segsites number of segregating sites
-#' @return int matrix [nsam x segsites]
+#' @return int matrix (nsam x segsites)
 #' @rdname ms
 #' @export
 sprinkle_mutations = function(population, nsam, mu=NULL, segsites=NULL) {

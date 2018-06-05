@@ -16,7 +16,7 @@ plot_bar_age(.tbl, xmax = max(.tbl$ageend), alpha = 1, ...)
 
 \item{colour}{character}
 
-\item{alpha}{opacity [0, 1]}
+\item{alpha}{opacity \code{[0, 1]}}
 
 \item{...}{passed to aes_()}
 }

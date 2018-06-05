@@ -17,7 +17,7 @@ plot_lattice2d(.tbl, colour = "clade", alpha = 1, size = 1,
 
 \item{colour}{column name to colorcode}
 
-\item{alpha}{opacity [0, 1]}
+\item{alpha}{opacity \code{[0, 1]}}
 
 \item{size}{relative size of points}
 
