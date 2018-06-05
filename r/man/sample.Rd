@@ -2,64 +2,32 @@
 % Please edit documentation in R/sample.R
 \name{sample_bulk}
 \alias{sample_bulk}
+\alias{sample_uniform_regions}
 \alias{sample_random_regions}
-\alias{combn_sample_ids}
-\alias{summarize_capture_rate}
-\alias{within_between_samples}
-\title{Sample bulk of cells near the specified coord}
+\title{Sample cells from a population}
 \usage{
-sample_bulk(extant, center, size = 100L)
+sample_bulk(extant, center, ncell = 100L)
+
+sample_uniform_regions(extant, nsam = 2L, ncell = 10L)
 
 sample_random_regions(extant, nsam = 2L, ncell = 10L)
-
-combn_sample_ids(ids, nsam = seq_along(ids))
-
-summarize_capture_rate(combinations, population, threshold = 0.01)
-
-within_between_samples(graph, regions)
 }
 \arguments{
 \item{extant}{tibble of extant cells}
 
 \item{center}{named (x, y, z) vector, list, or tibble}
 
-\item{size}{number of cells}
-
-\item{nsam}{number of regions to sample}
-
 \item{ncell}{number of cells per specimen}
 
-\item{ids}{list of ID vectors}
-
-\item{combinations}{nested tibble from combn_sample_ids()}
-
-\item{population}{tibble with descendants and id column}
-
-\item{threshold}{lowerbound of detectable allele frequency}
-
-\item{graph}{igraph}
-
-\item{regions}{output of sample_random_regions()}
+\item{nsam}{number of regions to sample}
 }
 \value{
 tibble
-
-nested tibble
-
-nested tibble
-
-tibble
-
-tibble
 }
 \description{
-Sample bulk of cells near the specified coord
+\code{sample_bulk} samples bulk of cells near the specified coord
 
-Sample multiple regions from extant cells
+\code{sample_uniform_regions} sample uniformly distributed regions
 
-Make combinations of cell IDs for various number of samples
-
-Calculate expected allele capture rate on various combinations of samples
-
-Sample specimens and measure mean branch lengths
+\code{sample_random_regions} samples multiple regions at random
 }
