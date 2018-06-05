@@ -6,14 +6,25 @@ refresh("tumopp/r")
 
 .result = tumopp::read_results('tumopp_20180501_182513') %>% print()
 
-(.result = tumopp(str_split("-N40000 -D3 -Chex -k24 -Lstep", " ")[[1]]))
+(.result = tumopp(str_split("-N40000 -D2 -Chex -k24 -Lstep", " ")[[1]]))
 (.population = .result$population[[1]])
 (.extant = .population %>% filter_extant())
+(.regions = sample_uniform_regions(.extant, 8L, 100L))
+
+.sampled = .regions %>%
+  dplyr::transmute(cluster = id, id = samples) %>%
+  tidyr::unnest() %>%
+  dplyr::left_join(.extant, by = "id") %>%
+  print()
+
+.extant %>%
+  plot_lattice2d() +
+  geom_point(data = .sampled, aes(x, y)) +
+  scale_colour_brewer(palette = "Spectral", guide = FALSE)
+
 (.graph = make_igraph(.population))
 
 # #######1#########2#########3#########4#########5#########6#########7#########
-
-.regions = sample_random_regions(.extant, nsam=8L, ncell=100L) %>% print()
 
 .threshold = 0.01
 
