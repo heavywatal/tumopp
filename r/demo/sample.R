@@ -34,7 +34,7 @@ add_cluster = function(extant, regions) {
 .tbl %>% plot_capture_rate()
 
 .combn_capture_rate = function(population, regions, graph, thr_range = c(0.01, 0.03, 0.05), ...) {
-  wtl::mcmap_dfr(thr_range, function(thr) {
+  purrr::map_dfr(thr_range, function(thr) {
     regions$samples %>%
       purrr::map(~detectable_mutants(graph, .x, thr)) %>%
       combn_sample_ids() %>%
@@ -82,8 +82,10 @@ summaryRprof()
 .tr_L = c(const='Constant-rate', step='Step-function', linear='Linear-function')
 
 setwd("~/working/tumopp/spatial")
-result_dirs = fs::dir_ls()
+result_dirs = fs::dir_ls(type = "directory")
 raw_results = tumopp::read_results(result_dirs)
+
+# saveRDS(raw_results, "raw_results.rds")
 
 results = raw_results %>%
   select_if(~ n_distinct(.x) > 1L) %>%
@@ -101,6 +103,8 @@ df_sampled = results %>%
     extant = purrr::map2(extant, regions, add_cluster),
     graph = purrr::map(population, make_igraph)
   ) %>% print()
+
+# saveRDS(df_sampled, "df_sampled.rds")
 
 df_extant = df_sampled %>%
   dplyr::select(local, path, shape, extant) %>%
@@ -123,23 +127,36 @@ df_extant = df_sampled %>%
 .p_sampled
 ggsave('samples.png', .p_sampled, width = 12, height = 12)
 
-df_capture = df %>%
+df_capture = df_sampled %>%
   dplyr::mutate(
-    capture_tbl = purrr::pmap(., .combn_capture_rate),
-    capture_plt = purrr::map(capture_tbl, ~plot_capture_rate(.x) + facet_wrap(~threshold))
+    capture_tbl = purrr::pmap(., .combn_capture_rate, thr_range = c(0.01))
   ) %>% print()
 
-.p_capture = df_capture %>%
-  dplyr::transmute(
-    local = factor(.tr_L[local], levels=.tr_L),
-    path = factor(.tr_P[path], levels=.tr_P),
-    shape, capture_tbl) %>%
+# saveRDS(df_capture, "df_capture.rds")
+
+df_capture_tidy = df_capture %>%
+  dplyr::select(local, path, shape, capture_tbl) %>%
   dplyr::group_by(local, path, shape) %>%
   dplyr::mutate(replicate = seq_along(local)) %>%
   tidyr::unnest() %>%
+  print()
+
+df_capture_tidy %>%
   plot_capture_rate() +
   facet_grid(local + path ~ shape + replicate + threshold) +
   scale_y_continuous(breaks = c(0, 0.5, 1)) +
   theme(panel.spacing = unit(0, 'mm'))
+
+.xrange = data.frame(nsam = range(df_capture_tidy$nsam) + c(-0.9, 0.9), capture_rate = 0.5)
+.p_capture = df_capture_tidy %>%
+  ggplot2::ggplot(ggplot2::aes_(~nsam, ~capture_rate)) +
+    ggplot2::geom_ribbon(data=.xrange, ymin = 0.9, ymax = 1.0, fill = "dodgerblue", alpha = 0.5) +
+    ggplot2::geom_ribbon(data=.xrange, ymin = 0.8, ymax = 0.9, fill = "orange", alpha = 0.5) +
+    ggplot2::stat_summary(fun.y = mean, geom = "bar", fill = "#666666") +
+    # ggplot2::stat_summary(fun.data = wtl::mean_sd, geom = "errorbar", width = 0.2, size = 0.3, colour = "#333333") +
+    ggplot2::coord_cartesian(ylim = c(0, 1), xlim = .xrange$nsam, expand = FALSE) +
+  facet_grid(local + path ~ shape + replicate) +
+  scale_y_continuous(breaks = c(0, 0.5, 1,0)) +
+  theme(panel.grid = element_blank())
 .p_capture
-ggsave("capture_rate.png", .p_capture, width=15, height=12)
+ggsave("capture_rate.png", .p_capture, width=11, height=12)
