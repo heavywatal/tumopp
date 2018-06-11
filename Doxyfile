@@ -109,7 +109,7 @@ FILE_PATTERNS          = *.cpp \
                          *.hpp \
                          *.md
 RECURSIVE              = NO
-EXCLUDE                =
+EXCLUDE                = src/version.hpp
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
