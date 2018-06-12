@@ -120,7 +120,7 @@ class Tissue {
     double positional_value(const std::valarray<int>&) const;
 
     //! Put random mutations on genealogy
-    std::vector<uint_fast32_t> generate_neutral_mutations() const;
+    std::vector<unsigned> generate_neutral_mutations() const;
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for tumor_
@@ -168,7 +168,7 @@ class Tissue {
         hash_shptr_cell,
         equal_shptr_cell> tumor_;
     //! incremented when a new cell is born
-    uint_fast32_t id_tail_ = 0;
+    unsigned id_tail_ = 0;
 
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_;

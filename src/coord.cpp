@@ -19,13 +19,13 @@ constexpr size_t ipow(size_t base, size_t exponent) noexcept {
        : base * ipow(base, --exponent);
 }
 
-Coord::Coord(unsigned int d): dimensions_(d) {
+Coord::Coord(unsigned d): dimensions_(d) {
     if (d < 2U || 3U < d) {
         throw std::runtime_error("Invalid value for dimensions");
     }
 }
 
-Neumann::Neumann(const unsigned int d): Coord(d) {
+Neumann::Neumann(const unsigned d): Coord(d) {
     directions_.reserve(2U * dimensions_);
     std::valarray<int> v(dimensions_);
     v[v.size() - 1] += 1;
@@ -37,11 +37,11 @@ Neumann::Neumann(const unsigned int d): Coord(d) {
     do {
         directions_.push_back(v);
     } while (std::next_permutation(std::begin(v), std::end(v)));
-    auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+    auto dirmax = static_cast<unsigned>(directions_.size()) - 1;
     dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
 }
 
-Moore::Moore(const unsigned int d): Coord(d) {
+Moore::Moore(const unsigned d): Coord(d) {
     directions_.reserve(ipow(3u, dimensions_) - 1u);
     for (const int x: {-1, 0, 1}) {
         for (const int y: {-1, 0, 1}) {
@@ -56,11 +56,11 @@ Moore::Moore(const unsigned int d): Coord(d) {
             }
         }
     }
-    auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+    auto dirmax = static_cast<unsigned>(directions_.size()) - 1;
     dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
 }
 
-Hexagonal::Hexagonal(const unsigned int d): Coord(d) {
+Hexagonal::Hexagonal(const unsigned d): Coord(d) {
     std::valarray<int> v{-1, 0, 1};
     directions_.reserve(6 * (dimensions_ - 1));
     if (dimensions_ == 2U) {
@@ -79,7 +79,7 @@ Hexagonal::Hexagonal(const unsigned int d): Coord(d) {
         directions_.push_back({-1, 0, 1});
         directions_.push_back({-1, 1, 1});
     }
-    auto dirmax = static_cast<unsigned int>(directions_.size()) - 1;
+    auto dirmax = static_cast<unsigned>(directions_.size()) - 1;
     dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
 }
 

@@ -17,7 +17,7 @@ double Cell::DEATH_PROB_ = 0.0;
 double Cell::MIGRATION_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
 double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
-unsigned int Cell::MAX_PROLIFERATION_CAPACITY_ = 10u;
+unsigned Cell::MAX_PROLIFERATION_CAPACITY_ = 10u;
 double Cell::DRIVER_RATE_BIRTH_ = 0.0;
 double Cell::DRIVER_RATE_DEATH_ = 0.0;
 double Cell::DRIVER_RATE_MIGRA_ = 0.0;
@@ -199,8 +199,8 @@ double Cell::delta_time(const double positional_value) {
     }
 }
 
-std::unordered_set<uint_fast32_t> Cell::traceback() const {
-    std::unordered_set<uint_fast32_t> genealogy;
+std::unordered_set<unsigned> Cell::traceback() const {
+    std::unordered_set<unsigned> genealogy;
     genealogy.emplace(id_);
     for (std::shared_ptr<Cell> p = ancestor_; p; p = p->ancestor_) {
         genealogy.emplace(p->id_);
@@ -208,9 +208,9 @@ std::unordered_set<uint_fast32_t> Cell::traceback() const {
     return genealogy;
 }
 
-std::vector<uint_fast32_t> Cell::has_mutations_of(const std::vector<uint_fast32_t>& mutants) const {
+std::vector<unsigned> Cell::has_mutations_of(const std::vector<unsigned>& mutants) const {
     const auto genealogy = traceback();
-    std::vector<uint_fast32_t> genotype;
+    std::vector<unsigned> genotype;
     genotype.reserve(mutants.size());
     for (const auto mut: mutants) {
         if (genealogy.find(mut) != genealogy.end()) {
@@ -225,7 +225,7 @@ std::vector<uint_fast32_t> Cell::has_mutations_of(const std::vector<uint_fast32_
 size_t Cell::branch_length(const Cell& other) const {
     if (id_ == other.id_) return 0u;
     size_t length = 2u;
-    uint_fast32_t mrca = 1u;
+    unsigned mrca = 1u;
     const auto genealogy = traceback();
     for (std::shared_ptr<Cell> p = other.ancestor_; p; p = p->ancestor_) {
         if (genealogy.find(p->id_) != genealogy.end()) {
@@ -260,8 +260,8 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << birth_rate_ << "\t"
         << death_rate_ << "\t" << death_prob_ << "\t"
         << migra_rate_ << "\t"
-        << static_cast<unsigned int>(type_) << "\t"
-        << static_cast<unsigned int>(proliferation_capacity_);
+        << static_cast<unsigned>(type_) << "\t"
+        << static_cast<unsigned>(proliferation_capacity_);
 }
 
 std::string Cell::str() const {
