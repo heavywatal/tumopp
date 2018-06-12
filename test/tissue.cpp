@@ -5,7 +5,7 @@
 //! Test coordinate system
 template <class T> inline
 void test_coordinate(const std::valarray<int>& v) {
-    T coord(static_cast<unsigned int>(v.size()));
+    T coord(static_cast<unsigned>(v.size()));
     std::cout << coord.core() << "\n";
     std::cout << coord.sphere(20) << "\n";
     for (auto x: coord.directions()) {

@@ -83,7 +83,7 @@ class Coord {
     //! Default constructor is deleted
     Coord() = delete;
     //! Constructor: initialize and check #dimensions_
-    explicit Coord(unsigned int d);
+    explicit Coord(unsigned d);
 
     //! Euclidean distance
     template <class T> inline
@@ -95,11 +95,11 @@ class Coord {
     // Data member
 
     //! {2, 3}
-    const unsigned int dimensions_;
+    const unsigned dimensions_;
     //! initialized in derived class constructor
     std::vector<std::valarray<int>> directions_;
     //! initialized in derived class constructor
-    std::uniform_int_distribution<unsigned int> dist_direction_;
+    std::uniform_int_distribution<unsigned> dist_direction_;
 };
 
 /*! @brief Derived class of Coord
@@ -108,7 +108,7 @@ class Neumann final: public Coord {
   public:
     Neumann() = delete;
     //! Constructor
-    explicit Neumann(const unsigned int d);
+    explicit Neumann(const unsigned d);
     ~Neumann() = default;
     //! Manhattan distance
     int graph_distance(const std::valarray<int>& v) const override;
@@ -122,7 +122,7 @@ class Moore final: public Coord {
   public:
     Moore() = delete;
     //! Constructor
-    explicit Moore(const unsigned int d);
+    explicit Moore(const unsigned d);
     ~Moore() = default;
     //! Chebyshev/chessboard distance
     int graph_distance(const std::valarray<int>& v) const override;
@@ -134,7 +134,7 @@ class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;
     //! Constructor
-    explicit Hexagonal(const unsigned int d);
+    explicit Hexagonal(const unsigned d);
     ~Hexagonal() = default;
     std::valarray<double> continuous(const std::valarray<int>& v) const override;
     int graph_distance(const std::valarray<int>& v) const override;

@@ -16,7 +16,7 @@
 
 namespace tumopp {
 
-unsigned int Tissue::DIMENSIONS_ = 3u;
+unsigned Tissue::DIMENSIONS_ = 3u;
 std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::LOCAL_DENSITY_EFFECT_ = "const";
 std::string Tissue::DISPLACEMENT_PATH_ = "default";
@@ -310,7 +310,7 @@ size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<in
     return steps;
 }
 
-std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, const unsigned int search_max) const {
+std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, const unsigned search_max) const {
     size_t least_steps = std::numeric_limits<size_t>::max();
     std::valarray<int> best_direction;
     auto directions = coord_func_->directions();
@@ -357,18 +357,18 @@ double Tissue::positional_value(const std::valarray<int>& coord) const {
     return std::exp(-exponent);
 }
 
-std::vector<uint_fast32_t> Tissue::generate_neutral_mutations() const {
-    std::poisson_distribution<unsigned int> poisson(Cell::MUTATION_RATE() * id_tail_);
-    const unsigned int num_mutants = poisson(wtl::sfmt64());
-    std::uniform_int_distribution<uint_fast32_t> uniform(1, id_tail_);
-    std::vector<uint_fast32_t> mutants;
+std::vector<unsigned> Tissue::generate_neutral_mutations() const {
+    std::poisson_distribution<unsigned> poisson(Cell::MUTATION_RATE() * id_tail_);
+    const unsigned num_mutants = poisson(wtl::sfmt64());
+    std::uniform_int_distribution<unsigned> uniform(1, id_tail_);
+    std::vector<unsigned> mutants;
     if (Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION()) {
         mutants.reserve(id_tail_ + num_mutants);
-        for (uint_fast32_t i=1; i<=id_tail_; ++i) mutants.push_back(i);
+        for (unsigned i=1; i<=id_tail_; ++i) mutants.push_back(i);
     } else {
         mutants.reserve(num_mutants);
     }
-    for (unsigned int i=0; i<num_mutants; ++i) {
+    for (unsigned i=0; i<num_mutants; ++i) {
         mutants.push_back(uniform(wtl::sfmt64()));
     }
     return mutants;
@@ -377,13 +377,13 @@ std::vector<uint_fast32_t> Tissue::generate_neutral_mutations() const {
 std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
     const size_t sample_size = samples.size();
     const auto mutants = generate_neutral_mutations();
-    std::vector<std::vector<uint_fast32_t>> flags;
+    std::vector<std::vector<unsigned>> flags;
     flags.reserve(sample_size);
     for (const auto& cell: samples) {
         flags.emplace_back(cell->has_mutations_of(mutants));
     }
     flags = wtl::transpose(flags);
-    std::vector<std::vector<uint_fast32_t>> segsites;
+    std::vector<std::vector<unsigned>> segsites;
     segsites.reserve(flags.size());
     for (size_t i=0; i<flags.size(); ++i) {
         const auto daf = wtl::sum(flags[i]);
@@ -471,7 +471,7 @@ std::string Tissue::header() const {
 
 void Tissue::write(std::ostream& ost, const Cell& cell) const {
     cell.write(ost) << "\t"
-       << static_cast<unsigned int>(num_empty_neighbors(cell.coord())) << "\n";
+       << static_cast<unsigned>(num_empty_neighbors(cell.coord())) << "\n";
 }
 
 void Tissue::write_snapshot() {

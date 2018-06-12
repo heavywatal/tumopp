@@ -36,7 +36,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::valarray<int>& v, uint_fast32_t i=0) noexcept: coord_(v), id_(i) {}
+    Cell(const std::valarray<int>& v, unsigned i=0) noexcept: coord_(v), id_(i) {}
     //! Copy constructor
     Cell(const Cell& other) noexcept;
     //! Destructor
@@ -60,7 +60,7 @@ class Cell {
     double delta_time(double positional_value);
 
     //! Check mutant ancestors
-    std::vector<uint_fast32_t> has_mutations_of(const std::vector<uint_fast32_t>&) const;
+    std::vector<unsigned> has_mutations_of(const std::vector<unsigned>&) const;
 
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
@@ -68,7 +68,7 @@ class Cell {
     //! setter of #coord_
     void set_coord(const std::valarray<int>& v) noexcept {coord_ = v;}
     //! setter of #time_of_birth_; reset other properties
-    void set_time_of_birth(double t, uint_fast32_t i, const std::shared_ptr<Cell>& ancestor) noexcept {
+    void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;
         id_ = i;
         ancestor_ = ancestor;
@@ -107,7 +107,7 @@ class Cell {
 
   private:
     //! Accumulate ancestral #id_
-    std::unordered_set<uint_fast32_t> traceback() const;
+    std::unordered_set<unsigned> traceback() const;
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
@@ -124,7 +124,7 @@ class Cell {
     //! \f$p_s\f$
     static double PROB_SYMMETRIC_DIVISION_;
     //! \f$\omega_\text{max}\f$
-    static unsigned int MAX_PROLIFERATION_CAPACITY_;
+    static unsigned MAX_PROLIFERATION_CAPACITY_;
 
     //! \f$\mu_\beta\f$
     static double DRIVER_RATE_BIRTH_;
@@ -173,7 +173,7 @@ class Cell {
     double elapsed_ = 0.0;
 
     //! ID
-    uint_fast32_t id_;
+    unsigned id_;
     //! ancestor's ID
     std::shared_ptr<Cell> ancestor_;
     //! time of birth
