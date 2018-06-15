@@ -39,7 +39,7 @@ e.g., `cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..`
 
 ## Usage
 
-Run tumopp via [R package](https://github.com/heavywatal/tumopp/tree/master/r)
+Run tumopp via [R package](https://github.com/heavywatal/rtumopp/)
 
 Alternatively, it can be executed as a command-line program:
 ```sh

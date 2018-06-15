@@ -1,3 +1,0 @@
-mkdir -p build
-rm build/CMakeCache.txt
-cmake -Hsrc -Bbuild
