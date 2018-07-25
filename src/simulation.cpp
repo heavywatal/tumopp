@@ -51,7 +51,7 @@ po::options_description Simulation::options_desc() {HERE;
     description.add_options()
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
-      ("outdir,o", po::value<std::string>()->default_value("")->implicit_value(OUT_DIR))
+      ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
     description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
@@ -143,6 +143,7 @@ void Simulation::write() const {HERE;
     DCERR("mkdir && cd to " << outdir << std::endl);
     fs::create_directory(outdir);
     fs::current_path(outdir);
+    std::cerr << "Output: " << outdir << "\n";
     wtl::make_ofs("program_options.conf") << config_string_;
     wtl::ozfstream{"population.tsv.gz"}
         << tissue_->specimens();
@@ -152,7 +153,6 @@ void Simulation::write() const {HERE;
         << tissue_->drivers();
     wtl::ozfstream{"distance.tsv.gz"}
         << tissue_->pairwise_distance(std::min(200UL, tissue_->size() / 2U));
-    std::cerr << wtl::iso8601datetime() << std::endl;
 }
 
 void Simulation::ms(std::ostream& ost) const {HERE;
