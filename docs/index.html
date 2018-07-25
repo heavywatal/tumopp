@@ -66,7 +66,7 @@ $(function() {
 <h2>Installation</h2>
 <p>The easiest way is to use <a href="https://brew.sh/">Homebrew</a>/<a href="http://linuxbrew.sh/">Linuxbrew</a>. The following command installs tumopp and all the dependencies: </p><div class="fragment"><div class="line">brew install heavywatal/tap/tumopp</div></div><!-- fragment --><p>Alternatively, you can get the source code from GitHub manually: </p><div class="fragment"><div class="line">git clone https://github.com/heavywatal/tumopp.git</div><div class="line">cd tumopp/</div><div class="line">mkdir build</div><div class="line">cd build/</div><div class="line">DESTINATION=${HOME}/local</div><div class="line">cmake -DCMAKE_INSTALL_PREFIX=$DESTINATION ..</div><div class="line">make -j2</div><div class="line">make install</div></div><!-- fragment --><p>If needed, set <code>CMAKE_PREFIX_PATH</code> or <code>BOOST_ROOT</code> variable so that CMake can find prerequisite libraries, e.g., <code>cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..</code></p>
 <h2>Usage</h2>
-<p>Run tumopp via <a href="https://github.com/heavywatal/tumopp/tree/master/r">R package</a></p>
+<p>Run tumopp via <a href="https://github.com/heavywatal/rtumopp/">R package</a></p>
 <p>Alternatively, it can be executed as a command-line program: </p><div class="fragment"><div class="line">tumopp -h</div><div class="line">tumopp -N20000 -D3 -Chex -k100 -d0.1 -m0.5 -o OUTPUT_DIR</div></div><!-- fragment --><ul>
 <li><a href="https://heavywatal.github.io/tumopp/">Online documentation generated with doxygen</a></li>
 <li><a class="el" href="group__params.html">Parameters</a></li>
