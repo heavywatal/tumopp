@@ -51,6 +51,7 @@ po::options_description Simulation::options_desc() {HERE;
     description.add_options()
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
+      ("npair", po::value<size_t>()->default_value(0u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
     description.add(Cell::opt_description());
@@ -139,20 +140,23 @@ void Simulation::run() {HERE;
 void Simulation::write() const {HERE;
     auto& vm = *vars_;
     const auto outdir = vm["outdir"].as<std::string>();
+    const auto npair = vm["npair"].as<size_t>();
     if (outdir.empty()) return;
     DCERR("mkdir && cd to " << outdir << std::endl);
     fs::create_directory(outdir);
     fs::current_path(outdir);
     std::cerr << "Output: " << outdir << "\n";
     wtl::make_ofs("program_options.conf") << config_string_;
-    wtl::ozfstream{"population.tsv.gz"}
-        << tissue_->specimens();
-    wtl::ozfstream{"snapshots.tsv.gz"}
-        << tissue_->snapshots();
-    wtl::ozfstream{"drivers.tsv.gz"}
-        << tissue_->drivers();
-    wtl::ozfstream{"distance.tsv.gz"}
-        << tissue_->pairwise_distance(std::min(200UL, tissue_->size() / 2U));
+    wtl::ozfstream{"population.tsv.gz"} << tissue_->specimens();
+    if (tissue_->has_snapshots()) {
+        wtl::ozfstream{"snapshots.tsv.gz"} << tissue_->snapshots();
+    }
+    if (tissue_->has_drivers()) {
+        wtl::ozfstream{"drivers.tsv.gz"} << tissue_->drivers();
+    }
+    if (npair > 0u) {
+        wtl::ozfstream{"distance.tsv.gz"} << tissue_->pairwise_distance(npair);
+    }
 }
 
 void Simulation::ms(std::ostream& ost) const {HERE;

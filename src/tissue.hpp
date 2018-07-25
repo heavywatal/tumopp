@@ -69,6 +69,11 @@ class Tissue {
     void write_snapshot();
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
+    //! @cond
+    bool has_snapshots() const;
+    bool has_drivers() const;
+    //! @endcond
+
     //! Shortcut of coord.radius(tumor_.size())
     double radius() const {return coord_func_->radius(tumor_.size());}
     //! getter of #coord_func_

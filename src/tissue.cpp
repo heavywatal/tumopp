@@ -85,7 +85,9 @@ void Tissue::init() {HERE;
             if (tumor_.size() >= INITIAL_SIZE_) break;
         }
     }
-    write_snapshot();
+    if (RECORDING_EARLY_GROWTH_ > 0u) {
+        write_snapshot();
+    }
 }
 
 void Tissue::init_coord() {HERE;
@@ -479,6 +481,18 @@ void Tissue::write_snapshot() {
         write(snapshots_ << time_ << "\t", *p);
     }
 }
+
+//! @cond
+bool Tissue::has_snapshots() const {
+    const auto tsv = snapshots_.str();
+    return tsv.find("\n") != tsv.rfind("\n");
+}
+
+bool Tissue::has_drivers() const {
+    const auto tsv = drivers_.str();
+    return tsv.find("\n") != tsv.rfind("\n");
+}
+//! @endcond
 
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
