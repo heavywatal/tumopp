@@ -61,7 +61,7 @@ po::options_description Simulation::options_desc() {HERE;
 po::options_description Simulation::positional_desc() {HERE;
     po::options_description description("Positional");
     description.add_options()
-        ("nsam", po::value<size_t>()->default_value(20u))
+        ("nsam", po::value<size_t>()->default_value(0u))
         ("howmany", po::value<size_t>()->default_value(1u));
     return description;
 }
@@ -160,6 +160,7 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     const auto nsam = vm["nsam"].as<size_t>();
     const auto howmany = vm["howmany"].as<size_t>();
     const auto seed = vm["seed"].as<uint32_t>();
+    if (nsam < 1u | howmany < 1u) return;
     ost << "tumopp " << command_args_ << "\n" << seed << "\n";
 
     if (Tissue::DIMENSIONS() == 3U) {
