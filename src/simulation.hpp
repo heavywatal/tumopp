@@ -51,10 +51,9 @@ class Simulation {
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
-    //! options description for optional arguments
     boost::program_options::options_description options_desc();
-    //! options description for positional arguments
     boost::program_options::options_description positional_desc();
+
     //! Print help message and exit
     [[noreturn]] void help_and_exit();
     //! Print version and exit

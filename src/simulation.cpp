@@ -34,14 +34,14 @@ inline po::options_description general_desc() {HERE;
     return description;
 }
 
-//! Program options
+//! Parameters of Simulation class
 /*! @ingroup params
-    @return Program options description
 
     Command line option | Symbol         | Variable                  |
     ------------------- | -------------- | ------------------------- |
     `-N,--max`          | \f$N_\max\f$   | -
     `-T,--plateau`      | -              | -
+    `--npair`           | -              | -
     `-o,--outdir`       | -              | -
     `--seed`            | -              | -
 */
@@ -59,6 +59,14 @@ po::options_description Simulation::options_desc() {HERE;
     return description;
 }
 
+//! Positional arguments to produce ms-like output
+/*! @ingroup params
+
+    Command line option | Symbol         | Variable                  |
+    ------------------- | -------------- | ------------------------- |
+    `nsam`              | -              | -
+    `howmany`           | -              | -
+*/
 po::options_description Simulation::positional_desc() {HERE;
     po::options_description description("Positional");
     description.add_options()

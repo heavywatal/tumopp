@@ -25,9 +25,8 @@ size_t Tissue::INITIAL_SIZE_ = 1u;
 size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
 size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
 
-//! Program options
+//! Parameters of Tissue class
 /*! @ingroup params
-    @return Program options description
 
     Command line option | Symbol         | Variable                        |
     ------------------- | -------------- | ------------------------------- |

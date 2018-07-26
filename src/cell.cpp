@@ -39,9 +39,8 @@ namespace {
     std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
 }
 
-//! Program options
+//! Parameters of Cell class
 /*! @ingroup params
-    @return Program options description
 
     Command line option | Symbol              | Variable                  |
     ------------------- | ------------------- | ------------------------- |
