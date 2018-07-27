@@ -53,6 +53,7 @@ po::options_description Simulation::options_desc() {HERE;
       ("plateau,T", po::value<double>()->default_value(0.0))
       ("npair", po::value<size_t>()->default_value(0u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
+      ("extinction", po::value<unsigned>()->default_value(100u))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
     description.add(Cell::opt_description());
     description.add(Tissue::opt_description());
@@ -136,8 +137,9 @@ void Simulation::run() {HERE;
     auto& vm = *vars_;
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
+    const auto allowed_extinction = vm["extinction"].as<unsigned>();
 
-    for (size_t i=0; i<10u; ++i) {
+    for (size_t i=0; i<allowed_extinction; ++i) {
         if (tissue_->grow(max_size, plateau_time)) break;
     }
     if (tissue_->size() != max_size) {
