@@ -19,7 +19,7 @@ namespace tumopp {
 unsigned Tissue::DIMENSIONS_ = 3u;
 std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::LOCAL_DENSITY_EFFECT_ = "const";
-std::string Tissue::DISPLACEMENT_PATH_ = "default";
+std::string Tissue::DISPLACEMENT_PATH_ = "random";
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
 size_t Tissue::INITIAL_SIZE_ = 1u;
 size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
@@ -222,9 +222,6 @@ void Tissue::init_insert_function() {
         daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt64()));
         return tumor_.insert(daughter).second;
     });
-    swtch["const"].emplace("default", swtch["const"]["random"]);
-    swtch["step"].emplace("default", swtch["step"]["mindrag"]);
-    swtch["linear"].emplace("default", swtch["linear"]["mindrag"]);
     try {
         insert = swtch.at(LOCAL_DENSITY_EFFECT_).at(DISPLACEMENT_PATH_);
     } catch (std::exception& e) {
