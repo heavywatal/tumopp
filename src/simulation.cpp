@@ -174,7 +174,7 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     const auto nsam = vm["nsam"].as<size_t>();
     const auto howmany = vm["howmany"].as<size_t>();
     const auto seed = vm["seed"].as<uint32_t>();
-    if (nsam < 1u | howmany < 1u) return;
+    if ((nsam < 1u) || (howmany < 1u)) return;
     ost << "tumopp " << command_args_ << "\n" << seed << "\n";
 
     if (Tissue::DIMENSIONS() == 3U) {
