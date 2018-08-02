@@ -12,7 +12,7 @@
 #include <wtl/chrono.hpp>
 #include <wtl/getopt.hpp>
 #include <wtl/exception.hpp>
-#include <wtl/zfstream.hpp>
+#include <wtl/zlib.hpp>
 #include <sfmt.hpp>
 
 #include <boost/program_options.hpp>
@@ -157,15 +157,15 @@ void Simulation::write() const {HERE;
     fs::current_path(outdir);
     std::cerr << "Output: " << outdir << "\n";
     wtl::make_ofs("program_options.conf") << config_string_;
-    wtl::ozfstream{"population.tsv.gz"} << tissue_->specimens();
+    wtl::zlib::ofstream{"population.tsv.gz"} << tissue_->specimens();
     if (tissue_->has_snapshots()) {
-        wtl::ozfstream{"snapshots.tsv.gz"} << tissue_->snapshots();
+        wtl::zlib::ofstream{"snapshots.tsv.gz"} << tissue_->snapshots();
     }
     if (tissue_->has_drivers()) {
-        wtl::ozfstream{"drivers.tsv.gz"} << tissue_->drivers();
+        wtl::zlib::ofstream{"drivers.tsv.gz"} << tissue_->drivers();
     }
     if (npair > 0u) {
-        wtl::ozfstream{"distance.tsv.gz"} << tissue_->pairwise_distance(npair);
+        wtl::zlib::ofstream{"distance.tsv.gz"} << tissue_->pairwise_distance(npair);
     }
 }
 
