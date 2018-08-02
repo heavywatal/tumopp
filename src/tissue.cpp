@@ -42,15 +42,16 @@ size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
 boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
     po::options_description desc{"Tissue"};
+    auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
-        ("dimensions,D", po::value(&DIMENSIONS_)->default_value(DIMENSIONS_))
-        ("coord,C", po::value(&COORDINATE_)->default_value(COORDINATE_))
-        ("local,L", po::value(&LOCAL_DENSITY_EFFECT_)->default_value(LOCAL_DENSITY_EFFECT_))
-        ("path,P", po::value(&DISPLACEMENT_PATH_)->default_value(DISPLACEMENT_PATH_))
-        ("peripheral,g", po::value(&SIGMA_E_)->default_value(SIGMA_E_))
-        ("origin,O", po::value(&INITIAL_SIZE_)->default_value(INITIAL_SIZE_))
-        ("record,R", po::value(&RECORDING_EARLY_GROWTH_)->default_value(RECORDING_EARLY_GROWTH_))
-        ("mutate,U", po::value(&MUTATION_TIMING_)->default_value(MUTATION_TIMING_))
+        ("dimensions,D", po_value(&DIMENSIONS_))
+        ("coord,C", po_value(&COORDINATE_))
+        ("local,L", po_value(&LOCAL_DENSITY_EFFECT_))
+        ("path,P", po_value(&DISPLACEMENT_PATH_))
+        ("peripheral,g", po_value(&SIGMA_E_))
+        ("origin,O", po_value(&INITIAL_SIZE_))
+        ("record,R", po_value(&RECORDING_EARLY_GROWTH_))
+        ("mutate,U", po_value(&MUTATION_TIMING_))
     ;
     return desc;
 }
