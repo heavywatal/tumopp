@@ -93,8 +93,7 @@ po::options_description Simulation::positional_desc() {HERE;
 }
 
 Simulation::Simulation(const std::vector<std::string>& arguments)
-: tissue_(std::make_unique<Tissue>()),
-  vars_(std::make_unique<po::variables_map>()) {HERE;
+: vars_(std::make_unique<po::variables_map>()) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(15);
@@ -140,6 +139,7 @@ void Simulation::run() {HERE;
     const auto allowed_extinction = vm["extinction"].as<unsigned>();
 
     for (size_t i=0; i<allowed_extinction; ++i) {
+        tissue_ = std::make_unique<Tissue>();
         if (tissue_->grow(max_size, plateau_time)) break;
     }
     if (tissue_->size() != max_size) {

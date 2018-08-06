@@ -27,7 +27,7 @@ namespace tumopp {
 class Tissue {
   public:
     //! Constructor
-    Tissue() = default;
+    Tissue();
 
     //! main function
     bool grow(size_t max_size, double plateau=0.0);

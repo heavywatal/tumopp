@@ -56,7 +56,7 @@ boost::program_options::options_description Tissue::opt_description() {
     return desc;
 }
 
-void Tissue::init() {HERE;
+Tissue::Tissue() {HERE;
     tumor_.clear();
     queue_.clear();
     time_ = 0.0;
@@ -107,7 +107,6 @@ void Tissue::init_coord() {HERE;
 }
 
 bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
-    init();
     bool success = false;
     bool is_growing = true;
     double max_time = std::log2(max_size) * 100.0;
