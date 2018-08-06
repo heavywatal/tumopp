@@ -163,7 +163,7 @@ class Tissue {
     // Data member
 
     //! Dimensions: {2, 3}
-    static unsigned int DIMENSIONS_;
+    static unsigned DIMENSIONS_;
     //! Coordinate/neighborhood system {neumann, moore, hex}
     static std::string COORDINATE_;
     //! E2 {const, step, linear}
@@ -180,6 +180,8 @@ class Tissue {
     static double SNAPSHOT_INTERVAL_;
     //! Time (tumor_.size()) to introduce a driver mutation
     static size_t MUTATION_TIMING_;
+    //! The number of random resistant cells for visualization
+    static size_t NUM_RESISTANT_CELLS_;
 
     //! cells
     std::unordered_set<

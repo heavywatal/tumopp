@@ -25,6 +25,7 @@ size_t Tissue::INITIAL_SIZE_ = 1u;
 size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
 double Tissue::SNAPSHOT_INTERVAL_ = std::numeric_limits<double>::infinity();
 size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
+size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
 
 //! Parameters of Tissue class
 /*! @ingroup params
@@ -55,6 +56,7 @@ boost::program_options::options_description Tissue::opt_description() {
         ("record,R", po_value(&RECORDING_EARLY_GROWTH_))
         ("interval,I", po_value(&SNAPSHOT_INTERVAL_))
         ("mutate,U", po_value(&MUTATION_TIMING_))
+        ("resistant", po_value(&NUM_RESISTANT_CELLS_))
     ;
     return desc;
 }
@@ -173,18 +175,20 @@ void Tissue::plateau(const double time) {HERE;
 }
 
 void Tissue::treatment() {HERE;
-    queue_.clear();
-    const double p_resistance = 0.001;
     const size_t original_size = tumor_.size();
-    const size_t margin = static_cast<size_t>(2 * original_size * p_resistance);
-    std::bernoulli_distribution bernoulli(1.0 - p_resistance);
-    for (auto& p: tumor_) {
-        if (bernoulli(wtl::sfmt64())) {
+    std::vector<std::shared_ptr<Cell>> cells;
+    cells.reserve(original_size);
+    for (const auto& p: queue_) { // for reproducibility
+        cells.emplace_back(p.second);
+    }
+    std::shuffle(cells.begin(), cells.end(), wtl::sfmt64());
+    for (size_t i=0; i<original_size; ++i) {
+        const auto& p = cells[i];
+        if (i >= NUM_RESISTANT_CELLS_) {
             p->set_death_prob(1.0);
         }
-        p->set_elapsed(0.0);
-        queue_push(p);
     }
+    const size_t margin = 10u * NUM_RESISTANT_CELLS_;
     grow(original_size + margin, std::numeric_limits<double>::max());
 }
 
