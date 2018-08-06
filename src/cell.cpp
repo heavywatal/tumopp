@@ -32,9 +32,6 @@ double Cell::MUTATION_RATE_ = 1e-1;
 bool Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_ = false;
 
 namespace {
-    std::bernoulli_distribution BERN_BIRTH(0.0);
-    std::bernoulli_distribution BERN_DEATH(0.0);
-    std::bernoulli_distribution BERN_MIGRA(0.0);
     std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
     std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
     std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
@@ -98,9 +95,6 @@ boost::program_options::options_description Cell::opt_description() {
 }
 
 void Cell::init_distributions() {
-    BERN_BIRTH.param(decltype(BERN_BIRTH)::param_type(DRIVER_RATE_BIRTH_));
-    BERN_DEATH.param(decltype(BERN_DEATH)::param_type(DRIVER_RATE_DEATH_));
-    BERN_MIGRA.param(decltype(BERN_MIGRA)::param_type(DRIVER_RATE_MIGRA_));
     GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_));
     GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_));
     GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_));
@@ -129,18 +123,18 @@ Cell::Cell(const Cell& other) noexcept:
 
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
-    if (BERN_BIRTH(wtl::sfmt64())) {
+    if (bernoulli(DRIVER_RATE_BIRTH_, wtl::sfmt64())) {
         double s = GAUSS_BIRTH(wtl::sfmt64());
         oss << id_ << "\tbirth\t" << s << "\n";
         birth_rate_ *= (s += 1.0);
     }
-    if (BERN_DEATH(wtl::sfmt64())) {
+    if (bernoulli(DRIVER_RATE_DEATH_, wtl::sfmt64())) {
         double s = GAUSS_DEATH(wtl::sfmt64());
         oss << id_ << "\tdeath\t" << s << "\n";
         death_rate_ *= (s += 1.0);
         death_prob_ *= (s += 1.0);
     }
-    if (BERN_MIGRA(wtl::sfmt64())) {
+    if (bernoulli(DRIVER_MEAN_MIGRA_, wtl::sfmt64())) {
         double s = GAUSS_MIGRA(wtl::sfmt64());
         oss << id_ << "\tmigra\t" << s << "\n";
         migra_rate_ *= (s += 1.0);

@@ -232,9 +232,11 @@ void Tissue::init_insert_function() {
     });
     swtch["linear"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         const double prob = proportion_empty_neighbors(daughter->coord());
-        if (!std::bernoulli_distribution(prob)(wtl::sfmt64())) {return false;}
-        push(daughter, coord_func_->random_direction(wtl::sfmt64()));
-        return true;
+        if (wtl::generate_canonical(wtl::sfmt64()) < prob) {
+            push(daughter, coord_func_->random_direction(wtl::sfmt64()));
+            return true;
+        }
+        return false;
     });
     swtch["linear"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
         daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt64()));
