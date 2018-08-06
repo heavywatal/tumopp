@@ -154,13 +154,30 @@ bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
     return success;
 }
 
-void Tissue::set_plateau() {HERE;
+void Tissue::plateau(const double time) {HERE;
     queue_.clear();
     for (auto& p: tumor_) {
         p->increase_death_rate();
         p->set_elapsed(0.0);
         queue_push(p);
     }
+    grow(std::numeric_limits<size_t>::max(), time_ + time);
+}
+
+void Tissue::treatment() {HERE;
+    queue_.clear();
+    const double p_resistance = 0.001;
+    const size_t original_size = tumor_.size();
+    const size_t margin = static_cast<size_t>(2 * original_size * p_resistance);
+    std::bernoulli_distribution bernoulli(1.0 - p_resistance);
+    for (auto& p: tumor_) {
+        if (bernoulli(wtl::sfmt64())) {
+            p->set_death_prob(1.0);
+        }
+        p->set_elapsed(0.0);
+        queue_push(p);
+    }
+    grow(original_size + margin, std::numeric_limits<double>::max());
 }
 
 void Tissue::queue_push(const std::shared_ptr<Cell>& x) {

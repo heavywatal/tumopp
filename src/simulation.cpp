@@ -51,6 +51,7 @@ po::options_description Simulation::options_desc() {HERE;
     description.add_options()
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
+      ("treatment,X", po::bool_switch())
       ("npair", po::value<size_t>()->default_value(0u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("extinction", po::value<unsigned>()->default_value(100u))
@@ -147,8 +148,10 @@ void Simulation::run() {HERE;
         std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;
     }
     if (plateau_time > 0.0) {
-        tissue_->set_plateau();
-        tissue_->grow(std::numeric_limits<size_t>::max(), tissue_->time() + plateau_time);
+        tissue_->plateau(plateau_time);
+    }
+    if (vm["treatment"].as<bool>()) {
+        tissue_->treatment();
     }
 }
 

@@ -32,8 +32,11 @@ class Tissue {
     //! main function
     bool grow(size_t max_size, double max_time=100.0);
 
-    //! Reset queue after increasing death rates to simulate turnover
-    void set_plateau();
+    //! Simulate turnover with the increased death_rate
+    void plateau(double time);
+
+    //! Simulate medical treatment with the increased death_prob
+    void treatment();
 
     //! getter of #DIMENSIONS_
     static unsigned int DIMENSIONS() noexcept {return DIMENSIONS_;}
