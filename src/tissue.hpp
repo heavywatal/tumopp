@@ -56,7 +56,7 @@ class Tissue {
     std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
 
     //! Stringify #specimens_
-    std::string specimens() const {return specimens_.str();}
+    std::string specimens();
     //! Stringify #snapshots_
     std::string snapshots() const {return snapshots_.str();}
     //! Stringify #drivers_
@@ -68,8 +68,6 @@ class Tissue {
     std::string header() const;
     //! TSV
     void write(std::ostream&, const Cell&) const;
-    //! Write all cells to #specimens_
-    void write_extant();
     //! Write all cells to #snapshots_ with #time_
     void write_snapshot();
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
@@ -191,7 +189,7 @@ class Tissue {
     std::unique_ptr<Coord> coord_func_;
 
     //! record all cells existed
-    std::ostringstream specimens_;
+    std::vector<std::shared_ptr<Cell>> specimens_;
     //! record state when size() < #RECORDING_EARLY_GROWTH_
     std::ostringstream snapshots_;
     //! record driver mutations

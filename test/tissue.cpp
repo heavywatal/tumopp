@@ -24,7 +24,6 @@ int main() {
 
     tumopp::Tissue tissue;
     tissue.grow(10);
-    tissue.write_extant();
     std::cout << tissue << "\n";
     std::cout << tissue.specimens();
 

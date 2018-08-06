@@ -57,11 +57,7 @@ boost::program_options::options_description Tissue::opt_description() {
 }
 
 Tissue::Tissue() {HERE;
-    tumor_.clear();
-    queue_.clear();
-    time_ = 0.0;
-    id_tail_ = 0;
-    (specimens_ = wtl::make_oss()) << header();
+    specimens_.reserve(INITIAL_SIZE_ * 2u);
     (snapshots_ = wtl::make_oss()) << "time\t" << header();
     (drivers_ = wtl::make_oss()) << "id\ttype\tcoef\n";
     init_coord();
@@ -75,7 +71,7 @@ Tissue::Tissue() {HERE;
             const auto daughter = std::make_shared<Cell>(*mother);
             const auto ancestor = std::make_shared<Cell>(*mother);
             ancestor->set_time_of_death(0.0);
-            write(specimens_, *ancestor);
+            specimens_.emplace_back(ancestor);
             mother->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_coord(initial_coords[tumor_.size()]);
@@ -124,7 +120,7 @@ bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
             if (insert(daughter)) {
                 const auto ancestor = std::make_shared<Cell>(*mother);
                 ancestor->set_time_of_death(time_);
-                write(specimens_, *ancestor);
+                specimens_.emplace_back(ancestor);
                 mother->set_time_of_birth(time_, ++id_tail_, ancestor);
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 drivers_ << mother->mutate();
@@ -141,7 +137,7 @@ bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
             }
         } else if (mother->next_event() == Event::death) {
             mother->set_time_of_death(time_);
-            write(specimens_, *mother);
+            specimens_.emplace_back(mother);
             tumor_.erase(mother);
             if (tumor_.empty()) break;
         } else {
@@ -465,10 +461,18 @@ void Tissue::write(std::ostream& ost, const Cell& cell) const {
        << static_cast<unsigned>(num_empty_neighbors(cell.coord())) << "\n";
 }
 
-void Tissue::write_extant() {
+std::string Tissue::specimens() {
     for (const auto& p: tumor_) {
-        write(specimens_, *p);
+        specimens_.emplace_back(p);
     }
+    tumor_.clear();
+    queue_.clear();
+    std::ostringstream oss;
+    oss << header();
+    for (const auto& p: specimens_) {
+        write(oss, *p);
+    }
+    return oss.str();
 }
 
 void Tissue::write_snapshot() {

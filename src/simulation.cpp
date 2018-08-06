@@ -150,7 +150,6 @@ void Simulation::run() {HERE;
         tissue_->set_plateau();
         tissue_->grow(std::numeric_limits<size_t>::max(), tissue_->time() + plateau_time);
     }
-    tissue_->write_extant();
 }
 
 void Simulation::write() const {HERE;
