@@ -58,9 +58,13 @@ class Tissue {
     //! Stringify #specimens_
     std::string specimens();
     //! Stringify #snapshots_
-    std::string snapshots() const {return snapshots_.str();}
+    std::string snapshots() const {
+        return "time\t" + header() + snapshots_.str();
+    }
     //! Stringify #drivers_
-    std::string drivers() const {return drivers_.str();}
+    std::string drivers() const {
+        return "id\ttype\tcoef\n" + drivers_.str();
+    }
     //! Make TSV of pairwise distance
     std::string pairwise_distance(size_t npair) const;
 
@@ -73,8 +77,8 @@ class Tissue {
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond
-    bool has_snapshots() const;
-    bool has_drivers() const;
+    bool snapshots_empty() const {return snapshots_.str().empty();};
+    bool drivers_empty() const {return drivers_.str().empty();}
     //! @endcond
 
     //! Shortcut of coord.radius(tumor_.size())

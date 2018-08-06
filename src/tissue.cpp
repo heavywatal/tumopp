@@ -56,10 +56,10 @@ boost::program_options::options_description Tissue::opt_description() {
     return desc;
 }
 
-Tissue::Tissue() {HERE;
+Tissue::Tissue():
+  snapshots_(wtl::make_oss()),
+  drivers_(wtl::make_oss()) {HERE;
     specimens_.reserve(INITIAL_SIZE_ * 2u);
-    (snapshots_ = wtl::make_oss()) << "time\t" << header();
-    (drivers_ = wtl::make_oss()) << "id\ttype\tcoef\n";
     init_coord();
     init_insert_function();
     const auto initial_coords = coord_func_->sphere(INITIAL_SIZE_);
@@ -480,18 +480,6 @@ void Tissue::write_snapshot() {
         write(snapshots_ << time_ << "\t", *p);
     }
 }
-
-//! @cond
-bool Tissue::has_snapshots() const {
-    const auto tsv = snapshots_.str();
-    return tsv.find("\n") != tsv.rfind("\n");
-}
-
-bool Tissue::has_drivers() const {
-    const auto tsv = drivers_.str();
-    return tsv.find("\n") != tsv.rfind("\n");
-}
-//! @endcond
 
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {

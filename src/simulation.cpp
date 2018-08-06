@@ -163,10 +163,10 @@ void Simulation::write() const {HERE;
     std::cerr << "Output: " << outdir << "\n";
     wtl::make_ofs("program_options.conf") << config_string_;
     wtl::zlib::ofstream{"population.tsv.gz"} << tissue_->specimens();
-    if (tissue_->has_snapshots()) {
+    if (!tissue_->snapshots_empty()) {
         wtl::zlib::ofstream{"snapshots.tsv.gz"} << tissue_->snapshots();
     }
-    if (tissue_->has_drivers()) {
+    if (!tissue_->drivers_empty()) {
         wtl::zlib::ofstream{"drivers.tsv.gz"} << tissue_->drivers();
     }
     if (npair > 0u) {
