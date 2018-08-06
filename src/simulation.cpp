@@ -197,6 +197,7 @@ void Simulation::ms(std::ostream& ost) const {HERE;
 }
 
 std::string Simulation::specimens() const {return tissue_->specimens();}
+std::string Simulation::snapshots() const {return tissue_->snapshots();}
 std::string Simulation::drivers() const {return tissue_->drivers();}
 std::string Simulation::pairwise_distance(size_t npair) const {return tissue_->pairwise_distance(npair);}
 std::string Simulation::ms() const {

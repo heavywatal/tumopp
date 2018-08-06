@@ -23,6 +23,7 @@ std::string Tissue::DISPLACEMENT_PATH_ = "random";
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
 size_t Tissue::INITIAL_SIZE_ = 1u;
 size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
+double Tissue::SNAPSHOT_INTERVAL_ = std::numeric_limits<double>::infinity();
 size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
 
 //! Parameters of Tissue class
@@ -37,6 +38,7 @@ size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | \f$N_0\f$      | Tissue::INITIAL_SIZE_
     `-R,--record`       | -              | Tissue::RECORDING_EARLY_GROWTH_
+    `-I,--interval`     | -              | Tissue::SNAPSHOT_INTERVAL_
     `-U,--mutate`       | \f$N_\mu\f$    | Tissue::MUTATION_TIMING_
 */
 boost::program_options::options_description Tissue::opt_description() {
@@ -51,6 +53,7 @@ boost::program_options::options_description Tissue::opt_description() {
         ("peripheral,g", po_value(&SIGMA_E_))
         ("origin,O", po_value(&INITIAL_SIZE_))
         ("record,R", po_value(&RECORDING_EARLY_GROWTH_))
+        ("interval,I", po_value(&SNAPSHOT_INTERVAL_))
         ("mutate,U", po_value(&MUTATION_TIMING_))
     ;
     return desc;
@@ -105,6 +108,7 @@ void Tissue::init_coord() {HERE;
 bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
     bool success = false;
     size_t i = 0;
+    double time_snapshot = i_snapshot_ * SNAPSHOT_INTERVAL_;
     while (true) {
         if ((++i % 1000U) == 0U) {DCERR("\r" << tumor_.size());}
         auto it = queue_.begin();
@@ -112,6 +116,10 @@ bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
         if (time_ > max_time || tumor_.size() >= max_size) {
             success = true; // maybe not; but want to exit with record
             break;
+        }
+        if (time_ > time_snapshot) {
+            write_snapshot();
+            time_snapshot = ++i_snapshot_ * SNAPSHOT_INTERVAL_;
         }
         const auto mother = std::move(it->second);
         queue_.erase(it);

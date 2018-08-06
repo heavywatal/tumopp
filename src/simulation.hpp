@@ -40,6 +40,8 @@ class Simulation {
 
     //! Shortcut of Tissue.specimens() for R
     std::string specimens() const;
+    //! Shortcut of Tissue.snapshots() for R
+    std::string snapshots() const;
     //! Shortcut of Tissue.drivers() for R
     std::string drivers() const;
     //! Shortcut of Tissue.pairwise_distance() for R

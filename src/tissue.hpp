@@ -176,6 +176,8 @@ class Tissue {
     static size_t INITIAL_SIZE_;
     //! a flag
     static size_t RECORDING_EARLY_GROWTH_;
+    //! interval of snapshot recording
+    static double SNAPSHOT_INTERVAL_;
     //! Time (tumor_.size()) to introduce a driver mutation
     static size_t MUTATION_TIMING_;
 
@@ -191,7 +193,8 @@ class Tissue {
     std::multimap<double, std::shared_ptr<Cell>> queue_;
     //! continuous time
     double time_ = 0.0;
-
+    //! counter of periodic snapshots
+    unsigned i_snapshot_ = 1u;
     //! initialized in init_coord() or init_coord_test()
     std::unique_ptr<Coord> coord_func_;
 
