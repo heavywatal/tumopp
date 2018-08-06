@@ -30,7 +30,10 @@ class Tissue {
     Tissue();
 
     //! main function
-    bool grow(size_t max_size, double plateau=0.0);
+    bool grow(size_t max_size, double max_time=100.0);
+
+    //! Reset queue after increasing death rates to simulate turnover
+    void set_plateau();
 
     //! getter of #DIMENSIONS_
     static unsigned int DIMENSIONS() noexcept {return DIMENSIONS_;}
@@ -65,7 +68,9 @@ class Tissue {
     std::string header() const;
     //! TSV
     void write(std::ostream&, const Cell&) const;
-    //! Write all cells
+    //! Write all cells to #specimens_
+    void write_extant();
+    //! Write all cells to #snapshots_ with #time_
     void write_snapshot();
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
@@ -78,6 +83,8 @@ class Tissue {
     double radius() const {return coord_func_->radius(tumor_.size());}
     //! getter of #coord_func_
     const std::unique_ptr<Coord>& coord_func() const noexcept {return coord_func_;}
+    //! getter of #time_
+    double time() const noexcept {return time_;}
 
     static boost::program_options::options_description opt_description();
 

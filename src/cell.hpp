@@ -53,9 +53,6 @@ class Cell {
     //! driver mutation on all traits
     std::string force_mutate();
 
-    //! Set death rate to simulate Moran-like model
-    void increase_death_rate() noexcept;
-
     //! Calc dt and set #next_event_
     double delta_time(double positional_value);
 
@@ -76,6 +73,10 @@ class Cell {
     }
     //! setter of #time_of_death_
     void set_time_of_death(double t) noexcept {time_of_death_ = t;}
+    //! setter of #elapsed_
+    void set_elapsed(double t) noexcept {elapsed_ = t;}
+    //! Increase #death_rate_ to #birth_rate_ for simulating Moran-like situation
+    void increase_death_rate() noexcept {death_rate_ = birth_rate_;}
 
     //! getter of #birth_rate_
     double birth_rate() const noexcept {return birth_rate_;}

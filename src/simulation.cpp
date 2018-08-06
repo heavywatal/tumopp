@@ -137,14 +137,20 @@ void Simulation::run() {HERE;
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
     const auto allowed_extinction = vm["extinction"].as<unsigned>();
+    const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>();
-        if (tissue_->grow(max_size, plateau_time)) break;
+        if (tissue_->grow(max_size, max_time)) break;
     }
     if (tissue_->size() != max_size) {
         std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;
     }
+    if (plateau_time > 0.0) {
+        tissue_->set_plateau();
+        tissue_->grow(std::numeric_limits<size_t>::max(), tissue_->time() + plateau_time);
+    }
+    tissue_->write_extant();
 }
 
 void Simulation::write() const {HERE;

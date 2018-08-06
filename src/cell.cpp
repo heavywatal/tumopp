@@ -153,11 +153,6 @@ std::string Cell::force_mutate() {
     return oss.str();
 }
 
-void Cell::increase_death_rate() noexcept {
-    death_rate_ = birth_rate_;
-    elapsed_ = 0.0;
-}
-
 double Cell::delta_time(const double positional_value) {
     double t_birth = std::numeric_limits<double>::infinity();
     double t_death = std::numeric_limits<double>::infinity();

@@ -106,27 +106,14 @@ void Tissue::init_coord() {HERE;
     }
 }
 
-bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
+bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
     bool success = false;
-    bool is_growing = true;
-    double max_time = std::log2(max_size) * 100.0;
     size_t i = 0;
     while (true) {
         if ((++i % 1000U) == 0U) {DCERR("\r" << tumor_.size());}
-        if (tumor_.size() >= max_size && is_growing) {
-            max_time = time_ + plateau_time;
-            if (plateau_time > 0.0) {
-                is_growing = false;
-                queue_.clear();
-                for (auto& p: tumor_) {
-                    p->increase_death_rate();
-                    queue_push(p);
-                }
-            }
-        }
         auto it = queue_.begin();
         time_ = it->first;
-        if (time_ > max_time) {
+        if (time_ > max_time || tumor_.size() >= max_size) {
             success = true; // maybe not; but want to exit with record
             break;
         }
@@ -168,10 +155,16 @@ bool Tissue::grow(const size_t max_size, const double plateau_time) {HERE;
         }
     }
     DCERR("\r" << tumor_.size() << std::endl);
-    for (const auto& p: tumor_) {
-        write(specimens_, *p);
-    }
     return success;
+}
+
+void Tissue::set_plateau() {HERE;
+    queue_.clear();
+    for (auto& p: tumor_) {
+        p->increase_death_rate();
+        p->set_elapsed(0.0);
+        queue_push(p);
+    }
 }
 
 void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
@@ -470,6 +463,12 @@ std::string Tissue::header() const {
 void Tissue::write(std::ostream& ost, const Cell& cell) const {
     cell.write(ost) << "\t"
        << static_cast<unsigned>(num_empty_neighbors(cell.coord())) << "\n";
+}
+
+void Tissue::write_extant() {
+    for (const auto& p: tumor_) {
+        write(specimens_, *p);
+    }
 }
 
 void Tissue::write_snapshot() {
