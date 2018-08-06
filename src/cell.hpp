@@ -75,8 +75,8 @@ class Cell {
     void set_time_of_death(double t) noexcept {time_of_death_ = t;}
     //! setter of #elapsed_
     void set_elapsed(double t) noexcept {elapsed_ = t;}
-    //! setter of #death_prob_
-    void set_death_prob(double p) noexcept {death_prob_ = p;}
+    //! Set #death_prob_ and #next_event_
+    void set_cycle_dependent_death(double death_prob);
     //! Increase #death_rate_ to #birth_rate_ for simulating Moran-like situation
     void increase_death_rate() noexcept {death_rate_ = birth_rate_;}
 

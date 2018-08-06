@@ -174,7 +174,7 @@ void Tissue::plateau(const double time) {HERE;
     grow(std::numeric_limits<size_t>::max(), time_ + time);
 }
 
-void Tissue::treatment() {HERE;
+void Tissue::treatment(const double death_prob) {HERE;
     const size_t original_size = tumor_.size();
     std::vector<std::shared_ptr<Cell>> cells;
     cells.reserve(original_size);
@@ -185,7 +185,7 @@ void Tissue::treatment() {HERE;
     for (size_t i=0; i<original_size; ++i) {
         const auto& p = cells[i];
         if (i >= NUM_RESISTANT_CELLS_) {
-            p->set_death_prob(1.0);
+            p->set_cycle_dependent_death(death_prob);
         }
     }
     const size_t margin = 10u * NUM_RESISTANT_CELLS_;

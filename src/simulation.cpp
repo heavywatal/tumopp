@@ -51,7 +51,7 @@ po::options_description Simulation::options_desc() {HERE;
     description.add_options()
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
-      ("treatment,X", po::bool_switch())
+      ("treatment", po::value<double>()->default_value(0.0))
       ("npair", po::value<size_t>()->default_value(0u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("extinction", po::value<unsigned>()->default_value(100u))
@@ -137,6 +137,7 @@ void Simulation::run() {HERE;
     auto& vm = *vars_;
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
+    const auto treatment = vm["treatment"].as<double>();
     const auto allowed_extinction = vm["extinction"].as<unsigned>();
     const double max_time = std::log2(max_size) * 100.0;
 
@@ -150,8 +151,8 @@ void Simulation::run() {HERE;
     if (plateau_time > 0.0) {
         tissue_->plateau(plateau_time);
     }
-    if (vm["treatment"].as<bool>()) {
-        tissue_->treatment();
+    if (treatment > 0.0) {
+        tissue_->treatment(treatment);
     }
 }
 

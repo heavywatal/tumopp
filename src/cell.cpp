@@ -4,6 +4,7 @@
 #include "cell.hpp"
 
 #include <wtl/iostr.hpp>
+#include <wtl/random.hpp>
 #include <sfmt.hpp>
 #include <boost/program_options.hpp>
 
@@ -37,6 +38,12 @@ namespace {
     std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
     std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
     std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
+}
+
+template <class URBG>
+inline bool bernoulli(double p, URBG& engine) {
+    // consume less URBG when p is set to 0 or 1.
+    return p >= 1.0 || (p > 0.0 && wtl::generate_canonical(engine) < p);
 }
 
 //! Parameters of Cell class
@@ -114,7 +121,7 @@ Cell::Cell(const Cell& other) noexcept:
     ancestor_(other.ancestor_),
     time_of_birth_(other.time_of_birth_) {
     if (type_ == CellType::stem) {
-        if (!std::bernoulli_distribution(PROB_SYMMETRIC_DIVISION_)(wtl::sfmt64())) {
+        if (!bernoulli(PROB_SYMMETRIC_DIVISION_, wtl::sfmt64())) {
             type_ = CellType::nonstem;
         }
     }
@@ -176,12 +183,7 @@ double Cell::delta_time(const double positional_value) {
     }
 
     if (t_birth < t_death && t_birth < t_migra) {
-        std::bernoulli_distribution bern_death(death_prob_);
-        if (bern_death(wtl::sfmt64())) {
-            next_event_ = Event::death;
-        } else {
-            next_event_ = Event::birth;
-        }
+        next_event_ = bernoulli(death_prob_, wtl::sfmt64()) ? Event::death : Event::birth;
         elapsed_ = 0.0;
         return t_birth;
     } else if (t_death < t_migra) {
@@ -192,6 +194,11 @@ double Cell::delta_time(const double positional_value) {
         elapsed_ += t_migra;
         return t_migra;
     }
+}
+
+void Cell::set_cycle_dependent_death(const double p) {
+    death_prob_ = p;
+    next_event_ = bernoulli(p, wtl::sfmt64()) ? Event::death : Event::birth;
 }
 
 std::unordered_set<unsigned> Cell::traceback() const {

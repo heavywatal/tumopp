@@ -36,7 +36,7 @@ class Tissue {
     void plateau(double time);
 
     //! Simulate medical treatment with the increased death_prob
-    void treatment();
+    void treatment(double death_prob);
 
     //! getter of #DIMENSIONS_
     static unsigned int DIMENSIONS() noexcept {return DIMENSIONS_;}
