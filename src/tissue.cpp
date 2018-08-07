@@ -188,7 +188,7 @@ void Tissue::treatment(const double death_prob) {HERE;
             p->set_cycle_dependent_death(death_prob);
         }
     }
-    const size_t margin = 10u * NUM_RESISTANT_CELLS_;
+    const size_t margin = 10u * NUM_RESISTANT_CELLS_ + 10u;
     grow(original_size + margin, std::numeric_limits<double>::max());
 }
 
