@@ -45,7 +45,7 @@ class Simulation {
     //! Shortcut of Tissue.drivers() for R
     std::string drivers() const;
     //! Shortcut of Tissue.pairwise_distance() for R
-    std::string pairwise_distance(size_t npair) const;
+    std::string pairwise_distance(size_t npair=0) const; // keeping the argument just for compatibility for a while
     //! Shortcut of ms() as std::string for R
     std::string ms() const;
     //! getter of #config_string_

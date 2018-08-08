@@ -468,6 +468,7 @@ std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const 
 std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     auto oss = wtl::make_oss(6);
     oss << "genealogy\tgraph\teuclidean\n";
+    if (npair == 0u) return oss.str();
     auto samples = sample_random(2 * npair);
     std::shuffle(samples.begin(), samples.end(), wtl::sfmt64());
     //TODO: should be randam sampling from all possible pairs
