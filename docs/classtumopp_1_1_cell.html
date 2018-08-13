@@ -108,10 +108,6 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7d6e11e5f54855bfdc7f6f5b098bfa37">force_mutate</a> ()</td></tr>
 <tr class="memdesc:a7d6e11e5f54855bfdc7f6f5b098bfa37"><td class="mdescLeft">&#160;</td><td class="mdescRight">driver mutation on all traits <br /></td></tr>
 <tr class="separator:a7d6e11e5f54855bfdc7f6f5b098bfa37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49f24a9da45429661b7de212c402fb37"><td class="memItemLeft" align="right" valign="top"><a id="a49f24a9da45429661b7de212c402fb37"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a49f24a9da45429661b7de212c402fb37">increase_death_rate</a> () noexcept</td></tr>
-<tr class="memdesc:a49f24a9da45429661b7de212c402fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set death rate to simulate Moran-like model. <br /></td></tr>
-<tr class="separator:a49f24a9da45429661b7de212c402fb37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07f83314edf4a9472309e0dd66e4f2f0"><td class="memItemLeft" align="right" valign="top"><a id="a07f83314edf4a9472309e0dd66e4f2f0"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a07f83314edf4a9472309e0dd66e4f2f0">delta_time</a> (double positional_value)</td></tr>
 <tr class="memdesc:a07f83314edf4a9472309e0dd66e4f2f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calc dt and set <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a>. <br /></td></tr>
@@ -136,6 +132,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a0e816435058c65bce298b0f4af30685c">set_time_of_death</a> (double t) noexcept</td></tr>
 <tr class="memdesc:a0e816435058c65bce298b0f4af30685c"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475" title="time of death ">time_of_death_</a> <br /></td></tr>
 <tr class="separator:a0e816435058c65bce298b0f4af30685c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefb73e29cfcea671f068391d7cbcc85c"><td class="memItemLeft" align="right" valign="top"><a id="aefb73e29cfcea671f068391d7cbcc85c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aefb73e29cfcea671f068391d7cbcc85c">set_elapsed</a> (double t) noexcept</td></tr>
+<tr class="memdesc:aefb73e29cfcea671f068391d7cbcc85c"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a85882b8a52b2e5dbf929b96307174279" title="elapsed time by migration ">elapsed_</a> <br /></td></tr>
+<tr class="separator:aefb73e29cfcea671f068391d7cbcc85c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af54cb16eddf71ead3f026e51f6396e2f"><td class="memItemLeft" align="right" valign="top"><a id="af54cb16eddf71ead3f026e51f6396e2f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#af54cb16eddf71ead3f026e51f6396e2f">set_cycle_dependent_death</a> (double death_prob)</td></tr>
+<tr class="memdesc:af54cb16eddf71ead3f026e51f6396e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#ab1dedf2540071cd0a5c8319a9ed064ef" title=" ">death_prob_</a> and <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a>. <br /></td></tr>
+<tr class="separator:af54cb16eddf71ead3f026e51f6396e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49f24a9da45429661b7de212c402fb37"><td class="memItemLeft" align="right" valign="top"><a id="a49f24a9da45429661b7de212c402fb37"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a49f24a9da45429661b7de212c402fb37">increase_death_rate</a> () noexcept</td></tr>
+<tr class="memdesc:a49f24a9da45429661b7de212c402fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase <a class="el" href="classtumopp_1_1_cell.html#a4f87a79f5f82d7f01eb5ca6247c96b27" title=" ">death_rate_</a> to <a class="el" href="classtumopp_1_1_cell.html#ac6dfcf8f41c164ee77beb1959ab2e0d3" title=" ">birth_rate_</a> for simulating Moran-like situation. <br /></td></tr>
+<tr class="separator:a49f24a9da45429661b7de212c402fb37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memItemLeft" align="right" valign="top"><a id="ab2661f7ce201cb8f05b04530c9fcda35"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab2661f7ce201cb8f05b04530c9fcda35">birth_rate</a> () const noexcept</td></tr>
 <tr class="memdesc:ab2661f7ce201cb8f05b04530c9fcda35"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#ac6dfcf8f41c164ee77beb1959ab2e0d3" title=" ">birth_rate_</a> <br /></td></tr>
