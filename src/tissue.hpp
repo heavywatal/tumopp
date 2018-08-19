@@ -27,7 +27,11 @@ namespace tumopp {
 class Tissue {
   public:
     //! Constructor
-    Tissue(unsigned dimensions=3u, const std::string& coordinate="moore");
+    Tissue(
+      unsigned dimensions=3u,
+      const std::string& coordinate="moore",
+      const std::string& local_density_effect="const",
+      const std::string& displacement_path="random");
 
     //! main function
     bool grow(size_t max_size, double max_time=100.0);
@@ -91,8 +95,8 @@ class Tissue {
   private:
     //! Set #coord_func_
     void init_coord(unsigned dimensions, const std::string& coordinate);
-    //! Set #insert function according to #LOCAL_DENSITY_EFFECT_ and #DISPLACEMENT_PATH_
-    void init_insert_function();
+    //! Set #insert function
+    void init_insert_function(const std::string& local_density_effect, const std::string& displacement_path);
     //! initialized in init_insert_function()
     std::function<bool(const std::shared_ptr<Cell>&)> insert;
 
@@ -155,10 +159,6 @@ class Tissue {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
-    //! E2 {const, step, linear}
-    static std::string LOCAL_DENSITY_EFFECT_;
-    //! Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}
-    static std::string DISPLACEMENT_PATH_;
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
     //! initial population size

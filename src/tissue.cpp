@@ -16,8 +16,6 @@
 
 namespace tumopp {
 
-std::string Tissue::LOCAL_DENSITY_EFFECT_ = "const";
-std::string Tissue::DISPLACEMENT_PATH_ = "random";
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
 size_t Tissue::INITIAL_SIZE_ = 1u;
 size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
@@ -30,8 +28,6 @@ size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
 
     Command line option | Symbol         | Variable                        |
     ------------------- | -------------- | ------------------------------- |
-    `-L,--local`        | \f$E_2\f$      | Tissue::LOCAL_DENSITY_EFFECT_
-    `-P,--path`         | -              | Tissue::DISPLACEMENT_PATH_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
     `-O,--origin`       | \f$N_0\f$      | Tissue::INITIAL_SIZE_
     `-R,--record`       | -              | Tissue::RECORDING_EARLY_GROWTH_
@@ -43,8 +39,6 @@ boost::program_options::options_description Tissue::opt_description() {
     po::options_description desc{"Tissue"};
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
-        ("local,L", po_value(&LOCAL_DENSITY_EFFECT_))
-        ("path,P", po_value(&DISPLACEMENT_PATH_))
         ("peripheral,g", po_value(&SIGMA_E_))
         ("origin,O", po_value(&INITIAL_SIZE_))
         ("record,R", po_value(&RECORDING_EARLY_GROWTH_))
@@ -55,12 +49,16 @@ boost::program_options::options_description Tissue::opt_description() {
     return desc;
 }
 
-Tissue::Tissue(const unsigned dimensions, const std::string& coordinate):
+Tissue::Tissue(
+  const unsigned dimensions,
+  const std::string& coordinate,
+  const std::string& local_density_effect,
+  const std::string& displacement_path):
   snapshots_(wtl::make_oss()),
   drivers_(wtl::make_oss()) {HERE;
     specimens_.reserve(INITIAL_SIZE_ * 2u);
     init_coord(dimensions, coordinate);
-    init_insert_function();
+    init_insert_function(local_density_effect, displacement_path);
     const auto initial_coords = coord_func_->sphere(INITIAL_SIZE_);
     const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
     tumor_.insert(origin);
@@ -191,7 +189,7 @@ void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
     queue_.emplace_hint(queue_.end(), dt += time_, x);
 }
 
-void Tissue::init_insert_function() {
+void Tissue::init_insert_function(const std::string& local_density_effect, const std::string& displacement_path) {
     using func_t = std::function<bool(const std::shared_ptr<Cell>&)>;
     using map_sf = std::unordered_map<std::string, func_t>;
     std::unordered_map<std::string, map_sf> swtch;
@@ -237,12 +235,12 @@ void Tissue::init_insert_function() {
         return tumor_.insert(daughter).second;
     });
     try {
-        insert = swtch.at(LOCAL_DENSITY_EFFECT_).at(DISPLACEMENT_PATH_);
+        insert = swtch.at(local_density_effect).at(displacement_path);
     } catch (std::exception& e) {
         std::ostringstream oss;
         oss << std::endl << FILE_LINE_PRETTY
             << "\nInvalid value for -L/-P ("
-            << LOCAL_DENSITY_EFFECT_ << "/" << DISPLACEMENT_PATH_
+            << local_density_effect << "/" << displacement_path
             << "); choose from";
         for (const auto& p: swtch) {
             oss << "\n -L" << p.first << " -P " << wtl::keys(p.second);

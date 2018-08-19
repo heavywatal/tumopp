@@ -41,6 +41,8 @@ inline po::options_description general_desc() {HERE;
     ------------------- | -------------- | ------------------------- |
     `-D,--dimensions`   | -              | -
     `-C,--coord`        | -              | -
+    `-L,--local`        | \f$E_2\f$      | -
+    `-P,--path`         | -              | -
     `-N,--max`          | \f$N_\max\f$   | -
     `-T,--plateau`      | -              | -
     `--npair`           | -              | -
@@ -54,6 +56,10 @@ po::options_description Simulation::options_desc() {HERE;
       ("dimensions,D", po::value<unsigned>()->default_value(3u))
       ("coord,C", po::value<std::string>()->default_value("moore"),
        "Coordinate/neighborhood system {neumann, moore, hex}")
+      ("local,L", po::value<std::string>()->default_value("const"),
+       "E2 {const, step, linear}")
+      ("path,P", po::value<std::string>()->default_value("random"),
+       "Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}")
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
       ("treatment", po::value<double>()->default_value(0.0))
@@ -142,6 +148,8 @@ void Simulation::run() {HERE;
     auto& vm = *vars_;
     const auto dimensions = vm["dimensions"].as<unsigned>();
     const auto coord = vm["coord"].as<std::string>();
+    const auto local = vm["local"].as<std::string>();
+    const auto path = vm["path"].as<std::string>();
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
     const auto treatment = vm["treatment"].as<double>();
@@ -149,7 +157,7 @@ void Simulation::run() {HERE;
     const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
-        tissue_ = std::make_unique<Tissue>(dimensions,coord);
+        tissue_ = std::make_unique<Tissue>(dimensions, coord, local, path);
         if (tissue_->grow(max_size, max_time)) break;
     }
     if (tissue_->size() != max_size) {
