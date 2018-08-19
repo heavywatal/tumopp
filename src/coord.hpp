@@ -21,9 +21,6 @@ class Coord {
     //! hash coordinates for std::unordered_* container
     static size_t hash(const std::valarray<int>&);
 
-    //! getter of #directions_
-    const std::vector<std::valarray<int>>& directions() const {return directions_;}
-
     //! [0, 0, ...]
     std::valarray<int> origin() const {
         return std::valarray<int>(dimensions_);
@@ -78,6 +75,11 @@ class Coord {
     std::vector<std::valarray<int>> sphere(size_t n) const;
     //! Destructor
     virtual ~Coord() = default;
+
+    //! getter of #directions_
+    const std::vector<std::valarray<int>>& directions() const noexcept {return directions_;}
+    //! getter of #dimensions_
+    unsigned dimensions() const noexcept {return dimensions_;}
 
   protected:
     //! Default constructor is deleted

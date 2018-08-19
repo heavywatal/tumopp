@@ -16,8 +16,6 @@
 
 namespace tumopp {
 
-unsigned Tissue::DIMENSIONS_ = 3u;
-std::string Tissue::COORDINATE_ = "moore";
 std::string Tissue::LOCAL_DENSITY_EFFECT_ = "const";
 std::string Tissue::DISPLACEMENT_PATH_ = "random";
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
@@ -32,8 +30,6 @@ size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
 
     Command line option | Symbol         | Variable                        |
     ------------------- | -------------- | ------------------------------- |
-    `-D,--dimensions`   | -              | Tissue::DIMENSIONS_
-    `-C,--coord`        | -              | Tissue::COORDINATE_
     `-L,--local`        | \f$E_2\f$      | Tissue::LOCAL_DENSITY_EFFECT_
     `-P,--path`         | -              | Tissue::DISPLACEMENT_PATH_
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
@@ -47,8 +43,6 @@ boost::program_options::options_description Tissue::opt_description() {
     po::options_description desc{"Tissue"};
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
-        ("dimensions,D", po_value(&DIMENSIONS_))
-        ("coord,C", po_value(&COORDINATE_))
         ("local,L", po_value(&LOCAL_DENSITY_EFFECT_))
         ("path,P", po_value(&DISPLACEMENT_PATH_))
         ("peripheral,g", po_value(&SIGMA_E_))
@@ -61,11 +55,11 @@ boost::program_options::options_description Tissue::opt_description() {
     return desc;
 }
 
-Tissue::Tissue():
+Tissue::Tissue(const unsigned dimensions, const std::string& coordinate):
   snapshots_(wtl::make_oss()),
   drivers_(wtl::make_oss()) {HERE;
     specimens_.reserve(INITIAL_SIZE_ * 2u);
-    init_coord();
+    init_coord(dimensions, coordinate);
     init_insert_function();
     const auto initial_coords = coord_func_->sphere(INITIAL_SIZE_);
     const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
@@ -91,17 +85,17 @@ Tissue::Tissue():
     }
 }
 
-void Tissue::init_coord() {HERE;
+void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {HERE;
     std::unordered_map<std::string, std::unique_ptr<Coord>> swtch;
-    swtch["neumann"] = std::make_unique<Neumann>(DIMENSIONS_);
-    swtch["moore"] = std::make_unique<Moore>(DIMENSIONS_);
-    swtch["hex"] = std::make_unique<Hexagonal>(DIMENSIONS_);
+    swtch["neumann"] = std::make_unique<Neumann>(dimensions);
+    swtch["moore"] = std::make_unique<Moore>(dimensions);
+    swtch["hex"] = std::make_unique<Hexagonal>(dimensions);
     try {
-        coord_func_ = std::move(swtch.at(COORDINATE_));
+        coord_func_ = std::move(swtch.at(coordinate));
     } catch (std::exception& e) {
         std::ostringstream oss;
         oss << std::endl << FILE_LINE_PRETTY
-            << "\nInvalid value for -C (" << COORDINATE_ << "); choose from "
+            << "\nInvalid value for -C (" << coordinate << "); choose from "
             << wtl::keys(swtch);
         throw std::runtime_error(oss.str());
     }
@@ -478,8 +472,8 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
         const auto& rhs = *(*(++it));
         const auto diff = lhs.coord() - rhs.coord();
         oss << lhs.branch_length(rhs) << "\t"
-            << coord_func()->graph_distance(diff) << "\t"
-            << coord_func()->euclidean_distance(diff) << "\n";
+            << coord_func_->graph_distance(diff) << "\t"
+            << coord_func_->euclidean_distance(diff) << "\n";
     }
     return oss.str();
 }

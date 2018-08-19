@@ -39,6 +39,8 @@ inline po::options_description general_desc() {HERE;
 
     Command line option | Symbol         | Variable                  |
     ------------------- | -------------- | ------------------------- |
+    `-D,--dimensions`   | -              | -
+    `-C,--coord`        | -              | -
     `-N,--max`          | \f$N_\max\f$   | -
     `-T,--plateau`      | -              | -
     `--npair`           | -              | -
@@ -49,6 +51,9 @@ po::options_description Simulation::options_desc() {HERE;
     const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
     po::options_description description("Simulation");
     description.add_options()
+      ("dimensions,D", po::value<unsigned>()->default_value(3u))
+      ("coord,C", po::value<std::string>()->default_value("moore"),
+       "Coordinate/neighborhood system {neumann, moore, hex}")
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
       ("treatment", po::value<double>()->default_value(0.0))
@@ -135,6 +140,8 @@ Simulation::~Simulation() = default;
 
 void Simulation::run() {HERE;
     auto& vm = *vars_;
+    const auto dimensions = vm["dimensions"].as<unsigned>();
+    const auto coord = vm["coord"].as<std::string>();
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
     const auto treatment = vm["treatment"].as<double>();
@@ -142,7 +149,7 @@ void Simulation::run() {HERE;
     const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
-        tissue_ = std::make_unique<Tissue>();
+        tissue_ = std::make_unique<Tissue>(dimensions,coord);
         if (tissue_->grow(max_size, max_time)) break;
     }
     if (tissue_->size() != max_size) {
@@ -186,7 +193,7 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     if ((nsam < 1u) || (howmany < 1u)) return;
     ost << "tumopp " << command_args_ << "\n" << seed << "\n";
 
-    if (Tissue::DIMENSIONS() == 3U) {
+    if (tissue_->dimensions() == 3U) {
         for (size_t i=0; i<howmany; ++i) {
             tissue_->write_segsites(ost, tissue_->sample_section(nsam));
         }

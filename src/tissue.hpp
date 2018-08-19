@@ -27,7 +27,7 @@ namespace tumopp {
 class Tissue {
   public:
     //! Constructor
-    Tissue();
+    Tissue(unsigned dimensions=3u, const std::string& coordinate="moore");
 
     //! main function
     bool grow(size_t max_size, double max_time=100.0);
@@ -37,15 +37,6 @@ class Tissue {
 
     //! Simulate medical treatment with the increased death_prob
     void treatment(double death_prob);
-
-    //! getter of #DIMENSIONS_
-    static unsigned int DIMENSIONS() noexcept {return DIMENSIONS_;}
-    //! Shortcut of tumor_.size()
-    size_t size() const noexcept {return tumor_.size();}
-    //! Shortcut of tumor_.begin()
-    auto begin() noexcept {return tumor_.begin();}
-    //! Shortcut of tumor_.end()
-    auto end() noexcept {return tumor_.end();}
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
@@ -84,20 +75,22 @@ class Tissue {
     bool drivers_empty() const {return drivers_.str().empty();}
     //! @endcond
 
-    //! Shortcut of coord.radius(tumor_.size())
-    double radius() const {return coord_func_->radius(tumor_.size());}
-    //! getter of #coord_func_
-    const std::unique_ptr<Coord>& coord_func() const noexcept {return coord_func_;}
+    //! Shortcut of tumor_.size()
+    size_t size() const noexcept {return tumor_.size();}
+    //! Shortcut of tumor_.begin()
+    auto begin() noexcept {return tumor_.begin();}
+    //! Shortcut of tumor_.end()
+    auto end() noexcept {return tumor_.end();}
     //! getter of #time_
     double time() const noexcept {return time_;}
+    //! Shortcut of coord_func_.dimensions()
+    unsigned dimensions() const noexcept {return coord_func_->dimensions();}
 
     static boost::program_options::options_description opt_description();
 
   private:
-    //! Initializer is separated from constructor for restarting
-    void init();
     //! Set #coord_func_
-    void init_coord();
+    void init_coord(unsigned dimensions, const std::string& coordinate);
     //! Set #insert function according to #LOCAL_DENSITY_EFFECT_ and #DISPLACEMENT_PATH_
     void init_insert_function();
     //! initialized in init_insert_function()
@@ -162,10 +155,6 @@ class Tissue {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
-    //! Dimensions: {2, 3}
-    static unsigned DIMENSIONS_;
-    //! Coordinate/neighborhood system {neumann, moore, hex}
-    static std::string COORDINATE_;
     //! E2 {const, step, linear}
     static std::string LOCAL_DENSITY_EFFECT_;
     //! Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}
