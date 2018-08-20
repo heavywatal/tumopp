@@ -48,6 +48,8 @@ inline po::options_description general_desc() {HERE;
     `-T,--plateau`      | -              | -
     `--npair`           | -              | -
     `-o,--outdir`       | -              | -
+    `-I,--interval`     | -              | -
+    `-R,--record`       | -              | -
     `--seed`            | -              | -
 */
 po::options_description Simulation::options_desc() {HERE;
@@ -67,6 +69,8 @@ po::options_description Simulation::options_desc() {HERE;
       ("treatment", po::value<double>()->default_value(0.0))
       ("npair", po::value<size_t>()->default_value(0u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
+      ("interval,I", po::value<double>()->default_value(std::numeric_limits<double>::infinity()))
+      ("record,R", po::value<size_t>()->default_value(0u))
       ("extinction", po::value<unsigned>()->default_value(100u))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
     description.add(Cell::opt_description());
@@ -156,12 +160,14 @@ void Simulation::run() {HERE;
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
     const auto treatment = vm["treatment"].as<double>();
+    const auto interval = vm["interval"].as<double>();
+    const auto record = vm["record"].as<size_t>();
     const auto allowed_extinction = vm["extinction"].as<unsigned>();
     const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>(init_size, dimensions, coord, local, path);
-        if (tissue_->grow(max_size, max_time)) break;
+        if (tissue_->grow(max_size, max_time, interval, record)) break;
     }
     if (tissue_->size() != max_size) {
         std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;

@@ -17,8 +17,6 @@
 namespace tumopp {
 
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
-size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
-double Tissue::SNAPSHOT_INTERVAL_ = std::numeric_limits<double>::infinity();
 size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
 size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
 
@@ -28,8 +26,6 @@ size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
     Command line option | Symbol         | Variable                        |
     ------------------- | -------------- | ------------------------------- |
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
-    `-R,--record`       | -              | Tissue::RECORDING_EARLY_GROWTH_
-    `-I,--interval`     | -              | Tissue::SNAPSHOT_INTERVAL_
     `-U,--mutate`       | \f$N_\mu\f$    | Tissue::MUTATION_TIMING_
 */
 boost::program_options::options_description Tissue::opt_description() {
@@ -38,8 +34,6 @@ boost::program_options::options_description Tissue::opt_description() {
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
         ("peripheral,g", po_value(&SIGMA_E_))
-        ("record,R", po_value(&RECORDING_EARLY_GROWTH_))
-        ("interval,I", po_value(&SNAPSHOT_INTERVAL_))
         ("mutate,U", po_value(&MUTATION_TIMING_))
         ("resistant", po_value(&NUM_RESISTANT_CELLS_))
     ;
@@ -76,9 +70,6 @@ Tissue::Tissue(
             if (tumor_.size() >= initial_size) break;
         }
     }
-    if (RECORDING_EARLY_GROWTH_ > 0u) {
-        write_snapshot();
-    }
 }
 
 void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {HERE;
@@ -97,10 +88,13 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
     }
 }
 
-bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
+bool Tissue::grow(const size_t max_size, const double max_time,
+                  const double snapshot_interval,
+                  size_t recording_early_growth) {HERE;
+    if (recording_early_growth > 0u) {write_snapshot();}
     bool success = false;
     size_t i = 0;
-    double time_snapshot = i_snapshot_ * SNAPSHOT_INTERVAL_;
+    double time_snapshot = i_snapshot_ * snapshot_interval;
     while (true) {
         if ((++i % 1000U) == 0U) {DCERR("\r" << tumor_.size());}
         auto it = queue_.begin();
@@ -111,7 +105,7 @@ bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
         }
         if (time_ > time_snapshot) {
             write_snapshot();
-            time_snapshot = ++i_snapshot_ * SNAPSHOT_INTERVAL_;
+            time_snapshot = ++i_snapshot_ * snapshot_interval;
         }
         const auto mother = std::move(it->second);
         queue_.erase(it);
@@ -144,10 +138,10 @@ bool Tissue::grow(const size_t max_size, const double max_time) {HERE;
             migrate(mother);
             queue_push(mother);
         }
-        if (tumor_.size() < RECORDING_EARLY_GROWTH_) {
+        if (tumor_.size() < recording_early_growth) {
             write_snapshot();
         } else {
-            RECORDING_EARLY_GROWTH_ = 0;  // prevent restart by cell death
+            recording_early_growth = 0u;  // prevent restart by cell death
         }
     }
     DCERR("\r" << tumor_.size() << std::endl);

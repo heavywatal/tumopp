@@ -35,7 +35,11 @@ class Tissue {
       const std::string& displacement_path="random");
 
     //! main function
-    bool grow(size_t max_size, double max_time=100.0);
+    bool grow(
+      size_t max_size,
+      double max_time=100.0,
+      double snapshot_interval=std::numeric_limits<double>::infinity(),
+      size_t recording_early_growth=0u);
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);
@@ -162,10 +166,6 @@ class Tissue {
 
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
-    //! a flag
-    static size_t RECORDING_EARLY_GROWTH_;
-    //! interval of snapshot recording
-    static double SNAPSHOT_INTERVAL_;
     //! Time (tumor_.size()) to introduce a driver mutation
     static size_t MUTATION_TIMING_;
     //! The number of random resistant cells for visualization
