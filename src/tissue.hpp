@@ -28,6 +28,7 @@ class Tissue {
   public:
     //! Constructor
     Tissue(
+      size_t initial_size=1u,
       unsigned dimensions=3u,
       const std::string& coordinate="moore",
       const std::string& local_density_effect="const",
@@ -161,8 +162,6 @@ class Tissue {
 
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
-    //! initial population size
-    static size_t INITIAL_SIZE_;
     //! a flag
     static size_t RECORDING_EARLY_GROWTH_;
     //! interval of snapshot recording

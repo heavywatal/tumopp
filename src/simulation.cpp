@@ -43,6 +43,7 @@ inline po::options_description general_desc() {HERE;
     `-C,--coord`        | -              | -
     `-L,--local`        | \f$E_2\f$      | -
     `-P,--path`         | -              | -
+    `-O,--origin`       | \f$N_0\f$      | -
     `-N,--max`          | \f$N_\max\f$   | -
     `-T,--plateau`      | -              | -
     `--npair`           | -              | -
@@ -60,6 +61,7 @@ po::options_description Simulation::options_desc() {HERE;
        "E2 {const, step, linear}")
       ("path,P", po::value<std::string>()->default_value("random"),
        "Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}")
+      ("origin,O", po::value<size_t>()->default_value(1u))
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
       ("treatment", po::value<double>()->default_value(0.0))
@@ -150,6 +152,7 @@ void Simulation::run() {HERE;
     const auto coord = vm["coord"].as<std::string>();
     const auto local = vm["local"].as<std::string>();
     const auto path = vm["path"].as<std::string>();
+    const auto init_size = vm["origin"].as<size_t>();
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
     const auto treatment = vm["treatment"].as<double>();
@@ -157,7 +160,7 @@ void Simulation::run() {HERE;
     const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
-        tissue_ = std::make_unique<Tissue>(dimensions, coord, local, path);
+        tissue_ = std::make_unique<Tissue>(init_size, dimensions, coord, local, path);
         if (tissue_->grow(max_size, max_time)) break;
     }
     if (tissue_->size() != max_size) {

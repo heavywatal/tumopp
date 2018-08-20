@@ -17,7 +17,6 @@
 namespace tumopp {
 
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
-size_t Tissue::INITIAL_SIZE_ = 1u;
 size_t Tissue::RECORDING_EARLY_GROWTH_ = 0u;
 double Tissue::SNAPSHOT_INTERVAL_ = std::numeric_limits<double>::infinity();
 size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
@@ -29,7 +28,6 @@ size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
     Command line option | Symbol         | Variable                        |
     ------------------- | -------------- | ------------------------------- |
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
-    `-O,--origin`       | \f$N_0\f$      | Tissue::INITIAL_SIZE_
     `-R,--record`       | -              | Tissue::RECORDING_EARLY_GROWTH_
     `-I,--interval`     | -              | Tissue::SNAPSHOT_INTERVAL_
     `-U,--mutate`       | \f$N_\mu\f$    | Tissue::MUTATION_TIMING_
@@ -40,7 +38,6 @@ boost::program_options::options_description Tissue::opt_description() {
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
         ("peripheral,g", po_value(&SIGMA_E_))
-        ("origin,O", po_value(&INITIAL_SIZE_))
         ("record,R", po_value(&RECORDING_EARLY_GROWTH_))
         ("interval,I", po_value(&SNAPSHOT_INTERVAL_))
         ("mutate,U", po_value(&MUTATION_TIMING_))
@@ -50,20 +47,21 @@ boost::program_options::options_description Tissue::opt_description() {
 }
 
 Tissue::Tissue(
+  const size_t initial_size,
   const unsigned dimensions,
   const std::string& coordinate,
   const std::string& local_density_effect,
   const std::string& displacement_path):
   snapshots_(wtl::make_oss()),
   drivers_(wtl::make_oss()) {HERE;
-    specimens_.reserve(INITIAL_SIZE_ * 2u);
+    specimens_.reserve(initial_size * 2u);
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
-    const auto initial_coords = coord_func_->sphere(INITIAL_SIZE_);
+    const auto initial_coords = coord_func_->sphere(initial_size);
     const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
     tumor_.insert(origin);
     queue_push(origin);
-    while (tumor_.size() < INITIAL_SIZE_) {
+    while (tumor_.size() < initial_size) {
         for (const auto& mother: tumor_) {
             const auto daughter = std::make_shared<Cell>(*mother);
             const auto ancestor = std::make_shared<Cell>(*mother);
@@ -75,7 +73,7 @@ Tissue::Tissue(
             tumor_.insert(daughter);
             // queue_push(mother);
             queue_push(daughter);
-            if (tumor_.size() >= INITIAL_SIZE_) break;
+            if (tumor_.size() >= initial_size) break;
         }
     }
     if (RECORDING_EARLY_GROWTH_ > 0u) {
