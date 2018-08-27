@@ -121,7 +121,7 @@ std::string Cell::mutate() {
         event_rates_->death_rate *= (s += 1.0);
         event_rates_->death_prob *= (s += 1.0);
     }
-    if (bernoulli(DRIVER_MEAN_MIGRA_, wtl::sfmt64())) {
+    if (bernoulli(DRIVER_RATE_MIGRA_, wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_MIGRA(wtl::sfmt64());
         oss << id_ << "\tmigra\t" << s << "\n";
