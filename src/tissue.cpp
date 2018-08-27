@@ -12,28 +12,8 @@
 #include <wtl/genetic.hpp>
 #include <wtl/cluster.hpp>
 #include <sfmt.hpp>
-#include <boost/program_options.hpp>
 
 namespace tumopp {
-
-double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
-
-//! Parameters of Tissue class
-/*! @ingroup params
-
-    Command line option | Symbol         | Variable                        |
-    ------------------- | -------------- | ------------------------------- |
-    `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
-*/
-boost::program_options::options_description Tissue::opt_description() {
-    namespace po = boost::program_options;
-    po::options_description desc{"Tissue"};
-    auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
-    desc.add_options()
-        ("peripheral,g", po_value(&SIGMA_E_))
-    ;
-    return desc;
-}
 
 Tissue::Tissue(
   const size_t initial_size,
@@ -344,15 +324,6 @@ uint_fast8_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const 
         if (tumor_.find(nb) == tumor_.end()) {++cnt;}
     }
     return cnt;
-}
-
-double Tissue::positional_value(const std::valarray<int>& coord) const {
-    if ((SIGMA_E_ > 1e9) | (tumor_.size() <= 8U)) return 1.0;
-    double rel_d = coord_func_->euclidean_distance(coord)
-                   / coord_func_->radius(tumor_.size());
-    double exponent = wtl::pow(std::max(0.0, 1.0 - rel_d), 2);
-    exponent /= SIGMA_E_;
-    return std::exp(-exponent);
 }
 
 std::vector<unsigned> Tissue::generate_neutral_mutations() const {

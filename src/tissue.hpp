@@ -18,8 +18,6 @@
 #include <memory>
 #include <functional>
 
-namespace boost {namespace program_options {class options_description;}}
-
 namespace tumopp {
 
 /*! @brief Population of Cell
@@ -96,8 +94,6 @@ class Tissue {
     //! Shortcut of coord_func_.dimensions()
     unsigned dimensions() const noexcept {return coord_func_->dimensions();}
 
-    static boost::program_options::options_description opt_description();
-
   private:
     //! Set #coord_func_
     void init_coord(unsigned dimensions, const std::string& coordinate);
@@ -136,8 +132,8 @@ class Tissue {
     //! Push a cell to event queue
     void queue_push(const std::shared_ptr<Cell>&);
 
-    //! Calculate positional value
-    double positional_value(const std::valarray<int>&) const;
+    //! TODO: Calculate positional value
+    double positional_value(const std::valarray<int>&) const {return 1.0;}
 
     //! Put random mutations on genealogy
     std::vector<unsigned> generate_neutral_mutations() const;
@@ -164,9 +160,6 @@ class Tissue {
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
-
-    //! 0: flat, +: peripheral growth
-    static double SIGMA_E_;
 
     //! cells
     std::unordered_set<

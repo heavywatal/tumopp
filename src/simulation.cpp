@@ -77,7 +77,6 @@ po::options_description Simulation::options_desc() {HERE;
       ("extinction", po::value<unsigned>()->default_value(100u))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
     description.add(Cell::opt_description());
-    description.add(Tissue::opt_description());
     return description;
 }
 
