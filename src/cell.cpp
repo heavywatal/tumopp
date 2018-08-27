@@ -27,18 +27,6 @@ double Cell::DRIVER_SD_MIGRA_ = 0.0;
 double Cell::MUTATION_RATE_ = 1e-1;
 bool Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_ = false;
 
-namespace {
-    std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
-    std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
-    std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
-}
-
-template <class URBG>
-inline bool bernoulli(double p, URBG& engine) {
-    // consume less URBG when p is set to 0 or 1.
-    return p >= 1.0 || (p > 0.0 && wtl::generate_canonical(engine) < p);
-}
-
 //! Parameters of Cell class
 /*! @ingroup params
 
@@ -82,10 +70,40 @@ boost::program_options::options_description Cell::opt_description() {
     return desc;
 }
 
+template <class URBG>
+inline bool bernoulli(double p, URBG& engine) {
+    // consume less URBG when p is set to 0 or 1.
+    return p >= 1.0 || (p > 0.0 && wtl::generate_canonical(engine) < p);
+}
+
+class bernoulli_distribution {
+  public:
+    bernoulli_distribution(double p) noexcept: p_(p) {}
+    template <class URBG>
+    bool operator()(URBG& engine) const {
+        return p_ >= 1.0 || (p_ > 0.0 && wtl::generate_canonical(engine) < p_);
+    }
+    void param(double p) {p_ = p;}
+  private:
+    double p_;
+};
+
+namespace {
+    std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
+    std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
+    std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
+    bernoulli_distribution BERN_MUT_BIRTH(0.0);
+    bernoulli_distribution BERN_MUT_DEATH(0.0);
+    bernoulli_distribution BERN_MUT_MIGRA(0.0);
+}
+
 void Cell::init_distributions() {
     GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(DRIVER_MEAN_BIRTH_, DRIVER_SD_BIRTH_));
     GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(DRIVER_MEAN_DEATH_, DRIVER_SD_DEATH_));
     GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(DRIVER_MEAN_MIGRA_, DRIVER_SD_MIGRA_));
+    BERN_MUT_BIRTH.param(DRIVER_RATE_BIRTH_);
+    BERN_MUT_DEATH.param(DRIVER_RATE_DEATH_);
+    BERN_MUT_MIGRA.param(DRIVER_RATE_MIGRA_);
 }
 
 static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
@@ -108,20 +126,20 @@ Cell::Cell(const Cell& other) noexcept:
 
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
-    if (bernoulli(DRIVER_RATE_BIRTH_, wtl::sfmt64())) {
+    if (BERN_MUT_BIRTH(wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_BIRTH(wtl::sfmt64());
         oss << id_ << "\tbirth\t" << s << "\n";
         event_rates_->birth_rate *= (s += 1.0);
     }
-    if (bernoulli(DRIVER_RATE_DEATH_, wtl::sfmt64())) {
+    if (BERN_MUT_DEATH(wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_DEATH(wtl::sfmt64());
         oss << id_ << "\tdeath\t" << s << "\n";
         event_rates_->death_rate *= (s += 1.0);
         event_rates_->death_prob *= (s += 1.0);
     }
-    if (bernoulli(DRIVER_RATE_MIGRA_, wtl::sfmt64())) {
+    if (BERN_MUT_MIGRA(wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_MIGRA(wtl::sfmt64());
         oss << id_ << "\tmigra\t" << s << "\n";
