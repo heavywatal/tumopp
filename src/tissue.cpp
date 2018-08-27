@@ -17,8 +17,6 @@
 namespace tumopp {
 
 double Tissue::SIGMA_E_ = std::numeric_limits<double>::infinity();
-size_t Tissue::MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
-size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
 
 //! Parameters of Tissue class
 /*! @ingroup params
@@ -26,7 +24,6 @@ size_t Tissue::NUM_RESISTANT_CELLS_ = 3u;
     Command line option | Symbol         | Variable                        |
     ------------------- | -------------- | ------------------------------- |
     `-g,--peripheral`   | \f$\sigma_E\f$ | Tissue::SIGMA_E_
-    `-U,--mutate`       | \f$N_\mu\f$    | Tissue::MUTATION_TIMING_
 */
 boost::program_options::options_description Tissue::opt_description() {
     namespace po = boost::program_options;
@@ -34,8 +31,6 @@ boost::program_options::options_description Tissue::opt_description() {
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
         ("peripheral,g", po_value(&SIGMA_E_))
-        ("mutate,U", po_value(&MUTATION_TIMING_))
-        ("resistant", po_value(&NUM_RESISTANT_CELLS_))
     ;
     return desc;
 }
@@ -90,7 +85,8 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
 
 bool Tissue::grow(const size_t max_size, const double max_time,
                   const double snapshot_interval,
-                  size_t recording_early_growth) {HERE;
+                  size_t recording_early_growth,
+                  size_t mutation_timing) {HERE;
     if (recording_early_growth > 0u) {write_snapshot();}
     bool success = false;
     size_t i = 0;
@@ -119,8 +115,8 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 drivers_ << mother->mutate();
                 drivers_ << daughter->mutate();
-                if (tumor_.size() > MUTATION_TIMING_) {  // once
-                    MUTATION_TIMING_ = std::numeric_limits<size_t>::max();
+                if (tumor_.size() > mutation_timing) {  // once
+                    mutation_timing = std::numeric_limits<size_t>::max();
                     drivers_ << daughter->force_mutate();
                 }
                 queue_push(mother);
@@ -158,7 +154,7 @@ void Tissue::plateau(const double time) {HERE;
     grow(std::numeric_limits<size_t>::max(), time_ + time);
 }
 
-void Tissue::treatment(const double death_prob) {HERE;
+void Tissue::treatment(const double death_prob, const size_t num_resistant_cells) {HERE;
     const size_t original_size = tumor_.size();
     std::vector<std::shared_ptr<Cell>> cells;
     cells.reserve(original_size);
@@ -168,11 +164,11 @@ void Tissue::treatment(const double death_prob) {HERE;
     std::shuffle(cells.begin(), cells.end(), wtl::sfmt64());
     for (size_t i=0; i<original_size; ++i) {
         const auto& p = cells[i];
-        if (i >= NUM_RESISTANT_CELLS_) {
+        if (i >= num_resistant_cells) {
             p->set_cycle_dependent_death(death_prob);
         }
     }
-    const size_t margin = 10u * NUM_RESISTANT_CELLS_ + 10u;
+    const size_t margin = 10u * num_resistant_cells + 10u;
     grow(original_size + margin, std::numeric_limits<double>::max());
 }
 

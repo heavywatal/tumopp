@@ -46,6 +46,7 @@ inline po::options_description general_desc() {HERE;
     `-O,--origin`       | \f$N_0\f$      | -
     `-N,--max`          | \f$N_\max\f$   | -
     `-T,--plateau`      | -              | -
+    `-U,--mutate`       | \f$N_\mu\f$    | -
     `--npair`           | -              | -
     `-o,--outdir`       | -              | -
     `-I,--interval`     | -              | -
@@ -66,7 +67,9 @@ po::options_description Simulation::options_desc() {HERE;
       ("origin,O", po::value<size_t>()->default_value(1u))
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
+      ("mutate,U", po::value<size_t>()->default_value(std::numeric_limits<size_t>::max()))
       ("treatment", po::value<double>()->default_value(0.0))
+      ("resistant", po::value<size_t>()->default_value(3u))
       ("npair", po::value<size_t>()->default_value(0u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("interval,I", po::value<double>()->default_value(std::numeric_limits<double>::infinity()))
@@ -159,7 +162,9 @@ void Simulation::run() {HERE;
     const auto init_size = vm["origin"].as<size_t>();
     const auto max_size = vm["max"].as<size_t>();
     const auto plateau_time = vm["plateau"].as<double>();
+    const auto mutate = vm["mutate"].as<size_t>();
     const auto treatment = vm["treatment"].as<double>();
+    const auto resistant = vm["resistant"].as<size_t>();
     const auto interval = vm["interval"].as<double>();
     const auto record = vm["record"].as<size_t>();
     const auto allowed_extinction = vm["extinction"].as<unsigned>();
@@ -167,7 +172,7 @@ void Simulation::run() {HERE;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>(init_size, dimensions, coord, local, path);
-        if (tissue_->grow(max_size, max_time, interval, record)) break;
+        if (tissue_->grow(max_size, max_time, interval, record, mutate)) break;
     }
     if (tissue_->size() != max_size) {
         std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;
@@ -176,7 +181,7 @@ void Simulation::run() {HERE;
         tissue_->plateau(plateau_time);
     }
     if (treatment > 0.0) {
-        tissue_->treatment(treatment);
+        tissue_->treatment(treatment, resistant);
     }
 }
 

@@ -39,13 +39,14 @@ class Tissue {
       size_t max_size,
       double max_time=100.0,
       double snapshot_interval=std::numeric_limits<double>::infinity(),
-      size_t recording_early_growth=0u);
+      size_t recording_early_growth=0u,
+      size_t mutation_timing=std::numeric_limits<size_t>::max());
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);
 
     //! Simulate medical treatment with the increased death_prob
-    void treatment(double death_prob);
+    void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
     //! Write ms-like binary sequence
     std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
@@ -166,10 +167,6 @@ class Tissue {
 
     //! 0: flat, +: peripheral growth
     static double SIGMA_E_;
-    //! Time (tumor_.size()) to introduce a driver mutation
-    static size_t MUTATION_TIMING_;
-    //! The number of random resistant cells for visualization
-    static size_t NUM_RESISTANT_CELLS_;
 
     //! cells
     std::unordered_set<
