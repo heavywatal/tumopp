@@ -30,7 +30,8 @@ class Tissue {
       unsigned dimensions=3u,
       const std::string& coordinate="moore",
       const std::string& local_density_effect="const",
-      const std::string& displacement_path="random");
+      const std::string& displacement_path="random",
+      const EventRates& init_event_rates=EventRates{});
 
     //! main function
     bool grow(

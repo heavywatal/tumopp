@@ -12,10 +12,6 @@
 
 namespace tumopp {
 
-double Cell::BIRTH_RATE_ = 1.0;
-double Cell::DEATH_RATE_ = 0.0;
-double Cell::DEATH_PROB_ = 0.0;
-double Cell::MIGRATION_RATE_ = 0.0;
 double Cell::GAMMA_SHAPE_ = 1.0;
 double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
 unsigned Cell::MAX_PROLIFERATION_CAPACITY_ = 10u;
@@ -48,10 +44,6 @@ inline bool bernoulli(double p, URBG& engine) {
 
     Command line option | Symbol              | Variable                  |
     ------------------- | ------------------- | ------------------------- |
-    `-b,--beta0`        | \f$\beta_0\f$       | Cell::BIRTH_RATE_
-    `-d,--delta0`       | \f$\delta_0\f$      | Cell::DEATH_RATE_
-    `-a,--alpha0`       | \f$\alpha_0\f$      | Cell::DEATH_PROB_
-    `-m,--rho0`         | \f$\rho_0\f$        | Cell::MIGRATION_RATE_
     `-k,--shape`        | \f$k\f$             | Cell::GAMMA_SHAPE_
     `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
     `-r,--prolif`       | \f$\omega_{\max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
@@ -72,10 +64,6 @@ boost::program_options::options_description Cell::opt_description() {
     po::options_description desc{"Cell"};
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
-        ("beta0,b", po_value(&BIRTH_RATE_))
-        ("delta0,d", po_value(&DEATH_RATE_))
-        ("alpha0,a", po_value(&DEATH_PROB_))
-        ("rho0,m", po_value(&MIGRATION_RATE_))
         ("shape,k", po_value(&GAMMA_SHAPE_))
         ("symmetric,p", po_value(&PROB_SYMMETRIC_DIVISION_))
         ("prolif,r", po_value(&MAX_PROLIFERATION_CAPACITY_))
@@ -105,10 +93,7 @@ static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
 
 Cell::Cell(const Cell& other) noexcept:
     coord_(other.coord_),
-    birth_rate_(other.birth_rate_),
-    death_rate_(other.death_rate_),
-    death_prob_(other.death_prob_),
-    migra_rate_(other.migra_rate_),
+    event_rates_(other.event_rates_),
     type_(other.type_),
     proliferation_capacity_(other.proliferation_capacity_),
     id_(other.id_),
@@ -124,29 +109,33 @@ Cell::Cell(const Cell& other) noexcept:
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
     if (bernoulli(DRIVER_RATE_BIRTH_, wtl::sfmt64())) {
+        event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_BIRTH(wtl::sfmt64());
         oss << id_ << "\tbirth\t" << s << "\n";
-        birth_rate_ *= (s += 1.0);
+        event_rates_->birth_rate *= (s += 1.0);
     }
     if (bernoulli(DRIVER_RATE_DEATH_, wtl::sfmt64())) {
+        event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_DEATH(wtl::sfmt64());
         oss << id_ << "\tdeath\t" << s << "\n";
-        death_rate_ *= (s += 1.0);
-        death_prob_ *= (s += 1.0);
+        event_rates_->death_rate *= (s += 1.0);
+        event_rates_->death_prob *= (s += 1.0);
     }
     if (bernoulli(DRIVER_MEAN_MIGRA_, wtl::sfmt64())) {
+        event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_MIGRA(wtl::sfmt64());
         oss << id_ << "\tmigra\t" << s << "\n";
-        migra_rate_ *= (s += 1.0);
+        event_rates_->migra_rate *= (s += 1.0);
     }
     return oss.str();
 }
 
 std::string Cell::force_mutate() {
-    birth_rate_ *= (1.0 + DRIVER_MEAN_BIRTH_);
-    death_rate_ *= (1.0 + DRIVER_MEAN_DEATH_);
-    death_prob_ *= (1.0 + DRIVER_MEAN_DEATH_);
-    migra_rate_ *= (1.0 + DRIVER_MEAN_MIGRA_);
+    event_rates_ = std::make_shared<EventRates>(*event_rates_);
+    event_rates_->birth_rate *= (1.0 + DRIVER_MEAN_BIRTH_);
+    event_rates_->death_rate *= (1.0 + DRIVER_MEAN_DEATH_);
+    event_rates_->death_prob *= (1.0 + DRIVER_MEAN_DEATH_);
+    event_rates_->migra_rate *= (1.0 + DRIVER_MEAN_MIGRA_);
     auto oss = wtl::make_oss();
     oss << id_ << "\tbirth\t" << DRIVER_MEAN_BIRTH_ << "\n"
         << id_ << "\tdeath\t" << DRIVER_MEAN_DEATH_ << "\n"
@@ -160,24 +149,25 @@ double Cell::delta_time(const double positional_value) {
     double t_migra = std::numeric_limits<double>::infinity();
     if (proliferation_capacity_ > 0) {
         double mu = 1.0;
-        mu /= birth_rate_;
+        mu /= birth_rate();
         mu /= positional_value;
         mu -= elapsed_;
         double theta = std::max(mu / GAMMA_SHAPE_, 0.0);
         std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
         t_birth = gamma(wtl::sfmt64());
     }
-    if (death_rate_ > 0.0) {
-        std::exponential_distribution<double> exponential(death_rate_);
+    if (death_rate() > 0.0) {
+        std::exponential_distribution<double> exponential(death_rate());
         t_death = exponential(wtl::sfmt64());
     }
-    if (migra_rate_ > 0.0) {
-        std::exponential_distribution<double> exponential(migra_rate_);
+    if (migra_rate() > 0.0) {
+        std::exponential_distribution<double> exponential(migra_rate());
         t_migra = exponential(wtl::sfmt64());
     }
 
     if (t_birth < t_death && t_birth < t_migra) {
-        next_event_ = bernoulli(death_prob_, wtl::sfmt64()) ? Event::death : Event::birth;
+        next_event_ = bernoulli(death_prob(), wtl::sfmt64())
+                      ? Event::death : Event::birth;
         elapsed_ = 0.0;
         return t_birth;
     } else if (t_death < t_migra) {
@@ -191,7 +181,9 @@ double Cell::delta_time(const double positional_value) {
 }
 
 void Cell::set_cycle_dependent_death(const double p) {
-    death_prob_ = p;
+    //TODO: reduce redundant copy for susceptible cells
+    event_rates_ = std::make_shared<EventRates>(*event_rates_);
+    event_rates_->death_prob = p;
     next_event_ = bernoulli(p, wtl::sfmt64()) ? Event::death : Event::birth;
 }
 
@@ -253,9 +245,10 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << id_ << "\t"
         << (ancestor_ ? ancestor_->id_ : 0u) << "\t"
         << time_of_birth_ << "\t" << time_of_death_ << "\t"
-        << birth_rate_ << "\t"
-        << death_rate_ << "\t" << death_prob_ << "\t"
-        << migra_rate_ << "\t"
+        << birth_rate() << "\t"
+        << death_rate() << "\t"
+        << death_prob() << "\t"
+        << migra_rate() << "\t"
         << static_cast<unsigned>(type_) << "\t"
         << static_cast<unsigned>(proliferation_capacity_);
 }

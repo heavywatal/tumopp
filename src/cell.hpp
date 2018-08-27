@@ -29,6 +29,19 @@ enum class Event: uint_fast8_t {
    migration,
 };
 
+/*! @brief Parameters for the probability distributions of waiting times
+*/
+struct EventRates {
+    //! \f$\beta\f$
+    double birth_rate = 1.0;
+    //! \f$\delta\f$
+    double death_rate = 0.0;
+    //! \f$\alpha\f$, death probability on cell division attempt
+    double death_prob = 0.0;
+    //! \f$\rho\f$
+    double migra_rate = 0.0;
+};
+
 /*! @brief Cancer cell
 */
 class Cell {
@@ -36,7 +49,9 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::valarray<int>& v, unsigned i=0) noexcept: coord_(v), id_(i) {}
+    Cell(const std::valarray<int>& v, unsigned i=0,
+         std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
+      coord_(v), event_rates_(er), id_(i) {}
     //! Copy constructor
     Cell(const Cell& other) noexcept;
     //! Destructor
@@ -62,38 +77,40 @@ class Cell {
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
 
-    //! setter of #coord_
-    void set_coord(const std::valarray<int>& v) noexcept {coord_ = v;}
-    //! setter of #time_of_birth_; reset other properties
+    //! Set #time_of_birth_; reset other properties
     void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;
         id_ = i;
         ancestor_ = ancestor;
         if (type_ == CellType::nonstem) {--proliferation_capacity_;}
     }
-    //! setter of #time_of_death_
-    void set_time_of_death(double t) noexcept {time_of_death_ = t;}
-    //! setter of #elapsed_
-    void set_elapsed(double t) noexcept {elapsed_ = t;}
-    //! Set #death_prob_ and #next_event_
+    //! Set #event_rates_->death_prob and #next_event_
     void set_cycle_dependent_death(double death_prob);
-    //! Increase #death_rate_ to #birth_rate_ for simulating Moran-like situation
-    void increase_death_rate() noexcept {death_rate_ = birth_rate_;}
+    //! Increase #event_rates_->death_rate to birth_rate() for simulating Moran-like situation
+    void increase_death_rate() noexcept {event_rates_->death_rate = birth_rate();}
 
-    //! getter of #birth_rate_
-    double birth_rate() const noexcept {return birth_rate_;}
-    //! getter of #death_rate_
-    double death_rate() const noexcept {return death_rate_;}
-    //! getter of #migra_rate_
-    double migra_rate() const noexcept {return migra_rate_;}
-    //! getter of #next_event_
+    //! @name Setter functions
+    //@{
+    void set_coord(const std::valarray<int>& v) noexcept {coord_ = v;}
+    void set_time_of_death(double t) noexcept {time_of_death_ = t;}
+    void set_elapsed(double t) noexcept {elapsed_ = t;}
+    //@}
+
+    //! @name Getter functions
+    //@{
+    double birth_rate() const noexcept {return event_rates_->birth_rate;}
+    double death_rate() const noexcept {return event_rates_->death_rate;}
+    double death_prob() const noexcept {return event_rates_->death_prob;}
+    double migra_rate() const noexcept {return event_rates_->migra_rate;}
     Event next_event() const noexcept {return next_event_;}
-    //! getter of #coord_
     const std::valarray<int>& coord() const noexcept {return coord_;}
-    //! getter of #MUTATION_RATE_
+    //@}
+
+    //! @name Static getter functions
+    //@{
     static double MUTATION_RATE() noexcept {return MUTATION_RATE_;}
-    //! getter of #HAS_AT_LEAST_1_MUTATION_PER_DIVISION_
     static bool HAS_AT_LEAST_1_MUTATION_PER_DIVISION() noexcept {return HAS_AT_LEAST_1_MUTATION_PER_DIVISION_;}
+    //@}
 
     //! TSV header
     static std::string header();
@@ -114,14 +131,6 @@ class Cell {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
-    //! \f$\beta_0\f$
-    static double BIRTH_RATE_;
-    //! \f$\delta_0\f$
-    static double DEATH_RATE_;
-    //! \f$\alpha_0\f$, death probability on cell division attempt
-    static double DEATH_PROB_;
-    //! \f$\rho_0\f$
-    static double MIGRATION_RATE_;
     //! \f$k\f$
     static double GAMMA_SHAPE_;
     //! \f$p_s\f$
@@ -155,15 +164,8 @@ class Cell {
 
     //! Position in a tumor
     std::valarray<int> coord_;
-
-    //! \f$\beta\f$
-    double birth_rate_ = BIRTH_RATE_;
-    //! \f$\delta\f$
-    double death_rate_ = DEATH_RATE_;
-    //! \f$\alpha\f$
-    double death_prob_ = DEATH_PROB_;
-    //! \f$\rho\f$
-    double migra_rate_ = MIGRATION_RATE_;
+    //! Set of event rates (copy-on-write)
+    std::shared_ptr<EventRates> event_rates_;
 
     //! C1 cell type
     CellType type_ = CellType::stem;

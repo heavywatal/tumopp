@@ -18,6 +18,7 @@ namespace boost {namespace program_options {
 namespace tumopp {
 
 class Tissue;
+struct EventRates;
 
 /*! @brief Represents single run
 */
@@ -55,6 +56,7 @@ class Simulation {
   private:
     boost::program_options::options_description options_desc();
     boost::program_options::options_description positional_desc();
+    boost::program_options::options_description cell_options();
 
     //! Print help message and exit
     [[noreturn]] void help_and_exit();
@@ -66,6 +68,8 @@ class Simulation {
 
     //! Tissue instance
     std::unique_ptr<Tissue> tissue_;
+    //! EventRates instance
+    std::unique_ptr<EventRates> init_event_rates_;
 
     //! optional variables
     std::unique_ptr<boost::program_options::variables_map> vars_;

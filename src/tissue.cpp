@@ -20,14 +20,18 @@ Tissue::Tissue(
   const unsigned dimensions,
   const std::string& coordinate,
   const std::string& local_density_effect,
-  const std::string& displacement_path):
+  const std::string& displacement_path,
+  const EventRates& init_event_rates):
   snapshots_(wtl::make_oss()),
   drivers_(wtl::make_oss()) {HERE;
     specimens_.reserve(initial_size * 2u);
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
     const auto initial_coords = coord_func_->sphere(initial_size);
-    const auto origin = std::make_shared<Cell>(initial_coords[0], ++id_tail_);
+    const auto origin = std::make_shared<Cell>(
+      initial_coords[0], ++id_tail_,
+      std::make_shared<EventRates>(init_event_rates)
+    );
     tumor_.insert(origin);
     queue_push(origin);
     while (tumor_.size() < initial_size) {
