@@ -132,14 +132,17 @@ std::string Cell::mutate() {
 
 std::string Cell::force_mutate() {
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
-    event_rates_->birth_rate *= (1.0 + DRIVER_MEAN_BIRTH_);
-    event_rates_->death_rate *= (1.0 + DRIVER_MEAN_DEATH_);
-    event_rates_->death_prob *= (1.0 + DRIVER_MEAN_DEATH_);
-    event_rates_->migra_rate *= (1.0 + DRIVER_MEAN_MIGRA_);
+    const double s_birth = GAUSS_BIRTH(wtl::sfmt64());
+    const double s_death = GAUSS_DEATH(wtl::sfmt64());
+    const double s_migra = GAUSS_MIGRA(wtl::sfmt64());
+    event_rates_->birth_rate *= (1.0 + s_birth);
+    event_rates_->death_rate *= (1.0 + s_death);
+    event_rates_->death_prob *= (1.0 + s_death);
+    event_rates_->migra_rate *= (1.0 + s_migra);
     auto oss = wtl::make_oss();
-    oss << id_ << "\tbirth\t" << DRIVER_MEAN_BIRTH_ << "\n"
-        << id_ << "\tdeath\t" << DRIVER_MEAN_DEATH_ << "\n"
-        << id_ << "\tmigra\t" << DRIVER_MEAN_MIGRA_ << "\n";
+    oss << id_ << "\tbirth\t" << s_birth << "\n"
+        << id_ << "\tdeath\t" << s_death << "\n"
+        << id_ << "\tmigra\t" << s_migra << "\n";
     return oss.str();
 }
 
