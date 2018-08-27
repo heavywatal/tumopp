@@ -180,7 +180,7 @@ class Tissue {
 
     //! record all cells existed
     std::vector<std::shared_ptr<Cell>> specimens_;
-    //! record state when size() < #RECORDING_EARLY_GROWTH_
+    //! record snapshots
     std::ostringstream snapshots_;
     //! record driver mutations
     std::ostringstream drivers_;
