@@ -33,7 +33,6 @@ Tissue::Tissue(
       std::make_shared<EventRates>(init_event_rates)
     );
     tumor_.insert(origin);
-    queue_push(origin);
     while (tumor_.size() < initial_size) {
         for (const auto& mother: tumor_) {
             const auto daughter = std::make_shared<Cell>(*mother);
@@ -44,11 +43,10 @@ Tissue::Tissue(
             daughter->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_coord(initial_coords[tumor_.size()]);
             tumor_.insert(daughter);
-            // queue_push(mother);
-            queue_push(daughter);
             if (tumor_.size() >= initial_size) break;
         }
     }
+    for (const auto& cell: tumor_) queue_push(cell);
 }
 
 void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {HERE;
@@ -96,6 +94,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 ancestor->set_time_of_death(time_);
                 specimens_.emplace_back(ancestor);
                 mother->set_time_of_birth(time_, ++id_tail_, ancestor);
+                daughter->differentiate();
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 drivers_ << mother->mutate();
                 drivers_ << daughter->mutate();

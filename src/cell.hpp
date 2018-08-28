@@ -76,7 +76,14 @@ class Cell {
          std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
       coord_(v), event_rates_(er), id_(i) {}
     //! Copy constructor
-    Cell(const Cell& other) noexcept;
+    Cell(const Cell& other) noexcept:
+      coord_(other.coord_),
+      event_rates_(other.event_rates_),
+      type_(other.type_),
+      proliferation_capacity_(other.proliferation_capacity_),
+      id_(other.id_),
+      ancestor_(other.ancestor_),
+      time_of_birth_(other.time_of_birth_) {}
     //! Destructor
     ~Cell() noexcept = default;
     //! Copy assignment operator
@@ -100,6 +107,8 @@ class Cell {
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
 
+    //! Change #type_ stochastically
+    void differentiate();
     //! Set #time_of_birth_; reset other properties
     void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;

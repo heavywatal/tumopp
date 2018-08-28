@@ -76,14 +76,7 @@ void Cell::init_distributions(const DriverParams& dp) {
 static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
 static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
 
-Cell::Cell(const Cell& other) noexcept:
-    coord_(other.coord_),
-    event_rates_(other.event_rates_),
-    type_(other.type_),
-    proliferation_capacity_(other.proliferation_capacity_),
-    id_(other.id_),
-    ancestor_(other.ancestor_),
-    time_of_birth_(other.time_of_birth_) {
+void Cell::differentiate() {
     if (type_ == CellType::stem) {
         if (!bernoulli(PROB_SYMMETRIC_DIVISION_, wtl::sfmt64())) {
             type_ = CellType::nonstem;
