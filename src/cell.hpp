@@ -14,12 +14,6 @@
 
 namespace tumopp {
 
-//! C1 cell type
-enum class CellType: uint_fast8_t {
-   stem,
-   nonstem,
-};
-
 //! event types
 enum class Event: uint_fast8_t {
    birth,
@@ -94,7 +88,7 @@ class Cell {
     Cell(const Cell& other) noexcept:
       coord_(other.coord_),
       event_rates_(other.event_rates_),
-      type_(other.type_),
+      is_differentiated_(other.is_differentiated_),
       proliferation_capacity_(other.proliferation_capacity_),
       id_(other.id_),
       ancestor_(other.ancestor_),
@@ -122,14 +116,14 @@ class Cell {
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
 
-    //! Change #type_ stochastically
+    //! Change #is_differentiated_ stochastically
     void differentiate();
     //! Set #time_of_birth_; reset other properties
     void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;
         id_ = i;
         ancestor_ = ancestor;
-        if (type_ == CellType::nonstem) {--proliferation_capacity_;}
+        if (is_differentiated_) {--proliferation_capacity_;}
     }
     //! Set #event_rates_->death_prob and #next_event_
     void set_cycle_dependent_death(double death_prob);
@@ -175,8 +169,8 @@ class Cell {
     //! Set of event rates (copy-on-write)
     std::shared_ptr<EventRates> event_rates_;
 
-    //! C1 cell type
-    CellType type_ = CellType::stem;
+    //! false: stem; true: non-stem
+    bool is_differentiated_ = false;
     //! \f$\omega\f$
     uint_fast8_t proliferation_capacity_;
 

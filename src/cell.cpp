@@ -71,10 +71,8 @@ void Cell::init_distributions(const CellParams& cp, const DriverParams& dp) {
 }
 
 void Cell::differentiate() {
-    if (type_ == CellType::stem) {
-        if (!BERN_SYMMETRIC(wtl::sfmt64())) {
-            type_ = CellType::nonstem;
-        }
+    if (!is_differentiated_) {
+        is_differentiated_ = !BERN_SYMMETRIC(wtl::sfmt64());
     }
 }
 
@@ -222,7 +220,7 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << death_rate() << "\t"
         << death_prob() << "\t"
         << migra_rate() << "\t"
-        << static_cast<unsigned>(type_) << "\t"
+        << is_differentiated_ << "\t"
         << static_cast<unsigned>(proliferation_capacity_);
 }
 
