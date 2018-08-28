@@ -330,12 +330,12 @@ uint_fast8_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const 
     return cnt;
 }
 
-std::vector<unsigned> Tissue::generate_neutral_mutations() const {
-    std::poisson_distribution<unsigned> poisson(Cell::MUTATION_RATE() * id_tail_);
+std::vector<unsigned> Tissue::generate_neutral_mutations(const double mu, const bool has_at_least_1_mutation_per_division) const {
+    std::poisson_distribution<unsigned> poisson(mu * id_tail_);
     const unsigned num_mutants = poisson(wtl::sfmt64());
     std::uniform_int_distribution<unsigned> uniform(1, id_tail_);
     std::vector<unsigned> mutants;
-    if (Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION()) {
+    if (has_at_least_1_mutation_per_division) {
         mutants.reserve(id_tail_ + num_mutants);
         for (unsigned i=1; i<=id_tail_; ++i) mutants.push_back(i);
     } else {
@@ -347,9 +347,8 @@ std::vector<unsigned> Tissue::generate_neutral_mutations() const {
     return mutants;
 }
 
-std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples) const {HERE;
+std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples, const std::vector<unsigned>& mutants) const {HERE;
     const size_t sample_size = samples.size();
-    const auto mutants = generate_neutral_mutations();
     std::vector<std::vector<unsigned>> flags;
     flags.reserve(sample_size);
     for (const auto& cell: samples) {

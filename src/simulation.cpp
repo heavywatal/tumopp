@@ -48,6 +48,8 @@ inline po::options_description general_desc() {HERE;
     `-T,--plateau`      | -              | -
     `-U,--mutate`       | \f$N_\mu\f$    | -
     `--npair`           | -              | -
+    `-u,--mutation`     | \f$\mu\f$      | -
+    `--ms1mut`          |                | -
     `-o,--outdir`       | -              | -
     `-I,--interval`     | -              | -
     `-R,--record`       | -              | -
@@ -71,6 +73,8 @@ po::options_description Simulation::options_desc() {HERE;
       ("treatment", po::value<double>()->default_value(0.0))
       ("resistant", po::value<size_t>()->default_value(3u))
       ("npair", po::value<size_t>()->default_value(0u))
+      ("mutation,u", po::value<double>()->default_value(0.1))
+      ("ms1mut", po::bool_switch())
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("interval,I", po::value<double>()->default_value(std::numeric_limits<double>::infinity()))
       ("record,R", po::value<size_t>()->default_value(0u))
@@ -255,16 +259,19 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     const auto nsam = vm["nsam"].as<size_t>();
     const auto howmany = vm["howmany"].as<size_t>();
     const auto seed = vm["seed"].as<uint32_t>();
+    const auto mutation = vm["mutation"].as<double>();
+    const auto ms1mut = vm["ms1mut"].as<bool>();
     if ((nsam < 1u) || (howmany < 1u)) return;
     ost << "tumopp " << command_args_ << "\n" << seed << "\n";
-
     if (tissue_->dimensions() == 3U) {
         for (size_t i=0; i<howmany; ++i) {
-            tissue_->write_segsites(ost, tissue_->sample_section(nsam));
+            const auto mutants = tissue_->generate_neutral_mutations(mutation, ms1mut);
+            tissue_->write_segsites(ost, tissue_->sample_section(nsam), mutants);
         }
     } else {
         for (size_t i=0; i<howmany; ++i) {
-            tissue_->write_segsites(ost, tissue_->sample_random(nsam));
+            const auto mutants = tissue_->generate_neutral_mutations(mutation, ms1mut);
+            tissue_->write_segsites(ost, tissue_->sample_random(nsam), mutants);
         }
     }
 }

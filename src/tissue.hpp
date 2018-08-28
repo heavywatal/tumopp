@@ -47,8 +47,10 @@ class Tissue {
     //! Simulate medical treatment with the increased death_prob
     void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
+    //! Put random mutations on genealogy
+    std::vector<unsigned> generate_neutral_mutations(double mu, bool has_at_least_1_mutation_per_division) const;
     //! Write ms-like binary sequence
-    std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&) const;
+    std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&, const std::vector<unsigned>&) const;
     //! sample cells around the given cell
     std::vector<std::shared_ptr<Cell>> sample_bulk(const std::shared_ptr<Cell>&, size_t) const;
     //! sample cells uniformly
@@ -135,9 +137,6 @@ class Tissue {
 
     //! TODO: Calculate positional value
     double positional_value(const std::valarray<int>&) const {return 1.0;}
-
-    //! Put random mutations on genealogy
-    std::vector<unsigned> generate_neutral_mutations() const;
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for tumor_

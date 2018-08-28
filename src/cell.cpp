@@ -15,8 +15,6 @@ namespace tumopp {
 double Cell::GAMMA_SHAPE_ = 1.0;
 double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
 unsigned Cell::MAX_PROLIFERATION_CAPACITY_ = 10u;
-double Cell::MUTATION_RATE_ = 1e-1;
-bool Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_ = false;
 
 //! Parameters of Cell class
 /*! @ingroup params
@@ -26,8 +24,6 @@ bool Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_ = false;
     `-k,--shape`        | \f$k\f$             | Cell::GAMMA_SHAPE_
     `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
     `-r,--prolif`       | \f$\omega_{\max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
-    `-u,--mutation`     | \f$\mu\f$           | Cell::MUTATION_RATE_
-    `--ms1mut`          |                     | Cell::HAS_AT_LEAST_1_MUTATION_PER_DIVISION_
 */
 boost::program_options::options_description Cell::opt_description() {
     namespace po = boost::program_options;
@@ -37,8 +33,6 @@ boost::program_options::options_description Cell::opt_description() {
         ("shape,k", po_value(&GAMMA_SHAPE_))
         ("symmetric,p", po_value(&PROB_SYMMETRIC_DIVISION_))
         ("prolif,r", po_value(&MAX_PROLIFERATION_CAPACITY_))
-        ("mutation,u", po_value(&MUTATION_RATE_))
-        ("ms1mut", po::bool_switch(&HAS_AT_LEAST_1_MUTATION_PER_DIVISION_))
     ;
     return desc;
 }
