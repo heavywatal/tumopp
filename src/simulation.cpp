@@ -80,7 +80,6 @@ po::options_description Simulation::options_desc() {HERE;
       ("record,R", po::value<size_t>()->default_value(0u))
       ("extinction", po::value<unsigned>()->default_value(100u))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
-    description.add(Cell::opt_description());
     description.add(cell_options());
     return description;
 }
@@ -94,6 +93,9 @@ po::options_description Simulation::options_desc() {HERE;
     `-d,--delta0`       | \f$\delta_0\f$      | EventRates::death_rate
     `-a,--alpha0`       | \f$\alpha_0\f$      | EventRates::death_prob
     `-m,--rho0`         | \f$\rho_0\f$        | EventRates::migra_rate
+    `-k,--shape`        | \f$k\f$             | CellParams::GAMMA_SHAPE
+    `-p,--symmetric`    | \f$p_s\f$           | CellParams::PROB_SYMMETRIC_DIVISION
+    `-r,--prolif`       | \f$\omega_{\max}\f$ | CellParams::MAX_PROLIFERATION_CAPACITY
     `--ub`              | \f$\mu_\beta\f$     | DriverParams::RATE_BIRTH
     `--ud`              | \f$\mu_\delta\f$    | DriverParams::RATE_DEATH
     `--um`              | \f$\mu_\rho\f$      | DriverParams::RATE_MIGRA
@@ -107,6 +109,7 @@ po::options_description Simulation::options_desc() {HERE;
 po::options_description Simulation::cell_options() {HERE;
     init_event_rates_ = std::make_unique<EventRates>();
     driver_params_ = std::make_unique<DriverParams>();
+    cell_params_ = std::make_unique<CellParams>();
     namespace po = boost::program_options;
     po::options_description desc{"Cell"};
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
@@ -115,6 +118,9 @@ po::options_description Simulation::cell_options() {HERE;
       ("delta0,d", po_value(&init_event_rates_->death_rate))
       ("alpha0,a", po_value(&init_event_rates_->death_prob))
       ("rho0,m", po_value(&init_event_rates_->migra_rate))
+      ("shape,k", po_value(&cell_params_->GAMMA_SHAPE))
+      ("symmetric,p", po_value(&cell_params_->PROB_SYMMETRIC_DIVISION))
+      ("prolif,r", po_value(&cell_params_->MAX_PROLIFERATION_CAPACITY))
       ("ub", po_value(&driver_params_->RATE_BIRTH))
       ("ud", po_value(&driver_params_->RATE_DEATH))
       ("um", po_value(&driver_params_->RATE_MIGRA))
@@ -181,7 +187,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     if (vm["help"].as<bool>()) {help_and_exit();}
     if (vm["version"].as<bool>()) {version_and_exit();}
     po::notify(vm);
-    Cell::init_distributions(*driver_params_);
+    Cell::init_distributions(*cell_params_, *driver_params_);
     wtl::sfmt64().seed(vm["seed"].as<uint32_t>());
 
     config_string_ = wtl::flags_into_string(vm);
@@ -218,7 +224,7 @@ void Simulation::run() {HERE;
     const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
-        tissue_ = std::make_unique<Tissue>(init_size, dimensions, coord, local, path, *init_event_rates_);
+        tissue_ = std::make_unique<Tissue>(init_size, dimensions, coord, local, path, *init_event_rates_, *cell_params_);
         if (tissue_->grow(max_size, max_time, interval, record, mutate)) break;
     }
     if (tissue_->size() != max_size) {

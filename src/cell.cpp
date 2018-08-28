@@ -6,36 +6,22 @@
 #include <wtl/iostr.hpp>
 #include <wtl/random.hpp>
 #include <sfmt.hpp>
-#include <boost/program_options.hpp>
 
 #include <type_traits>
 
 namespace tumopp {
 
-double Cell::GAMMA_SHAPE_ = 1.0;
-double Cell::PROB_SYMMETRIC_DIVISION_ = 1.0;
-unsigned Cell::MAX_PROLIFERATION_CAPACITY_ = 10u;
-
-//! Parameters of Cell class
-/*! @ingroup params
-
-    Command line option | Symbol              | Variable                  |
-    ------------------- | ------------------- | ------------------------- |
-    `-k,--shape`        | \f$k\f$             | Cell::GAMMA_SHAPE_
-    `-p,--symmetric`    | \f$p_s\f$           | Cell::PROB_SYMMETRIC_DIVISION_
-    `-r,--prolif`       | \f$\omega_{\max}\f$ | Cell::MAX_PROLIFERATION_CAPACITY_
-*/
-boost::program_options::options_description Cell::opt_description() {
-    namespace po = boost::program_options;
-    po::options_description desc{"Cell"};
-    auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
-    desc.add_options()
-        ("shape,k", po_value(&GAMMA_SHAPE_))
-        ("symmetric,p", po_value(&PROB_SYMMETRIC_DIVISION_))
-        ("prolif,r", po_value(&MAX_PROLIFERATION_CAPACITY_))
-    ;
-    return desc;
-}
+class GammaFactory {
+  public:
+    GammaFactory(double k) noexcept: shape_(k) {}
+    std::gamma_distribution<double> operator()(double mu) {
+        const double theta = std::max(mu / shape_, 0.0);
+        return std::gamma_distribution<double>(shape_, theta);
+    }
+    void param(double k) {shape_ = k;}
+  private:
+    double shape_;
+};
 
 template <class URBG>
 inline bool bernoulli(double p, URBG& engine) {
@@ -56,21 +42,25 @@ class bernoulli_distribution {
 };
 
 namespace {
-    std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
-    std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
-    std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
+    GammaFactory GAMMA_FACTORY(0.0);
+    bernoulli_distribution BERN_SYMMETRIC(0.0);
     bernoulli_distribution BERN_MUT_BIRTH(0.0);
     bernoulli_distribution BERN_MUT_DEATH(0.0);
     bernoulli_distribution BERN_MUT_MIGRA(0.0);
+    std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
+    std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
+    std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
 }
 
-void Cell::init_distributions(const DriverParams& dp) {
-    GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(dp.MEAN_BIRTH, dp.SD_BIRTH));
-    GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(dp.MEAN_DEATH, dp.SD_DEATH));
-    GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(dp.MEAN_MIGRA, dp.SD_MIGRA));
+void Cell::init_distributions(const CellParams& cp, const DriverParams& dp) {
+    GAMMA_FACTORY.param(cp.GAMMA_SHAPE);
+    BERN_SYMMETRIC.param(cp.PROB_SYMMETRIC_DIVISION);
     BERN_MUT_BIRTH.param(dp.RATE_BIRTH);
     BERN_MUT_DEATH.param(dp.RATE_DEATH);
     BERN_MUT_MIGRA.param(dp.RATE_MIGRA);
+    GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(dp.MEAN_BIRTH, dp.SD_BIRTH));
+    GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(dp.MEAN_DEATH, dp.SD_DEATH));
+    GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(dp.MEAN_MIGRA, dp.SD_MIGRA));
 }
 
 static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
@@ -78,7 +68,7 @@ static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
 
 void Cell::differentiate() {
     if (type_ == CellType::stem) {
-        if (!bernoulli(PROB_SYMMETRIC_DIVISION_, wtl::sfmt64())) {
+        if (!BERN_SYMMETRIC(wtl::sfmt64())) {
             type_ = CellType::nonstem;
         }
     }
@@ -133,9 +123,7 @@ double Cell::delta_time(const double positional_value) {
         mu /= birth_rate();
         mu /= positional_value;
         mu -= elapsed_;
-        double theta = std::max(mu / GAMMA_SHAPE_, 0.0);
-        std::gamma_distribution<double> gamma(GAMMA_SHAPE_, theta);
-        t_birth = gamma(wtl::sfmt64());
+        t_birth = GAMMA_FACTORY(mu)(wtl::sfmt64());
     }
     if (death_rate() > 0.0) {
         std::exponential_distribution<double> exponential(death_rate());

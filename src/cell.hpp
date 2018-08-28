@@ -12,8 +12,6 @@
 #include <string>
 #include <memory>
 
-namespace boost {namespace program_options {class options_description;}}
-
 namespace tumopp {
 
 //! C1 cell type
@@ -40,6 +38,17 @@ struct EventRates {
     double death_prob = 0.0;
     //! \f$\rho\f$
     double migra_rate = 0.0;
+};
+
+/*! @brief Miscellaneous parameters for Cell class
+*/
+struct CellParams {
+    //! \f$k\f$
+    double GAMMA_SHAPE = 1.0;
+    //! \f$p_s\f$
+    double PROB_SYMMETRIC_DIVISION = 1.0;
+    //! \f$\omega_\text{max}\f$
+    unsigned MAX_PROLIFERATION_CAPACITY = 10u;
 };
 
 /*! @brief Parameters for driver mutations
@@ -73,8 +82,11 @@ class Cell {
     Cell() = default;
     //! Constructor for first cells
     Cell(const std::valarray<int>& v, unsigned i=0,
-         std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
-      coord_(v), event_rates_(er), id_(i) {}
+         std::shared_ptr<EventRates> er=std::make_shared<EventRates>(),
+         std::shared_ptr<CellParams> cp=std::make_shared<CellParams>()) noexcept:
+      coord_(v), event_rates_(er),
+      proliferation_capacity_(static_cast<uint_fast8_t>(cp->MAX_PROLIFERATION_CAPACITY)),
+      id_(i) {}
     //! Copy constructor
     Cell(const Cell& other) noexcept:
       coord_(other.coord_),
@@ -147,22 +159,13 @@ class Cell {
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Initialize probability distributions for events
-    static void init_distributions(const DriverParams& dp=DriverParams{});
-
-    static boost::program_options::options_description opt_description();
+    static void init_distributions(const CellParams& cp=CellParams{}, const DriverParams& dp=DriverParams{});
 
   private:
     //! Accumulate ancestral #id_
     std::unordered_set<unsigned> traceback() const;
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
-
-    //! \f$k\f$
-    static double GAMMA_SHAPE_;
-    //! \f$p_s\f$
-    static double PROB_SYMMETRIC_DIVISION_;
-    //! \f$\omega_\text{max}\f$
-    static unsigned MAX_PROLIFERATION_CAPACITY_;
 
     //! Position in a tumor
     std::valarray<int> coord_;
@@ -172,7 +175,7 @@ class Cell {
     //! C1 cell type
     CellType type_ = CellType::stem;
     //! \f$\omega\f$
-    uint_fast8_t proliferation_capacity_ = static_cast<uint_fast8_t>(MAX_PROLIFERATION_CAPACITY_);
+    uint_fast8_t proliferation_capacity_;
 
     //! next event: birth, death, or migration
     Event next_event_ = Event::birth;

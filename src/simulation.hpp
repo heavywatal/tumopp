@@ -19,6 +19,7 @@ namespace tumopp {
 
 class Tissue;
 struct EventRates;
+struct CellParams;
 struct DriverParams;
 
 /*! @brief Represents single run
@@ -71,6 +72,8 @@ class Simulation {
     std::unique_ptr<Tissue> tissue_;
     //! EventRates instance
     std::unique_ptr<EventRates> init_event_rates_;
+    //! CellParams instance
+    std::unique_ptr<CellParams> cell_params_;
     //! DriverParams instance
     std::unique_ptr<DriverParams> driver_params_;
 

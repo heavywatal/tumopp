@@ -31,7 +31,8 @@ class Tissue {
       const std::string& coordinate="moore",
       const std::string& local_density_effect="const",
       const std::string& displacement_path="random",
-      const EventRates& init_event_rates=EventRates{});
+      const EventRates& init_event_rates=EventRates{},
+      const CellParams& cell_params=CellParams{});
 
     //! main function
     bool grow(
