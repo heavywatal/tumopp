@@ -80,10 +80,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a78c840fa75ddc5c27a2616a3f21a91b1"><td class="memItemLeft" align="right" valign="top"><a id="a78c840fa75ddc5c27a2616a3f21a91b1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a78c840fa75ddc5c27a2616a3f21a91b1">Tissue</a> (size_t initial_size=1u, unsigned dimensions=3u, const std::string &amp;coordinate=&quot;moore&quot;, const std::string &amp;local_density_effect=&quot;const&quot;, const std::string &amp;displacement_path=&quot;random&quot;)</td></tr>
-<tr class="memdesc:a78c840fa75ddc5c27a2616a3f21a91b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
-<tr class="separator:a78c840fa75ddc5c27a2616a3f21a91b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2cc4cb4ae9e045dd62c0d20055f462c"><td class="memItemLeft" align="right" valign="top"><a id="aa2cc4cb4ae9e045dd62c0d20055f462c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aa2cc4cb4ae9e045dd62c0d20055f462c">Tissue</a> (size_t initial_size=1u, unsigned dimensions=3u, const std::string &amp;coordinate=&quot;moore&quot;, const std::string &amp;local_density_effect=&quot;const&quot;, const std::string &amp;displacement_path=&quot;random&quot;, const EventRates &amp;init_event_rates=EventRates{}, const CellParams &amp;cell_params=CellParams{})</td></tr>
+<tr class="memdesc:aa2cc4cb4ae9e045dd62c0d20055f462c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
+<tr class="separator:aa2cc4cb4ae9e045dd62c0d20055f462c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abff6be5c001b3b7cf36a118e243e6088"><td class="memItemLeft" align="right" valign="top"><a id="abff6be5c001b3b7cf36a118e243e6088"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#abff6be5c001b3b7cf36a118e243e6088">grow</a> (size_t max_size, double max_time=100.0, double snapshot_interval=std::numeric_limits&lt; double &gt;::infinity(), size_t recording_early_growth=0u, size_t mutation_timing=std::numeric_limits&lt; size_t &gt;::max())</td></tr>
 <tr class="memdesc:abff6be5c001b3b7cf36a118e243e6088"><td class="mdescLeft">&#160;</td><td class="mdescRight">main function <br /></td></tr>
@@ -96,10 +96,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a578ce1e44eaa403dab467e6ea99c725a">treatment</a> (double death_prob, size_t num_resistant_cells=3u)</td></tr>
 <tr class="memdesc:a578ce1e44eaa403dab467e6ea99c725a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulate medical treatment with the increased death_prob. <br /></td></tr>
 <tr class="separator:a578ce1e44eaa403dab467e6ea99c725a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c0c05d87ab13c8ade9cd426d75317c5"><td class="memItemLeft" align="right" valign="top"><a id="a3c0c05d87ab13c8ade9cd426d75317c5"></a>
-std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a3c0c05d87ab13c8ade9cd426d75317c5">write_segsites</a> (std::ostream &amp;, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;&gt; &amp;) const</td></tr>
-<tr class="memdesc:a3c0c05d87ab13c8ade9cd426d75317c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write ms-like binary sequence. <br /></td></tr>
-<tr class="separator:a3c0c05d87ab13c8ade9cd426d75317c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95251ee5954a3bb10d2192f7e807e0fa"><td class="memItemLeft" align="right" valign="top"><a id="a95251ee5954a3bb10d2192f7e807e0fa"></a>
+std::vector&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a95251ee5954a3bb10d2192f7e807e0fa">generate_neutral_mutations</a> (double mu, bool has_at_least_1_mutation_per_division) const</td></tr>
+<tr class="memdesc:a95251ee5954a3bb10d2192f7e807e0fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put random mutations on genealogy. <br /></td></tr>
+<tr class="separator:a95251ee5954a3bb10d2192f7e807e0fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a196b02f6c507272e179c7d16cb133203"><td class="memItemLeft" align="right" valign="top"><a id="a196b02f6c507272e179c7d16cb133203"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a196b02f6c507272e179c7d16cb133203">write_segsites</a> (std::ostream &amp;, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;&gt; &amp;, const std::vector&lt; unsigned &gt; &amp;) const</td></tr>
+<tr class="memdesc:a196b02f6c507272e179c7d16cb133203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write ms-like binary sequence. <br /></td></tr>
+<tr class="separator:a196b02f6c507272e179c7d16cb133203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f34d0d263fcee6510ded8963433f202"><td class="memItemLeft" align="right" valign="top"><a id="a7f34d0d263fcee6510ded8963433f202"></a>
 std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a7f34d0d263fcee6510ded8963433f202">sample_bulk</a> (const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &amp;, size_t) const</td></tr>
 <tr class="memdesc:a7f34d0d263fcee6510ded8963433f202"><td class="mdescLeft">&#160;</td><td class="mdescRight">sample cells around the given cell <br /></td></tr>
@@ -227,10 +231,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a26de15df91be59cdc10f5ab7542d3bc5">positional_value</a> (const std::valarray&lt; int &gt; &amp;) const</td></tr>
 <tr class="memdesc:a26de15df91be59cdc10f5ab7542d3bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO: Calculate positional value. <br /></td></tr>
 <tr class="separator:a26de15df91be59cdc10f5ab7542d3bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfb4c3aee64e2f8c983a1e9c4a6ed3d6"><td class="memItemLeft" align="right" valign="top"><a id="abfb4c3aee64e2f8c983a1e9c4a6ed3d6"></a>
-std::vector&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#abfb4c3aee64e2f8c983a1e9c4a6ed3d6">generate_neutral_mutations</a> () const</td></tr>
-<tr class="memdesc:abfb4c3aee64e2f8c983a1e9c4a6ed3d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put random mutations on genealogy. <br /></td></tr>
-<tr class="separator:abfb4c3aee64e2f8c983a1e9c4a6ed3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>

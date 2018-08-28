@@ -57,7 +57,6 @@ $(function() {
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classtumopp_1_1_cell-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -76,10 +75,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a5859d40c07de3b214b9190e20a783681">Cell</a> ()=default</td></tr>
 <tr class="memdesc:a5859d40c07de3b214b9190e20a783681"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
 <tr class="separator:a5859d40c07de3b214b9190e20a783681"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c393aecc189fba3d68c9d06d0cb852c"><td class="memItemLeft" align="right" valign="top"><a id="a3c393aecc189fba3d68c9d06d0cb852c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a3c393aecc189fba3d68c9d06d0cb852c">Cell</a> (const std::valarray&lt; int &gt; &amp;v, unsigned i=0) noexcept</td></tr>
-<tr class="memdesc:a3c393aecc189fba3d68c9d06d0cb852c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for first cells. <br /></td></tr>
-<tr class="separator:a3c393aecc189fba3d68c9d06d0cb852c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af66001a9ae5aeb890ed4fbf9ab63c00f"><td class="memItemLeft" align="right" valign="top"><a id="af66001a9ae5aeb890ed4fbf9ab63c00f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#af66001a9ae5aeb890ed4fbf9ab63c00f">Cell</a> (const std::valarray&lt; int &gt; &amp;v, unsigned i=0, std::shared_ptr&lt; <a class="el" href="structtumopp_1_1_event_rates.html">EventRates</a> &gt; er=std::make_shared&lt; <a class="el" href="structtumopp_1_1_event_rates.html">EventRates</a> &gt;(), std::shared_ptr&lt; <a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> &gt; cp=std::make_shared&lt; <a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> &gt;()) noexcept</td></tr>
+<tr class="memdesc:af66001a9ae5aeb890ed4fbf9ab63c00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for first cells. <br /></td></tr>
+<tr class="separator:af66001a9ae5aeb890ed4fbf9ab63c00f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aced6b9f9fa27138899a5279d144f91"><td class="memItemLeft" align="right" valign="top"><a id="a8aced6b9f9fa27138899a5279d144f91"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a8aced6b9f9fa27138899a5279d144f91">Cell</a> (const <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &amp;other) noexcept</td></tr>
 <tr class="memdesc:a8aced6b9f9fa27138899a5279d144f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor. <br /></td></tr>
@@ -120,50 +119,22 @@ std::vector&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"
 size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a78601a1e05730081b55865d068e2e6b2">branch_length</a> (const <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &amp;) const</td></tr>
 <tr class="memdesc:a78601a1e05730081b55865d068e2e6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Branch length (# of divisions) between two cells. <br /></td></tr>
 <tr class="separator:a78601a1e05730081b55865d068e2e6b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47db045105db167857d2df0a80399e84"><td class="memItemLeft" align="right" valign="top"><a id="a47db045105db167857d2df0a80399e84"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a47db045105db167857d2df0a80399e84">set_coord</a> (const std::valarray&lt; int &gt; &amp;v) noexcept</td></tr>
-<tr class="memdesc:a47db045105db167857d2df0a80399e84"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a3bc6d8b7ac792d0df5b9bb9a8f28ce36" title="Position in a tumor. ">coord_</a> <br /></td></tr>
-<tr class="separator:a47db045105db167857d2df0a80399e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a079de705723f833482ea893d380bcaf8"><td class="memItemLeft" align="right" valign="top"><a id="a079de705723f833482ea893d380bcaf8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a079de705723f833482ea893d380bcaf8">differentiate</a> ()</td></tr>
+<tr class="memdesc:a079de705723f833482ea893d380bcaf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change <a class="el" href="classtumopp_1_1_cell.html#a8bc889165e9dc62b622b986cbfc8a3b5" title="C1 cell type. ">type_</a> stochastically. <br /></td></tr>
+<tr class="separator:a079de705723f833482ea893d380bcaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a795e696fb54ac568a875b9f25cf231f8"><td class="memItemLeft" align="right" valign="top"><a id="a795e696fb54ac568a875b9f25cf231f8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a795e696fb54ac568a875b9f25cf231f8">set_time_of_birth</a> (double t, unsigned i, const std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &amp;ancestor) noexcept</td></tr>
-<tr class="memdesc:a795e696fb54ac568a875b9f25cf231f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b" title="time of birth ">time_of_birth_</a>; reset other properties <br /></td></tr>
+<tr class="memdesc:a795e696fb54ac568a875b9f25cf231f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b" title="time of birth ">time_of_birth_</a>; reset other properties. <br /></td></tr>
 <tr class="separator:a795e696fb54ac568a875b9f25cf231f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e816435058c65bce298b0f4af30685c"><td class="memItemLeft" align="right" valign="top"><a id="a0e816435058c65bce298b0f4af30685c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a0e816435058c65bce298b0f4af30685c">set_time_of_death</a> (double t) noexcept</td></tr>
-<tr class="memdesc:a0e816435058c65bce298b0f4af30685c"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475" title="time of death ">time_of_death_</a> <br /></td></tr>
-<tr class="separator:a0e816435058c65bce298b0f4af30685c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefb73e29cfcea671f068391d7cbcc85c"><td class="memItemLeft" align="right" valign="top"><a id="aefb73e29cfcea671f068391d7cbcc85c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aefb73e29cfcea671f068391d7cbcc85c">set_elapsed</a> (double t) noexcept</td></tr>
-<tr class="memdesc:aefb73e29cfcea671f068391d7cbcc85c"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter of <a class="el" href="classtumopp_1_1_cell.html#a85882b8a52b2e5dbf929b96307174279" title="elapsed time by migration ">elapsed_</a> <br /></td></tr>
-<tr class="separator:aefb73e29cfcea671f068391d7cbcc85c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af54cb16eddf71ead3f026e51f6396e2f"><td class="memItemLeft" align="right" valign="top"><a id="af54cb16eddf71ead3f026e51f6396e2f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#af54cb16eddf71ead3f026e51f6396e2f">set_cycle_dependent_death</a> (double death_prob)</td></tr>
-<tr class="memdesc:af54cb16eddf71ead3f026e51f6396e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#ab1dedf2540071cd0a5c8319a9ed064ef" title=" ">death_prob_</a> and <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a>. <br /></td></tr>
+<tr class="memdesc:af54cb16eddf71ead3f026e51f6396e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1" title="Set of event rates (copy-on-write) ">event_rates_</a>-&gt;death_prob and <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a>. <br /></td></tr>
 <tr class="separator:af54cb16eddf71ead3f026e51f6396e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49f24a9da45429661b7de212c402fb37"><td class="memItemLeft" align="right" valign="top"><a id="a49f24a9da45429661b7de212c402fb37"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a49f24a9da45429661b7de212c402fb37">increase_death_rate</a> () noexcept</td></tr>
-<tr class="memdesc:a49f24a9da45429661b7de212c402fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase <a class="el" href="classtumopp_1_1_cell.html#a4f87a79f5f82d7f01eb5ca6247c96b27" title=" ">death_rate_</a> to <a class="el" href="classtumopp_1_1_cell.html#ac6dfcf8f41c164ee77beb1959ab2e0d3" title=" ">birth_rate_</a> for simulating Moran-like situation. <br /></td></tr>
+<tr class="memdesc:a49f24a9da45429661b7de212c402fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase <a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1" title="Set of event rates (copy-on-write) ">event_rates_</a>-&gt;death_rate to birth_rate() for simulating Moran-like situation. <br /></td></tr>
 <tr class="separator:a49f24a9da45429661b7de212c402fb37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memItemLeft" align="right" valign="top"><a id="ab2661f7ce201cb8f05b04530c9fcda35"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab2661f7ce201cb8f05b04530c9fcda35">birth_rate</a> () const noexcept</td></tr>
-<tr class="memdesc:ab2661f7ce201cb8f05b04530c9fcda35"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#ac6dfcf8f41c164ee77beb1959ab2e0d3" title=" ">birth_rate_</a> <br /></td></tr>
-<tr class="separator:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74f92a03b9f29f105f61929bc29607b8"><td class="memItemLeft" align="right" valign="top"><a id="a74f92a03b9f29f105f61929bc29607b8"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a74f92a03b9f29f105f61929bc29607b8">death_rate</a> () const noexcept</td></tr>
-<tr class="memdesc:a74f92a03b9f29f105f61929bc29607b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#a4f87a79f5f82d7f01eb5ca6247c96b27" title=" ">death_rate_</a> <br /></td></tr>
-<tr class="separator:a74f92a03b9f29f105f61929bc29607b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af85d81421b4467a3eca2cf60aeaa9449"><td class="memItemLeft" align="right" valign="top"><a id="af85d81421b4467a3eca2cf60aeaa9449"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#af85d81421b4467a3eca2cf60aeaa9449">migra_rate</a> () const noexcept</td></tr>
-<tr class="memdesc:af85d81421b4467a3eca2cf60aeaa9449"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#a7c90349decc7fb235b38cc39b46bbd51" title=" ">migra_rate_</a> <br /></td></tr>
-<tr class="separator:af85d81421b4467a3eca2cf60aeaa9449"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="memItemLeft" align="right" valign="top"><a id="ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"></a>
-<a class="el" href="cell_8hpp.html#a6541dc28b22056ce0e9338fc44423fec">Event</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7">next_event</a> () const noexcept</td></tr>
-<tr class="memdesc:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a> <br /></td></tr>
-<tr class="separator:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afba2b86f1dd758b70bde9108a6d2c955"><td class="memItemLeft" align="right" valign="top"><a id="afba2b86f1dd758b70bde9108a6d2c955"></a>
-const std::valarray&lt; int &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#afba2b86f1dd758b70bde9108a6d2c955">coord</a> () const noexcept</td></tr>
-<tr class="memdesc:afba2b86f1dd758b70bde9108a6d2c955"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#a3bc6d8b7ac792d0df5b9bb9a8f28ce36" title="Position in a tumor. ">coord_</a> <br /></td></tr>
-<tr class="separator:afba2b86f1dd758b70bde9108a6d2c955"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab542c6108030c220704f0f7692cbff47"><td class="memItemLeft" align="right" valign="top"><a id="ab542c6108030c220704f0f7692cbff47"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab542c6108030c220704f0f7692cbff47">write</a> (std::ostream &amp;ost) const</td></tr>
 <tr class="memdesc:ab542c6108030c220704f0f7692cbff47"><td class="mdescLeft">&#160;</td><td class="mdescRight">TSV. <br /></td></tr>
@@ -172,28 +143,46 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ad86f830cb0e1e5597097b5bbf80a1803">str</a> () const</td></tr>
 <tr class="memdesc:ad86f830cb0e1e5597097b5bbf80a1803"><td class="mdescLeft">&#160;</td><td class="mdescRight">TSV. <br /></td></tr>
 <tr class="separator:ad86f830cb0e1e5597097b5bbf80a1803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Setter functions</div></td></tr>
+<tr class="memitem:a47db045105db167857d2df0a80399e84"><td class="memItemLeft" align="right" valign="top"><a id="a47db045105db167857d2df0a80399e84"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_coord</b> (const std::valarray&lt; int &gt; &amp;v) noexcept</td></tr>
+<tr class="separator:a47db045105db167857d2df0a80399e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e816435058c65bce298b0f4af30685c"><td class="memItemLeft" align="right" valign="top"><a id="a0e816435058c65bce298b0f4af30685c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_time_of_death</b> (double t) noexcept</td></tr>
+<tr class="separator:a0e816435058c65bce298b0f4af30685c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefb73e29cfcea671f068391d7cbcc85c"><td class="memItemLeft" align="right" valign="top"><a id="aefb73e29cfcea671f068391d7cbcc85c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_elapsed</b> (double t) noexcept</td></tr>
+<tr class="separator:aefb73e29cfcea671f068391d7cbcc85c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Getter functions</div></td></tr>
+<tr class="memitem:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memItemLeft" align="right" valign="top"><a id="ab2661f7ce201cb8f05b04530c9fcda35"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>birth_rate</b> () const noexcept</td></tr>
+<tr class="separator:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74f92a03b9f29f105f61929bc29607b8"><td class="memItemLeft" align="right" valign="top"><a id="a74f92a03b9f29f105f61929bc29607b8"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>death_rate</b> () const noexcept</td></tr>
+<tr class="separator:a74f92a03b9f29f105f61929bc29607b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3910e70a136eb6edf267610cb80fffa"><td class="memItemLeft" align="right" valign="top"><a id="ae3910e70a136eb6edf267610cb80fffa"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>death_prob</b> () const noexcept</td></tr>
+<tr class="separator:ae3910e70a136eb6edf267610cb80fffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af85d81421b4467a3eca2cf60aeaa9449"><td class="memItemLeft" align="right" valign="top"><a id="af85d81421b4467a3eca2cf60aeaa9449"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>migra_rate</b> () const noexcept</td></tr>
+<tr class="separator:af85d81421b4467a3eca2cf60aeaa9449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="memItemLeft" align="right" valign="top"><a id="ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"></a>
+<a class="el" href="cell_8hpp.html#a6541dc28b22056ce0e9338fc44423fec">Event</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next_event</b> () const noexcept</td></tr>
+<tr class="separator:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba2b86f1dd758b70bde9108a6d2c955"><td class="memItemLeft" align="right" valign="top"><a id="afba2b86f1dd758b70bde9108a6d2c955"></a>
+const std::valarray&lt; int &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>coord</b> () const noexcept</td></tr>
+<tr class="separator:afba2b86f1dd758b70bde9108a6d2c955"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a15738ec7036887b3fd78ea99ca0db5c6"><td class="memItemLeft" align="right" valign="top"><a id="a15738ec7036887b3fd78ea99ca0db5c6"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a15738ec7036887b3fd78ea99ca0db5c6">MUTATION_RATE</a> () noexcept</td></tr>
-<tr class="memdesc:a15738ec7036887b3fd78ea99ca0db5c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374" title=": neutral mutation rate per cell division ">MUTATION_RATE_</a> <br /></td></tr>
-<tr class="separator:a15738ec7036887b3fd78ea99ca0db5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fd5a87ae01193256b50553e9196764d"><td class="memItemLeft" align="right" valign="top"><a id="a9fd5a87ae01193256b50553e9196764d"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a9fd5a87ae01193256b50553e9196764d">HAS_AT_LEAST_1_MUTATION_PER_DIVISION</a> () noexcept</td></tr>
-<tr class="memdesc:a9fd5a87ae01193256b50553e9196764d"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_cell.html#a152627c9328ff58cc397410a662fdcd2" title="for testing tree inference from ms-like output ">HAS_AT_LEAST_1_MUTATION_PER_DIVISION_</a> <br /></td></tr>
-<tr class="separator:a9fd5a87ae01193256b50553e9196764d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf294699568ae816353bd9fec8de604a"><td class="memItemLeft" align="right" valign="top"><a id="adf294699568ae816353bd9fec8de604a"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#adf294699568ae816353bd9fec8de604a">header</a> ()</td></tr>
 <tr class="memdesc:adf294699568ae816353bd9fec8de604a"><td class="mdescLeft">&#160;</td><td class="mdescRight">TSV header. <br /></td></tr>
 <tr class="separator:adf294699568ae816353bd9fec8de604a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a875576db8f804b44cda532d0aa5eb234"><td class="memItemLeft" align="right" valign="top"><a id="a875576db8f804b44cda532d0aa5eb234"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a875576db8f804b44cda532d0aa5eb234">init_distributions</a> ()</td></tr>
-<tr class="memdesc:a875576db8f804b44cda532d0aa5eb234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize probability distributions for events. <br /></td></tr>
-<tr class="separator:a875576db8f804b44cda532d0aa5eb234"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9eff67d457d523902fb1ac3660ac0b42"><td class="memItemLeft" align="right" valign="top">static boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga9eff67d457d523902fb1ac3660ac0b42">opt_description</a> ()</td></tr>
-<tr class="memdesc:ga9eff67d457d523902fb1ac3660ac0b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="group__params.html#ga9eff67d457d523902fb1ac3660ac0b42">More...</a><br /></td></tr>
-<tr class="separator:ga9eff67d457d523902fb1ac3660ac0b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea0ab8deac456d1a5f02ef642a76f3a5"><td class="memItemLeft" align="right" valign="top"><a id="aea0ab8deac456d1a5f02ef642a76f3a5"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aea0ab8deac456d1a5f02ef642a76f3a5">init_distributions</a> (const <a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> &amp;cp=<a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a>{}, const <a class="el" href="structtumopp_1_1_driver_params.html">DriverParams</a> &amp;dp=<a class="el" href="structtumopp_1_1_driver_params.html">DriverParams</a>{})</td></tr>
+<tr class="memdesc:aea0ab8deac456d1a5f02ef642a76f3a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize probability distributions. <br /></td></tr>
+<tr class="separator:aea0ab8deac456d1a5f02ef642a76f3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -208,28 +197,16 @@ Private Attributes</h2></td></tr>
 std::valarray&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a3bc6d8b7ac792d0df5b9bb9a8f28ce36">coord_</a></td></tr>
 <tr class="memdesc:a3bc6d8b7ac792d0df5b9bb9a8f28ce36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Position in a tumor. <br /></td></tr>
 <tr class="separator:a3bc6d8b7ac792d0df5b9bb9a8f28ce36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6dfcf8f41c164ee77beb1959ab2e0d3"><td class="memItemLeft" align="right" valign="top"><a id="ac6dfcf8f41c164ee77beb1959ab2e0d3"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ac6dfcf8f41c164ee77beb1959ab2e0d3">birth_rate_</a> = <a class="el" href="classtumopp_1_1_cell.html#a64b66f93c962cc6e8b095843c9850163">BIRTH_RATE_</a></td></tr>
-<tr class="memdesc:ac6dfcf8f41c164ee77beb1959ab2e0d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\beta\) <br /></td></tr>
-<tr class="separator:ac6dfcf8f41c164ee77beb1959ab2e0d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f87a79f5f82d7f01eb5ca6247c96b27"><td class="memItemLeft" align="right" valign="top"><a id="a4f87a79f5f82d7f01eb5ca6247c96b27"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4f87a79f5f82d7f01eb5ca6247c96b27">death_rate_</a> = <a class="el" href="classtumopp_1_1_cell.html#a84ead1eae36953fbe5ffd9ff28e858e2">DEATH_RATE_</a></td></tr>
-<tr class="memdesc:a4f87a79f5f82d7f01eb5ca6247c96b27"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\delta\) <br /></td></tr>
-<tr class="separator:a4f87a79f5f82d7f01eb5ca6247c96b27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1dedf2540071cd0a5c8319a9ed064ef"><td class="memItemLeft" align="right" valign="top"><a id="ab1dedf2540071cd0a5c8319a9ed064ef"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab1dedf2540071cd0a5c8319a9ed064ef">death_prob_</a> = <a class="el" href="classtumopp_1_1_cell.html#a774ad2fb1d51cb19a7a8d09fa4b0c92d">DEATH_PROB_</a></td></tr>
-<tr class="memdesc:ab1dedf2540071cd0a5c8319a9ed064ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\alpha\) <br /></td></tr>
-<tr class="separator:ab1dedf2540071cd0a5c8319a9ed064ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c90349decc7fb235b38cc39b46bbd51"><td class="memItemLeft" align="right" valign="top"><a id="a7c90349decc7fb235b38cc39b46bbd51"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7c90349decc7fb235b38cc39b46bbd51">migra_rate_</a> = <a class="el" href="classtumopp_1_1_cell.html#af221035ba8246d96ac7284546a195310">MIGRATION_RATE_</a></td></tr>
-<tr class="memdesc:a7c90349decc7fb235b38cc39b46bbd51"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\rho\) <br /></td></tr>
-<tr class="separator:a7c90349decc7fb235b38cc39b46bbd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2b3674fb9dd9d7b618226d964fa22f1"><td class="memItemLeft" align="right" valign="top"><a id="aa2b3674fb9dd9d7b618226d964fa22f1"></a>
+std::shared_ptr&lt; <a class="el" href="structtumopp_1_1_event_rates.html">EventRates</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1">event_rates_</a></td></tr>
+<tr class="memdesc:aa2b3674fb9dd9d7b618226d964fa22f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set of event rates (copy-on-write) <br /></td></tr>
+<tr class="separator:aa2b3674fb9dd9d7b618226d964fa22f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="memItemLeft" align="right" valign="top"><a id="a8bc889165e9dc62b622b986cbfc8a3b5"></a>
 <a class="el" href="cell_8hpp.html#a36714c346b1c0422dcab0e64d60f2b3e">CellType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a8bc889165e9dc62b622b986cbfc8a3b5">type_</a> = CellType::stem</td></tr>
 <tr class="memdesc:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">C1 cell type. <br /></td></tr>
 <tr class="separator:a8bc889165e9dc62b622b986cbfc8a3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="memItemLeft" align="right" valign="top"><a id="ae901542f3cf21bb9ca35ba81cb12c0c5"></a>
-uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae901542f3cf21bb9ca35ba81cb12c0c5">proliferation_capacity_</a> = static_cast&lt;uint_fast8_t&gt;(<a class="el" href="classtumopp_1_1_cell.html#a1bc0244bbb075f32c0fd72014fe0bd05">MAX_PROLIFERATION_CAPACITY_</a>)</td></tr>
+uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae901542f3cf21bb9ca35ba81cb12c0c5">proliferation_capacity_</a></td></tr>
 <tr class="memdesc:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\omega\) <br /></td></tr>
 <tr class="separator:ae901542f3cf21bb9ca35ba81cb12c0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48c7f319a9cbbe069e314105b64497a4"><td class="memItemLeft" align="right" valign="top"><a id="a48c7f319a9cbbe069e314105b64497a4"></a>
@@ -246,7 +223,7 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr class="separator:a30f79465ac5446013bdfd93b17a44027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="memItemLeft" align="right" valign="top"><a id="a4fbc103da88fbed6f71bf01f4bd7ea75"></a>
 std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4fbc103da88fbed6f71bf01f4bd7ea75">ancestor_</a></td></tr>
-<tr class="memdesc:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="mdescLeft">&#160;</td><td class="mdescRight">ancestor's ID <br /></td></tr>
+<tr class="memdesc:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="mdescLeft">&#160;</td><td class="mdescRight">pointer to the ancestor <br /></td></tr>
 <tr class="separator:a4fbc103da88fbed6f71bf01f4bd7ea75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0718cb9386cc15ecd9b29dd24e7a923b"><td class="memItemLeft" align="right" valign="top"><a id="a0718cb9386cc15ecd9b29dd24e7a923b"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b">time_of_birth_</a> = 0.0</td></tr>
@@ -256,81 +233,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475">time_of_death_</a> = 0.0</td></tr>
 <tr class="memdesc:a667e0253ed08a59572e9e96bfc434475"><td class="mdescLeft">&#160;</td><td class="mdescRight">time of death <br /></td></tr>
 <tr class="separator:a667e0253ed08a59572e9e96bfc434475"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
-Static Private Attributes</h2></td></tr>
-<tr class="memitem:a64b66f93c962cc6e8b095843c9850163"><td class="memItemLeft" align="right" valign="top"><a id="a64b66f93c962cc6e8b095843c9850163"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a64b66f93c962cc6e8b095843c9850163">BIRTH_RATE_</a> = 1.0</td></tr>
-<tr class="memdesc:a64b66f93c962cc6e8b095843c9850163"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\beta_0\) <br /></td></tr>
-<tr class="separator:a64b66f93c962cc6e8b095843c9850163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84ead1eae36953fbe5ffd9ff28e858e2"><td class="memItemLeft" align="right" valign="top"><a id="a84ead1eae36953fbe5ffd9ff28e858e2"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a84ead1eae36953fbe5ffd9ff28e858e2">DEATH_RATE_</a> = 0.0</td></tr>
-<tr class="memdesc:a84ead1eae36953fbe5ffd9ff28e858e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\delta_0\) <br /></td></tr>
-<tr class="separator:a84ead1eae36953fbe5ffd9ff28e858e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a774ad2fb1d51cb19a7a8d09fa4b0c92d"><td class="memItemLeft" align="right" valign="top"><a id="a774ad2fb1d51cb19a7a8d09fa4b0c92d"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a774ad2fb1d51cb19a7a8d09fa4b0c92d">DEATH_PROB_</a> = 0.0</td></tr>
-<tr class="memdesc:a774ad2fb1d51cb19a7a8d09fa4b0c92d"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\alpha_0\), death probability on cell division attempt <br /></td></tr>
-<tr class="separator:a774ad2fb1d51cb19a7a8d09fa4b0c92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af221035ba8246d96ac7284546a195310"><td class="memItemLeft" align="right" valign="top"><a id="af221035ba8246d96ac7284546a195310"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#af221035ba8246d96ac7284546a195310">MIGRATION_RATE_</a> = 0.0</td></tr>
-<tr class="memdesc:af221035ba8246d96ac7284546a195310"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\rho_0\) <br /></td></tr>
-<tr class="separator:af221035ba8246d96ac7284546a195310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeedc68d2dd7208e65f06d41f99817693"><td class="memItemLeft" align="right" valign="top"><a id="aeedc68d2dd7208e65f06d41f99817693"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aeedc68d2dd7208e65f06d41f99817693">GAMMA_SHAPE_</a> = 1.0</td></tr>
-<tr class="memdesc:aeedc68d2dd7208e65f06d41f99817693"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(k\) <br /></td></tr>
-<tr class="separator:aeedc68d2dd7208e65f06d41f99817693"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3533184ddf11df826d38c188d3d41695"><td class="memItemLeft" align="right" valign="top"><a id="a3533184ddf11df826d38c188d3d41695"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a3533184ddf11df826d38c188d3d41695">PROB_SYMMETRIC_DIVISION_</a> = 1.0</td></tr>
-<tr class="memdesc:a3533184ddf11df826d38c188d3d41695"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(p_s\) <br /></td></tr>
-<tr class="separator:a3533184ddf11df826d38c188d3d41695"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bc0244bbb075f32c0fd72014fe0bd05"><td class="memItemLeft" align="right" valign="top"><a id="a1bc0244bbb075f32c0fd72014fe0bd05"></a>
-static unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a1bc0244bbb075f32c0fd72014fe0bd05">MAX_PROLIFERATION_CAPACITY_</a> = 10u</td></tr>
-<tr class="memdesc:a1bc0244bbb075f32c0fd72014fe0bd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\omega_\text{max}\) <br /></td></tr>
-<tr class="separator:a1bc0244bbb075f32c0fd72014fe0bd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a73051fce9cce124250aadb5bd6ad1e"><td class="memItemLeft" align="right" valign="top"><a id="a7a73051fce9cce124250aadb5bd6ad1e"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7a73051fce9cce124250aadb5bd6ad1e">DRIVER_RATE_BIRTH_</a> = 0.0</td></tr>
-<tr class="memdesc:a7a73051fce9cce124250aadb5bd6ad1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\beta\) <br /></td></tr>
-<tr class="separator:a7a73051fce9cce124250aadb5bd6ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a033422f163baf839143503e77415b1ba"><td class="memItemLeft" align="right" valign="top"><a id="a033422f163baf839143503e77415b1ba"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a033422f163baf839143503e77415b1ba">DRIVER_RATE_DEATH_</a> = 0.0</td></tr>
-<tr class="memdesc:a033422f163baf839143503e77415b1ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\delta\) <br /></td></tr>
-<tr class="separator:a033422f163baf839143503e77415b1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38fc3587d9e78cc341084689ecf0e63e"><td class="memItemLeft" align="right" valign="top"><a id="a38fc3587d9e78cc341084689ecf0e63e"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a38fc3587d9e78cc341084689ecf0e63e">DRIVER_RATE_MIGRA_</a> = 0.0</td></tr>
-<tr class="memdesc:a38fc3587d9e78cc341084689ecf0e63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu_\rho\) <br /></td></tr>
-<tr class="separator:a38fc3587d9e78cc341084689ecf0e63e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a070a2d619af80d8ddebb4f1cac17f145"><td class="memItemLeft" align="right" valign="top"><a id="a070a2d619af80d8ddebb4f1cac17f145"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a070a2d619af80d8ddebb4f1cac17f145">DRIVER_MEAN_BIRTH_</a> = 0.0</td></tr>
-<tr class="memdesc:a070a2d619af80d8ddebb4f1cac17f145"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\bar s_\beta\) <br /></td></tr>
-<tr class="separator:a070a2d619af80d8ddebb4f1cac17f145"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e610fad946c873a2c10d71e0e983def"><td class="memItemLeft" align="right" valign="top"><a id="a1e610fad946c873a2c10d71e0e983def"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a1e610fad946c873a2c10d71e0e983def">DRIVER_MEAN_DEATH_</a> = 0.0</td></tr>
-<tr class="memdesc:a1e610fad946c873a2c10d71e0e983def"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\bar s_\delta\) <br /></td></tr>
-<tr class="separator:a1e610fad946c873a2c10d71e0e983def"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e9c6de1b5df3a7c58de5e58c49f7e6a"><td class="memItemLeft" align="right" valign="top"><a id="a8e9c6de1b5df3a7c58de5e58c49f7e6a"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a8e9c6de1b5df3a7c58de5e58c49f7e6a">DRIVER_MEAN_MIGRA_</a> = 0.0</td></tr>
-<tr class="memdesc:a8e9c6de1b5df3a7c58de5e58c49f7e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\bar s_\rho\) <br /></td></tr>
-<tr class="separator:a8e9c6de1b5df3a7c58de5e58c49f7e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada71bcfa00507b240d067015f71687f0"><td class="memItemLeft" align="right" valign="top"><a id="ada71bcfa00507b240d067015f71687f0"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ada71bcfa00507b240d067015f71687f0">DRIVER_SD_BIRTH_</a> = 0.0</td></tr>
-<tr class="memdesc:ada71bcfa00507b240d067015f71687f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\beta\) <br /></td></tr>
-<tr class="separator:ada71bcfa00507b240d067015f71687f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6e7b389efed8c6305fc5144682b922a"><td class="memItemLeft" align="right" valign="top"><a id="ab6e7b389efed8c6305fc5144682b922a"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab6e7b389efed8c6305fc5144682b922a">DRIVER_SD_DEATH_</a> = 0.0</td></tr>
-<tr class="memdesc:ab6e7b389efed8c6305fc5144682b922a"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\delta\) <br /></td></tr>
-<tr class="separator:ab6e7b389efed8c6305fc5144682b922a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c82812fcc104e8aa1b4b449a45c8880"><td class="memItemLeft" align="right" valign="top"><a id="a4c82812fcc104e8aa1b4b449a45c8880"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4c82812fcc104e8aa1b4b449a45c8880">DRIVER_SD_MIGRA_</a> = 0.0</td></tr>
-<tr class="memdesc:a4c82812fcc104e8aa1b4b449a45c8880"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\sigma_\rho\) <br /></td></tr>
-<tr class="separator:a4c82812fcc104e8aa1b4b449a45c8880"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec36cb1072b4c52cb6134412f0c87374"><td class="memItemLeft" align="right" valign="top"><a id="aec36cb1072b4c52cb6134412f0c87374"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aec36cb1072b4c52cb6134412f0c87374">MUTATION_RATE_</a> = 1e-1</td></tr>
-<tr class="memdesc:aec36cb1072b4c52cb6134412f0c87374"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(\mu\): neutral mutation rate per cell division <br /></td></tr>
-<tr class="separator:aec36cb1072b4c52cb6134412f0c87374"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a152627c9328ff58cc397410a662fdcd2"><td class="memItemLeft" align="right" valign="top"><a id="a152627c9328ff58cc397410a662fdcd2"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a152627c9328ff58cc397410a662fdcd2">HAS_AT_LEAST_1_MUTATION_PER_DIVISION_</a> = false</td></tr>
-<tr class="memdesc:a152627c9328ff58cc397410a662fdcd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">for testing tree inference from ms-like output <br /></td></tr>
-<tr class="separator:a152627c9328ff58cc397410a662fdcd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>

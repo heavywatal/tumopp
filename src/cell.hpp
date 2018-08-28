@@ -27,7 +27,8 @@ enum class Event: uint_fast8_t {
    migration,
 };
 
-/*! @brief Parameters for the probability distributions of waiting times
+//! @brief Parameters for the probability distributions of waiting times
+/*! @ingroup params
 */
 struct EventRates {
     //! \f$\beta\f$
@@ -40,7 +41,8 @@ struct EventRates {
     double migra_rate = 0.0;
 };
 
-/*! @brief Miscellaneous parameters for Cell class
+//! @brief Miscellaneous parameters for Cell class
+/*! @ingroup params
 */
 struct CellParams {
     //! \f$k\f$
@@ -51,7 +53,8 @@ struct CellParams {
     unsigned MAX_PROLIFERATION_CAPACITY = 10u;
 };
 
-/*! @brief Parameters for driver mutations
+//! @brief Parameters for driver mutations
+/*! @ingroup params
 */
 struct DriverParams {
     //! \f$\mu_\beta\f$
@@ -158,7 +161,7 @@ class Cell {
     std::string str() const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
-    //! Initialize probability distributions for events
+    //! Initialize probability distributions
     static void init_distributions(const CellParams& cp=CellParams{}, const DriverParams& dp=DriverParams{});
 
   private:
@@ -184,7 +187,7 @@ class Cell {
 
     //! ID
     unsigned id_;
-    //! ancestor's ID
+    //! pointer to the ancestor
     std::shared_ptr<Cell> ancestor_;
     //! time of birth
     double time_of_birth_ = 0.0;

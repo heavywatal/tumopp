@@ -122,6 +122,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:gab152c58afa27110a16c9a55808ae97d6"><td class="memItemLeft" align="right" valign="top">boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#gab152c58afa27110a16c9a55808ae97d6">positional_desc</a> ()</td></tr>
 <tr class="memdesc:gab152c58afa27110a16c9a55808ae97d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Positional arguments to produce ms-like output.  <a href="group__params.html#gab152c58afa27110a16c9a55808ae97d6">More...</a><br /></td></tr>
 <tr class="separator:gab152c58afa27110a16c9a55808ae97d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2023a97c469be5d486de7dc346b264d"><td class="memItemLeft" align="right" valign="top">boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#gac2023a97c469be5d486de7dc346b264d">cell_options</a> ()</td></tr>
+<tr class="memdesc:gac2023a97c469be5d486de7dc346b264d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="group__params.html#gac2023a97c469be5d486de7dc346b264d">More...</a><br /></td></tr>
+<tr class="separator:gac2023a97c469be5d486de7dc346b264d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ff1304bd90121d837c7286a4abeedb5"><td class="memItemLeft" align="right" valign="top"><a id="a6ff1304bd90121d837c7286a4abeedb5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a6ff1304bd90121d837c7286a4abeedb5">help_and_exit</a> ()</td></tr>
 <tr class="memdesc:a6ff1304bd90121d837c7286a4abeedb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print help message and exit. <br /></td></tr>
@@ -137,6 +140,18 @@ Private Attributes</h2></td></tr>
 std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_tissue.html">Tissue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#ab5d4d6b5a0a682727f8ee793113dbf11">tissue_</a></td></tr>
 <tr class="memdesc:ab5d4d6b5a0a682727f8ee793113dbf11"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtumopp_1_1_tissue.html" title="Population of Cell. ">Tissue</a> instance. <br /></td></tr>
 <tr class="separator:ab5d4d6b5a0a682727f8ee793113dbf11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7994b07a9c0f3d30323c88928eafbb92"><td class="memItemLeft" align="right" valign="top"><a id="a7994b07a9c0f3d30323c88928eafbb92"></a>
+std::unique_ptr&lt; <a class="el" href="structtumopp_1_1_event_rates.html">EventRates</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a7994b07a9c0f3d30323c88928eafbb92">init_event_rates_</a></td></tr>
+<tr class="memdesc:a7994b07a9c0f3d30323c88928eafbb92"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtumopp_1_1_event_rates.html" title="Parameters for the probability distributions of waiting times. ">EventRates</a> instance. <br /></td></tr>
+<tr class="separator:a7994b07a9c0f3d30323c88928eafbb92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96fa4cd24ca532e509cda4618c449ffb"><td class="memItemLeft" align="right" valign="top"><a id="a96fa4cd24ca532e509cda4618c449ffb"></a>
+std::unique_ptr&lt; <a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a96fa4cd24ca532e509cda4618c449ffb">cell_params_</a></td></tr>
+<tr class="memdesc:a96fa4cd24ca532e509cda4618c449ffb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtumopp_1_1_cell_params.html" title="Miscellaneous parameters for Cell class. ">CellParams</a> instance. <br /></td></tr>
+<tr class="separator:a96fa4cd24ca532e509cda4618c449ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1140ba7d0497386d144f59358087fc54"><td class="memItemLeft" align="right" valign="top"><a id="a1140ba7d0497386d144f59358087fc54"></a>
+std::unique_ptr&lt; <a class="el" href="structtumopp_1_1_driver_params.html">DriverParams</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a1140ba7d0497386d144f59358087fc54">driver_params_</a></td></tr>
+<tr class="memdesc:a1140ba7d0497386d144f59358087fc54"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtumopp_1_1_driver_params.html" title="Parameters for driver mutations. ">DriverParams</a> instance. <br /></td></tr>
+<tr class="separator:a1140ba7d0497386d144f59358087fc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81492d5e2d1fc46324461dfa982ae382"><td class="memItemLeft" align="right" valign="top"><a id="a81492d5e2d1fc46324461dfa982ae382"></a>
 std::unique_ptr&lt; boost::program_options::variables_map &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a81492d5e2d1fc46324461dfa982ae382">vars_</a></td></tr>
 <tr class="memdesc:a81492d5e2d1fc46324461dfa982ae382"><td class="mdescLeft">&#160;</td><td class="mdescRight">optional variables <br /></td></tr>

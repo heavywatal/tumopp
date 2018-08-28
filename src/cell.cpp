@@ -11,6 +11,12 @@
 
 namespace tumopp {
 
+static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
+static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
+
+/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
+namespace {
+
 class GammaFactory {
   public:
     GammaFactory(double k) noexcept: shape_(k) {}
@@ -41,16 +47,17 @@ class bernoulli_distribution {
     double p_;
 };
 
-namespace {
-    GammaFactory GAMMA_FACTORY(0.0);
-    bernoulli_distribution BERN_SYMMETRIC(0.0);
-    bernoulli_distribution BERN_MUT_BIRTH(0.0);
-    bernoulli_distribution BERN_MUT_DEATH(0.0);
-    bernoulli_distribution BERN_MUT_MIGRA(0.0);
-    std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
-    std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
-    std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
-}
+GammaFactory GAMMA_FACTORY(0.0);
+bernoulli_distribution BERN_SYMMETRIC(0.0);
+bernoulli_distribution BERN_MUT_BIRTH(0.0);
+bernoulli_distribution BERN_MUT_DEATH(0.0);
+bernoulli_distribution BERN_MUT_MIGRA(0.0);
+std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
+std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
+std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
+
+}// namespace
+/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
 void Cell::init_distributions(const CellParams& cp, const DriverParams& dp) {
     GAMMA_FACTORY.param(cp.GAMMA_SHAPE);
@@ -62,9 +69,6 @@ void Cell::init_distributions(const CellParams& cp, const DriverParams& dp) {
     GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(dp.MEAN_DEATH, dp.SD_DEATH));
     GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(dp.MEAN_MIGRA, dp.SD_MIGRA));
 }
-
-static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
-static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
 
 void Cell::differentiate() {
     if (type_ == CellType::stem) {
