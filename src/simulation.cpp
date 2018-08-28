@@ -90,17 +90,36 @@ po::options_description Simulation::options_desc() {HERE;
     `-d,--delta0`       | \f$\delta_0\f$      | EventRates::death_rate
     `-a,--alpha0`       | \f$\alpha_0\f$      | EventRates::death_prob
     `-m,--rho0`         | \f$\rho_0\f$        | EventRates::migra_rate
+    `--ub`              | \f$\mu_\beta\f$     | DriverParams::RATE_BIRTH
+    `--ud`              | \f$\mu_\delta\f$    | DriverParams::RATE_DEATH
+    `--um`              | \f$\mu_\rho\f$      | DriverParams::RATE_MIGRA
+    `--mb`              | \f$\bar s_\beta\f$  | DriverParams::MEAN_BIRTH
+    `--md`              | \f$\bar s_\delta\f$ | DriverParams::MEAN_DEATH
+    `--mm`              | \f$\bar s_\rho\f$   | DriverParams::MEAN_MIGRA
+    `--sb`              | \f$\sigma_\beta\f$  | DriverParams::SD_BIRTH
+    `--sd`              | \f$\sigma_\delta\f$ | DriverParams::SD_DEATH
+    `--sm`              | \f$\sigma_\rho\f$   | DriverParams::SD_MIGRA
 */
 po::options_description Simulation::cell_options() {HERE;
     init_event_rates_ = std::make_unique<EventRates>();
+    driver_params_ = std::make_unique<DriverParams>();
     namespace po = boost::program_options;
-    po::options_description desc{"Params!"};
+    po::options_description desc{"Cell"};
     auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
     desc.add_options()
       ("beta0,b", po_value(&init_event_rates_->birth_rate))
       ("delta0,d", po_value(&init_event_rates_->death_rate))
       ("alpha0,a", po_value(&init_event_rates_->death_prob))
       ("rho0,m", po_value(&init_event_rates_->migra_rate))
+      ("ub", po_value(&driver_params_->RATE_BIRTH))
+      ("ud", po_value(&driver_params_->RATE_DEATH))
+      ("um", po_value(&driver_params_->RATE_MIGRA))
+      ("mb", po_value(&driver_params_->MEAN_BIRTH))
+      ("md", po_value(&driver_params_->MEAN_DEATH))
+      ("mm", po_value(&driver_params_->MEAN_MIGRA))
+      ("sb", po_value(&driver_params_->SD_BIRTH))
+      ("sd", po_value(&driver_params_->SD_DEATH))
+      ("sm", po_value(&driver_params_->SD_MIGRA))
     ;
     return desc;
 }
@@ -158,7 +177,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     if (vm["help"].as<bool>()) {help_and_exit();}
     if (vm["version"].as<bool>()) {version_and_exit();}
     po::notify(vm);
-    Cell::init_distributions();
+    Cell::init_distributions(*driver_params_);
     wtl::sfmt64().seed(vm["seed"].as<uint32_t>());
 
     config_string_ = wtl::flags_into_string(vm);

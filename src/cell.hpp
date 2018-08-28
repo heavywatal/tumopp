@@ -42,6 +42,29 @@ struct EventRates {
     double migra_rate = 0.0;
 };
 
+/*! @brief Parameters for driver mutations
+*/
+struct DriverParams {
+    //! \f$\mu_\beta\f$
+    double RATE_BIRTH = 0.0;
+    //! \f$\mu_\delta\f$
+    double RATE_DEATH = 0.0;
+    //! \f$\mu_\rho\f$
+    double RATE_MIGRA = 0.0;
+    //! \f$\bar s_\beta\f$
+    double MEAN_BIRTH = 0.0;
+    //! \f$\bar s_\delta\f$
+    double MEAN_DEATH = 0.0;
+    //! \f$\bar s_\rho\f$
+    double MEAN_MIGRA = 0.0;
+    //! \f$\sigma_\beta\f$
+    double SD_BIRTH = 0.0;
+    //! \f$\sigma_\delta\f$
+    double SD_DEATH = 0.0;
+    //! \f$\sigma_\rho\f$
+    double SD_MIGRA = 0.0;
+};
+
 /*! @brief Cancer cell
 */
 class Cell {
@@ -121,7 +144,7 @@ class Cell {
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Initialize probability distributions for events
-    static void init_distributions();
+    static void init_distributions(const DriverParams& dp=DriverParams{});
 
     static boost::program_options::options_description opt_description();
 
@@ -137,26 +160,6 @@ class Cell {
     static double PROB_SYMMETRIC_DIVISION_;
     //! \f$\omega_\text{max}\f$
     static unsigned MAX_PROLIFERATION_CAPACITY_;
-
-    //! \f$\mu_\beta\f$
-    static double DRIVER_RATE_BIRTH_;
-    //! \f$\mu_\delta\f$
-    static double DRIVER_RATE_DEATH_;
-    //! \f$\mu_\rho\f$
-    static double DRIVER_RATE_MIGRA_;
-    //! \f$\bar s_\beta\f$
-    static double DRIVER_MEAN_BIRTH_;
-    //! \f$\bar s_\delta\f$
-    static double DRIVER_MEAN_DEATH_;
-    //! \f$\bar s_\rho\f$
-    static double DRIVER_MEAN_MIGRA_;
-    //! \f$\sigma_\beta\f$
-    static double DRIVER_SD_BIRTH_;
-    //! \f$\sigma_\delta\f$
-    static double DRIVER_SD_DEATH_;
-    //! \f$\sigma_\rho\f$
-    static double DRIVER_SD_MIGRA_;
-
     //! \f$\mu\f$: neutral mutation rate per cell division
     static double MUTATION_RATE_;
     //! for testing tree inference from ms-like output
