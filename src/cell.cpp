@@ -13,6 +13,7 @@ namespace tumopp {
 
 static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
 static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
+Cell::param_type Cell::PARAM_;
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace {
@@ -47,27 +48,28 @@ class bernoulli_distribution {
     double p_;
 };
 
-GammaFactory GAMMA_FACTORY(0.0);
-bernoulli_distribution BERN_SYMMETRIC(0.0);
-bernoulli_distribution BERN_MUT_BIRTH(0.0);
-bernoulli_distribution BERN_MUT_DEATH(0.0);
-bernoulli_distribution BERN_MUT_MIGRA(0.0);
-std::normal_distribution<double> GAUSS_BIRTH(0.0, 0.0);
-std::normal_distribution<double> GAUSS_DEATH(0.0, 0.0);
-std::normal_distribution<double> GAUSS_MIGRA(0.0, 0.0);
+GammaFactory GAMMA_FACTORY(Cell::param().GAMMA_SHAPE);
+bernoulli_distribution BERN_SYMMETRIC(Cell::param().PROB_SYMMETRIC_DIVISION);
+bernoulli_distribution BERN_MUT_BIRTH(Cell::param().RATE_BIRTH);
+bernoulli_distribution BERN_MUT_DEATH(Cell::param().RATE_DEATH);
+bernoulli_distribution BERN_MUT_MIGRA(Cell::param().RATE_MIGRA);
+std::normal_distribution<double> GAUSS_BIRTH(Cell::param().MEAN_BIRTH, Cell::param().SD_BIRTH);
+std::normal_distribution<double> GAUSS_DEATH(Cell::param().MEAN_DEATH, Cell::param().SD_DEATH);
+std::normal_distribution<double> GAUSS_MIGRA(Cell::param().MEAN_MIGRA, Cell::param().SD_MIGRA);
 
 }// namespace
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 
-void Cell::init_distributions(const CellParams& cp, const DriverParams& dp) {
-    GAMMA_FACTORY.param(cp.GAMMA_SHAPE);
-    BERN_SYMMETRIC.param(cp.PROB_SYMMETRIC_DIVISION);
-    BERN_MUT_BIRTH.param(dp.RATE_BIRTH);
-    BERN_MUT_DEATH.param(dp.RATE_DEATH);
-    BERN_MUT_MIGRA.param(dp.RATE_MIGRA);
-    GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(dp.MEAN_BIRTH, dp.SD_BIRTH));
-    GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(dp.MEAN_DEATH, dp.SD_DEATH));
-    GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(dp.MEAN_MIGRA, dp.SD_MIGRA));
+void Cell::param(const param_type& p) {
+    PARAM_ = p;
+    GAMMA_FACTORY.param(PARAM_.GAMMA_SHAPE);
+    BERN_SYMMETRIC.param(PARAM_.PROB_SYMMETRIC_DIVISION);
+    BERN_MUT_BIRTH.param(PARAM_.RATE_BIRTH);
+    BERN_MUT_DEATH.param(PARAM_.RATE_DEATH);
+    BERN_MUT_MIGRA.param(PARAM_.RATE_MIGRA);
+    GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(PARAM_.MEAN_BIRTH, PARAM_.SD_BIRTH));
+    GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(PARAM_.MEAN_DEATH, PARAM_.SD_DEATH));
+    GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(PARAM_.MEAN_MIGRA, PARAM_.SD_MIGRA));
 }
 
 void Cell::differentiate() {

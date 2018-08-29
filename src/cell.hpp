@@ -35,7 +35,7 @@ struct EventRates {
     double migra_rate = 0.0;
 };
 
-//! @brief Miscellaneous parameters for Cell class
+//! @brief Parameters for Cell class
 /*! @ingroup params
 */
 struct CellParams {
@@ -45,12 +45,6 @@ struct CellParams {
     double PROB_SYMMETRIC_DIVISION = 1.0;
     //! \f$\omega_\text{max}\f$
     unsigned MAX_PROLIFERATION_CAPACITY = 10u;
-};
-
-//! @brief Parameters for driver mutations
-/*! @ingroup params
-*/
-struct DriverParams {
     //! \f$\mu_\beta\f$
     double RATE_BIRTH = 0.0;
     //! \f$\mu_\delta\f$
@@ -75,14 +69,15 @@ struct DriverParams {
 */
 class Cell {
   public:
+    //! Alias
+    using param_type = CellParams;
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
     Cell(const std::valarray<int>& v, unsigned i=0,
-         std::shared_ptr<EventRates> er=std::make_shared<EventRates>(),
-         std::shared_ptr<CellParams> cp=std::make_shared<CellParams>()) noexcept:
+         std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
       coord_(v), event_rates_(er),
-      proliferation_capacity_(static_cast<uint_fast8_t>(cp->MAX_PROLIFERATION_CAPACITY)),
+      proliferation_capacity_(static_cast<uint_fast8_t>(PARAM_.MAX_PROLIFERATION_CAPACITY)),
       id_(i) {}
     //! Copy constructor
     Cell(const Cell& other) noexcept:
@@ -155,12 +150,18 @@ class Cell {
     std::string str() const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
-    //! Initialize probability distributions
-    static void init_distributions(const CellParams& cp=CellParams{}, const DriverParams& dp=DriverParams{});
+    //! Set #PARAM_
+    static void param(const param_type& p);
+    //! Get #PARAM_
+    static const param_type& param() {return PARAM_;}
 
   private:
     //! Accumulate ancestral #id_
     std::unordered_set<unsigned> traceback() const;
+
+    //! Parameters shared among instances
+    static param_type PARAM_;
+
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 

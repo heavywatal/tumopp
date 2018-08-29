@@ -20,7 +20,6 @@ void test_coordinate(const std::valarray<int>& v) {
 
 int main() {
     std::cout.precision(15);
-    tumopp::Cell::init_distributions();
 
     tumopp::Tissue tissue;
     tissue.grow(10);
