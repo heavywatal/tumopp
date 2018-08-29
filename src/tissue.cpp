@@ -452,7 +452,7 @@ std::string Tissue::specimens() {
     }
     tumor_.clear();
     queue_.clear();
-    std::ostringstream oss;
+    auto oss = wtl::make_oss();
     oss << header();
     for (const auto& p: specimens_) {
         write(oss, *p);
