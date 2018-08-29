@@ -148,9 +148,6 @@ $(function() {
 <li>dist_direction_
 : <a class="el" href="classtumopp_1_1_coord.html#a9482986e5b9429ae37afaabffe94aa66">tumopp::Coord</a>
 </li>
-<li>driver_params_
-: <a class="el" href="classtumopp_1_1_simulation.html#a1140ba7d0497386d144f59358087fc54">tumopp::Simulation</a>
-</li>
 <li>drivers()
 : <a class="el" href="classtumopp_1_1_simulation.html#a09525044065fb6998dc2d7b4f7585f3f">tumopp::Simulation</a>
 , <a class="el" href="classtumopp_1_1_tissue.html#a19132f7bf1a714cc2e33341ae2ff65e3">tumopp::Tissue</a>
@@ -240,9 +237,6 @@ $(function() {
 <li>init_coord()
 : <a class="el" href="classtumopp_1_1_tissue.html#a5731b86a51eda99c5688d1b535f8da38">tumopp::Tissue</a>
 </li>
-<li>init_distributions()
-: <a class="el" href="classtumopp_1_1_cell.html#aea0ab8deac456d1a5f02ef642a76f3a5">tumopp::Cell</a>
-</li>
 <li>init_event_rates_
 : <a class="el" href="classtumopp_1_1_simulation.html#a7994b07a9c0f3d30323c88928eafbb92">tumopp::Simulation</a>
 </li>
@@ -255,6 +249,9 @@ $(function() {
 <li>insert_adjacent()
 : <a class="el" href="classtumopp_1_1_tissue.html#a609535e3359984797fcf6b0c702dbb91">tumopp::Tissue</a>
 </li>
+<li>is_differentiated()
+: <a class="el" href="classtumopp_1_1_cell.html#aac14979939636aab4fdf0e6c1db68f03">tumopp::Cell</a>
+</li>
 </ul>
 
 
@@ -263,13 +260,13 @@ $(function() {
 : <a class="el" href="structtumopp_1_1_cell_params.html#a67d709319658cc793eb8734d917e86ec">tumopp::CellParams</a>
 </li>
 <li>MEAN_BIRTH
-: <a class="el" href="structtumopp_1_1_driver_params.html#a0dca3bfa3c68b6652a9dfeaebffbc0c1">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a05f4d38f6701a1952bf95e8affdaf1ec">tumopp::CellParams</a>
 </li>
 <li>MEAN_DEATH
-: <a class="el" href="structtumopp_1_1_driver_params.html#a104f256016c83567f8035f5b4ce01011">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a5885feb8bf282ae1fa77163b1499ab3b">tumopp::CellParams</a>
 </li>
 <li>MEAN_MIGRA
-: <a class="el" href="structtumopp_1_1_driver_params.html#a5c40eed4899933f27c05db2ea782b2a0">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#aa1b61fea8e15cfdd4e2ebba919671afa">tumopp::CellParams</a>
 </li>
 <li>migra_rate
 : <a class="el" href="structtumopp_1_1_event_rates.html#a60d8100903d790f7d36f56264d2071fc">tumopp::EventRates</a>
@@ -334,6 +331,15 @@ $(function() {
 : <a class="el" href="classtumopp_1_1_simulation.html#a8bda78174280236708d37ee3825916ea">tumopp::Simulation</a>
 , <a class="el" href="classtumopp_1_1_tissue.html#a59139afbb7df1c22e7ccfa08b5c48125">tumopp::Tissue</a>
 </li>
+<li>param()
+: <a class="el" href="classtumopp_1_1_cell.html#af09ae99ccbd1c4bd269c378e16e3dd0a">tumopp::Cell</a>
+</li>
+<li>PARAM_
+: <a class="el" href="classtumopp_1_1_cell.html#a284a5773ffde92c7646cab6df747c779">tumopp::Cell</a>
+</li>
+<li>param_type
+: <a class="el" href="classtumopp_1_1_cell.html#a1e135d782ec62816c8ddedaddf99971f">tumopp::Cell</a>
+</li>
 <li>plateau()
 : <a class="el" href="classtumopp_1_1_tissue.html#a43277cef127d454d521de37274a8733e">tumopp::Tissue</a>
 </li>
@@ -347,7 +353,7 @@ $(function() {
 : <a class="el" href="structtumopp_1_1_cell_params.html#afd8d4170c5f98e78dc192a410a585426">tumopp::CellParams</a>
 </li>
 <li>proliferation_capacity_
-: <a class="el" href="classtumopp_1_1_cell.html#ae901542f3cf21bb9ca35ba81cb12c0c5">tumopp::Cell</a>
+: <a class="el" href="classtumopp_1_1_cell.html#a1ab2723455162072a241869a34435333">tumopp::Cell</a>
 </li>
 <li>proportion_empty_neighbors()
 : <a class="el" href="classtumopp_1_1_tissue.html#a9ed8f1a1c992649f06fbd75fba495cb4">tumopp::Tissue</a>
@@ -383,13 +389,13 @@ $(function() {
 : <a class="el" href="classtumopp_1_1_coord.html#aba77c9326d60cd40c8afbaf7aef4fc37">tumopp::Coord</a>
 </li>
 <li>RATE_BIRTH
-: <a class="el" href="structtumopp_1_1_driver_params.html#ad5e968350ae4c61e6eba2b7b48e53232">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a1e8c05efb0e9759ac1121836778373d9">tumopp::CellParams</a>
 </li>
 <li>RATE_DEATH
-: <a class="el" href="structtumopp_1_1_driver_params.html#ae9edc13aaec23c551195f15fa64555a9">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a49e23e7ddc78e085041cd50973845c34">tumopp::CellParams</a>
 </li>
 <li>RATE_MIGRA
-: <a class="el" href="structtumopp_1_1_driver_params.html#a8767893cb5820bdddc7298e718f3220b">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a175e134ab31c0db18806eb15f333985e">tumopp::CellParams</a>
 </li>
 <li>roulette_direction()
 : <a class="el" href="classtumopp_1_1_tissue.html#ac15f4c819e29abdf2b1c0a6229843e09">tumopp::Tissue</a>
@@ -414,13 +420,13 @@ $(function() {
 : <a class="el" href="classtumopp_1_1_tissue.html#a2e32a270f5cd912c7ac843843dffebb0">tumopp::Tissue</a>
 </li>
 <li>SD_BIRTH
-: <a class="el" href="structtumopp_1_1_driver_params.html#ac12107fef4efe7e2591b8820ef694ccf">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a07fc1d9e06db4f0a9e42dfe7d65bf7d7">tumopp::CellParams</a>
 </li>
 <li>SD_DEATH
-: <a class="el" href="structtumopp_1_1_driver_params.html#a693128f58c2f2be8bd37c5c2034c58b4">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a7490d483f2e685cd6f03b6b9927f7458">tumopp::CellParams</a>
 </li>
 <li>SD_MIGRA
-: <a class="el" href="structtumopp_1_1_driver_params.html#afd0990316445d0e505915db37fe15666">tumopp::DriverParams</a>
+: <a class="el" href="structtumopp_1_1_cell_params.html#a85963dadb0789b785e3ed0c97b908023">tumopp::CellParams</a>
 </li>
 <li>set_cycle_dependent_death()
 : <a class="el" href="classtumopp_1_1_cell.html#af54cb16eddf71ead3f026e51f6396e2f">tumopp::Cell</a>
@@ -480,7 +486,7 @@ $(function() {
 : <a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475">tumopp::Cell</a>
 </li>
 <li>Tissue()
-: <a class="el" href="classtumopp_1_1_tissue.html#aa2cc4cb4ae9e045dd62c0d20055f462c">tumopp::Tissue</a>
+: <a class="el" href="classtumopp_1_1_tissue.html#af25398e4619896a2721d848c51803ff1">tumopp::Tissue</a>
 </li>
 <li>tissue_
 : <a class="el" href="classtumopp_1_1_simulation.html#ab5d4d6b5a0a682727f8ee793113dbf11">tumopp::Simulation</a>
@@ -496,9 +502,6 @@ $(function() {
 </li>
 <li>tumor_
 : <a class="el" href="classtumopp_1_1_tissue.html#ad7e412502f859486d462d13938572025">tumopp::Tissue</a>
-</li>
-<li>type_
-: <a class="el" href="classtumopp_1_1_cell.html#a8bc889165e9dc62b622b986cbfc8a3b5">tumopp::Cell</a>
 </li>
 </ul>
 
@@ -517,7 +520,6 @@ $(function() {
 <li>write()
 : <a class="el" href="classtumopp_1_1_cell.html#ab542c6108030c220704f0f7692cbff47">tumopp::Cell</a>
 , <a class="el" href="classtumopp_1_1_simulation.html#a058bbc69ca044f8604879488b50b2e69">tumopp::Simulation</a>
-, <a class="el" href="classtumopp_1_1_tissue.html#a9715f51f774b78a1e9dab514bee02c59">tumopp::Tissue</a>
 </li>
 <li>write_segsites()
 : <a class="el" href="classtumopp_1_1_tissue.html#a196b02f6c507272e179c7d16cb133203">tumopp::Tissue</a>

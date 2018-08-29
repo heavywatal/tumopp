@@ -109,7 +109,7 @@ class Cell {
     //! Branch length (# of divisions) between two cells
     size_t branch_length(const Cell&) const;
 
-    //! Change #is_differentiated_ stochastically
+    //! Change #proliferation_capacity_ stochastically
     void differentiate();
     //! Set #time_of_birth_; reset other properties
     void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
@@ -122,6 +122,7 @@ class Cell {
     void set_cycle_dependent_death(double death_prob);
     //! Increase #event_rates_->death_rate to birth_rate() for simulating Moran-like situation
     void increase_death_rate() noexcept {event_rates_->death_rate = birth_rate();}
+    //! Check #proliferation_capacity_
     bool is_differentiated() const noexcept {return proliferation_capacity_ >= 0;}
 
     //! @name Setter functions
