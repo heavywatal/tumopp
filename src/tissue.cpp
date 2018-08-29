@@ -438,12 +438,7 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
 }
 
 std::string Tissue::header() const {
-    return Cell::header() + "\tphi\n";
-}
-
-void Tissue::write(std::ostream& ost, const Cell& cell) const {
-    cell.write(ost) << "\t"
-       << static_cast<unsigned>(num_empty_neighbors(cell.coord())) << "\n";
+    return Cell::header() + "\n";
 }
 
 std::string Tissue::specimens() {
@@ -455,14 +450,14 @@ std::string Tissue::specimens() {
     auto oss = wtl::make_oss();
     oss << header();
     for (const auto& p: specimens_) {
-        write(oss, *p);
+        oss << *p << "\n";
     }
     return oss.str();
 }
 
 void Tissue::write_snapshot() {
     for (const auto& p: tumor_) {
-        write(snapshots_ << time_ << "\t", *p);
+        snapshots_ << time_ << "\t" << *p << "\n";
     }
 }
 

@@ -75,8 +75,6 @@ class Tissue {
 
     //! TSV header
     std::string header() const;
-    //! TSV
-    void write(std::ostream&, const Cell&) const;
     //! Write all cells to #snapshots_ with #time_
     void write_snapshot();
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
