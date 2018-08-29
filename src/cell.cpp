@@ -73,9 +73,9 @@ void Cell::param(const param_type& p) {
 }
 
 void Cell::differentiate() {
-    if (!is_differentiated_) {
-        is_differentiated_ = !BERN_SYMMETRIC(wtl::sfmt64());
-    }
+    if (is_differentiated()) return;
+    if (BERN_SYMMETRIC(wtl::sfmt64())) return;
+    proliferation_capacity_ = static_cast<int8_t>(PARAM_.MAX_PROLIFERATION_CAPACITY);
 }
 
 std::string Cell::mutate() {
@@ -122,7 +122,7 @@ double Cell::delta_time(const double positional_value) {
     double t_birth = std::numeric_limits<double>::infinity();
     double t_death = std::numeric_limits<double>::infinity();
     double t_migra = std::numeric_limits<double>::infinity();
-    if (proliferation_capacity_ > 0) {
+    if (proliferation_capacity_ != 0) {
         double mu = 1.0;
         mu /= birth_rate();
         mu /= positional_value;
@@ -207,7 +207,7 @@ std::string Cell::header() {
         << "id\tancestor\t"
         << "birth\tdeath\t"
         << "beta\tdelta\talpha\trho\t"
-        << "type\tomega";
+        << "omega";
     return oss.str();
 }
 
@@ -222,8 +222,7 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << death_rate() << "\t"
         << death_prob() << "\t"
         << migra_rate() << "\t"
-        << is_differentiated_ << "\t"
-        << static_cast<unsigned>(proliferation_capacity_);
+        << static_cast<int>(proliferation_capacity_);
 }
 
 std::string Cell::str() const {

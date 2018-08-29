@@ -77,13 +77,11 @@ class Cell {
     Cell(const std::valarray<int>& v, unsigned i=0,
          std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
       coord_(v), event_rates_(er),
-      proliferation_capacity_(static_cast<uint_fast8_t>(PARAM_.MAX_PROLIFERATION_CAPACITY)),
       id_(i) {}
     //! Copy constructor
     Cell(const Cell& other) noexcept:
       coord_(other.coord_),
       event_rates_(other.event_rates_),
-      is_differentiated_(other.is_differentiated_),
       proliferation_capacity_(other.proliferation_capacity_),
       id_(other.id_),
       ancestor_(other.ancestor_),
@@ -118,12 +116,13 @@ class Cell {
         time_of_birth_ = t;
         id_ = i;
         ancestor_ = ancestor;
-        if (is_differentiated_) {--proliferation_capacity_;}
+        if (is_differentiated()) {--proliferation_capacity_;}
     }
     //! Set #event_rates_->death_prob and #next_event_
     void set_cycle_dependent_death(double death_prob);
     //! Increase #event_rates_->death_rate to birth_rate() for simulating Moran-like situation
     void increase_death_rate() noexcept {event_rates_->death_rate = birth_rate();}
+    bool is_differentiated() const noexcept {return proliferation_capacity_ >= 0;}
 
     //! @name Setter functions
     //@{
@@ -170,10 +169,8 @@ class Cell {
     //! Set of event rates (copy-on-write)
     std::shared_ptr<EventRates> event_rates_;
 
-    //! false: stem; true: non-stem
-    bool is_differentiated_ = false;
-    //! \f$\omega\f$
-    uint_fast8_t proliferation_capacity_;
+    //! \f$\omega\f$; stem cell if negative
+    int8_t proliferation_capacity_ = -1;
 
     //! next event: birth, death, or migration
     Event next_event_ = Event::birth;
