@@ -43,7 +43,6 @@ class Tissue {
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);
-
     //! Simulate medical treatment with the increased death_prob
     void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
@@ -60,23 +59,19 @@ class Tissue {
     //! sample cells in a cross section
     std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
 
+    //! Clear #tumor_ and #queue_ after appending to #specimens_
+    void clear();
+
     //! Stringify #specimens_
     std::string specimens();
     //! Stringify #snapshots_
-    std::string snapshots() const {
-        return "time\t" + header() + snapshots_.str();
-    }
+    std::string snapshots() const;
     //! Stringify #drivers_
     std::string drivers() const {
         return "id\ttype\tcoef\n" + drivers_.str();
     }
     //! Make TSV of pairwise distance
     std::string pairwise_distance(size_t npair) const;
-
-    //! TSV header
-    std::string header() const;
-    //! Write all cells to #snapshots_ with #time_
-    void write_snapshot();
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond
@@ -129,12 +124,13 @@ class Tissue {
         double x = static_cast<double>(num_empty_neighbors(coord));
         return x /= static_cast<double>(coord_func_->directions().size());
     }
-
-    //! Push a cell to event queue
-    void queue_push(const std::shared_ptr<Cell>&);
-
     //! TODO: Calculate positional value
     double positional_value(const std::valarray<int>&) const {return 1.0;}
+
+    //! Push a cell to event #queue_
+    void queue_push(const std::shared_ptr<Cell>&);
+    //! Write all cells to #snapshots_ with #time_
+    void snapshots_append();
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for tumor_

@@ -212,9 +212,9 @@ std::string Cell::header() {
 }
 
 std::ostream& Cell::write(std::ostream& ost) const {
-    int z = (coord_.size() > 2U) ? coord_[2] : 0;
     return ost
-        << coord_[0] << "\t" << coord_[1] << "\t" << z << "\t"
+        << coord_[0] << "\t" << coord_[1] << "\t"
+        << ((coord_.size() > 2u) ? coord_[2] : 0) << "\t"
         << id_ << "\t"
         << (ancestor_ ? ancestor_->id_ : 0u) << "\t"
         << time_of_birth_ << "\t" << time_of_death_ << "\t"
@@ -223,12 +223,6 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << death_prob() << "\t"
         << migra_rate() << "\t"
         << static_cast<int>(proliferation_capacity_);
-}
-
-std::string Cell::str() const {
-    auto oss = wtl::make_oss();
-    write(oss);
-    return oss.str();
 }
 
 //! Stream operator for debug print

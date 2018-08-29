@@ -146,8 +146,6 @@ class Cell {
     static std::string header();
     //! TSV
     std::ostream& write(std::ostream& ost) const;
-    //! TSV
-    std::string str() const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Set #PARAM_

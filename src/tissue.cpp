@@ -69,7 +69,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                   const double snapshot_interval,
                   size_t recording_early_growth,
                   size_t mutation_timing) {HERE;
-    if (recording_early_growth > 0u) {write_snapshot();}
+    if (recording_early_growth > 0u) {snapshots_append();}
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
@@ -82,7 +82,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             break;
         }
         if (time_ > time_snapshot) {
-            write_snapshot();
+            snapshots_append();
             time_snapshot = ++i_snapshot_ * snapshot_interval;
         }
         const auto mother = std::move(it->second);
@@ -118,7 +118,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             queue_push(mother);
         }
         if (tumor_.size() < recording_early_growth) {
-            write_snapshot();
+            snapshots_append();
         } else {
             recording_early_growth = 0u;  // prevent restart by cell death
         }
@@ -437,25 +437,29 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     return oss.str();
 }
 
-std::string Tissue::header() const {
-    return Cell::header() + "\n";
-}
-
-std::string Tissue::specimens() {
+void Tissue::clear() {
     for (const auto& p: tumor_) {
         specimens_.emplace_back(p);
     }
     tumor_.clear();
     queue_.clear();
+}
+
+std::string Tissue::specimens() {
+    clear();
     auto oss = wtl::make_oss();
-    oss << header();
+    oss << Cell::header() << "\n";
     for (const auto& p: specimens_) {
         oss << *p << "\n";
     }
     return oss.str();
 }
 
-void Tissue::write_snapshot() {
+std::string Tissue::snapshots() const {
+    return "time\t" + Cell::header() + "\n" + snapshots_.str();
+}
+
+void Tissue::snapshots_append() {
     for (const auto& p: tumor_) {
         snapshots_ << time_ << "\t" << *p << "\n";
     }
