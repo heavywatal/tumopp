@@ -21,9 +21,9 @@ Tissue::Tissue(
   const std::string& coordinate,
   const std::string& local_density_effect,
   const std::string& displacement_path,
-  const EventRates& init_event_rates):
-  snapshots_(wtl::make_oss()),
-  drivers_(wtl::make_oss()) {HERE;
+  const EventRates& init_event_rates) {HERE;
+    snapshots_.precision(std::cout.precision());
+    drivers_.precision(std::cout.precision());
     specimens_.reserve(initial_size * 2u);
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
@@ -70,6 +70,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                   size_t recording_early_growth,
                   size_t mutation_timing) {HERE;
     if (recording_early_growth > 0u) {snapshots_append();}
+    specimens_.reserve(2u * max_size);
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
@@ -445,18 +446,29 @@ void Tissue::clear() {
     queue_.clear();
 }
 
-std::string Tissue::specimens() {
-    clear();
-    auto oss = wtl::make_oss();
-    oss << Cell::header() << "\n";
+std::stringstream Tissue::specimens() const {
+    std::stringstream ss;
+    ss.precision(std::cout.precision());
+    ss << Cell::header() << "\n";
     for (const auto& p: specimens_) {
-        oss << *p << "\n";
+        p->write(ss) << "\n";
     }
-    return oss.str();
+    for (const auto& p: tumor_) {
+        p->write(ss) << "\n";
+    }
+    return ss;
 }
 
-std::string Tissue::snapshots() const {
-    return "time\t" + Cell::header() + "\n" + snapshots_.str();
+std::stringstream Tissue::snapshots() const {
+    std::stringstream ss;
+    ss << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
+    return ss;
+}
+
+std::stringstream Tissue::drivers() const {
+    std::stringstream ss;
+    ss << "id\ttype\tcoef\n" << drivers_.rdbuf();
+    return ss;
 }
 
 void Tissue::snapshots_append() {

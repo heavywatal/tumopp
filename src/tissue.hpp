@@ -63,20 +63,18 @@ class Tissue {
     void clear();
 
     //! Stringify #specimens_
-    std::string specimens();
+    std::stringstream specimens() const;
     //! Stringify #snapshots_
-    std::string snapshots() const;
+    std::stringstream snapshots() const;
     //! Stringify #drivers_
-    std::string drivers() const {
-        return "id\ttype\tcoef\n" + drivers_.str();
-    }
+    std::stringstream drivers() const;
     //! Make TSV of pairwise distance
     std::string pairwise_distance(size_t npair) const;
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond
-    bool snapshots_empty() const {return snapshots_.str().empty();};
-    bool drivers_empty() const {return drivers_.str().empty();}
+    bool has_snapshots() const {return snapshots_.rdbuf()->in_avail();};
+    bool has_drivers() const {return drivers_.rdbuf()->in_avail();}
     //! @endcond
 
     //! Shortcut of tumor_.size()
@@ -175,9 +173,9 @@ class Tissue {
     //! record all cells existed
     std::vector<std::shared_ptr<Cell>> specimens_;
     //! record snapshots
-    std::ostringstream snapshots_;
+    std::stringstream snapshots_;
     //! record driver mutations
-    std::ostringstream drivers_;
+    std::stringstream drivers_;
 };
 
 } // namespace tumopp

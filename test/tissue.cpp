@@ -8,6 +8,6 @@ int main() {
     tumopp::Tissue tissue;
     tissue.grow(10);
     std::cout << tissue << "\n";
-    std::cout << tissue.specimens();
+    std::cout << tissue.specimens().rdbuf();
     return 0;
 }
