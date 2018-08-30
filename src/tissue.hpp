@@ -59,11 +59,11 @@ class Tissue {
     //! sample cells in a cross section
     std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
 
-    //! Clear #tumor_ and #queue_ after appending to #specimens_
+    //! Clear #extant_cells_ and #queue_ after appending to #history_
     void clear();
 
-    //! Stringify #specimens_
-    std::stringstream specimens() const;
+    //! Stringify #history_
+    std::stringstream history() const;
     //! Stringify #snapshots_
     std::stringstream snapshots() const;
     //! Stringify #drivers_
@@ -77,16 +77,13 @@ class Tissue {
     bool has_drivers() const {return drivers_.rdbuf()->in_avail();}
     //! @endcond
 
-    //! Shortcut of tumor_.size()
-    size_t size() const noexcept {return tumor_.size();}
-    //! Shortcut of tumor_.begin()
-    auto begin() noexcept {return tumor_.begin();}
-    //! Shortcut of tumor_.end()
-    auto end() noexcept {return tumor_.end();}
-    //! getter of #time_
+    //! @name Getter functions
+    size_t size() const noexcept {return extant_cells_.size();}
+    auto begin() noexcept {return extant_cells_.begin();}
+    auto end() noexcept {return extant_cells_.end();}
     double time() const noexcept {return time_;}
-    //! Shortcut of coord_func_.dimensions()
     unsigned dimensions() const noexcept {return coord_func_->dimensions();}
+    //@}
 
   private:
     //! Set #coord_func_
@@ -131,7 +128,7 @@ class Tissue {
     void snapshots_append();
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
-    // Function object for tumor_
+    // Function object for extant_cells_
 
     //! Hashing function object for shptr<Cell>
     struct hash_shptr_cell {
@@ -157,7 +154,7 @@ class Tissue {
     std::unordered_set<
         std::shared_ptr<Cell>,
         hash_shptr_cell,
-        equal_shptr_cell> tumor_;
+        equal_shptr_cell> extant_cells_;
     //! incremented when a new cell is born
     unsigned id_tail_ = 0;
 
@@ -171,7 +168,7 @@ class Tissue {
     std::unique_ptr<Coord> coord_func_;
 
     //! record all cells existed
-    std::vector<std::shared_ptr<Cell>> specimens_;
+    std::vector<std::shared_ptr<Cell>> history_;
     //! record snapshots
     std::stringstream snapshots_;
     //! record driver mutations

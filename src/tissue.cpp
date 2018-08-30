@@ -24,7 +24,7 @@ Tissue::Tissue(
   const EventRates& init_event_rates) {HERE;
     snapshots_.precision(std::cout.precision());
     drivers_.precision(std::cout.precision());
-    specimens_.reserve(initial_size * 2u);
+    history_.reserve(initial_size * 2u);
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
     const auto initial_coords = coord_func_->sphere(initial_size);
@@ -32,21 +32,21 @@ Tissue::Tissue(
       initial_coords[0], ++id_tail_,
       std::make_shared<EventRates>(init_event_rates)
     );
-    tumor_.insert(origin);
-    while (tumor_.size() < initial_size) {
-        for (const auto& mother: tumor_) {
+    extant_cells_.insert(origin);
+    while (extant_cells_.size() < initial_size) {
+        for (const auto& mother: extant_cells_) {
             const auto daughter = std::make_shared<Cell>(*mother);
             const auto ancestor = std::make_shared<Cell>(*mother);
             ancestor->set_time_of_death(0.0);
-            specimens_.emplace_back(ancestor);
+            history_.emplace_back(ancestor);
             mother->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_time_of_birth(0.0, ++id_tail_, ancestor);
-            daughter->set_coord(initial_coords[tumor_.size()]);
-            tumor_.insert(daughter);
-            if (tumor_.size() >= initial_size) break;
+            daughter->set_coord(initial_coords[extant_cells_.size()]);
+            extant_cells_.insert(daughter);
+            if (extant_cells_.size() >= initial_size) break;
         }
     }
-    for (const auto& cell: tumor_) queue_push(cell);
+    for (const auto& cell: extant_cells_) queue_push(cell);
 }
 
 void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {HERE;
@@ -70,15 +70,15 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                   size_t recording_early_growth,
                   size_t mutation_timing) {HERE;
     if (recording_early_growth > 0u) {snapshots_append();}
-    specimens_.reserve(2u * max_size);
+    history_.reserve(2u * max_size);
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
     while (true) {
-        if ((++i % 1000U) == 0U) {DCERR("\r" << tumor_.size());}
+        if ((++i % 1000U) == 0U) {DCERR("\r" << extant_cells_.size());}
         auto it = queue_.begin();
         time_ = it->first;
-        if (time_ > max_time || tumor_.size() >= max_size) {
+        if (time_ > max_time || extant_cells_.size() >= max_size) {
             success = true; // maybe not; but want to exit with record
             break;
         }
@@ -93,13 +93,13 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             if (insert(daughter)) {
                 const auto ancestor = std::make_shared<Cell>(*mother);
                 ancestor->set_time_of_death(time_);
-                specimens_.emplace_back(ancestor);
+                history_.emplace_back(ancestor);
                 mother->set_time_of_birth(time_, ++id_tail_, ancestor);
                 daughter->differentiate();
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 drivers_ << mother->mutate();
                 drivers_ << daughter->mutate();
-                if (tumor_.size() > mutation_timing) {  // once
+                if (extant_cells_.size() > mutation_timing) {  // once
                     mutation_timing = std::numeric_limits<size_t>::max();
                     drivers_ << daughter->force_mutate();
                 }
@@ -111,26 +111,26 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             }
         } else if (mother->next_event() == Event::death) {
             mother->set_time_of_death(time_);
-            specimens_.emplace_back(mother);
-            tumor_.erase(mother);
-            if (tumor_.empty()) break;
+            history_.emplace_back(mother);
+            extant_cells_.erase(mother);
+            if (extant_cells_.empty()) break;
         } else {
             migrate(mother);
             queue_push(mother);
         }
-        if (tumor_.size() < recording_early_growth) {
+        if (extant_cells_.size() < recording_early_growth) {
             snapshots_append();
         } else {
             recording_early_growth = 0u;  // prevent restart by cell death
         }
     }
-    DCERR("\r" << tumor_.size() << std::endl);
+    DCERR("\r" << extant_cells_.size() << std::endl);
     return success;
 }
 
 void Tissue::plateau(const double time) {HERE;
     queue_.clear();
-    for (auto& p: tumor_) {
+    for (auto& p: extant_cells_) {
         p->increase_death_rate();
         p->set_elapsed(0.0);
         queue_push(p);
@@ -139,7 +139,7 @@ void Tissue::plateau(const double time) {HERE;
 }
 
 void Tissue::treatment(const double death_prob, const size_t num_resistant_cells) {HERE;
-    const size_t original_size = tumor_.size();
+    const size_t original_size = extant_cells_.size();
     std::vector<std::shared_ptr<Cell>> cells;
     cells.reserve(original_size);
     for (const auto& p: queue_) { // for reproducibility
@@ -204,7 +204,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     });
     swtch["linear"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
         daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt64()));
-        return tumor_.insert(daughter).second;
+        return extant_cells_.insert(daughter).second;
     });
     try {
         insert = swtch.at(local_density_effect).at(displacement_path);
@@ -246,7 +246,7 @@ bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
     std::shuffle(neighbors.begin(), neighbors.end(), wtl::sfmt64());
     for (auto& x: neighbors) {
         moving->set_coord(x);
-        if (tumor_.insert(moving).second) {
+        if (extant_cells_.insert(moving).second) {
             return true;
         }
     }
@@ -255,30 +255,30 @@ bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
 }
 
 bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
-    // The cell must not be in tumor_.
-    auto result = tumor_.insert(*x);
+    // The cell must not be in extant_cells_.
+    auto result = extant_cells_.insert(*x);
     if (result.second) {
         return false;
     } else {
         std::shared_ptr<Cell> existing = std::move(*result.first);
-        tumor_.erase(result.first);
-        tumor_.insert(std::move(*x));
+        extant_cells_.erase(result.first);
+        extant_cells_.insert(std::move(*x));
         x->swap(existing);
         return true;
     }
 }
 
 void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
-    tumor_.erase(moving);
+    extant_cells_.erase(moving);
     const auto orig_pos = moving->coord();
     moving->set_coord(coord_func_->random_neighbor(moving->coord(), wtl::sfmt64()));
-    auto result = tumor_.insert(moving);
+    auto result = extant_cells_.insert(moving);
     if (!result.second) {
         std::shared_ptr<Cell> existing = std::move(*result.first);
-        tumor_.erase(result.first);
-        tumor_.insert(std::move(moving));
+        extant_cells_.erase(result.first);
+        extant_cells_.insert(std::move(moving));
         existing->set_coord(orig_pos);
-        tumor_.insert(existing);
+        extant_cells_.insert(existing);
     }
 }
 
@@ -288,7 +288,7 @@ size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<in
     do {
         key->set_coord(current += direction);
         ++steps;
-    } while (tumor_.find(key) != tumor_.end());
+    } while (extant_cells_.find(key) != extant_cells_.end());
     return steps;
 }
 
@@ -325,7 +325,7 @@ uint_fast8_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const 
     std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
         nb->set_coord(coord + d);
-        if (tumor_.find(nb) == tumor_.end()) {++cnt;}
+        if (extant_cells_.find(nb) == extant_cells_.end()) {++cnt;}
     }
     return cnt;
 }
@@ -377,7 +377,7 @@ std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::s
 std::vector<std::shared_ptr<Cell>>
 Tissue::sample_bulk(const std::shared_ptr<Cell>& center, const size_t n) const {
     std::multimap<double, std::shared_ptr<Cell>> ordered;
-    for (const auto& p: tumor_) {
+    for (const auto& p: extant_cells_) {
         ordered.emplace(coord_func_->euclidean_distance(p->coord() - center->coord()), p);
     }
     std::vector<std::shared_ptr<Cell>> sampled;
@@ -391,7 +391,7 @@ Tissue::sample_bulk(const std::shared_ptr<Cell>& center, const size_t n) const {
 
 std::vector<std::shared_ptr<Cell>>
 Tissue::sample_medoids(const size_t n) const {HERE;
-    std::vector<std::shared_ptr<Cell>> cells(tumor_.begin(), tumor_.end());
+    std::vector<std::shared_ptr<Cell>> cells(extant_cells_.begin(), extant_cells_.end());
     std::vector<std::valarray<double>> points;
     points.reserve(n);
     for (const auto& p: cells) {
@@ -407,13 +407,13 @@ Tissue::sample_medoids(const size_t n) const {HERE;
 }
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
-    return wtl::sample(std::vector<std::shared_ptr<Cell>>(tumor_.begin(), tumor_.end()), n, wtl::sfmt64());
+    return wtl::sample(std::vector<std::shared_ptr<Cell>>(extant_cells_.begin(), extant_cells_.end()), n, wtl::sfmt64());
 }
 
 std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Cell>> section;
-    section.reserve(static_cast<size_t>(coord_func_->cross_section(tumor_.size())));
-    for (const auto& p: tumor_) {
+    section.reserve(static_cast<size_t>(coord_func_->cross_section(extant_cells_.size())));
+    for (const auto& p: extant_cells_) {
         if (p->coord()[2] == 0) {section.push_back(p);}
     }
     return wtl::sample(section, n, wtl::sfmt64());
@@ -439,21 +439,21 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
 }
 
 void Tissue::clear() {
-    for (const auto& p: tumor_) {
-        specimens_.emplace_back(p);
+    for (const auto& p: extant_cells_) {
+        history_.emplace_back(p);
     }
-    tumor_.clear();
+    extant_cells_.clear();
     queue_.clear();
 }
 
-std::stringstream Tissue::specimens() const {
+std::stringstream Tissue::history() const {
     std::stringstream ss;
     ss.precision(std::cout.precision());
     ss << Cell::header() << "\n";
-    for (const auto& p: specimens_) {
+    for (const auto& p: history_) {
         p->write(ss) << "\n";
     }
-    for (const auto& p: tumor_) {
+    for (const auto& p: extant_cells_) {
         p->write(ss) << "\n";
     }
     return ss;
@@ -472,14 +472,14 @@ std::stringstream Tissue::drivers() const {
 }
 
 void Tissue::snapshots_append() {
-    for (const auto& p: tumor_) {
+    for (const auto& p: extant_cells_) {
         snapshots_ << time_ << "\t" << *p << "\n";
     }
 }
 
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
-    for (const auto& p: tissue.tumor_) {
+    for (const auto& p: tissue.extant_cells_) {
         ost << *p << "\n";
     }
     return ost;

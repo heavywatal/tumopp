@@ -250,7 +250,7 @@ void Simulation::write() const {HERE;
     fs::current_path(outdir);
     std::cerr << "Output: " << outdir << "\n";
     wtl::make_ofs("program_options.conf") << config_string_;
-    wtl::zlib::ofstream{"population.tsv.gz"} << tissue_->specimens().rdbuf();
+    wtl::zlib::ofstream{"population.tsv.gz"} << tissue_->history().rdbuf();
     if (tissue_->has_snapshots()) {
         wtl::zlib::ofstream{"snapshots.tsv.gz"} << tissue_->snapshots().rdbuf();
     }
@@ -284,7 +284,7 @@ void Simulation::ms(std::ostream& ost) const {HERE;
     }
 }
 
-std::string Simulation::specimens() const {return tissue_->specimens().str();}
+std::string Simulation::history() const {return tissue_->history().str();}
 std::string Simulation::snapshots() const {return tissue_->snapshots().str();}
 std::string Simulation::drivers() const {return tissue_->drivers().str();}
 std::string Simulation::pairwise_distance(size_t npair) const {

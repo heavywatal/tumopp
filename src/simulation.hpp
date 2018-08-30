@@ -40,8 +40,8 @@ class Simulation {
     //! Make samples and write ms-like output
     void ms(std::ostream&) const;
 
-    //! Shortcut of Tissue.specimens() for R
-    std::string specimens() const;
+    //! Shortcut of Tissue.history() for R
+    std::string history() const;
     //! Shortcut of Tissue.snapshots() for R
     std::string snapshots() const;
     //! Shortcut of Tissue.drivers() for R
