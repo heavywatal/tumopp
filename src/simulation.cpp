@@ -172,7 +172,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
 : vars_(std::make_unique<po::variables_map>()) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
-    std::cout.precision(15);
+    std::cout.precision(9);
     std::cerr.precision(6);
     command_args_ = wtl::str_join(arguments, " ");
 

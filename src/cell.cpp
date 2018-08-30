@@ -68,7 +68,7 @@ void Cell::param(const param_type& p) {
     BERN_SYMMETRIC.param(PARAM_.PROB_SYMMETRIC_DIVISION);
     BERN_MUT_BIRTH.param(PARAM_.RATE_BIRTH);
     BERN_MUT_DEATH.param(PARAM_.RATE_DEATH);
-    BERN_MUT_DEATH.param(PARAM_.RATE_ALPHA);
+    BERN_MUT_ALPHA.param(PARAM_.RATE_ALPHA);
     BERN_MUT_MIGRA.param(PARAM_.RATE_MIGRA);
     GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(PARAM_.MEAN_BIRTH, PARAM_.SD_BIRTH));
     GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(PARAM_.MEAN_DEATH, PARAM_.SD_DEATH));
@@ -217,7 +217,6 @@ std::string Cell::header() {
     oss << "x\ty\tz\t"
         << "id\tancestor\t"
         << "birth\tdeath\t"
-        << "beta\tdelta\talpha\trho\t"
         << "omega";
     return oss.str();
 }
@@ -229,10 +228,6 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << id_ << "\t"
         << (ancestor_ ? ancestor_->id_ : 0u) << "\t"
         << time_of_birth_ << "\t" << time_of_death_ << "\t"
-        << birth_rate() << "\t"
-        << death_rate() << "\t"
-        << death_prob() << "\t"
-        << migra_rate() << "\t"
         << static_cast<int>(proliferation_capacity_);
 }
 
