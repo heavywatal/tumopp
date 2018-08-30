@@ -65,9 +65,6 @@ $(function() {
 
 
 <h3><a id="index_b"></a>- b -</h3><ul>
-<li>begin()
-: <a class="el" href="classtumopp_1_1_tissue.html#a1763abe59545fe47cf120415b71105ac">tumopp::Tissue</a>
-</li>
 <li>birth_rate
 : <a class="el" href="structtumopp_1_1_event_rates.html#a8a4a99ca3a073a8f2ec665bdc65d7661">tumopp::EventRates</a>
 </li>
@@ -87,6 +84,9 @@ $(function() {
 <li>cell_params_
 : <a class="el" href="classtumopp_1_1_simulation.html#a96fa4cd24ca532e509cda4618c449ffb">tumopp::Simulation</a>
 </li>
+<li>clear()
+: <a class="el" href="classtumopp_1_1_tissue.html#a4f4b8afda344ea8bafcb1265ddb21ecd">tumopp::Tissue</a>
+</li>
 <li>command_args_
 : <a class="el" href="classtumopp_1_1_simulation.html#a279a2eefb18c5e0d6eac4f7d8aa700d8">tumopp::Simulation</a>
 </li>
@@ -101,7 +101,7 @@ $(function() {
 , <a class="el" href="classtumopp_1_1_hexagonal.html#aacebfb885faf5a4de219a53200072074">tumopp::Hexagonal</a>
 </li>
 <li>Coord()
-: <a class="el" href="classtumopp_1_1_coord.html#a7a93209484e92767d5788e3df83037d3">tumopp::Coord</a>
+: <a class="el" href="classtumopp_1_1_coord.html#aa2188d11d1fe0c1a94fed065491e13ad">tumopp::Coord</a>
 </li>
 <li>coord_
 : <a class="el" href="classtumopp_1_1_cell.html#a3bc6d8b7ac792d0df5b9bb9a8f28ce36">tumopp::Cell</a>
@@ -134,7 +134,6 @@ $(function() {
 </li>
 <li>dimensions()
 : <a class="el" href="classtumopp_1_1_coord.html#a138685c92fd34c38772629a4563be0d4">tumopp::Coord</a>
-, <a class="el" href="classtumopp_1_1_tissue.html#a57289d9f21586944e95b90c3313ccf3c">tumopp::Tissue</a>
 </li>
 <li>dimensions_
 : <a class="el" href="classtumopp_1_1_coord.html#a4ad8d5f17deb72cb0ca25cc61bcf584a">tumopp::Coord</a>
@@ -150,10 +149,10 @@ $(function() {
 </li>
 <li>drivers()
 : <a class="el" href="classtumopp_1_1_simulation.html#a09525044065fb6998dc2d7b4f7585f3f">tumopp::Simulation</a>
-, <a class="el" href="classtumopp_1_1_tissue.html#a19132f7bf1a714cc2e33341ae2ff65e3">tumopp::Tissue</a>
+, <a class="el" href="classtumopp_1_1_tissue.html#a5c6385800d4da0935661d01f5f937155">tumopp::Tissue</a>
 </li>
 <li>drivers_
-: <a class="el" href="classtumopp_1_1_tissue.html#aa0a9bdb2b6792ba1dcec02faf2f52ef8">tumopp::Tissue</a>
+: <a class="el" href="classtumopp_1_1_tissue.html#afe930640da2934d4aa9836e4d88deea6">tumopp::Tissue</a>
 </li>
 </ul>
 
@@ -162,15 +161,15 @@ $(function() {
 <li>elapsed_
 : <a class="el" href="classtumopp_1_1_cell.html#a85882b8a52b2e5dbf929b96307174279">tumopp::Cell</a>
 </li>
-<li>end()
-: <a class="el" href="classtumopp_1_1_tissue.html#a7235466799018fce9d2480236f334760">tumopp::Tissue</a>
-</li>
 <li>euclidean_distance()
 : <a class="el" href="classtumopp_1_1_coord.html#abe86c94d2f3b19d36c663a21bbb657d2">tumopp::Coord</a>
 , <a class="el" href="classtumopp_1_1_hexagonal.html#a81d3b3ebe0a1fbb1ef9578667b77a314">tumopp::Hexagonal</a>
 </li>
 <li>event_rates_
 : <a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1">tumopp::Cell</a>
+</li>
+<li>extant_cells_
+: <a class="el" href="classtumopp_1_1_tissue.html#a4cafc7d864edc75e9f685c0fab169927">tumopp::Tissue</a>
 </li>
 </ul>
 
@@ -210,13 +209,19 @@ $(function() {
 </li>
 <li>header()
 : <a class="el" href="classtumopp_1_1_cell.html#adf294699568ae816353bd9fec8de604a">tumopp::Cell</a>
-, <a class="el" href="classtumopp_1_1_tissue.html#ab33d489cebf1eb40991ac7a1d57221d3">tumopp::Tissue</a>
 </li>
 <li>help_and_exit()
 : <a class="el" href="classtumopp_1_1_simulation.html#a6ff1304bd90121d837c7286a4abeedb5">tumopp::Simulation</a>
 </li>
 <li>Hexagonal()
 : <a class="el" href="classtumopp_1_1_hexagonal.html#a7ff165871d5f9a8eaf0cb4ba945d82c8">tumopp::Hexagonal</a>
+</li>
+<li>history()
+: <a class="el" href="classtumopp_1_1_simulation.html#ac12fd6d32f6ab610fe3847751d2590ca">tumopp::Simulation</a>
+, <a class="el" href="classtumopp_1_1_tissue.html#a5473f9af955b3259e3f330e7e6876a1c">tumopp::Tissue</a>
+</li>
+<li>history_
+: <a class="el" href="classtumopp_1_1_tissue.html#a5688d75b1a48e43bcd7898cdad849fbb">tumopp::Tissue</a>
 </li>
 </ul>
 
@@ -258,6 +263,9 @@ $(function() {
 <h3><a id="index_m"></a>- m -</h3><ul>
 <li>MAX_PROLIFERATION_CAPACITY
 : <a class="el" href="structtumopp_1_1_cell_params.html#a67d709319658cc793eb8734d917e86ec">tumopp::CellParams</a>
+</li>
+<li>MEAN_ALPHA
+: <a class="el" href="structtumopp_1_1_cell_params.html#ad099bc6cee5eb8cdd9c113ccd9b1c17f">tumopp::CellParams</a>
 </li>
 <li>MEAN_BIRTH
 : <a class="el" href="structtumopp_1_1_cell_params.html#a05f4d38f6701a1952bf95e8affdaf1ec">tumopp::CellParams</a>
@@ -388,6 +396,9 @@ $(function() {
 <li>random_neighbor()
 : <a class="el" href="classtumopp_1_1_coord.html#aba77c9326d60cd40c8afbaf7aef4fc37">tumopp::Coord</a>
 </li>
+<li>RATE_ALPHA
+: <a class="el" href="structtumopp_1_1_cell_params.html#a17f0ca91a7a873225760cb18fdd92dfd">tumopp::CellParams</a>
+</li>
 <li>RATE_BIRTH
 : <a class="el" href="structtumopp_1_1_cell_params.html#a1e8c05efb0e9759ac1121836778373d9">tumopp::CellParams</a>
 </li>
@@ -419,6 +430,9 @@ $(function() {
 <li>sample_section()
 : <a class="el" href="classtumopp_1_1_tissue.html#a2e32a270f5cd912c7ac843843dffebb0">tumopp::Tissue</a>
 </li>
+<li>SD_ALPHA
+: <a class="el" href="structtumopp_1_1_cell_params.html#adb998253946f5afcdbaaf7e93a533179">tumopp::CellParams</a>
+</li>
 <li>SD_BIRTH
 : <a class="el" href="structtumopp_1_1_cell_params.html#a07fc1d9e06db4f0a9e42dfe7d65bf7d7">tumopp::CellParams</a>
 </li>
@@ -437,31 +451,21 @@ $(function() {
 <li>Simulation()
 : <a class="el" href="classtumopp_1_1_simulation.html#afe9b371937a72968cdc3645f8bad7170">tumopp::Simulation</a>
 </li>
-<li>size()
-: <a class="el" href="classtumopp_1_1_tissue.html#ae505196bae0b40708e3d324bfb271369">tumopp::Tissue</a>
-</li>
 <li>snapshots()
 : <a class="el" href="classtumopp_1_1_simulation.html#acf16cf9863558577d10c1f1d771fcccc">tumopp::Simulation</a>
-, <a class="el" href="classtumopp_1_1_tissue.html#a505e448287852edbb03768ead50065fe">tumopp::Tissue</a>
+, <a class="el" href="classtumopp_1_1_tissue.html#a33aa2b9db6c073b9bd570a78550cb7d6">tumopp::Tissue</a>
 </li>
 <li>snapshots_
-: <a class="el" href="classtumopp_1_1_tissue.html#a0d1f7dc8fd8062ae90d731e8e6bdef52">tumopp::Tissue</a>
+: <a class="el" href="classtumopp_1_1_tissue.html#a70cf9dcd6c9faba8d7e710b7f441a88f">tumopp::Tissue</a>
 </li>
-<li>specimens()
-: <a class="el" href="classtumopp_1_1_simulation.html#a50ebf6248eaadd524fdee2920e43b507">tumopp::Simulation</a>
-, <a class="el" href="classtumopp_1_1_tissue.html#a1a213e128ddfcbbe9652c20f6a6ec96b">tumopp::Tissue</a>
-</li>
-<li>specimens_
-: <a class="el" href="classtumopp_1_1_tissue.html#acc65c4144b88aa867e0612f754e803cc">tumopp::Tissue</a>
+<li>snapshots_append()
+: <a class="el" href="classtumopp_1_1_tissue.html#aaaf0d8986d21de6cfdb913a82c011276">tumopp::Tissue</a>
 </li>
 <li>sphere()
 : <a class="el" href="classtumopp_1_1_coord.html#a3ba397bd3d97c3d4f36cd7278f1f23bb">tumopp::Coord</a>
 </li>
 <li>steps_to_empty()
 : <a class="el" href="classtumopp_1_1_tissue.html#a6017136ba2328da4e45e15a1970e8ef8">tumopp::Tissue</a>
-</li>
-<li>str()
-: <a class="el" href="classtumopp_1_1_cell.html#ad86f830cb0e1e5597097b5bbf80a1803">tumopp::Cell</a>
 </li>
 <li>stroll()
 : <a class="el" href="classtumopp_1_1_tissue.html#a4128d23239fb57edeb752a2ee65090be">tumopp::Tissue</a>
@@ -473,9 +477,6 @@ $(function() {
 
 
 <h3><a id="index_t"></a>- t -</h3><ul>
-<li>time()
-: <a class="el" href="classtumopp_1_1_tissue.html#aaa45dcf648b02fd07e4ead6c9172d319">tumopp::Tissue</a>
-</li>
 <li>time_
 : <a class="el" href="classtumopp_1_1_tissue.html#a617cd1ee201c63f86470f887c932179c">tumopp::Tissue</a>
 </li>
@@ -500,9 +501,6 @@ $(function() {
 <li>treatment()
 : <a class="el" href="classtumopp_1_1_tissue.html#a578ce1e44eaa403dab467e6ea99c725a">tumopp::Tissue</a>
 </li>
-<li>tumor_
-: <a class="el" href="classtumopp_1_1_tissue.html#ad7e412502f859486d462d13938572025">tumopp::Tissue</a>
-</li>
 </ul>
 
 
@@ -523,9 +521,6 @@ $(function() {
 </li>
 <li>write_segsites()
 : <a class="el" href="classtumopp_1_1_tissue.html#a196b02f6c507272e179c7d16cb133203">tumopp::Tissue</a>
-</li>
-<li>write_snapshot()
-: <a class="el" href="classtumopp_1_1_tissue.html#a1496acc7c4c11646d2d27a51d78d2545">tumopp::Tissue</a>
 </li>
 </ul>
 
