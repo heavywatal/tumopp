@@ -52,9 +52,11 @@ GammaFactory GAMMA_FACTORY(Cell::param().GAMMA_SHAPE);
 bernoulli_distribution BERN_SYMMETRIC(Cell::param().PROB_SYMMETRIC_DIVISION);
 bernoulli_distribution BERN_MUT_BIRTH(Cell::param().RATE_BIRTH);
 bernoulli_distribution BERN_MUT_DEATH(Cell::param().RATE_DEATH);
+bernoulli_distribution BERN_MUT_ALPHA(Cell::param().RATE_ALPHA);
 bernoulli_distribution BERN_MUT_MIGRA(Cell::param().RATE_MIGRA);
 std::normal_distribution<double> GAUSS_BIRTH(Cell::param().MEAN_BIRTH, Cell::param().SD_BIRTH);
 std::normal_distribution<double> GAUSS_DEATH(Cell::param().MEAN_DEATH, Cell::param().SD_DEATH);
+std::normal_distribution<double> GAUSS_ALPHA(Cell::param().MEAN_ALPHA, Cell::param().SD_ALPHA);
 std::normal_distribution<double> GAUSS_MIGRA(Cell::param().MEAN_MIGRA, Cell::param().SD_MIGRA);
 
 }// namespace
@@ -66,9 +68,11 @@ void Cell::param(const param_type& p) {
     BERN_SYMMETRIC.param(PARAM_.PROB_SYMMETRIC_DIVISION);
     BERN_MUT_BIRTH.param(PARAM_.RATE_BIRTH);
     BERN_MUT_DEATH.param(PARAM_.RATE_DEATH);
+    BERN_MUT_DEATH.param(PARAM_.RATE_ALPHA);
     BERN_MUT_MIGRA.param(PARAM_.RATE_MIGRA);
     GAUSS_BIRTH.param(decltype(GAUSS_BIRTH)::param_type(PARAM_.MEAN_BIRTH, PARAM_.SD_BIRTH));
     GAUSS_DEATH.param(decltype(GAUSS_DEATH)::param_type(PARAM_.MEAN_DEATH, PARAM_.SD_DEATH));
+    GAUSS_ALPHA.param(decltype(GAUSS_ALPHA)::param_type(PARAM_.MEAN_ALPHA, PARAM_.SD_ALPHA));
     GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(PARAM_.MEAN_MIGRA, PARAM_.SD_MIGRA));
 }
 
@@ -83,20 +87,25 @@ std::string Cell::mutate() {
     if (BERN_MUT_BIRTH(wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_BIRTH(wtl::sfmt64());
-        oss << id_ << "\tbirth\t" << s << "\n";
+        oss << id_ << "\tbeta\t" << s << "\n";
         event_rates_->birth_rate *= (s += 1.0);
     }
     if (BERN_MUT_DEATH(wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_DEATH(wtl::sfmt64());
-        oss << id_ << "\tdeath\t" << s << "\n";
+        oss << id_ << "\tdelta\t" << s << "\n";
         event_rates_->death_rate *= (s += 1.0);
+    }
+    if (BERN_MUT_ALPHA(wtl::sfmt64())) {
+        event_rates_ = std::make_shared<EventRates>(*event_rates_);
+        double s = GAUSS_ALPHA(wtl::sfmt64());
+        oss << id_ << "\talpha\t" << s << "\n";
         event_rates_->death_prob *= (s += 1.0);
     }
     if (BERN_MUT_MIGRA(wtl::sfmt64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_MIGRA(wtl::sfmt64());
-        oss << id_ << "\tmigra\t" << s << "\n";
+        oss << id_ << "\trho\t" << s << "\n";
         event_rates_->migra_rate *= (s += 1.0);
     }
     return oss.str();
@@ -106,15 +115,17 @@ std::string Cell::force_mutate() {
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
     const double s_birth = GAUSS_BIRTH(wtl::sfmt64());
     const double s_death = GAUSS_DEATH(wtl::sfmt64());
+    const double s_alpha = GAUSS_ALPHA(wtl::sfmt64());
     const double s_migra = GAUSS_MIGRA(wtl::sfmt64());
     event_rates_->birth_rate *= (1.0 + s_birth);
     event_rates_->death_rate *= (1.0 + s_death);
-    event_rates_->death_prob *= (1.0 + s_death);
+    event_rates_->death_prob *= (1.0 + s_alpha);
     event_rates_->migra_rate *= (1.0 + s_migra);
     auto oss = wtl::make_oss();
-    oss << id_ << "\tbirth\t" << s_birth << "\n"
-        << id_ << "\tdeath\t" << s_death << "\n"
-        << id_ << "\tmigra\t" << s_migra << "\n";
+    oss << id_ << "\tbeta\t" << s_birth << "\n"
+        << id_ << "\tdelta\t" << s_death << "\n"
+        << id_ << "\talpha\t" << s_alpha << "\n"
+        << id_ << "\trho\t" << s_migra << "\n";
     return oss.str();
 }
 

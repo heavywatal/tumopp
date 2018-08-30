@@ -122,12 +122,15 @@ po::options_description Simulation::cell_options() {HERE;
       ("prolif,r", po_value(&cell_params_->MAX_PROLIFERATION_CAPACITY))
       ("ub", po_value(&cell_params_->RATE_BIRTH))
       ("ud", po_value(&cell_params_->RATE_DEATH))
+      ("ua", po_value(&cell_params_->RATE_ALPHA))
       ("um", po_value(&cell_params_->RATE_MIGRA))
       ("mb", po_value(&cell_params_->MEAN_BIRTH))
       ("md", po_value(&cell_params_->MEAN_DEATH))
+      ("ma", po_value(&cell_params_->MEAN_ALPHA))
       ("mm", po_value(&cell_params_->MEAN_MIGRA))
       ("sb", po_value(&cell_params_->SD_BIRTH))
       ("sd", po_value(&cell_params_->SD_DEATH))
+      ("sa", po_value(&cell_params_->SD_ALPHA))
       ("sm", po_value(&cell_params_->SD_MIGRA))
     ;
     return desc;

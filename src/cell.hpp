@@ -49,18 +49,24 @@ struct CellParams {
     double RATE_BIRTH = 0.0;
     //! \f$\mu_\delta\f$
     double RATE_DEATH = 0.0;
+    //! \f$\mu_\alpha\f$
+    double RATE_ALPHA = 0.0;
     //! \f$\mu_\rho\f$
     double RATE_MIGRA = 0.0;
     //! \f$\bar s_\beta\f$
     double MEAN_BIRTH = 0.0;
     //! \f$\bar s_\delta\f$
     double MEAN_DEATH = 0.0;
+    //! \f$\bar s_\alpha\f$
+    double MEAN_ALPHA = 0.0;
     //! \f$\bar s_\rho\f$
     double MEAN_MIGRA = 0.0;
     //! \f$\sigma_\beta\f$
     double SD_BIRTH = 0.0;
     //! \f$\sigma_\delta\f$
     double SD_DEATH = 0.0;
+    //! \f$\sigma_\alpha\f$
+    double SD_ALPHA = 0.0;
     //! \f$\sigma_\rho\f$
     double SD_MIGRA = 0.0;
 };
