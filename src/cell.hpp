@@ -109,13 +109,6 @@ class Cell {
 
     //! Calc dt and set #next_event_
     double delta_time(double now, double positional_value, bool surrounded=false);
-
-    //! Check mutant ancestors
-    std::vector<unsigned> has_mutations_of(const std::vector<unsigned>&) const;
-
-    //! Branch length (# of divisions) between two cells
-    size_t branch_length(const Cell&) const;
-
     //! Change #proliferation_capacity_ stochastically
     void differentiate();
     //! Set #time_of_birth_; reset other properties
@@ -162,9 +155,6 @@ class Cell {
     static const param_type& param() {return PARAM_;}
 
   private:
-    //! Accumulate ancestral #id_
-    std::unordered_set<unsigned> traceback() const;
-
     //! Parameters shared among instances
     static param_type PARAM_;
 

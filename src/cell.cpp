@@ -169,47 +169,6 @@ void Cell::set_cycle_dependent_death(const double p) {
     next_event_ = bernoulli(p, wtl::sfmt64()) ? Event::death : Event::birth;
 }
 
-std::unordered_set<unsigned> Cell::traceback() const {
-    std::unordered_set<unsigned> genealogy;
-    genealogy.emplace(id_);
-    for (std::shared_ptr<Cell> p = ancestor_; p; p = p->ancestor_) {
-        genealogy.emplace(p->id_);
-    }
-    return genealogy;
-}
-
-std::vector<unsigned> Cell::has_mutations_of(const std::vector<unsigned>& mutants) const {
-    const auto genealogy = traceback();
-    std::vector<unsigned> genotype;
-    genotype.reserve(mutants.size());
-    for (const auto mut: mutants) {
-        if (genealogy.find(mut) != genealogy.end()) {
-            genotype.push_back(1u);
-        } else {
-            genotype.push_back(0u);
-        }
-    }
-    return genotype;
-}
-
-size_t Cell::branch_length(const Cell& other) const {
-    if (id_ == other.id_) return 0u;
-    size_t length = 2u;
-    unsigned mrca = 1u;
-    const auto genealogy = traceback();
-    for (std::shared_ptr<Cell> p = other.ancestor_; p; p = p->ancestor_) {
-        if (genealogy.find(p->id_) != genealogy.end()) {
-            mrca = p->id_;
-            break;
-        }
-        ++length;
-    }
-    for (std::shared_ptr<Cell> p = ancestor_; p->id_ > mrca; p = p->ancestor_) {
-        ++length;
-    }
-    return length;
-}
-
 std::string Cell::header() {
     std::ostringstream oss;
     oss << "x\ty\tz\t"

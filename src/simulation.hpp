@@ -37,26 +37,16 @@ class Simulation {
     //! Write files unless `--outdir` is empty
     void write() const;
 
-    //! Make samples and write ms-like output
-    void ms(std::ostream&) const;
-
-    //! Shortcut of Tissue.history() for R
+    //! @name Output for Rcpp
+    //@{
     std::string history() const;
-    //! Shortcut of Tissue.snapshots() for R
     std::string snapshots() const;
-    //! Shortcut of Tissue.drivers() for R
     std::string drivers() const;
-    //! Shortcut of Tissue.pairwise_distance() for R
-    std::string pairwise_distance(size_t npair=0) const; // keeping the argument just for compatibility for a while
-    //! Shortcut of ms() as std::string for R
-    std::string ms() const;
-    //! getter of #config_string_
     std::string config_string() const {return config_string_;}
-
+    //@}
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
     boost::program_options::options_description options_desc();
-    boost::program_options::options_description positional_desc();
     boost::program_options::options_description cell_options();
 
     //! Print help message and exit

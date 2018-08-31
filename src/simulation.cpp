@@ -136,22 +136,6 @@ po::options_description Simulation::cell_options() {HERE;
     return desc;
 }
 
-//! Positional arguments to produce ms-like output
-/*! @ingroup params
-
-    Command line option | Symbol         | Variable                  |
-    ------------------- | -------------- | ------------------------- |
-    `nsam`              | -              | -
-    `howmany`           | -              | -
-*/
-po::options_description Simulation::positional_desc() {HERE;
-    po::options_description description("Positional");
-    description.add_options()
-        ("nsam", po::value<size_t>()->default_value(0u))
-        ("howmany", po::value<size_t>()->default_value(1u));
-    return description;
-}
-
 [[noreturn]] void Simulation::help_and_exit() {HERE;
     auto description = general_desc();
     description.add(options_desc());
@@ -178,14 +162,9 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
 
     auto description = general_desc();
     description.add(options_desc());
-    description.add(positional_desc());
-    po::positional_options_description positional;
-    positional.add("nsam", 1)
-              .add("howmany", 1);
     auto& vm = *vars_;
     po::store(po::command_line_parser(arguments).
-              options(description).
-              positional(positional).run(), vm);
+              options(description).run(), vm);
     if (vm["help"].as<bool>()) {help_and_exit();}
     if (vm["version"].as<bool>()) {version_and_exit();}
     po::notify(vm);
@@ -196,13 +175,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     if (vm["verbose"].as<bool>()) {
         std::cerr << wtl::iso8601datetime() << std::endl;
         std::cerr << config_string_ << std::endl;
-    }
-    if (vm["nsam"].as<size_t>() > vm["max"].as<size_t>()) {
-        std::ostringstream oss;
-        oss << "nsam_=" << vm["nsam"].as<size_t>()
-            << " is larger than final tumor size "
-            << vm["max"].as<size_t>();
-        throw std::runtime_error(oss.str());
     }
 }
 
@@ -243,7 +215,6 @@ void Simulation::run() {HERE;
 void Simulation::write() const {HERE;
     auto& vm = *vars_;
     const auto outdir = vm["outdir"].as<std::string>();
-    const auto npair = vm["npair"].as<size_t>();
     if (outdir.empty()) return;
     DCERR("mkdir && cd to " << outdir << std::endl);
     fs::create_directory(outdir);
@@ -257,44 +228,10 @@ void Simulation::write() const {HERE;
     if (tissue_->has_drivers()) {
         wtl::zlib::ofstream{"drivers.tsv.gz"} << tissue_->drivers().rdbuf();
     }
-    if (npair > 0u) {
-        wtl::zlib::ofstream{"distance.tsv.gz"} << tissue_->pairwise_distance(npair);
-    }
-}
-
-void Simulation::ms(std::ostream& ost) const {HERE;
-    auto& vm = *vars_;
-    const auto nsam = vm["nsam"].as<size_t>();
-    const auto howmany = vm["howmany"].as<size_t>();
-    const auto seed = vm["seed"].as<uint32_t>();
-    const auto mutation = vm["mutation"].as<double>();
-    const auto ms1mut = vm["ms1mut"].as<bool>();
-    if ((nsam < 1u) || (howmany < 1u)) return;
-    ost << "tumopp " << command_args_ << "\n" << seed << "\n";
-    if (tissue_->dimensions() == 3U) {
-        for (size_t i=0; i<howmany; ++i) {
-            const auto mutants = tissue_->generate_neutral_mutations(mutation, ms1mut);
-            tissue_->write_segsites(ost, tissue_->sample_section(nsam), mutants);
-        }
-    } else {
-        for (size_t i=0; i<howmany; ++i) {
-            const auto mutants = tissue_->generate_neutral_mutations(mutation, ms1mut);
-            tissue_->write_segsites(ost, tissue_->sample_random(nsam), mutants);
-        }
-    }
 }
 
 std::string Simulation::history() const {return tissue_->history().str();}
 std::string Simulation::snapshots() const {return tissue_->snapshots().str();}
 std::string Simulation::drivers() const {return tissue_->drivers().str();}
-std::string Simulation::pairwise_distance(size_t npair) const {
-    if (npair == 0u) npair = (*vars_)["npair"].as<size_t>();
-    return tissue_->pairwise_distance(npair);
-}
-std::string Simulation::ms() const {
-    std::ostringstream oss;
-    ms(oss);
-    return oss.str();
-}
 
 } // namespace tumopp

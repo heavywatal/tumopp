@@ -10,7 +10,6 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
-#include <wtl/cluster.hpp>
 #include <sfmt.hpp>
 
 namespace tumopp {
@@ -321,114 +320,6 @@ uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
         if (extant_cells_.find(nb) == extant_cells_.end()) {++cnt;}
     }
     return cnt;
-}
-
-std::vector<unsigned> Tissue::generate_neutral_mutations(const double mu, const bool has_at_least_1_mutation_per_division) const {
-    std::poisson_distribution<unsigned> poisson(mu * id_tail_);
-    const unsigned num_mutants = poisson(wtl::sfmt64());
-    std::uniform_int_distribution<unsigned> uniform(1, id_tail_);
-    std::vector<unsigned> mutants;
-    if (has_at_least_1_mutation_per_division) {
-        mutants.reserve(id_tail_ + num_mutants);
-        for (unsigned i=1; i<=id_tail_; ++i) mutants.push_back(i);
-    } else {
-        mutants.reserve(num_mutants);
-    }
-    for (unsigned i=0; i<num_mutants; ++i) {
-        mutants.push_back(uniform(wtl::sfmt64()));
-    }
-    return mutants;
-}
-
-std::ostream& Tissue::write_segsites(std::ostream& ost, const std::vector<std::shared_ptr<Cell>>& samples, const std::vector<unsigned>& mutants) const {HERE;
-    const size_t sample_size = samples.size();
-    std::vector<std::vector<unsigned>> flags;
-    flags.reserve(sample_size);
-    for (const auto& cell: samples) {
-        flags.emplace_back(cell->has_mutations_of(mutants));
-    }
-    flags = wtl::transpose(flags);
-    std::vector<std::vector<unsigned>> segsites;
-    segsites.reserve(flags.size());
-    for (size_t i=0; i<flags.size(); ++i) {
-        const auto daf = wtl::sum(flags[i]);
-        if (0U < daf && daf < sample_size) segsites.push_back(flags[i]);
-    }
-    const size_t s = segsites.size();
-    ost << "\n//\nsegsites: " << s << "\n";
-    if (s > 0U) {
-        segsites = wtl::transpose(segsites);
-        ost << "positions: ";
-        wtl::join(std::vector<int>(s), ost, " ") << "\n";
-        for (const auto& x: segsites) {
-            wtl::join(x, ost, "") << "\n";
-        }
-    } else {ost << "\n";}
-    return ost;
-}
-
-std::vector<std::shared_ptr<Cell>>
-Tissue::sample_bulk(const std::shared_ptr<Cell>& center, const size_t n) const {
-    std::multimap<double, std::shared_ptr<Cell>> ordered;
-    for (const auto& p: extant_cells_) {
-        ordered.emplace(coord_func_->euclidean_distance(p->coord() - center->coord()), p);
-    }
-    std::vector<std::shared_ptr<Cell>> sampled;
-    sampled.reserve(n);
-    for (const auto& p: ordered) {
-        sampled.emplace_back(p.second);
-        if (sampled.size() >= n) break;
-    }
-    return sampled;
-}
-
-std::vector<std::shared_ptr<Cell>>
-Tissue::sample_medoids(const size_t n) const {HERE;
-    std::vector<std::shared_ptr<Cell>> cells(extant_cells_.begin(), extant_cells_.end());
-    std::vector<std::array<double, 3>> points;
-    points.reserve(n);
-    for (const auto& p: cells) {
-        points.emplace_back(coord_func_->continuous(p->coord()));
-    }
-    auto clusters = wtl::cluster::pam(points, n, wtl::sfmt64());
-    std::vector<std::shared_ptr<Cell>> sampled;
-    sampled.reserve(n);
-    for (const auto i: clusters.medoids()) {
-        sampled.emplace_back(cells[i]);
-    }
-    return sampled;
-}
-
-std::vector<std::shared_ptr<Cell>> Tissue::sample_random(const size_t n) const {HERE;
-    return wtl::sample(std::vector<std::shared_ptr<Cell>>(extant_cells_.begin(), extant_cells_.end()), n, wtl::sfmt64());
-}
-
-std::vector<std::shared_ptr<Cell>> Tissue::sample_section(const size_t n) const {HERE;
-    std::vector<std::shared_ptr<Cell>> section;
-    section.reserve(static_cast<size_t>(coord_func_->cross_section(extant_cells_.size())));
-    for (const auto& p: extant_cells_) {
-        if (p->coord()[2] == 0) {section.push_back(p);}
-    }
-    return wtl::sample(section, n, wtl::sfmt64());
-}
-
-std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
-    auto oss = wtl::make_oss(6);
-    oss << "genealogy\tgraph\teuclidean\n";
-    if (npair == 0u) return oss.str();
-    auto samples = sample_random(2 * npair);
-    std::shuffle(samples.begin(), samples.end(), wtl::sfmt64());
-    //TODO: should be randam sampling from all possible pairs
-    const auto end = samples.cend();
-    for (auto it=samples.cbegin(); it!=end; ++it) {
-        const auto& lhs = *(*it);
-        const auto& rhs = *(*(++it));
-        const auto diff = lhs.coord() - rhs.coord();
-        oss << lhs.branch_length(rhs) << "\t"
-            << coord_func_->graph_distance(diff) << "\t"
-            << coord_func_->euclidean_distance(diff) << "\n";
-    }
-    return oss.str();
 }
 
 std::stringstream Tissue::history() const {

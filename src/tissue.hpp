@@ -46,27 +46,12 @@ class Tissue {
     //! Simulate medical treatment with the increased death_prob
     void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
-    //! Put random mutations on genealogy
-    std::vector<unsigned> generate_neutral_mutations(double mu, bool has_at_least_1_mutation_per_division) const;
-    //! Write ms-like binary sequence
-    std::ostream& write_segsites(std::ostream&, const std::vector<std::shared_ptr<Cell>>&, const std::vector<unsigned>&) const;
-    //! sample cells around the given cell
-    std::vector<std::shared_ptr<Cell>> sample_bulk(const std::shared_ptr<Cell>&, size_t) const;
-    //! sample cells uniformly
-    std::vector<std::shared_ptr<Cell>> sample_medoids(size_t) const;
-    //! sample cells randomly
-    std::vector<std::shared_ptr<Cell>> sample_random(size_t) const;
-    //! sample cells in a cross section
-    std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
-
     //! Stringify #extant_cells_ and their ancestors
     std::stringstream history() const;
     //! Stringify #snapshots_
     std::stringstream snapshots() const;
     //! Stringify #drivers_
     std::stringstream drivers() const;
-    //! Make TSV of pairwise distance
-    std::string pairwise_distance(size_t npair) const;
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond
@@ -78,7 +63,6 @@ class Tissue {
     size_t size() const noexcept {return extant_cells_.size();}
     auto begin() noexcept {return extant_cells_.begin();}
     auto end() noexcept {return extant_cells_.end();}
-    double time() const noexcept {return time_;}
     unsigned dimensions() const noexcept {return coord_func_->dimensions();}
     //@}
 
