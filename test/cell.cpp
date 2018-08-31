@@ -3,6 +3,7 @@
 #include <iostream>
 
 int main() {
+    std::cout << "sizeof(Cell): " << sizeof(tumopp::Cell) << "\n";
     tumopp::Cell cell({1, 2, 3});
     std::cout << tumopp::Cell::header() << "\n"
               << cell << "\n";

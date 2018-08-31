@@ -87,11 +87,11 @@ class Cell {
     //! Copy constructor
     Cell(const Cell& other) noexcept:
       coord_(other.coord_),
-      event_rates_(other.event_rates_),
-      proliferation_capacity_(other.proliferation_capacity_),
-      id_(other.id_),
       ancestor_(other.ancestor_),
-      time_of_birth_(other.time_of_birth_) {}
+      event_rates_(other.event_rates_),
+      time_of_birth_(other.time_of_birth_),
+      id_(other.id_),
+      proliferation_capacity_(other.proliferation_capacity_) {}
     //! Destructor
     ~Cell() noexcept = default;
     //! Copy assignment operator
@@ -170,22 +170,20 @@ class Cell {
 
     //! Position in a tumor
     std::valarray<int> coord_;
-    //! Set of event rates (copy-on-write)
-    std::shared_ptr<EventRates> event_rates_;
-
-    //! \f$\omega\f$; stem cell if negative
-    int8_t proliferation_capacity_ = -1;
-
-    //! next event: birth, death, or migration
-    Event next_event_ = Event::birth;
-    //! ID
-    unsigned id_;
     //! pointer to the ancestor
     std::shared_ptr<Cell> ancestor_;
+    //! Set of event rates (copy-on-write)
+    std::shared_ptr<EventRates> event_rates_;
     //! time of birth
     double time_of_birth_ = 0.0;
     //! time of death
     double time_of_death_ = 0.0;
+    //! ID
+    unsigned id_;
+    //! \f$\omega\f$; stem cell if negative
+    int8_t proliferation_capacity_ = -1;
+    //! next event: birth, death, or migration
+    Event next_event_ = Event::birth;
 };
 
 } // namespace tumopp
