@@ -54,7 +54,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">coord.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -62,11 +64,9 @@ $(function() {
 
 <p>Coordinate system.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;cstdlib&gt;</code><br />
-<code>#include &lt;valarray&gt;</code><br />
+<div class="textblock"><code>#include &lt;array&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;random&gt;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
 </div>
 <p><a href="coord_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -84,6 +84,48 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html">tumopp::Hexagonal</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Derived class of <a class="el" href="classtumopp_1_1_coord.html" title="Base class of coordinate system. ">Coord</a>.  <a href="classtumopp_1_1_hexagonal.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a218622cbed8f180e0c9a27f448836a79"><td class="memItemLeft" align="right" valign="top"><a id="a218622cbed8f180e0c9a27f448836a79"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">tumopp::coord_t</a> = std::array&lt; int, MAX_DIM &gt;</td></tr>
+<tr class="memdesc:a218622cbed8f180e0c9a27f448836a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias of coordinate type. <br /></td></tr>
+<tr class="separator:a218622cbed8f180e0c9a27f448836a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Arithmetic operators for std::array</div></td></tr>
+<tr class="memitem:ae1121f4ca89e0a5aec0e2924cace6b26"><td class="memTemplParams" colspan="2"><a id="ae1121f4ca89e0a5aec0e2924cace6b26"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ae1121f4ca89e0a5aec0e2924cace6b26"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, MAX_DIM &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tumopp::operator+=</b> (std::array&lt; T, MAX_DIM &gt; &amp;lhs, const std::array&lt; T, MAX_DIM &gt; &amp;rhs)</td></tr>
+<tr class="separator:ae1121f4ca89e0a5aec0e2924cace6b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b47f6e6f6360534c805b2ecb8d87489"><td class="memTemplParams" colspan="2"><a id="a2b47f6e6f6360534c805b2ecb8d87489"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a2b47f6e6f6360534c805b2ecb8d87489"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, MAX_DIM &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tumopp::operator-=</b> (std::array&lt; T, MAX_DIM &gt; &amp;lhs, const std::array&lt; T, MAX_DIM &gt; &amp;rhs)</td></tr>
+<tr class="separator:a2b47f6e6f6360534c805b2ecb8d87489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1190b9ef5a95230c45212c0300b4cbc0"><td class="memTemplParams" colspan="2"><a id="a1190b9ef5a95230c45212c0300b4cbc0"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1190b9ef5a95230c45212c0300b4cbc0"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, MAX_DIM &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tumopp::operator*=</b> (std::array&lt; T, MAX_DIM &gt; &amp;lhs, const std::array&lt; T, MAX_DIM &gt; &amp;rhs)</td></tr>
+<tr class="separator:a1190b9ef5a95230c45212c0300b4cbc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bfa964c818070f91085499d8d646f3b"><td class="memTemplParams" colspan="2"><a id="a9bfa964c818070f91085499d8d646f3b"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a9bfa964c818070f91085499d8d646f3b"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, MAX_DIM &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tumopp::operator+</b> (const std::array&lt; T, MAX_DIM &gt; &amp;lhs, const std::array&lt; T, MAX_DIM &gt; &amp;rhs)</td></tr>
+<tr class="separator:a9bfa964c818070f91085499d8d646f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b3b74eefb44539d3fde89370ae7c3e3"><td class="memTemplParams" colspan="2"><a id="a0b3b74eefb44539d3fde89370ae7c3e3"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a0b3b74eefb44539d3fde89370ae7c3e3"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, MAX_DIM &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tumopp::operator-</b> (const std::array&lt; T, MAX_DIM &gt; &amp;lhs, const std::array&lt; T, MAX_DIM &gt; &amp;rhs)</td></tr>
+<tr class="separator:a0b3b74eefb44539d3fde89370ae7c3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68da9894f7d6126e935742605fca0b5d"><td class="memTemplParams" colspan="2"><a id="a68da9894f7d6126e935742605fca0b5d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a68da9894f7d6126e935742605fca0b5d"><td class="memTemplItemLeft" align="right" valign="top">std::array&lt; T, MAX_DIM &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tumopp::operator*</b> (const std::array&lt; T, MAX_DIM &gt; &amp;lhs, const std::array&lt; T, MAX_DIM &gt; &amp;rhs)</td></tr>
+<tr class="separator:a68da9894f7d6126e935742605fca0b5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:aad24c0fbee1d127077738711c9fc2828"><td class="memItemLeft" align="right" valign="top"><a id="aad24c0fbee1d127077738711c9fc2828"></a>
+constexpr unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8hpp.html#aad24c0fbee1d127077738711c9fc2828">tumopp::MAX_DIM</a> = 3u</td></tr>
+<tr class="memdesc:aad24c0fbee1d127077738711c9fc2828"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum dimensions. <br /></td></tr>
+<tr class="separator:aad24c0fbee1d127077738711c9fc2828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Coordinate system. </p>
