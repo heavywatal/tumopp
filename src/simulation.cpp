@@ -47,9 +47,6 @@ inline po::options_description general_desc() {HERE;
     `-N,--max`          | \f$N_\max\f$   | -
     `-T,--plateau`      | -              | -
     `-U,--mutate`       | \f$N_\mu\f$    | -
-    `--npair`           | -              | -
-    `-u,--mutation`     | \f$\mu\f$      | -
-    `--ms1mut`          |                | -
     `-o,--outdir`       | -              | -
     `-I,--interval`     | -              | -
     `-R,--record`       | -              | -
@@ -72,9 +69,6 @@ po::options_description Simulation::options_desc() {HERE;
       ("mutate,U", po::value<size_t>()->default_value(std::numeric_limits<size_t>::max()))
       ("treatment", po::value<double>()->default_value(0.0))
       ("resistant", po::value<size_t>()->default_value(3u))
-      ("npair", po::value<size_t>()->default_value(0u))
-      ("mutation,u", po::value<double>()->default_value(0.1))
-      ("ms1mut", po::bool_switch())
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
       ("interval,I", po::value<double>()->default_value(std::numeric_limits<double>::infinity()))
       ("record,R", po::value<size_t>()->default_value(0u))
