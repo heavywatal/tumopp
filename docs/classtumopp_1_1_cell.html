@@ -57,7 +57,6 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pri-types">Private Types</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
@@ -121,14 +120,6 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a7250ae1e1d8fd40c7c1e716766964214">delta_time</a> (double now, double positional_value, bool surrounded=false)</td></tr>
 <tr class="memdesc:a7250ae1e1d8fd40c7c1e716766964214"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calc dt and set <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration ">next_event_</a>. <br /></td></tr>
 <tr class="separator:a7250ae1e1d8fd40c7c1e716766964214"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b6ddffa9b31ab8161579f1f9f05d4d1"><td class="memItemLeft" align="right" valign="top"><a id="a4b6ddffa9b31ab8161579f1f9f05d4d1"></a>
-std::vector&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a4b6ddffa9b31ab8161579f1f9f05d4d1">has_mutations_of</a> (const std::vector&lt; unsigned &gt; &amp;) const</td></tr>
-<tr class="memdesc:a4b6ddffa9b31ab8161579f1f9f05d4d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check mutant ancestors. <br /></td></tr>
-<tr class="separator:a4b6ddffa9b31ab8161579f1f9f05d4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78601a1e05730081b55865d068e2e6b2"><td class="memItemLeft" align="right" valign="top"><a id="a78601a1e05730081b55865d068e2e6b2"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a78601a1e05730081b55865d068e2e6b2">branch_length</a> (const <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &amp;) const</td></tr>
-<tr class="memdesc:a78601a1e05730081b55865d068e2e6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Branch length (# of divisions) between two cells. <br /></td></tr>
-<tr class="separator:a78601a1e05730081b55865d068e2e6b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a079de705723f833482ea893d380bcaf8"><td class="memItemLeft" align="right" valign="top"><a id="a079de705723f833482ea893d380bcaf8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a079de705723f833482ea893d380bcaf8">differentiate</a> ()</td></tr>
 <tr class="memdesc:a079de705723f833482ea893d380bcaf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change <a class="el" href="classtumopp_1_1_cell.html#a1ab2723455162072a241869a34435333" title="; stem cell if negative ">proliferation_capacity_</a> stochastically. <br /></td></tr>
@@ -205,13 +196,6 @@ Private Types</h2></td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a28662dc771a336335848307b4fed09e8">coord_t</a> = std::array&lt; int, 3 &gt;</td></tr>
 <tr class="memdesc:a28662dc771a336335848307b4fed09e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias of coordinate type. <br /></td></tr>
 <tr class="separator:a28662dc771a336335848307b4fed09e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a345e3cb6fffb5dc2b348511da7c19c91"><td class="memItemLeft" align="right" valign="top"><a id="a345e3cb6fffb5dc2b348511da7c19c91"></a>
-std::unordered_set&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a345e3cb6fffb5dc2b348511da7c19c91">traceback</a> () const</td></tr>
-<tr class="memdesc:a345e3cb6fffb5dc2b348511da7c19c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate ancestral <a class="el" href="classtumopp_1_1_cell.html#a30f79465ac5446013bdfd93b17a44027" title="ID. ">id_</a>. <br /></td></tr>
-<tr class="separator:a345e3cb6fffb5dc2b348511da7c19c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
