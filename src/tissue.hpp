@@ -123,7 +123,7 @@ class Tissue {
     double positional_value(const std::valarray<int>&) const {return 1.0;}
 
     //! Push a cell to event #queue_
-    void queue_push(const std::shared_ptr<Cell>&);
+    void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
     //! Write all cells to #snapshots_ with #time_
     void snapshots_append();
 

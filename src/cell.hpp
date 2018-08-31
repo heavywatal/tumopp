@@ -107,7 +107,7 @@ class Cell {
     std::string force_mutate();
 
     //! Calc dt and set #next_event_
-    double delta_time(double positional_value);
+    double delta_time(double now, double positional_value, bool surrounded=false);
 
     //! Check mutant ancestors
     std::vector<unsigned> has_mutations_of(const std::vector<unsigned>&) const;
@@ -135,7 +135,6 @@ class Cell {
     //@{
     void set_coord(const std::valarray<int>& v) noexcept {coord_ = v;}
     void set_time_of_death(double t) noexcept {time_of_death_ = t;}
-    void set_elapsed(double t) noexcept {elapsed_ = t;}
     //@}
 
     //! @name Getter functions
@@ -179,9 +178,6 @@ class Cell {
 
     //! next event: birth, death, or migration
     Event next_event_ = Event::birth;
-    //! elapsed time by migration
-    double elapsed_ = 0.0;
-
     //! ID
     unsigned id_;
     //! pointer to the ancestor

@@ -106,7 +106,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 queue_push(mother);
                 queue_push(daughter);
             } else {
-                queue_push(mother);
+                queue_push(mother, true);
                 continue;  // skip write()
             }
         } else if (mother->next_event() == Event::death) {
@@ -132,7 +132,6 @@ void Tissue::plateau(const double time) {HERE;
     queue_.clear();
     for (auto& p: extant_cells_) {
         p->increase_death_rate();
-        p->set_elapsed(0.0);
         queue_push(p);
     }
     grow(std::numeric_limits<size_t>::max(), time_ + time);
@@ -156,8 +155,8 @@ void Tissue::treatment(const double death_prob, const size_t num_resistant_cells
     grow(original_size + margin, std::numeric_limits<double>::max());
 }
 
-void Tissue::queue_push(const std::shared_ptr<Cell>& x) {
-    double dt = x->delta_time(positional_value(x->coord()));
+void Tissue::queue_push(const std::shared_ptr<Cell>& x, const bool surrounded) {
+    double dt = x->delta_time(time_, positional_value(x->coord()), surrounded);
     queue_.emplace_hint(queue_.end(), dt += time_, x);
 }
 

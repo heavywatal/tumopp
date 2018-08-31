@@ -129,7 +129,7 @@ std::string Cell::force_mutate() {
     return oss.str();
 }
 
-double Cell::delta_time(const double positional_value) {
+double Cell::delta_time(const double now, const double positional_value, const bool surrounded) {
     double t_birth = std::numeric_limits<double>::infinity();
     double t_death = std::numeric_limits<double>::infinity();
     double t_migra = std::numeric_limits<double>::infinity();
@@ -137,7 +137,7 @@ double Cell::delta_time(const double positional_value) {
         double mu = 1.0;
         mu /= birth_rate();
         mu /= positional_value;
-        mu -= elapsed_;
+        if (!surrounded) mu -= (now - time_of_birth_);
         t_birth = GAMMA_FACTORY(mu)(wtl::sfmt64());
     }
     if (death_rate() > 0.0) {
@@ -152,14 +152,12 @@ double Cell::delta_time(const double positional_value) {
     if (t_birth < t_death && t_birth < t_migra) {
         next_event_ = bernoulli(death_prob(), wtl::sfmt64())
                       ? Event::death : Event::birth;
-        elapsed_ = 0.0;
         return t_birth;
     } else if (t_death < t_migra) {
         next_event_ = Event::death;
         return t_death;
     } else {
         next_event_ = Event::migration;
-        elapsed_ += t_migra;
         return t_migra;
     }
 }
