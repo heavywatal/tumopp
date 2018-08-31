@@ -120,13 +120,9 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.htm
 std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a2e32a270f5cd912c7ac843843dffebb0">sample_section</a> (size_t) const</td></tr>
 <tr class="memdesc:a2e32a270f5cd912c7ac843843dffebb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">sample cells in a cross section <br /></td></tr>
 <tr class="separator:a2e32a270f5cd912c7ac843843dffebb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f4b8afda344ea8bafcb1265ddb21ecd"><td class="memItemLeft" align="right" valign="top"><a id="a4f4b8afda344ea8bafcb1265ddb21ecd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a4f4b8afda344ea8bafcb1265ddb21ecd">clear</a> ()</td></tr>
-<tr class="memdesc:a4f4b8afda344ea8bafcb1265ddb21ecd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear <a class="el" href="classtumopp_1_1_tissue.html#a4cafc7d864edc75e9f685c0fab169927" title="cells ">extant_cells_</a> and <a class="el" href="classtumopp_1_1_tissue.html#a22722f6ed2e4aaa22d2e65af4c9c9970" title="event queue ">queue_</a> after appending to <a class="el" href="classtumopp_1_1_tissue.html#a5688d75b1a48e43bcd7898cdad849fbb" title="record all cells existed ">history_</a>. <br /></td></tr>
-<tr class="separator:a4f4b8afda344ea8bafcb1265ddb21ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5473f9af955b3259e3f330e7e6876a1c"><td class="memItemLeft" align="right" valign="top"><a id="a5473f9af955b3259e3f330e7e6876a1c"></a>
 std::stringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a5473f9af955b3259e3f330e7e6876a1c">history</a> () const</td></tr>
-<tr class="memdesc:a5473f9af955b3259e3f330e7e6876a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stringify <a class="el" href="classtumopp_1_1_tissue.html#a5688d75b1a48e43bcd7898cdad849fbb" title="record all cells existed ">history_</a>. <br /></td></tr>
+<tr class="memdesc:a5473f9af955b3259e3f330e7e6876a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stringify <a class="el" href="classtumopp_1_1_tissue.html#a4cafc7d864edc75e9f685c0fab169927" title="cells ">extant_cells_</a> and their ancestors. <br /></td></tr>
 <tr class="separator:a5473f9af955b3259e3f330e7e6876a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33aa2b9db6c073b9bd570a78550cb7d6"><td class="memItemLeft" align="right" valign="top"><a id="a33aa2b9db6c073b9bd570a78550cb7d6"></a>
 std::stringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a33aa2b9db6c073b9bd570a78550cb7d6">snapshots</a> () const</td></tr>
@@ -254,10 +250,6 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 std::unique_ptr&lt; <a class="el" href="classtumopp_1_1_coord.html">Coord</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#aa9ad7cc98294f4eb422bd0d9a52e74b8">coord_func_</a></td></tr>
 <tr class="memdesc:aa9ad7cc98294f4eb422bd0d9a52e74b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialized in <a class="el" href="classtumopp_1_1_tissue.html#a5731b86a51eda99c5688d1b535f8da38" title="Set coord_func_. ">init_coord()</a> or init_coord_test() <br /></td></tr>
 <tr class="separator:aa9ad7cc98294f4eb422bd0d9a52e74b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5688d75b1a48e43bcd7898cdad849fbb"><td class="memItemLeft" align="right" valign="top"><a id="a5688d75b1a48e43bcd7898cdad849fbb"></a>
-std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtumopp_1_1_cell.html">Cell</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a5688d75b1a48e43bcd7898cdad849fbb">history_</a></td></tr>
-<tr class="memdesc:a5688d75b1a48e43bcd7898cdad849fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">record all cells existed <br /></td></tr>
-<tr class="separator:a5688d75b1a48e43bcd7898cdad849fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70cf9dcd6c9faba8d7e710b7f441a88f"><td class="memItemLeft" align="right" valign="top"><a id="a70cf9dcd6c9faba8d7e710b7f441a88f"></a>
 std::stringstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_tissue.html#a70cf9dcd6c9faba8d7e710b7f441a88f">snapshots_</a></td></tr>
 <tr class="memdesc:a70cf9dcd6c9faba8d7e710b7f441a88f"><td class="mdescLeft">&#160;</td><td class="mdescRight">record snapshots <br /></td></tr>
