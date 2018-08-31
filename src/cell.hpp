@@ -152,6 +152,8 @@ class Cell {
     static std::string header();
     //! TSV
     std::ostream& write(std::ostream& ost) const;
+    //! Write TSV while tracing back #ancestor_ recursively
+    std::ostream& traceback(std::ostream& ost, std::unordered_set<unsigned>* done) const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
 
     //! Set #PARAM_

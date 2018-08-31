@@ -24,7 +24,6 @@ Tissue::Tissue(
   const EventRates& init_event_rates) {HERE;
     snapshots_.precision(std::cout.precision());
     drivers_.precision(std::cout.precision());
-    history_.reserve(initial_size * 2u);
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
     const auto initial_coords = coord_func_->sphere(initial_size);
@@ -38,7 +37,6 @@ Tissue::Tissue(
             const auto daughter = std::make_shared<Cell>(*mother);
             const auto ancestor = std::make_shared<Cell>(*mother);
             ancestor->set_time_of_death(0.0);
-            history_.emplace_back(ancestor);
             mother->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_coord(initial_coords[extant_cells_.size()]);
@@ -70,7 +68,6 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                   size_t recording_early_growth,
                   size_t mutation_timing) {HERE;
     if (recording_early_growth > 0u) {snapshots_append();}
-    history_.reserve(2u * max_size);
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
@@ -93,7 +90,6 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             if (insert(daughter)) {
                 const auto ancestor = std::make_shared<Cell>(*mother);
                 ancestor->set_time_of_death(time_);
-                history_.emplace_back(ancestor);
                 mother->set_time_of_birth(time_, ++id_tail_, ancestor);
                 daughter->differentiate();
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
@@ -110,8 +106,6 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 continue;  // skip write()
             }
         } else if (mother->next_event() == Event::death) {
-            mother->set_time_of_death(time_);
-            history_.emplace_back(mother);
             extant_cells_.erase(mother);
             if (extant_cells_.empty()) break;
         } else {
@@ -437,23 +431,13 @@ std::string Tissue::pairwise_distance(const size_t npair) const {HERE;
     return oss.str();
 }
 
-void Tissue::clear() {
-    for (const auto& p: extant_cells_) {
-        history_.emplace_back(p);
-    }
-    extant_cells_.clear();
-    queue_.clear();
-}
-
 std::stringstream Tissue::history() const {
     std::stringstream ss;
     ss.precision(std::cout.precision());
     ss << Cell::header() << "\n";
-    for (const auto& p: history_) {
-        p->write(ss) << "\n";
-    }
+    std::unordered_set<unsigned> done;
     for (const auto& p: extant_cells_) {
-        p->write(ss) << "\n";
+        p->traceback(ss, &done);
     }
     return ss;
 }

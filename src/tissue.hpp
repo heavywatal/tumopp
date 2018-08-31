@@ -59,10 +59,7 @@ class Tissue {
     //! sample cells in a cross section
     std::vector<std::shared_ptr<Cell>> sample_section(size_t) const;
 
-    //! Clear #extant_cells_ and #queue_ after appending to #history_
-    void clear();
-
-    //! Stringify #history_
+    //! Stringify #extant_cells_ and their ancestors
     std::stringstream history() const;
     //! Stringify #snapshots_
     std::stringstream snapshots() const;
@@ -167,8 +164,6 @@ class Tissue {
     //! initialized in init_coord() or init_coord_test()
     std::unique_ptr<Coord> coord_func_;
 
-    //! record all cells existed
-    std::vector<std::shared_ptr<Cell>> history_;
     //! record snapshots
     std::stringstream snapshots_;
     //! record driver mutations

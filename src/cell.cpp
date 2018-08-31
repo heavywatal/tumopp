@@ -228,6 +228,14 @@ std::ostream& Cell::write(std::ostream& ost) const {
         << static_cast<int>(proliferation_capacity_);
 }
 
+std::ostream& Cell::traceback(std::ostream& ost, std::unordered_set<unsigned>* done) const {
+    write(ost) << "\n";
+    if (ancestor_ && done->insert(ancestor_->id_).second) {
+        ancestor_->traceback(ost, done);
+    }
+    return ost;
+}
+
 //! Stream operator for debug print
 std::ostream& operator<< (std::ostream& ost, const Cell& x) {
     return x.write(ost);
