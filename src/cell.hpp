@@ -7,7 +7,7 @@
 
 #include <cstdint>
 #include <vector>
-#include <valarray>
+#include <array>
 #include <unordered_set>
 #include <string>
 #include <memory>
@@ -74,22 +74,23 @@ struct CellParams {
 /*! @brief Cancer cell
 */
 class Cell {
+    //! Alias of coordinate type
+    using coord_t = std::array<int, 3>;
   public:
     //! Alias
     using param_type = CellParams;
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const std::valarray<int>& v, unsigned i=0,
+    Cell(const coord_t& v, unsigned i,
          std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
-      coord_(v), event_rates_(er),
-      id_(i) {}
+      event_rates_(er), coord_(v), id_(i) {}
     //! Copy constructor
     Cell(const Cell& other) noexcept:
-      coord_(other.coord_),
       ancestor_(other.ancestor_),
       event_rates_(other.event_rates_),
       time_of_birth_(other.time_of_birth_),
+      coord_(other.coord_),
       id_(other.id_),
       proliferation_capacity_(other.proliferation_capacity_) {}
     //! Destructor
@@ -133,7 +134,7 @@ class Cell {
 
     //! @name Setter functions
     //@{
-    void set_coord(const std::valarray<int>& v) noexcept {coord_ = v;}
+    void set_coord(const coord_t& v) noexcept {coord_ = v;}
     void set_time_of_death(double t) noexcept {time_of_death_ = t;}
     //@}
 
@@ -144,7 +145,7 @@ class Cell {
     double death_prob() const noexcept {return event_rates_->death_prob;}
     double migra_rate() const noexcept {return event_rates_->migra_rate;}
     Event next_event() const noexcept {return next_event_;}
-    const std::valarray<int>& coord() const noexcept {return coord_;}
+    const coord_t& coord() const noexcept {return coord_;}
     //@}
 
     //! TSV header
@@ -168,8 +169,6 @@ class Cell {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
-    //! Position in a tumor
-    std::valarray<int> coord_;
     //! pointer to the ancestor
     std::shared_ptr<Cell> ancestor_;
     //! Set of event rates (copy-on-write)
@@ -178,6 +177,8 @@ class Cell {
     double time_of_birth_ = 0.0;
     //! time of death
     double time_of_death_ = 0.0;
+    //! Position in a tumor
+    coord_t coord_ = {};
     //! ID
     unsigned id_;
     //! \f$\omega\f$; stem cell if negative

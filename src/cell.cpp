@@ -221,8 +221,7 @@ std::string Cell::header() {
 
 std::ostream& Cell::write(std::ostream& ost) const {
     return ost
-        << coord_[0] << "\t" << coord_[1] << "\t"
-        << ((coord_.size() > 2u) ? coord_[2] : 0) << "\t"
+        << coord_[0] << "\t" << coord_[1] << "\t" << coord_[2] << "\t"
         << id_ << "\t"
         << (ancestor_ ? ancestor_->id_ : 0u) << "\t"
         << time_of_birth_ << "\t" << time_of_death_ << "\t"

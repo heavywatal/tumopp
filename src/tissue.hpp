@@ -12,7 +12,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <valarray>
+#include <array>
 #include <unordered_set>
 #include <map>
 #include <memory>
@@ -96,31 +96,31 @@ class Tissue {
     //! Swap with a random neighbor
     void migrate(const std::shared_ptr<Cell>&);
     //! Emplace daughter cell and push other cells to the direction
-    void push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
+    void push(std::shared_ptr<Cell> moving, const coord_t& direction);
     //! Push through the minimum drag path
     void push_minimum_drag(std::shared_ptr<Cell> moving);
     //! Try insert_adjacent() on every step in push()
-    void stroll(std::shared_ptr<Cell> moving, const std::valarray<int>& direction);
+    void stroll(std::shared_ptr<Cell> moving, const coord_t& direction);
     //! Insert x if any adjacent node is empty
     bool insert_adjacent(const std::shared_ptr<Cell>& x);
     //! Put new cell and return existing.
     bool swap_existing(std::shared_ptr<Cell>* x);
     //! Count steps to the nearest empty
-    size_t steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const;
+    size_t steps_to_empty(coord_t current, const coord_t& direction) const;
     //! Direction to the nearest empty
-    std::valarray<int> to_nearest_empty(const std::valarray<int>& current, const unsigned int search_max=26) const;
+    coord_t to_nearest_empty(const coord_t& current, const unsigned int search_max=26) const;
     //! Direction is selected with a probability proportional with 1/l
-    std::valarray<int> roulette_direction(const std::valarray<int>& current) const;
+    coord_t roulette_direction(const coord_t& current) const;
 
     //! Count adjacent empty sites
-    uint_fast8_t num_empty_neighbors(const std::valarray<int>&) const;
+    uint_fast8_t num_empty_neighbors(const coord_t&) const;
     //! num_empty_neighbors() / directions().size()
-    double proportion_empty_neighbors(const std::valarray<int>& coord) const {
+    double proportion_empty_neighbors(const coord_t& coord) const {
         double x = static_cast<double>(num_empty_neighbors(coord));
         return x /= static_cast<double>(coord_func_->directions().size());
     }
     //! TODO: Calculate positional value
-    double positional_value(const std::valarray<int>&) const {return 1.0;}
+    double positional_value(const coord_t&) const {return 1.0;}
 
     //! Push a cell to event #queue_
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
@@ -143,7 +143,7 @@ class Tissue {
         //! Compare cell coord
         bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
                          const std::shared_ptr<tumopp::Cell>& rhs) const noexcept {
-            return (lhs->coord() == rhs->coord()).min();
+            return lhs->coord() == rhs->coord();
         }
     };
 

@@ -220,7 +220,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     }
 }
 
-void Tissue::push(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {
+void Tissue::push(std::shared_ptr<Cell> moving, const coord_t& direction) {
     do {
         moving->set_coord(moving->coord() + direction);
     } while (swap_existing(&moving));
@@ -232,7 +232,7 @@ void Tissue::push_minimum_drag(std::shared_ptr<Cell> moving) {
     } while (swap_existing(&moving));
 }
 
-void Tissue::stroll(std::shared_ptr<Cell> moving, const std::valarray<int>& direction) {
+void Tissue::stroll(std::shared_ptr<Cell> moving, const coord_t& direction) {
     while (!insert_adjacent(moving)) {
         moving->set_coord(moving->coord() + direction);
         swap_existing(&moving);
@@ -281,7 +281,7 @@ void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
     }
 }
 
-size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<int>& direction) const {
+size_t Tissue::steps_to_empty(coord_t current, const coord_t& direction) const {
     size_t steps = 0;
     const auto key = std::make_shared<Cell>();
     do {
@@ -291,9 +291,9 @@ size_t Tissue::steps_to_empty(std::valarray<int> current, const std::valarray<in
     return steps;
 }
 
-std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, const unsigned search_max) const {
+coord_t Tissue::to_nearest_empty(const coord_t& current, const unsigned search_max) const {
     size_t least_steps = std::numeric_limits<size_t>::max();
-    std::valarray<int> best_direction;
+    coord_t best_direction{};
     auto directions = coord_func_->directions();
     std::shuffle(directions.begin(), directions.end(), wtl::sfmt64());
     if (search_max < directions.size()) directions.resize(search_max);
@@ -307,7 +307,7 @@ std::valarray<int> Tissue::to_nearest_empty(const std::valarray<int>& current, c
     return best_direction;
 }
 
-std::valarray<int> Tissue::roulette_direction(const std::valarray<int>& current) const {
+coord_t Tissue::roulette_direction(const coord_t& current) const {
     auto directions = coord_func_->directions();
     std::shuffle(directions.begin(), directions.end(), wtl::sfmt64());
     std::vector<double> roulette;
@@ -319,7 +319,7 @@ std::valarray<int> Tissue::roulette_direction(const std::valarray<int>& current)
     return directions[wtl::roulette_select(roulette, wtl::sfmt64())];
 }
 
-uint_fast8_t Tissue::num_empty_neighbors(const std::valarray<int>& coord) const {
+uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
     uint_fast8_t cnt = 0;
     std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
@@ -391,7 +391,7 @@ Tissue::sample_bulk(const std::shared_ptr<Cell>& center, const size_t n) const {
 std::vector<std::shared_ptr<Cell>>
 Tissue::sample_medoids(const size_t n) const {HERE;
     std::vector<std::shared_ptr<Cell>> cells(extant_cells_.begin(), extant_cells_.end());
-    std::vector<std::valarray<double>> points;
+    std::vector<std::array<double, 3>> points;
     points.reserve(n);
     for (const auto& p: cells) {
         points.emplace_back(coord_func_->continuous(p->coord()));

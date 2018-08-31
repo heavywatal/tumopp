@@ -5,79 +5,110 @@
 #ifndef COORD_HPP_
 #define COORD_HPP_
 
-#include <cstdlib> // std::abs for int; must be here for old compilers
-#include <valarray>
+#include <array>
 #include <vector>
 #include <random>
-#include <algorithm>
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace tumopp {
+
+//! Maximum dimensions
+constexpr unsigned MAX_DIM = 3u;
+
+//! Alias of coordinate type
+using coord_t = std::array<int, MAX_DIM>;
+
+//! @name Arithmetic operators for std::array
+//@{
+template <class T> inline
+std::array<T, MAX_DIM>& operator+=(std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
+    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] += rhs[i];}
+    return lhs;
+}
+
+template <class T> inline
+std::array<T, MAX_DIM>& operator-=(std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
+    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] -= rhs[i];}
+    return lhs;
+}
+
+template <class T> inline
+std::array<T, MAX_DIM>& operator*=(std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
+    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] *= rhs[i];}
+    return lhs;
+}
+
+template <class T> inline
+std::array<T, MAX_DIM> operator+(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
+    std::array<T, MAX_DIM> v(lhs);
+    return v += rhs;
+}
+
+template <class T> inline
+std::array<T, MAX_DIM> operator-(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
+    std::array<T, MAX_DIM> v(lhs);
+    return v -= rhs;
+}
+
+template <class T> inline
+std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
+    std::array<T, MAX_DIM> v(lhs);
+    return v *= rhs;
+}
+//@}
 
 /*! @brief Base class of coordinate system
 */
 class Coord {
   public:
     //! hash coordinates for std::unordered_* container
-    static size_t hash(const std::valarray<int>&);
+    static size_t hash(const coord_t&);
 
     //! [0, 0, ...]
-    std::valarray<int> origin() const {
-        return std::valarray<int>(dimensions_);
+    coord_t origin() const {
+        return {{0, 0, 0}};
     }
     //! Convert #directions_ to absolute coordinates
-    std::vector<std::valarray<int>> neighbors(const std::valarray<int>& v) const {
-        std::vector<std::valarray<int>> output = directions_;
+    std::vector<coord_t> neighbors(const coord_t& v) const {
+        std::vector<coord_t> output = directions_;
         for (auto& d: output) {
             d += v;
         }
         return output;
     }
     //! Choose a random neighbor
-    template <class RNG> inline
-    std::valarray<int> random_direction(RNG& rng) {
-        return directions_[dist_direction_(rng)];
+    template <class URBG> inline
+    coord_t random_direction(URBG& engine) {
+        return directions_[dist_direction_(engine)];
     }
     //! Choose a random neighbor of the specified site
-    template <class RNG> inline
-    std::valarray<int> random_neighbor(const std::valarray<int>& v, RNG& rng) {
-        return v + random_direction(rng);
+    template <class URBG> inline
+    coord_t random_neighbor(const coord_t& v, URBG& engine) {
+        return v + random_direction(engine);
     }
     //! Direction that maximize the distance from the origin
-    std::valarray<int> outward(const std::valarray<int>& v) const {
-        const auto candidates = neighbors(v);
-        return *std::max_element(candidates.begin(), candidates.end(),
-                                 [this](const std::valarray<int>& lhs, const std::valarray<int>& rhs) {
-            return euclidean_distance(lhs) < euclidean_distance(rhs);
-        });
-    }
+    coord_t outward(const coord_t& v) const;
     //! Area of cross section
     double cross_section(size_t nodes) const;
 
     // virtual methods
     //! Convert coordinates into continuous scale
-    virtual std::valarray<double> continuous(const std::valarray<int>& v) const {
-        std::valarray<double> out(v.size());
-        std::copy(std::begin(v), std::end(v), std::begin(out));
-        return out;
-    }
+    virtual std::array<double, MAX_DIM> continuous(const coord_t& v) const;
     //! Graph distance
-    virtual int graph_distance(const std::valarray<int>& v) const = 0;
+    virtual int graph_distance(const coord_t& v) const = 0;
     //! Euclidean distance
-    virtual double euclidean_distance(const std::valarray<int>& v) const {
-        return _euclidean_distance(v);
-    }
+    virtual double euclidean_distance(const coord_t& v) const;
     //! Estimate radius from volume
     virtual double radius(size_t nodes) const;
     //! square or cube
-    virtual std::vector<std::valarray<int>> core() const;
+    virtual std::vector<coord_t> core() const;
     //! sphere coordinates with inside-out direction
-    std::vector<std::valarray<int>> sphere(size_t n) const;
+    std::vector<coord_t> sphere(size_t n) const;
     //! Destructor
     virtual ~Coord() = default;
 
     //! getter of #directions_
-    const std::vector<std::valarray<int>>& directions() const noexcept {return directions_;}
+    const std::vector<coord_t>& directions() const noexcept {return directions_;}
     //! getter of #dimensions_
     unsigned dimensions() const noexcept {return dimensions_;}
 
@@ -87,19 +118,13 @@ class Coord {
     //! Constructor: initialize and check #dimensions_
     explicit Coord(unsigned d);
 
-    //! Euclidean distance
-    template <class T> inline
-    double _euclidean_distance(const std::valarray<T>& v) const {
-        return std::sqrt((v * v).sum());
-    }
-
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
     //! {2, 3}
     const unsigned dimensions_;
     //! initialized in derived class constructor
-    std::vector<std::valarray<int>> directions_;
+    std::vector<coord_t> directions_;
     //! initialized in derived class constructor
     std::uniform_int_distribution<unsigned> dist_direction_;
 };
@@ -113,7 +138,7 @@ class Neumann final: public Coord {
     explicit Neumann(const unsigned d);
     ~Neumann() = default;
     //! Manhattan distance
-    int graph_distance(const std::valarray<int>& v) const override;
+    int graph_distance(const coord_t& v) const override;
 };
 
 /*! @brief Derived class of Coord
@@ -127,7 +152,7 @@ class Moore final: public Coord {
     explicit Moore(const unsigned d);
     ~Moore() = default;
     //! Chebyshev/chessboard distance
-    int graph_distance(const std::valarray<int>& v) const override;
+    int graph_distance(const coord_t& v) const override;
 };
 
 /*! @brief Derived class of Coord
@@ -138,13 +163,11 @@ class Hexagonal final: public Coord {
     //! Constructor
     explicit Hexagonal(const unsigned d);
     ~Hexagonal() = default;
-    std::valarray<double> continuous(const std::valarray<int>& v) const override;
-    int graph_distance(const std::valarray<int>& v) const override;
-    double euclidean_distance(const std::valarray<int>& v) const override {
-        return _euclidean_distance(continuous(v));
-    }
+    std::array<double, MAX_DIM> continuous(const coord_t& v) const override;
+    int graph_distance(const coord_t& v) const override;
+    double euclidean_distance(const coord_t& v) const override;
     double radius(size_t nodes) const override;
-    std::vector<std::valarray<int>> core() const override;
+    std::vector<coord_t> core() const override;
 };
 
 } // namespace tumopp
