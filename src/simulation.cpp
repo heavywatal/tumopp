@@ -134,15 +134,13 @@ po::options_description Simulation::cell_options() {HERE;
     auto description = general_desc();
     description.add(options_desc());
     // do not print positional arguments as options
-    std::cout << "Usage: tumopp [options] nsam howmany\n\n";
+    std::cout << "Usage: " << PROJECT_NAME << " [options]\n\n";
     description.print(std::cout);
     throw wtl::ExitSuccess();
 }
 
 [[noreturn]] void Simulation::version_and_exit() {HERE;
-    std::cout << GIT_COMMIT_HASH
-              << " [" << GIT_BRANCH << "] "
-              << GIT_COMMIT_TIME << std::endl;
+    std::cout << PROJECT_VERSION << "\n";
     throw wtl::ExitSuccess();
 }
 

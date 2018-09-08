@@ -1,23 +1,14 @@
 execute_process(
-  COMMAND git rev-parse --abbrev-ref HEAD
-  OUTPUT_VARIABLE GIT_BRANCH
+  COMMAND git describe --always --dirty
+  OUTPUT_VARIABLE GIT_DESCRIBE
+  ERROR_QUIET
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+if(GIT_DESCRIBE)
+  set(PROJECT_VERSION ${GIT_DESCRIBE})
+endif()
+message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
 
-execute_process(
-  COMMAND git describe --always --abbrev=0 --dirty
-  OUTPUT_VARIABLE GIT_COMMIT_HASH
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-  COMMAND git show -s --format=%ci
-  OUTPUT_VARIABLE GIT_COMMIT_TIME
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-message(STATUS "commit ${GIT_COMMIT_HASH} [${GIT_BRANCH}]")
-message(STATUS "Date:  ${GIT_COMMIT_TIME}")
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
   ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp @ONLY
