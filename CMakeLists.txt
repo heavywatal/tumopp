@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
-project(tumopp CXX)
+project(tumopp
+  VERSION 0.5.1
+  LANGUAGES CXX)
 
 include(GNUInstallDirs)
 option(PROFILE "Use gperftools" FALSE)
@@ -10,7 +12,7 @@ find_package(Boost REQUIRED COMPONENTS program_options filesystem)
 message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 
 find_package(ZLIB REQUIRED)
-find_package(wtl)
+find_package(wtl 0.3)
 find_package(sfmt)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -50,6 +52,12 @@ set_target_properties(${PROJECT_NAME}-exe PROPERTIES
   OUTPUT_NAME ${PROJECT_NAME}
 )
 
+set(CONFIG_VERSION_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CONFIG_VERSION_FILE} COMPATIBILITY AnyNewerVersion
+)
+
 install(TARGETS ${PROJECT_NAME}-exe ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}-config
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -60,6 +68,9 @@ install(DIRECTORY src/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.hpp")
 install(EXPORT ${PROJECT_NAME}-config
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+)
+install(FILES ${CONFIG_VERSION_FILE}
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
 )
 
