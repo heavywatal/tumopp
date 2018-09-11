@@ -18,6 +18,17 @@ constexpr unsigned MAX_DIM = 3u;
 //! Alias of coordinate type
 using coord_t = std::array<int, MAX_DIM>;
 
+//! hash coordinates for std::unordered_* container
+inline size_t hash(const coord_t& v) {
+    // no collision as long as each of v is within +-1e6
+    constexpr coord_t::value_type mask21 = 0x001fffff;
+    size_t seed = v[0u] & mask21;
+    seed |= static_cast<size_t>(v[1u] & mask21) << 21;
+    seed |= static_cast<size_t>(v[2u] & mask21) << 42;
+    return seed;
+}
+
+
 //! @name Arithmetic operators for std::array
 //@{
 template <class T> inline
@@ -61,9 +72,6 @@ std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, const std::a
 */
 class Coord {
   public:
-    //! hash coordinates for std::unordered_* container
-    static size_t hash(const coord_t&);
-
     //! Convert #directions_ to absolute coordinates
     std::vector<coord_t> neighbors(const coord_t& v) const {
         std::vector<coord_t> output = directions_;

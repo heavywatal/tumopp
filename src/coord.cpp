@@ -1,7 +1,5 @@
 #include "coord.hpp"
 
-#include <boost/functional/hash.hpp>
-
 #include <cmath>
 #include <numeric>
 #include <algorithm>
@@ -214,8 +212,4 @@ coord_t Coord::outward(const coord_t& v) const {
     });
 }
 
-size_t Coord::hash(const coord_t& v) {
-    return boost::hash_range(std::begin(v), std::end(v));
-}
-
-}
+} // namespace tumopp

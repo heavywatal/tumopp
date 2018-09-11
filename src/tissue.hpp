@@ -115,7 +115,7 @@ class Tissue {
     struct hash_shptr_cell {
         //! hash function
         size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const noexcept {
-            return Coord::hash(x->coord());
+            return hash(x->coord());
         }
     };
 
