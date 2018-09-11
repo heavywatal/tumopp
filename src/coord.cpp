@@ -1,6 +1,5 @@
 #include "coord.hpp"
 
-#include <boost/math/constants/constants.hpp>
 #include <boost/functional/hash.hpp>
 
 #include <cmath>
@@ -12,9 +11,6 @@
 namespace tumopp {
 
 namespace {
-
-//! Mathematical constant
-constexpr double PI = boost::math::constants::pi<double>();
 
 //! constexpr pow function for integers
 constexpr size_t ipow(size_t base, size_t exponent) noexcept {
@@ -171,33 +167,6 @@ std::vector<coord_t> Hexagonal::core() const {
         output.push_back({{1, 0, -1}});
     }
     return output;
-}
-
-double Coord::radius(const size_t nodes) const {
-    double x = nodes;
-    x /= PI;
-    if (dimensions_ == 2U) {
-        // S = pi r^2
-        return std::sqrt(x);
-    } else {
-        // V = 4/3 pi r^3
-        return std::pow(x *= (3.0 / 4.0), 1.0 / 3.0);
-    }
-}
-
-double Hexagonal::radius(const size_t nodes) const {
-    const static double rate2d = std::pow(std::sqrt(3.0 / 4.0), 1.0 / 3.0);
-    const static double rate3d = std::pow(std::sqrt(0.5), 1.0 / 3.0);
-    if (dimensions_ == 2U) {
-        return Coord::radius(nodes) * rate2d;
-    } else {
-        return Coord::radius(nodes) * rate3d;
-    }
-}
-
-double Coord::cross_section(size_t nodes) const {
-    double r = radius(nodes);
-    return PI * (r *= r);
 }
 
 std::vector<coord_t> Coord::sphere(const size_t n) const {

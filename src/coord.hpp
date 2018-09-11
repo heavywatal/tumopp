@@ -64,10 +64,6 @@ class Coord {
     //! hash coordinates for std::unordered_* container
     static size_t hash(const coord_t&);
 
-    //! [0, 0, ...]
-    coord_t origin() const {
-        return {{0, 0, 0}};
-    }
     //! Convert #directions_ to absolute coordinates
     std::vector<coord_t> neighbors(const coord_t& v) const {
         std::vector<coord_t> output = directions_;
@@ -88,8 +84,6 @@ class Coord {
     }
     //! Direction that maximize the distance from the origin
     coord_t outward(const coord_t& v) const;
-    //! Area of cross section
-    double cross_section(size_t nodes) const;
 
     // virtual methods
     //! Convert coordinates into continuous scale
@@ -98,8 +92,6 @@ class Coord {
     virtual int graph_distance(const coord_t& v) const = 0;
     //! Euclidean distance
     virtual double euclidean_distance(const coord_t& v) const;
-    //! Estimate radius from volume
-    virtual double radius(size_t nodes) const;
     //! square or cube
     virtual std::vector<coord_t> core() const;
     //! sphere coordinates with inside-out direction
@@ -166,7 +158,6 @@ class Hexagonal final: public Coord {
     std::array<double, MAX_DIM> continuous(const coord_t& v) const override;
     int graph_distance(const coord_t& v) const override;
     double euclidean_distance(const coord_t& v) const override;
-    double radius(size_t nodes) const override;
     std::vector<coord_t> core() const override;
 };
 

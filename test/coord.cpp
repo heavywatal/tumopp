@@ -13,8 +13,6 @@ void test_coordinate(const tumopp::coord_t& v) {
     std::cout << "neighbors:   " << coord_func.neighbors(v) << "\n";
     std::cout << "dist_g:      " << coord_func.graph_distance(v) << "\n";
     std::cout << "dist_e:      " << coord_func.euclidean_distance(v) << "\n";
-    std::cout << "radius(1e2): " << coord_func.radius(100) << "\n";
-    std::cout << "radius(1e3): " << coord_func.radius(1000) << "\n";
 }
 
 int main() {
