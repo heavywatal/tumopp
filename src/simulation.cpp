@@ -12,15 +12,15 @@
 #include <wtl/chrono.hpp>
 #include <wtl/getopt.hpp>
 #include <wtl/exception.hpp>
+#include <wtl/filesystem.hpp>
 #include <wtl/zlib.hpp>
 #include <sfmt.hpp>
 
 #include <boost/program_options.hpp>
-#include <boost/filesystem.hpp>
 
 namespace tumopp {
 
-namespace fs = boost::filesystem;
+namespace fs = wtl::filesystem;
 namespace po = boost::program_options;
 
 //! Options description for general purpose
