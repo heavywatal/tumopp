@@ -37,9 +37,9 @@ class Tissue {
     bool grow(
       size_t max_size,
       double max_time=100.0,
-      double snapshot_interval=std::numeric_limits<double>::infinity(),
+      double snapshot_interval=0.0,
       size_t recording_early_growth=0u,
-      size_t mutation_timing=std::numeric_limits<size_t>::max());
+      size_t mutation_timing=0u);
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);

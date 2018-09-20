@@ -78,7 +78,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             success = true; // maybe not; but want to exit with record
             break;
         }
-        if (time_ > time_snapshot) {
+        if (time_snapshot > 0.0 && time_ > time_snapshot) {
             snapshots_append();
             time_snapshot = ++i_snapshot_ * snapshot_interval;
         }
@@ -94,8 +94,8 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 drivers_ << mother->mutate();
                 drivers_ << daughter->mutate();
-                if (extant_cells_.size() > mutation_timing) {  // once
-                    mutation_timing = std::numeric_limits<size_t>::max();
+                if (extant_cells_.size() == mutation_timing) {
+                    mutation_timing = 0u; // once
                     drivers_ << daughter->force_mutate();
                 }
                 queue_push(mother);

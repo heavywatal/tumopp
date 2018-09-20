@@ -66,11 +66,11 @@ po::options_description Simulation::options_desc() {HERE;
       ("origin,O", po::value<size_t>()->default_value(1u))
       ("max,N", po::value<size_t>()->default_value(16384u))
       ("plateau,T", po::value<double>()->default_value(0.0))
-      ("mutate,U", po::value<size_t>()->default_value(std::numeric_limits<size_t>::max()))
+      ("mutate,U", po::value<size_t>()->default_value(0.0))
       ("treatment", po::value<double>()->default_value(0.0))
       ("resistant", po::value<size_t>()->default_value(3u))
       ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
-      ("interval,I", po::value<double>()->default_value(std::numeric_limits<double>::infinity()))
+      ("interval,I", po::value<double>()->default_value(0.0))
       ("record,R", po::value<size_t>()->default_value(0u))
       ("extinction", po::value<unsigned>()->default_value(100u))
       ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
