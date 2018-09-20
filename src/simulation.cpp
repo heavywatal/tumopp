@@ -73,7 +73,7 @@ po::options_description Simulation::options_desc() {HERE;
       ("interval,I", po::value<double>()->default_value(0.0))
       ("record,R", po::value<size_t>()->default_value(0u))
       ("extinction", po::value<unsigned>()->default_value(100u))
-      ("seed", po::value<uint32_t>()->default_value(std::random_device{}()));
+      ("seed", po::value<int>()->default_value(std::random_device{}()));
     description.add(cell_options());
     return description;
 }
@@ -161,7 +161,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     if (vm["version"].as<bool>()) {version_and_exit();}
     po::notify(vm);
     Cell::param(*cell_params_);
-    wtl::sfmt64().seed(vm["seed"].as<uint32_t>());
+    wtl::sfmt64().seed(static_cast<unsigned>(vm["seed"].as<int>()));
 
     config_string_ = wtl::flags_into_string(vm);
     if (vm["verbose"].as<bool>()) {
