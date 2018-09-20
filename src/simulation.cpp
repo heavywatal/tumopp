@@ -10,28 +10,25 @@
 #include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
-#include <wtl/getopt.hpp>
 #include <wtl/exception.hpp>
 #include <wtl/filesystem.hpp>
 #include <wtl/zlib.hpp>
 #include <sfmt.hpp>
-
-#include <boost/program_options.hpp>
+#include <clippson/clippson.hpp>
 
 namespace tumopp {
 
 namespace fs = wtl::filesystem;
-namespace po = boost::program_options;
+
+nlohmann::json VM;
 
 //! Options description for general purpose
-inline po::options_description general_desc() {HERE;
-    po::options_description description("General");
-    description.add_options()
-        ("help,h", po::bool_switch(), "print this help")
-        ("version", po::bool_switch(), "print version")
-        ("verbose,v", po::bool_switch(), "verbose output")
-    ;
-    return description;
+inline clipp::group general_options(nlohmann::json* vm) {HERE;
+    return (
+      wtl::option(vm, {"h", "help"}, false, "print this help"),
+      wtl::option(vm, {"version"}, false, "print version"),
+      wtl::option(vm, {"v", "verbose"}, false, "verbose output")
+    ).doc("General:");
 }
 
 //! Parameters of Simulation class
@@ -52,30 +49,29 @@ inline po::options_description general_desc() {HERE;
     `-R,--record`       | -              | -
     `--seed`            | -              | -
 */
-po::options_description Simulation::options_desc() {HERE;
+inline clipp::group simulation_options(nlohmann::json* vm) {HERE;
     const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
-    po::options_description description("Simulation");
-    description.add_options()
-      ("dimensions,D", po::value<unsigned>()->default_value(3u))
-      ("coord,C", po::value<std::string>()->default_value("moore"),
-       "Coordinate/neighborhood system {neumann, moore, hex}")
-      ("local,L", po::value<std::string>()->default_value("const"),
-       "E2 {const, step, linear}")
-      ("path,P", po::value<std::string>()->default_value("random"),
-       "Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}")
-      ("origin,O", po::value<size_t>()->default_value(1u))
-      ("max,N", po::value<size_t>()->default_value(16384u))
-      ("plateau,T", po::value<double>()->default_value(0.0))
-      ("mutate,U", po::value<size_t>()->default_value(0.0))
-      ("treatment", po::value<double>()->default_value(0.0))
-      ("resistant", po::value<size_t>()->default_value(3u))
-      ("outdir,o", po::value<std::string>()->default_value(OUT_DIR))
-      ("interval,I", po::value<double>()->default_value(0.0))
-      ("record,R", po::value<size_t>()->default_value(0u))
-      ("extinction", po::value<unsigned>()->default_value(100u))
-      ("seed", po::value<int>()->default_value(std::random_device{}()));
-    description.add(cell_options());
-    return description;
+    const int seed = std::random_device{}(); // 32-bit signed integer for R
+    return (
+      wtl::option(vm, {"D", "dimensions"}, 3u),
+      wtl::option(vm, {"C", "coord"}, "moore",
+        "Coordinate/neighborhood system {neumann, moore, hex}"),
+      wtl::option(vm, {"L", "local"}, "const",
+        "E2 {const, step, linear}"),
+      wtl::option(vm, {"P", "path"}, "random",
+        "Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}"),
+      wtl::option(vm, {"O", "origin"}, 1u),
+      wtl::option(vm, {"N", "max"}, 16384u),
+      wtl::option(vm, {"T", "plateau"}, 0.0),
+      wtl::option(vm, {"U", "mutate"}, 0u),
+      wtl::option(vm, {"treatment"}, 0.0),
+      wtl::option(vm, {"resistant"}, 3u),
+      wtl::option(vm, {"o", "outdir"}, OUT_DIR),
+      wtl::option(vm, {"I", "interval"}, 0.0),
+      wtl::option(vm, {"R", "record"}, 0u),
+      wtl::option(vm, {"extinction"}, 100u),
+      wtl::option(vm, {"seed"}, seed)
+    ).doc("Simulation:");
 }
 
 //! Parameters of Cell class
@@ -100,93 +96,82 @@ po::options_description Simulation::options_desc() {HERE;
     `--sd`              | \f$\sigma_\delta\f$ | CellParams::SD_DEATH
     `--sm`              | \f$\sigma_\rho\f$   | CellParams::SD_MIGRA
 */
-po::options_description Simulation::cell_options() {HERE;
-    init_event_rates_ = std::make_unique<EventRates>();
-    cell_params_ = std::make_unique<CellParams>();
-    namespace po = boost::program_options;
-    po::options_description desc{"Cell"};
-    auto po_value = [](auto* var) {return po::value(var)->default_value(*var);};
-    desc.add_options()
-      ("beta0,b", po_value(&init_event_rates_->birth_rate))
-      ("delta0,d", po_value(&init_event_rates_->death_rate))
-      ("alpha0,a", po_value(&init_event_rates_->death_prob))
-      ("rho0,m", po_value(&init_event_rates_->migra_rate))
-      ("shape,k", po_value(&cell_params_->GAMMA_SHAPE))
-      ("symmetric,p", po_value(&cell_params_->PROB_SYMMETRIC_DIVISION))
-      ("prolif,r", po_value(&cell_params_->MAX_PROLIFERATION_CAPACITY))
-      ("ub", po_value(&cell_params_->RATE_BIRTH))
-      ("ud", po_value(&cell_params_->RATE_DEATH))
-      ("ua", po_value(&cell_params_->RATE_ALPHA))
-      ("um", po_value(&cell_params_->RATE_MIGRA))
-      ("mb", po_value(&cell_params_->MEAN_BIRTH))
-      ("md", po_value(&cell_params_->MEAN_DEATH))
-      ("ma", po_value(&cell_params_->MEAN_ALPHA))
-      ("mm", po_value(&cell_params_->MEAN_MIGRA))
-      ("sb", po_value(&cell_params_->SD_BIRTH))
-      ("sd", po_value(&cell_params_->SD_DEATH))
-      ("sa", po_value(&cell_params_->SD_ALPHA))
-      ("sm", po_value(&cell_params_->SD_MIGRA))
-    ;
-    return desc;
-}
-
-[[noreturn]] void Simulation::help_and_exit() {HERE;
-    auto description = general_desc();
-    description.add(options_desc());
-    // do not print positional arguments as options
-    std::cout << "Usage: " << PROJECT_NAME << " [options]\n\n";
-    description.print(std::cout);
-    throw wtl::ExitSuccess();
-}
-
-[[noreturn]] void Simulation::version_and_exit() {HERE;
-    std::cout << PROJECT_VERSION << "\n";
-    throw wtl::ExitSuccess();
+inline clipp::group
+cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_params) {HERE;
+    return (
+      wtl::option(vm, {"b", "beta0"}, &init_event_rates->birth_rate),
+      wtl::option(vm, {"d", "delta0"}, &init_event_rates->death_rate),
+      wtl::option(vm, {"a", "alpha0"}, &init_event_rates->death_prob),
+      wtl::option(vm, {"m", "rho0"}, &init_event_rates->migra_rate),
+      wtl::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE),
+      wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION),
+      wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY),
+      wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH),
+      wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH),
+      wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA),
+      wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA),
+      wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH),
+      wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH),
+      wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA),
+      wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA),
+      wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH),
+      wtl::option(vm, {"sd"}, &cell_params->SD_DEATH),
+      wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA),
+      wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA)
+    ).doc("Cell:");
 }
 
 Simulation::Simulation(const std::vector<std::string>& arguments)
-: vars_(std::make_unique<po::variables_map>()) {HERE;
+: init_event_rates_(std::make_unique<EventRates>()),
+  cell_params_(std::make_unique<CellParams>()) {HERE;
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(9);
     std::cerr.precision(6);
-    command_args_ = wtl::str_join(arguments, " ");
 
-    auto description = general_desc();
-    description.add(options_desc());
-    auto& vm = *vars_;
-    po::store(po::command_line_parser(arguments).
-              options(description).run(), vm);
-    if (vm["help"].as<bool>()) {help_and_exit();}
-    if (vm["version"].as<bool>()) {version_and_exit();}
-    po::notify(vm);
+    VM.clear();
+    nlohmann::json vm_local;
+    auto cli = (
+      general_options(&vm_local),
+      simulation_options(&VM),
+      cell_options(&VM, init_event_rates_.get(), cell_params_.get())
+    );
+    wtl::parse(cli, arguments);
+    auto fmt = wtl::doc_format();
+    if (vm_local["help"]) {
+        std::cout << "Usage: " << PROJECT_NAME << " [options]\n\n";
+        std::cout << clipp::documentation(cli, fmt) << "\n";
+        throw wtl::ExitSuccess();
+    }
+    if (vm_local["version"]) {
+        std::cout << PROJECT_VERSION << "\n";
+        throw wtl::ExitSuccess();
+    }
     Cell::param(*cell_params_);
-    wtl::sfmt64().seed(static_cast<unsigned>(vm["seed"].as<int>()));
-
-    config_string_ = wtl::flags_into_string(vm);
-    if (vm["verbose"].as<bool>()) {
+    wtl::sfmt64().seed(VM.at("seed").get<uint32_t>());
+    config_ = VM.dump(2) + "\n";
+    if (vm_local["verbose"]) {
         std::cerr << wtl::iso8601datetime() << std::endl;
-        std::cerr << config_string_ << std::endl;
+        std::cerr << config_ << std::endl;
     }
 }
 
 Simulation::~Simulation() = default;
 
 void Simulation::run() {HERE;
-    auto& vm = *vars_;
-    const auto dimensions = vm["dimensions"].as<unsigned>();
-    const auto coord = vm["coord"].as<std::string>();
-    const auto local = vm["local"].as<std::string>();
-    const auto path = vm["path"].as<std::string>();
-    const auto init_size = vm["origin"].as<size_t>();
-    const auto max_size = vm["max"].as<size_t>();
-    const auto plateau_time = vm["plateau"].as<double>();
-    const auto mutate = vm["mutate"].as<size_t>();
-    const auto treatment = vm["treatment"].as<double>();
-    const auto resistant = vm["resistant"].as<size_t>();
-    const auto interval = vm["interval"].as<double>();
-    const auto record = vm["record"].as<size_t>();
-    const auto allowed_extinction = vm["extinction"].as<unsigned>();
+    const auto dimensions = VM.at("dimensions").get<unsigned>();
+    const auto coord = VM.at("coord").get<std::string>();
+    const auto local = VM.at("local").get<std::string>();
+    const auto path = VM.at("path").get<std::string>();
+    const auto init_size = VM.at("origin").get<size_t>();
+    const auto max_size = VM.at("max").get<size_t>();
+    const auto plateau_time = VM.at("plateau").get<double>();
+    const auto mutate = VM.at("mutate").get<size_t>();
+    const auto treatment = VM.at("treatment").get<double>();
+    const auto resistant = VM.at("resistant").get<size_t>();
+    const auto interval = VM.at("interval").get<double>();
+    const auto record = VM.at("record").get<size_t>();
+    const auto allowed_extinction = VM.at("extinction").get<unsigned>();
     const double max_time = std::log2(max_size) * 100.0;
 
     for (size_t i=0; i<allowed_extinction; ++i) {
@@ -205,14 +190,13 @@ void Simulation::run() {HERE;
 }
 
 void Simulation::write() const {HERE;
-    auto& vm = *vars_;
-    const auto outdir = vm["outdir"].as<std::string>();
+    const auto outdir = VM.at("outdir").get<std::string>();
     if (outdir.empty()) return;
     DCERR("mkdir && cd to " << outdir << std::endl);
     fs::create_directory(outdir);
     fs::current_path(outdir);
     std::cerr << "Output: " << outdir << "\n";
-    wtl::make_ofs("program_options.conf") << config_string_;
+    wtl::make_ofs("config.json") << config_;
     wtl::zlib::ofstream{"population.tsv.gz"} << tissue_->history().rdbuf();
     if (tissue_->has_snapshots()) {
         wtl::zlib::ofstream{"snapshots.tsv.gz"} << tissue_->snapshots().rdbuf();

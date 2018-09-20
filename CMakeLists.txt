@@ -7,13 +7,10 @@ include(GNUInstallDirs)
 option(PROFILE "Use gperftools" FALSE)
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
-set(Boost_NO_BOOST_CMAKE TRUE)
-find_package(Boost REQUIRED COMPONENTS program_options)
-message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
-
 find_package(ZLIB REQUIRED)
 find_package(wtl 0.4.0)
 find_package(sfmt 0.5.0)
+find_package(clippson 0.6.0 REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -41,7 +38,7 @@ add_library(${PROJECT_NAME} SHARED $<TARGET_OBJECTS:obj>)
 target_include_directories(${PROJECT_NAME} BEFORE
   INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE wtl sfmt ${Boost_LIBRARIES} ZLIB::ZLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE wtl sfmt clippson::clippson ZLIB::ZLIB)
 
 add_executable(${PROJECT_NAME}-exe main.cpp)
 target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME})

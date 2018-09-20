@@ -10,11 +10,6 @@
 #include <string>
 #include <memory>
 
-namespace boost {namespace program_options {
-  class options_description;
-  class variables_map;
-}}
-
 namespace tumopp {
 
 class Tissue;
@@ -42,18 +37,10 @@ class Simulation {
     std::string history() const;
     std::string snapshots() const;
     std::string drivers() const;
-    std::string config_string() const {return config_string_;}
+    std::string config() const {return config_;}
     //@}
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
-    boost::program_options::options_description options_desc();
-    boost::program_options::options_description cell_options();
-
-    //! Print help message and exit
-    [[noreturn]] void help_and_exit();
-    //! Print version and exit
-    [[noreturn]] void version_and_exit();
-
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
@@ -63,13 +50,8 @@ class Simulation {
     std::unique_ptr<EventRates> init_event_rates_;
     //! CellParams instance
     std::unique_ptr<CellParams> cell_params_;
-
-    //! optional variables
-    std::unique_ptr<boost::program_options::variables_map> vars_;
-    //! Command line arguments
-    std::string command_args_;
-    //! Writen to "program_options.conf"
-    std::string config_string_;
+    //! Parameters
+    std::string config_;
 };
 
 } // namespace tumopp
