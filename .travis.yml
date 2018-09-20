@@ -10,7 +10,7 @@ before_install:
 install:
 - export HOMEBREW_NO_AUTO_UPDATE=1
 - brew tap heavywatal/tap
-- brew install sfmt-class cxxwtl
+- brew install clippson sfmt-class cxxwtl
 script:
 - mkdir build && cd build
 - cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ..
