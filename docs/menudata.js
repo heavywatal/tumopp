@@ -46,7 +46,6 @@ var menudata={children:[
 {text:"r",url:"functions.html#index_r"},
 {text:"s",url:"functions.html#index_s"},
 {text:"t",url:"functions.html#index_t"},
-{text:"v",url:"functions.html#index_v"},
 {text:"w",url:"functions.html#index_w"},
 {text:"~",url:"functions.html#index_0x7e"}]},
 {text:"Functions",url:"functions_func.html",children:[
@@ -65,7 +64,6 @@ var menudata={children:[
 {text:"r",url:"functions_func.html#index_r"},
 {text:"s",url:"functions_func.html#index_s"},
 {text:"t",url:"functions_func.html#index_t"},
-{text:"v",url:"functions_func.html#index_v"},
 {text:"w",url:"functions_func.html#index_w"},
 {text:"~",url:"functions_func.html#index_0x7e"}]},
 {text:"Variables",url:"functions_vars.html",children:[
@@ -82,8 +80,7 @@ var menudata={children:[
 {text:"q",url:"functions_vars.html#index_q"},
 {text:"r",url:"functions_vars.html#index_r"},
 {text:"s",url:"functions_vars.html#index_s"},
-{text:"t",url:"functions_vars.html#index_t"},
-{text:"v",url:"functions_vars.html#index_v"}]},
+{text:"t",url:"functions_vars.html#index_t"}]},
 {text:"Typedefs",url:"functions_type.html"},
 {text:"Related Functions",url:"functions_rela.html"}]}]},
 {text:"Files",url:"files.html",children:[

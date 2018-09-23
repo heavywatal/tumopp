@@ -67,17 +67,17 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gafada1336d09b79b5d782b0385f97b3f2"><td class="memItemLeft" align="right" valign="top">boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#gafada1336d09b79b5d782b0385f97b3f2">tumopp::Simulation::options_desc</a> ()</td></tr>
-<tr class="memdesc:gafada1336d09b79b5d782b0385f97b3f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_simulation.html" title="Represents single run. ">Simulation</a> class.  <a href="#gafada1336d09b79b5d782b0385f97b3f2">More...</a><br /></td></tr>
-<tr class="separator:gafada1336d09b79b5d782b0385f97b3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac2023a97c469be5d486de7dc346b264d"><td class="memItemLeft" align="right" valign="top">boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#gac2023a97c469be5d486de7dc346b264d">tumopp::Simulation::cell_options</a> ()</td></tr>
-<tr class="memdesc:gac2023a97c469be5d486de7dc346b264d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="#gac2023a97c469be5d486de7dc346b264d">More...</a><br /></td></tr>
-<tr class="separator:gac2023a97c469be5d486de7dc346b264d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8488487054b825ff05f36ecdca0100c0"><td class="memItemLeft" align="right" valign="top">clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga8488487054b825ff05f36ecdca0100c0">tumopp::simulation_options</a> (nlohmann::json *vm)</td></tr>
+<tr class="memdesc:ga8488487054b825ff05f36ecdca0100c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_simulation.html" title="Represents single run. ">Simulation</a> class.  <a href="group__params.html#ga8488487054b825ff05f36ecdca0100c0">More...</a><br /></td></tr>
+<tr class="separator:ga8488487054b825ff05f36ecdca0100c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7d8bddce7dfa18f9f8597b3692706895"><td class="memItemLeft" align="right" valign="top">clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga7d8bddce7dfa18f9f8597b3692706895">tumopp::cell_options</a> (nlohmann::json *vm, <a class="el" href="structtumopp_1_1_event_rates.html">EventRates</a> *init_event_rates, <a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> *cell_params)</td></tr>
+<tr class="memdesc:ga7d8bddce7dfa18f9f8597b3692706895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="group__params.html#ga7d8bddce7dfa18f9f8597b3692706895">More...</a><br /></td></tr>
+<tr class="separator:ga7d8bddce7dfa18f9f8597b3692706895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gac2023a97c469be5d486de7dc346b264d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac2023a97c469be5d486de7dc346b264d">&#9670;&nbsp;</a></span>cell_options()</h2>
+<a id="ga7d8bddce7dfa18f9f8597b3692706895"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7d8bddce7dfa18f9f8597b3692706895">&#9670;&nbsp;</a></span>cell_options()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -86,15 +86,32 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">po::options_description tumopp::Simulation::cell_options </td>
+          <td class="memname">clipp::group tumopp::cell_options </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">nlohmann::json *&#160;</td>
+          <td class="paramname"><em>vm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structtumopp_1_1_event_rates.html">EventRates</a> *&#160;</td>
+          <td class="paramname"><em>init_event_rates</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> *&#160;</td>
+          <td class="paramname"><em>cell_params</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -139,8 +156,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gafada1336d09b79b5d782b0385f97b3f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafada1336d09b79b5d782b0385f97b3f2">&#9670;&nbsp;</a></span>options_desc()</h2>
+<a id="ga8488487054b825ff05f36ecdca0100c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8488487054b825ff05f36ecdca0100c0">&#9670;&nbsp;</a></span>simulation_options()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -149,15 +166,16 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">po::options_description tumopp::Simulation::options_desc </td>
+          <td class="memname">clipp::group tumopp::simulation_options </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">nlohmann::json *&#160;</td>
+          <td class="paramname"><em>vm</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

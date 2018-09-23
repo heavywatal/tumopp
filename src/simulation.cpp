@@ -18,6 +18,7 @@
 
 namespace tumopp {
 
+//! variables mapper to handle command-line arguments
 namespace fs = wtl::filesystem;
 
 nlohmann::json VM;

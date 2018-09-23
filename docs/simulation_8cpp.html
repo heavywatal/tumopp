@@ -53,7 +53,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">simulation.cpp File Reference</div>  </div>
 </div><!--header-->
@@ -68,19 +69,31 @@ $(function() {
 <code>#include &lt;wtl/debug.hpp&gt;</code><br />
 <code>#include &lt;wtl/iostr.hpp&gt;</code><br />
 <code>#include &lt;wtl/chrono.hpp&gt;</code><br />
-<code>#include &lt;wtl/getopt.hpp&gt;</code><br />
 <code>#include &lt;wtl/exception.hpp&gt;</code><br />
+<code>#include &lt;wtl/filesystem.hpp&gt;</code><br />
 <code>#include &lt;wtl/zlib.hpp&gt;</code><br />
 <code>#include &lt;sfmt.hpp&gt;</code><br />
-<code>#include &lt;boost/program_options.hpp&gt;</code><br />
-<code>#include &lt;boost/filesystem.hpp&gt;</code><br />
+<code>#include &lt;clippson/clippson.hpp&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa67f6fca7fa21ba5c00a15f20a1b37b2"><td class="memItemLeft" align="right" valign="top"><a id="aa67f6fca7fa21ba5c00a15f20a1b37b2"></a>
-po::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simulation_8cpp.html#aa67f6fca7fa21ba5c00a15f20a1b37b2">tumopp::general_desc</a> ()</td></tr>
-<tr class="memdesc:aa67f6fca7fa21ba5c00a15f20a1b37b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options description for general purpose. <br /></td></tr>
-<tr class="separator:aa67f6fca7fa21ba5c00a15f20a1b37b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20ee08ee51174884ead36a4f10eae130"><td class="memItemLeft" align="right" valign="top"><a id="a20ee08ee51174884ead36a4f10eae130"></a>
+clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simulation_8cpp.html#a20ee08ee51174884ead36a4f10eae130">tumopp::general_options</a> (nlohmann::json *vm)</td></tr>
+<tr class="memdesc:a20ee08ee51174884ead36a4f10eae130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options description for general purpose. <br /></td></tr>
+<tr class="separator:a20ee08ee51174884ead36a4f10eae130"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8488487054b825ff05f36ecdca0100c0"><td class="memItemLeft" align="right" valign="top">clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga8488487054b825ff05f36ecdca0100c0">tumopp::simulation_options</a> (nlohmann::json *vm)</td></tr>
+<tr class="memdesc:ga8488487054b825ff05f36ecdca0100c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_simulation.html" title="Represents single run. ">Simulation</a> class.  <a href="group__params.html#ga8488487054b825ff05f36ecdca0100c0">More...</a><br /></td></tr>
+<tr class="separator:ga8488487054b825ff05f36ecdca0100c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7d8bddce7dfa18f9f8597b3692706895"><td class="memItemLeft" align="right" valign="top">clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga7d8bddce7dfa18f9f8597b3692706895">tumopp::cell_options</a> (nlohmann::json *vm, EventRates *init_event_rates, CellParams *cell_params)</td></tr>
+<tr class="memdesc:ga7d8bddce7dfa18f9f8597b3692706895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="group__params.html#ga7d8bddce7dfa18f9f8597b3692706895">More...</a><br /></td></tr>
+<tr class="separator:ga7d8bddce7dfa18f9f8597b3692706895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a992d7149532c063d9bb3314dfc021218"><td class="memItemLeft" align="right" valign="top"><a id="a992d7149532c063d9bb3314dfc021218"></a>
+nlohmann::json&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simulation_8cpp.html#a992d7149532c063d9bb3314dfc021218">tumopp::VM</a></td></tr>
+<tr class="memdesc:a992d7149532c063d9bb3314dfc021218"><td class="mdescLeft">&#160;</td><td class="mdescRight">variables mapper to handle command-line arguments <br /></td></tr>
+<tr class="separator:a992d7149532c063d9bb3314dfc021218"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of Simulation class. </p>

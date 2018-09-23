@@ -54,7 +54,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtumopp_1_1_coord-members.html">List of all members</a>  </div>
@@ -81,10 +80,6 @@ Inheritance diagram for tumopp::Coord:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acd69b3095c1f186fd2c07305ac5224c2"><td class="memItemLeft" align="right" valign="top"><a id="acd69b3095c1f186fd2c07305ac5224c2"></a>
-<a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#acd69b3095c1f186fd2c07305ac5224c2">origin</a> () const</td></tr>
-<tr class="memdesc:acd69b3095c1f186fd2c07305ac5224c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">[0, 0, ...] <br /></td></tr>
-<tr class="separator:acd69b3095c1f186fd2c07305ac5224c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80748590103cd182497e5cfd083bc30c"><td class="memItemLeft" align="right" valign="top"><a id="a80748590103cd182497e5cfd083bc30c"></a>
 std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a80748590103cd182497e5cfd083bc30c">neighbors</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const</td></tr>
 <tr class="memdesc:a80748590103cd182497e5cfd083bc30c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="classtumopp_1_1_coord.html#a610435922fc02aed730226de65596af6" title="initialized in derived class constructor ">directions_</a> to absolute coordinates. <br /></td></tr>
@@ -103,10 +98,6 @@ template&lt;class URBG &gt; </td></tr>
 <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a2a6658150fba57a667aa32ef55aa214a">outward</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const</td></tr>
 <tr class="memdesc:a2a6658150fba57a667aa32ef55aa214a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Direction that maximize the distance from the origin. <br /></td></tr>
 <tr class="separator:a2a6658150fba57a667aa32ef55aa214a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8d5f691b88df8948ff59474432511c3"><td class="memItemLeft" align="right" valign="top"><a id="ac8d5f691b88df8948ff59474432511c3"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#ac8d5f691b88df8948ff59474432511c3">cross_section</a> (size_t nodes) const</td></tr>
-<tr class="memdesc:ac8d5f691b88df8948ff59474432511c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Area of cross section. <br /></td></tr>
-<tr class="separator:ac8d5f691b88df8948ff59474432511c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad88c2d3042ebeef99dbbf5b6982693e5"><td class="memItemLeft" align="right" valign="top"><a id="ad88c2d3042ebeef99dbbf5b6982693e5"></a>
 virtual std::array&lt; double, MAX_DIM &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#ad88c2d3042ebeef99dbbf5b6982693e5">continuous</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const</td></tr>
 <tr class="memdesc:ad88c2d3042ebeef99dbbf5b6982693e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert coordinates into continuous scale. <br /></td></tr>
@@ -119,10 +110,6 @@ virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a517893152829744edde75df50033d685">euclidean_distance</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const</td></tr>
 <tr class="memdesc:a517893152829744edde75df50033d685"><td class="mdescLeft">&#160;</td><td class="mdescRight">Euclidean distance. <br /></td></tr>
 <tr class="separator:a517893152829744edde75df50033d685"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52e1ca64d453a726e5fbde38ec1154ea"><td class="memItemLeft" align="right" valign="top"><a id="a52e1ca64d453a726e5fbde38ec1154ea"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a52e1ca64d453a726e5fbde38ec1154ea">radius</a> (size_t nodes) const</td></tr>
-<tr class="memdesc:a52e1ca64d453a726e5fbde38ec1154ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimate radius from volume. <br /></td></tr>
-<tr class="separator:a52e1ca64d453a726e5fbde38ec1154ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad58f5e23ee0a15e5d08703489872096a"><td class="memItemLeft" align="right" valign="top"><a id="ad58f5e23ee0a15e5d08703489872096a"></a>
 virtual std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#ad58f5e23ee0a15e5d08703489872096a">core</a> () const</td></tr>
 <tr class="memdesc:ad58f5e23ee0a15e5d08703489872096a"><td class="mdescLeft">&#160;</td><td class="mdescRight">square or cube <br /></td></tr>
@@ -143,13 +130,6 @@ const std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a2
 unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a138685c92fd34c38772629a4563be0d4">dimensions</a> () const noexcept</td></tr>
 <tr class="memdesc:a138685c92fd34c38772629a4563be0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_coord.html#a4ad8d5f17deb72cb0ca25cc61bcf584a" title="{2, 3} ">dimensions_</a> <br /></td></tr>
 <tr class="separator:a138685c92fd34c38772629a4563be0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a698b1711cbd30e97ae4a37f39387d91b"><td class="memItemLeft" align="right" valign="top"><a id="a698b1711cbd30e97ae4a37f39387d91b"></a>
-static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a698b1711cbd30e97ae4a37f39387d91b">hash</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;)</td></tr>
-<tr class="memdesc:a698b1711cbd30e97ae4a37f39387d91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">hash coordinates for std::unordered_* container <br /></td></tr>
-<tr class="separator:a698b1711cbd30e97ae4a37f39387d91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>

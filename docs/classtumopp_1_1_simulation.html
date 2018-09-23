@@ -54,7 +54,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classtumopp_1_1_simulation-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -95,26 +94,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>snapshots</b> 
 <tr class="memitem:a09525044065fb6998dc2d7b4f7585f3f"><td class="memItemLeft" align="right" valign="top"><a id="a09525044065fb6998dc2d7b4f7585f3f"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>drivers</b> () const</td></tr>
 <tr class="separator:a09525044065fb6998dc2d7b4f7585f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b49784e1767d7be6f6ea2cdfbaa11ed"><td class="memItemLeft" align="right" valign="top"><a id="a6b49784e1767d7be6f6ea2cdfbaa11ed"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>config_string</b> () const</td></tr>
-<tr class="separator:a6b49784e1767d7be6f6ea2cdfbaa11ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:gafada1336d09b79b5d782b0385f97b3f2"><td class="memItemLeft" align="right" valign="top">boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#gafada1336d09b79b5d782b0385f97b3f2">options_desc</a> ()</td></tr>
-<tr class="memdesc:gafada1336d09b79b5d782b0385f97b3f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_simulation.html" title="Represents single run. ">Simulation</a> class.  <a href="group__params.html#gafada1336d09b79b5d782b0385f97b3f2">More...</a><br /></td></tr>
-<tr class="separator:gafada1336d09b79b5d782b0385f97b3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac2023a97c469be5d486de7dc346b264d"><td class="memItemLeft" align="right" valign="top">boost::program_options::options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#gac2023a97c469be5d486de7dc346b264d">cell_options</a> ()</td></tr>
-<tr class="memdesc:gac2023a97c469be5d486de7dc346b264d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="group__params.html#gac2023a97c469be5d486de7dc346b264d">More...</a><br /></td></tr>
-<tr class="separator:gac2023a97c469be5d486de7dc346b264d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ff1304bd90121d837c7286a4abeedb5"><td class="memItemLeft" align="right" valign="top"><a id="a6ff1304bd90121d837c7286a4abeedb5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a6ff1304bd90121d837c7286a4abeedb5">help_and_exit</a> ()</td></tr>
-<tr class="memdesc:a6ff1304bd90121d837c7286a4abeedb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print help message and exit. <br /></td></tr>
-<tr class="separator:a6ff1304bd90121d837c7286a4abeedb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1216807e46271e114659104ea6af44c1"><td class="memItemLeft" align="right" valign="top"><a id="a1216807e46271e114659104ea6af44c1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a1216807e46271e114659104ea6af44c1">version_and_exit</a> ()</td></tr>
-<tr class="memdesc:a1216807e46271e114659104ea6af44c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print version and exit. <br /></td></tr>
-<tr class="separator:a1216807e46271e114659104ea6af44c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0647218c016821d5301442bf580181bb"><td class="memItemLeft" align="right" valign="top"><a id="a0647218c016821d5301442bf580181bb"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>config</b> () const</td></tr>
+<tr class="separator:a0647218c016821d5301442bf580181bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -130,18 +112,10 @@ std::unique_ptr&lt; <a class="el" href="structtumopp_1_1_event_rates.html">Event
 std::unique_ptr&lt; <a class="el" href="structtumopp_1_1_cell_params.html">CellParams</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a96fa4cd24ca532e509cda4618c449ffb">cell_params_</a></td></tr>
 <tr class="memdesc:a96fa4cd24ca532e509cda4618c449ffb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtumopp_1_1_cell_params.html" title="Parameters for Cell class. ">CellParams</a> instance. <br /></td></tr>
 <tr class="separator:a96fa4cd24ca532e509cda4618c449ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81492d5e2d1fc46324461dfa982ae382"><td class="memItemLeft" align="right" valign="top"><a id="a81492d5e2d1fc46324461dfa982ae382"></a>
-std::unique_ptr&lt; boost::program_options::variables_map &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a81492d5e2d1fc46324461dfa982ae382">vars_</a></td></tr>
-<tr class="memdesc:a81492d5e2d1fc46324461dfa982ae382"><td class="mdescLeft">&#160;</td><td class="mdescRight">optional variables <br /></td></tr>
-<tr class="separator:a81492d5e2d1fc46324461dfa982ae382"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a279a2eefb18c5e0d6eac4f7d8aa700d8"><td class="memItemLeft" align="right" valign="top"><a id="a279a2eefb18c5e0d6eac4f7d8aa700d8"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a279a2eefb18c5e0d6eac4f7d8aa700d8">command_args_</a></td></tr>
-<tr class="memdesc:a279a2eefb18c5e0d6eac4f7d8aa700d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command line arguments. <br /></td></tr>
-<tr class="separator:a279a2eefb18c5e0d6eac4f7d8aa700d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20cf0d516fcd0bcdb306b01896332ac0"><td class="memItemLeft" align="right" valign="top"><a id="a20cf0d516fcd0bcdb306b01896332ac0"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a20cf0d516fcd0bcdb306b01896332ac0">config_string_</a></td></tr>
-<tr class="memdesc:a20cf0d516fcd0bcdb306b01896332ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writen to "program_options.conf". <br /></td></tr>
-<tr class="separator:a20cf0d516fcd0bcdb306b01896332ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0095e3af04109f093ca85985fcceecb0"><td class="memItemLeft" align="right" valign="top"><a id="a0095e3af04109f093ca85985fcceecb0"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_simulation.html#a0095e3af04109f093ca85985fcceecb0">config_</a></td></tr>
+<tr class="memdesc:a0095e3af04109f093ca85985fcceecb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters. <br /></td></tr>
+<tr class="separator:a0095e3af04109f093ca85985fcceecb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents single run. </p>
