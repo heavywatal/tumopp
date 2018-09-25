@@ -33,7 +33,7 @@ make -j2
 make install
 ```
 
-If needed, set `CMAKE_PREFIX_PATH` or `BOOST_ROOT` variable so that CMake can find prerequisite libraries,
+If needed, set `CMAKE_PREFIX_PATH` variable so that CMake can find prerequisite libraries,
 e.g., `cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..`
 
 
