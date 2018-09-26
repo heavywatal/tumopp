@@ -2,10 +2,10 @@
     @brief Implementation of Cell class
 */
 #include "cell.hpp"
+#include "random.hpp"
 
 #include <wtl/iostr.hpp>
 #include <wtl/random.hpp>
-#include <sfmt.hpp>
 
 #include <type_traits>
 
@@ -78,33 +78,33 @@ void Cell::param(const param_type& p) {
 
 void Cell::differentiate() {
     if (is_differentiated()) return;
-    if (BERN_SYMMETRIC(wtl::sfmt64())) return;
+    if (BERN_SYMMETRIC(engine64())) return;
     proliferation_capacity_ = static_cast<int8_t>(PARAM_.MAX_PROLIFERATION_CAPACITY);
 }
 
 std::string Cell::mutate() {
     auto oss = wtl::make_oss();
-    if (BERN_MUT_BIRTH(wtl::sfmt64())) {
+    if (BERN_MUT_BIRTH(engine64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_BIRTH(wtl::sfmt64());
+        double s = GAUSS_BIRTH(engine64());
         oss << id_ << "\tbeta\t" << s << "\n";
         event_rates_->birth_rate *= (s += 1.0);
     }
-    if (BERN_MUT_DEATH(wtl::sfmt64())) {
+    if (BERN_MUT_DEATH(engine64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_DEATH(wtl::sfmt64());
+        double s = GAUSS_DEATH(engine64());
         oss << id_ << "\tdelta\t" << s << "\n";
         event_rates_->death_rate *= (s += 1.0);
     }
-    if (BERN_MUT_ALPHA(wtl::sfmt64())) {
+    if (BERN_MUT_ALPHA(engine64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_ALPHA(wtl::sfmt64());
+        double s = GAUSS_ALPHA(engine64());
         oss << id_ << "\talpha\t" << s << "\n";
         event_rates_->death_prob *= (s += 1.0);
     }
-    if (BERN_MUT_MIGRA(wtl::sfmt64())) {
+    if (BERN_MUT_MIGRA(engine64())) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_MIGRA(wtl::sfmt64());
+        double s = GAUSS_MIGRA(engine64());
         oss << id_ << "\trho\t" << s << "\n";
         event_rates_->migra_rate *= (s += 1.0);
     }
@@ -113,10 +113,10 @@ std::string Cell::mutate() {
 
 std::string Cell::force_mutate() {
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
-    const double s_birth = GAUSS_BIRTH(wtl::sfmt64());
-    const double s_death = GAUSS_DEATH(wtl::sfmt64());
-    const double s_alpha = GAUSS_ALPHA(wtl::sfmt64());
-    const double s_migra = GAUSS_MIGRA(wtl::sfmt64());
+    const double s_birth = GAUSS_BIRTH(engine64());
+    const double s_death = GAUSS_DEATH(engine64());
+    const double s_alpha = GAUSS_ALPHA(engine64());
+    const double s_migra = GAUSS_MIGRA(engine64());
     event_rates_->birth_rate *= (1.0 + s_birth);
     event_rates_->death_rate *= (1.0 + s_death);
     event_rates_->death_prob *= (1.0 + s_alpha);
@@ -138,19 +138,19 @@ double Cell::delta_time(const double now, const double positional_value, const b
         mu /= birth_rate();
         mu /= positional_value;
         if (!surrounded) mu -= (now - time_of_birth_);
-        t_birth = GAMMA_FACTORY(mu)(wtl::sfmt64());
+        t_birth = GAMMA_FACTORY(mu)(engine64());
     }
     if (death_rate() > 0.0) {
         std::exponential_distribution<double> exponential(death_rate());
-        t_death = exponential(wtl::sfmt64());
+        t_death = exponential(engine64());
     }
     if (migra_rate() > 0.0) {
         std::exponential_distribution<double> exponential(migra_rate());
-        t_migra = exponential(wtl::sfmt64());
+        t_migra = exponential(engine64());
     }
 
     if (t_birth < t_death && t_birth < t_migra) {
-        next_event_ = bernoulli(death_prob(), wtl::sfmt64())
+        next_event_ = bernoulli(death_prob(), engine64())
                       ? Event::death : Event::birth;
         return t_birth;
     } else if (t_death < t_migra) {
@@ -166,7 +166,7 @@ void Cell::set_cycle_dependent_death(const double p) {
     //TODO: reduce redundant copy for susceptible cells
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
     event_rates_->death_prob = p;
-    next_event_ = bernoulli(p, wtl::sfmt64()) ? Event::death : Event::birth;
+    next_event_ = bernoulli(p, engine64()) ? Event::death : Event::birth;
 }
 
 std::string Cell::header() {

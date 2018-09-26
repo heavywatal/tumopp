@@ -1,0 +1,19 @@
+#pragma once
+#ifndef TUMOPP_RANDOM_HPP
+#define TUMOPP_RANDOM_HPP
+
+#include <@WTL_MT_HPP@>
+
+namespace tumopp {
+
+inline auto& engine64() {
+#ifdef WTL_SFMT_HPP_
+    return wtl::sfmt64();
+#else
+    return wtl::mt64();
+#endif
+}
+
+}
+
+#endif//TUMOPP_RANDOM_HPP

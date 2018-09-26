@@ -10,8 +10,8 @@ Tumor growth simulator in C++.
 - C++14 compiler (clang++ >= Apple LLVM 8.1, g++ >= 5.3)
 - [CMake](https://cmake.org/)
 - [clippson](https://github.com/heavywatal/clippson)
-- [sfmt-class](https://github.com/heavywatal/sfmt-class)
 - [cxxwtl](https://github.com/heavywatal/cxxwtl)
+- [sfmt-class](https://github.com/heavywatal/sfmt-class) (optional)
 
 ## Installation
 

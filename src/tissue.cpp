@@ -2,6 +2,7 @@
     @brief Implementation of Tissue class
 */
 #include "tissue.hpp"
+#include "random.hpp"
 
 #include <wtl/random.hpp>
 #include <wtl/iostr.hpp>
@@ -10,7 +11,6 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
-#include <sfmt.hpp>
 
 namespace tumopp {
 
@@ -137,7 +137,7 @@ void Tissue::treatment(const double death_prob, const size_t num_resistant_cells
     for (const auto& p: queue_) { // for reproducibility
         cells.emplace_back(p.second);
     }
-    std::shuffle(cells.begin(), cells.end(), wtl::sfmt64());
+    std::shuffle(cells.begin(), cells.end(), engine64());
     for (size_t i=0; i<original_size; ++i) {
         const auto& p = cells[i];
         if (i >= num_resistant_cells) {
@@ -159,7 +159,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     std::unordered_map<std::string, map_sf> swtch;
 
     swtch["const"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
-        push(daughter, coord_func_->random_direction(wtl::sfmt64()));
+        push(daughter, coord_func_->random_direction(engine64()));
         return true;
     });
     swtch["const"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
@@ -175,12 +175,12 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
         return true;
     });
     swtch["const"].emplace("stroll", [this](const std::shared_ptr<Cell>& daughter) {
-        stroll(daughter, coord_func_->random_direction(wtl::sfmt64()));
+        stroll(daughter, coord_func_->random_direction(engine64()));
         return true;
     });
     swtch["step"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         if (num_empty_neighbors(daughter->coord()) == 0U) {return false;}
-        push(daughter, coord_func_->random_direction(wtl::sfmt64()));
+        push(daughter, coord_func_->random_direction(engine64()));
         return true;
     });
     swtch["step"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
@@ -188,14 +188,14 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     });
     swtch["linear"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         const double prob = proportion_empty_neighbors(daughter->coord());
-        if (wtl::generate_canonical(wtl::sfmt64()) < prob) {
-            push(daughter, coord_func_->random_direction(wtl::sfmt64()));
+        if (wtl::generate_canonical(engine64()) < prob) {
+            push(daughter, coord_func_->random_direction(engine64()));
             return true;
         }
         return false;
     });
     swtch["linear"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
-        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), wtl::sfmt64()));
+        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), engine64()));
         return extant_cells_.insert(daughter).second;
     });
     try {
@@ -235,7 +235,7 @@ void Tissue::stroll(std::shared_ptr<Cell> moving, const coord_t& direction) {
 bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
     const auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
-    std::shuffle(neighbors.begin(), neighbors.end(), wtl::sfmt64());
+    std::shuffle(neighbors.begin(), neighbors.end(), engine64());
     for (auto& x: neighbors) {
         moving->set_coord(x);
         if (extant_cells_.insert(moving).second) {
@@ -263,7 +263,7 @@ bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
 void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
     extant_cells_.erase(moving);
     const auto orig_pos = moving->coord();
-    moving->set_coord(coord_func_->random_neighbor(moving->coord(), wtl::sfmt64()));
+    moving->set_coord(coord_func_->random_neighbor(moving->coord(), engine64()));
     auto result = extant_cells_.insert(moving);
     if (!result.second) {
         std::shared_ptr<Cell> existing = std::move(*result.first);
@@ -288,7 +288,7 @@ coord_t Tissue::to_nearest_empty(const coord_t& current, const unsigned search_m
     size_t least_steps = std::numeric_limits<size_t>::max();
     coord_t best_direction{};
     auto directions = coord_func_->directions();
-    std::shuffle(directions.begin(), directions.end(), wtl::sfmt64());
+    std::shuffle(directions.begin(), directions.end(), engine64());
     if (search_max < directions.size()) directions.resize(search_max);
     for (const auto& d: directions) {
         auto n = steps_to_empty(current, d);
@@ -302,14 +302,14 @@ coord_t Tissue::to_nearest_empty(const coord_t& current, const unsigned search_m
 
 coord_t Tissue::roulette_direction(const coord_t& current) const {
     auto directions = coord_func_->directions();
-    std::shuffle(directions.begin(), directions.end(), wtl::sfmt64());
+    std::shuffle(directions.begin(), directions.end(), engine64());
     std::vector<double> roulette;
     for (const auto& d: directions) {
         const auto l = steps_to_empty(current, d);
         if (l == 0U) {return d;}
         roulette.push_back(1.0 / l);
     }
-    return directions[wtl::roulette_select(roulette, wtl::sfmt64())];
+    return directions[wtl::roulette_select(roulette, engine64())];
 }
 
 uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {

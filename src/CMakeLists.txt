@@ -14,6 +14,16 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp @ONLY
 )
 
+if(sfmt_FOUND)
+  set(WTL_MT_HPP sfmt.hpp)
+else()
+  set(WTL_MT_HPP wtl/random.hpp)
+endif()
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/random.hpp.in
+  ${CMAKE_CURRENT_SOURCE_DIR}/random.hpp @ONLY
+)
+
 # waiting for CMake 3.12
 get_property(wtl_INCLUDE_DIRS TARGET wtl PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
 get_property(sfmt_INCLUDE_DIRS TARGET sfmt PROPERTY INTERFACE_INCLUDE_DIRECTORIES)

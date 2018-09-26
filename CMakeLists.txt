@@ -38,7 +38,10 @@ add_library(${PROJECT_NAME} SHARED $<TARGET_OBJECTS:obj>)
 target_include_directories(${PROJECT_NAME} BEFORE
   INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE wtl sfmt clippson::clippson ZLIB::ZLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE wtl clippson::clippson ZLIB::ZLIB)
+if(sfmt_FOUND)
+  target_link_libraries(${PROJECT_NAME} PRIVATE sfmt)
+endif()
 
 add_executable(${PROJECT_NAME}-exe main.cpp)
 target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME})
