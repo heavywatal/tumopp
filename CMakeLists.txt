@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.11)
 project(tumopp
   VERSION 0.6.1
   LANGUAGES CXX)
@@ -8,8 +8,8 @@ option(PROFILE "Use gperftools" FALSE)
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 find_package(ZLIB REQUIRED)
-find_package(wtl 0.4.0)
-find_package(sfmt 0.5.0)
+find_package(wtl 0.6.0)
+find_package(sfmt 0.6.0)
 find_package(clippson 0.6.0 REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -33,14 +33,15 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_library(${PROJECT_NAME} SHARED)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 add_subdirectory(src)
 
 target_include_directories(${PROJECT_NAME} BEFORE
   INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE wtl clippson::clippson ZLIB::ZLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson ZLIB::ZLIB)
 if(sfmt_FOUND)
-  target_link_libraries(${PROJECT_NAME} PRIVATE sfmt)
+  target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
 endif()
 
 add_executable(${PROJECT_NAME}-exe main.cpp)
