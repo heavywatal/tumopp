@@ -7,10 +7,6 @@ matrix:
     osx_image: xcode8.3
 before_install:
 - uname -a; sw_vers
-install:
-- export HOMEBREW_NO_AUTO_UPDATE=1
-- brew tap heavywatal/tap
-- brew install clippson sfmt-class cxxwtl
 script:
 - mkdir build && cd build
 - cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ..
