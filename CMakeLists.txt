@@ -10,26 +10,24 @@ set(CMAKE_VERBOSE_MAKEFILE TRUE)
 function(find_package_or_git package version repo)
   find_package(Git)
   find_package(${package} ${version} QUIET)
-  if(NOT ${package}_FOUND)
-    set(subdir external/${package}-v${version})
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/.git")
-      execute_process(COMMAND
-        ${GIT_EXECUTABLE} clone --recursive --depth=1 --branch=v${version} https://github.com/${repo}.git ${subdir}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      )
-    endif()
-    set(BUILD_TESTING_ORIG ${BUILD_TESTING})
-    set(BUILD_TESTING FALSE)
-    message(STATUS "add_subdirectory(${subdir})")
-    add_subdirectory(${subdir} EXCLUDE_FROM_ALL)
-    set(BUILD_TESTING ${BUILD_TESTING_ORIG})
+  if(${package}_FOUND)
+    return()
   endif()
-endfunction(find_package_or_git)
+  set(subdir external/${package}-v${version})
+  if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/.git")
+    execute_process(COMMAND
+      ${GIT_EXECUTABLE} clone --recursive --depth=1 --branch=v${version} https://github.com/${repo}.git ${subdir}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+  endif()
+  message(STATUS "add_subdirectory(${subdir})")
+  add_subdirectory(${subdir} EXCLUDE_FROM_ALL)
+endfunction()
 
 find_package(ZLIB REQUIRED)
 find_package(sfmt 0.6.0)
-find_package_or_git(wtl 0.7.0 heavywatal/cxxwtl)
-find_package_or_git(clippson 0.7.2 heavywatal/clippson)
+find_package_or_git(wtl 0.7.1 heavywatal/cxxwtl)
+find_package_or_git(clippson 0.7.3 heavywatal/clippson)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
