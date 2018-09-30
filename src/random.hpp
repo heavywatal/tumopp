@@ -2,12 +2,15 @@
 #ifndef TUMOPP_RANDOM_HPP
 #define TUMOPP_RANDOM_HPP
 
-#include <@WTL_MT_HPP@>
+#ifdef SFMT_FOUND
+  #include <sfmt.hpp>
+#endif
+#include <wtl/random.hpp>
 
 namespace tumopp {
 
 inline auto& engine64() {
-#ifdef WTL_SFMT_HPP_
+#ifdef SFMT_FOUND
     return wtl::sfmt64();
 #else
     return wtl::mt64();

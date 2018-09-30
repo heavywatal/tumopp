@@ -14,16 +14,6 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp @ONLY
 )
 
-if(sfmt_FOUND)
-  set(WTL_MT_HPP sfmt.hpp)
-else()
-  set(WTL_MT_HPP wtl/random.hpp)
-endif()
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/random.hpp.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/random.hpp @ONLY
-)
-
 file(GLOB srcfiles *.cpp)
 target_sources(${PROJECT_NAME} PRIVATE ${srcfiles})
-set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE TRUE)
+set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)

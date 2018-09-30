@@ -24,7 +24,7 @@ function(find_package_or_git package version repo)
 endfunction()
 
 find_package(ZLIB REQUIRED)
-find_package(sfmt 0.6.0)
+find_package(sfmt 0.7.0)
 find_package_or_git(wtl 0.7.1 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.7.3 heavywatal/clippson)
 
@@ -58,6 +58,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson ZLIB::ZLIB)
 if(sfmt_FOUND)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
 endif()
 
@@ -82,11 +83,11 @@ install(DIRECTORY src/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.hpp")
 install(EXPORT ${PROJECT_NAME}-config
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
   NAMESPACE ${PROJECT_NAME}::
 )
 install(FILES ${VERSION_CONFIG}
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
 )
 
 include(CTest)
