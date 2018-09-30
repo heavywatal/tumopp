@@ -24,9 +24,10 @@ matrix:
     env:
     - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 before_install:
-- uname -a; sw_vers
+- eval "${MATRIX_EVAL}"
 script:
-- mkdir build && cd build
+- mkdir build
+- cd build
 - cmake -DCMAKE_INSTALL_PREFIX=${HOME}/local ..
 - cmake --build . -- --jobs=2
 - cmake --build . --target install
