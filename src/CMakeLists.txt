@@ -16,4 +16,3 @@ configure_file(
 
 file(GLOB srcfiles *.cpp)
 target_sources(${PROJECT_NAME} PRIVATE ${srcfiles})
-set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
