@@ -54,6 +54,7 @@ add_subdirectory(src)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
   POSITION_INDEPENDENT_CODE ON
+  WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 target_include_directories(${PROJECT_NAME} INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
