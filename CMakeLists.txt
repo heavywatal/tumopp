@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.4)
 project(tumopp
   VERSION 0.6.2
   LANGUAGES CXX)
@@ -24,7 +24,7 @@ function(find_package_or_git package version repo)
 endfunction()
 
 find_package(ZLIB REQUIRED)
-find_package(sfmt 0.7.0)
+find_package(sfmt 0.7.1)
 find_package_or_git(wtl 0.7.1 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.7.3 heavywatal/clippson)
 
