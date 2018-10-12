@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 project(tumopp
-  VERSION 0.6.2
+  VERSION 0.6.3
   LANGUAGES CXX)
 
 include(GNUInstallDirs)
