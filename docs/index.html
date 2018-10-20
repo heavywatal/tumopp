@@ -54,14 +54,14 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p><a href="https://travis-ci.org/heavywatal/tumopp"></a></p>
 <p>Tumor growth simulator in C++.</p>
-<h2>Dependencies</h2>
+<h2>Requirements</h2>
 <ul>
-<li>Unix-like OS (macOS, Linux, etc.)</li>
+<li>Unix-like environment (macOS, Linux, WSL, MinGW on MSYS2, etc.)</li>
 <li>C++14 compiler (clang++ &gt;= Apple LLVM 8.1, g++ &gt;= 5.3)</li>
-<li><a href="https://cmake.org/">CMake</a></li>
-<li><a href="https://github.com/heavywatal/clippson">clippson</a></li>
-<li><a href="https://github.com/heavywatal/sfmt-class">sfmt-class</a></li>
-<li><a href="https://github.com/heavywatal/cxxwtl">cxxwtl</a></li>
+<li><a href="https://cmake.org/">CMake</a> (&gt;= 3.4.0)</li>
+<li><a href="https://github.com/heavywatal/clippson">clippson</a> (optional)</li>
+<li><a href="https://github.com/heavywatal/cxxwtl">cxxwtl</a> (optional)</li>
+<li><a href="https://github.com/heavywatal/sfmt-class">sfmt-class</a> (optional)</li>
 </ul>
 <h2>Installation</h2>
 <p>The easiest way is to use <a href="https://brew.sh/">Homebrew</a>/<a href="http://linuxbrew.sh/">Linuxbrew</a>. The following command installs tumopp and all the dependencies: </p><div class="fragment"><div class="line">brew install heavywatal/tap/tumopp</div></div><!-- fragment --><p>Alternatively, you can get the source code from GitHub manually: </p><div class="fragment"><div class="line">git clone https://github.com/heavywatal/tumopp.git</div><div class="line">cd tumopp/</div><div class="line">mkdir build</div><div class="line">cd build/</div><div class="line">DESTINATION=${HOME}/local</div><div class="line">cmake -DCMAKE_INSTALL_PREFIX=$DESTINATION ..</div><div class="line">make -j2</div><div class="line">make install</div></div><!-- fragment --><p>If needed, set <code>CMAKE_PREFIX_PATH</code> variable so that CMake can find prerequisite libraries, e.g., <code>cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..</code></p>
