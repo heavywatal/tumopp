@@ -55,6 +55,12 @@ class Simulation {
     std::string config_;
 };
 
+//! @name Workaround for R/Rcpp
+//@{
+std::streambuf* std_cout_rdbuf(std::streambuf*);
+std::streambuf* std_cerr_rdbuf(std::streambuf*);
+//@}
+
 } // namespace tumopp
 
 #endif /* SIMULATION_HPP_ */

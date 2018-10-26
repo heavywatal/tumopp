@@ -215,4 +215,11 @@ std::string Simulation::snapshots() const {return tissue_->snapshots().str();}
 std::string Simulation::drivers() const {return tissue_->drivers().str();}
 std::string Simulation::benchmark() const {return tissue_->benchmark().str();}
 
+std::streambuf* std_cout_rdbuf(std::streambuf* buf) {
+    return std::cout.rdbuf(buf);
+}
+std::streambuf* std_cerr_rdbuf(std::streambuf* buf) {
+    return std::cerr.rdbuf(buf);
+}
+
 } // namespace tumopp
