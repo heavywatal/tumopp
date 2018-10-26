@@ -52,6 +52,8 @@ class Tissue {
     std::stringstream snapshots() const;
     //! Stringify #drivers_
     std::stringstream drivers() const;
+    //! Stringify #rusage_
+    std::stringstream rusage() const;
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond
@@ -152,6 +154,8 @@ class Tissue {
     std::stringstream snapshots_;
     //! record driver mutations
     std::stringstream drivers_;
+    //! record resource usage
+    std::stringstream rusage_;
 };
 
 } // namespace tumopp

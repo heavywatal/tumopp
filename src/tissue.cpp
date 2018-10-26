@@ -11,6 +11,7 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
+#include <wtl/resource.hpp>
 
 namespace tumopp {
 
@@ -70,8 +71,20 @@ bool Tissue::grow(const size_t max_size, const double max_time,
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
+    wtl::ru_epoch();
+    const auto start = std::chrono::steady_clock::now();
     while (true) {
-        if ((++i % 1000U) == 0U) {DCERR("\r" << extant_cells_.size());}
+        if ((++i % 2000U) == 0U) {DCERR("\r" << extant_cells_.size());}
+        if ((i % 2000U) == 0U) {
+            auto now = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+            auto ru = wtl::getrusage<std::milli, std::mega>();
+            rusage_ << extant_cells_.size() << "\t";
+            rusage_ << ru.maxrss << "\t"
+                    << ru.utime << "\t"
+                    << ru.stime << "\t";
+            rusage_ << elapsed.count() << "\n";
+        }
         auto it = queue_.begin();
         time_ = it->first;
         if (time_ > max_time || extant_cells_.size() >= max_size) {
@@ -118,6 +131,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
         }
     }
     DCERR("\r" << extant_cells_.size() << std::endl);
+    std::cout << rusage().rdbuf();
     return success;
 }
 
@@ -342,6 +356,12 @@ std::stringstream Tissue::snapshots() const {
 std::stringstream Tissue::drivers() const {
     std::stringstream ss;
     ss << "id\ttype\tcoef\n" << drivers_.rdbuf();
+    return ss;
+}
+
+std::stringstream Tissue::rusage() const {
+    std::stringstream ss;
+    ss << "size\tmemory\tutime\tstime\tttime\n" << rusage_.rdbuf();
     return ss;
 }
 
