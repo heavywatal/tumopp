@@ -11,7 +11,10 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
-#include <wtl/resource.hpp>
+
+#ifdef BENCHMARK
+  #include <wtl/resource.hpp>
+#endif
 
 namespace tumopp {
 
@@ -71,19 +74,11 @@ bool Tissue::grow(const size_t max_size, const double max_time,
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
-    wtl::ru_epoch();
-    const auto start = std::chrono::steady_clock::now();
+    benchmark_append_ifdef_BENCHMARK(); // initialize static epoch
     while (true) {
-        if ((++i % 2000U) == 0U) {DCERR("\r" << extant_cells_.size());}
-        if ((i % 2000U) == 0U) {
-            auto now = std::chrono::steady_clock::now();
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
-            auto ru = wtl::getrusage<std::milli, std::mega>();
-            rusage_ << extant_cells_.size() << "\t";
-            rusage_ << ru.maxrss << "\t"
-                    << ru.utime << "\t"
-                    << ru.stime << "\t";
-            rusage_ << elapsed.count() << "\n";
+        if ((++i % 2000U) == 0U) {
+            DCERR("\r" << extant_cells_.size());
+            benchmark_append_ifdef_BENCHMARK();
         }
         auto it = queue_.begin();
         time_ = it->first;
@@ -131,7 +126,6 @@ bool Tissue::grow(const size_t max_size, const double max_time,
         }
     }
     DCERR("\r" << extant_cells_.size() << std::endl);
-    std::cout << rusage().rdbuf();
     return success;
 }
 
@@ -359,9 +353,9 @@ std::stringstream Tissue::drivers() const {
     return ss;
 }
 
-std::stringstream Tissue::rusage() const {
+std::stringstream Tissue::benchmark() const {
     std::stringstream ss;
-    ss << "size\tmemory\tutime\tstime\tttime\n" << rusage_.rdbuf();
+    ss << "size\tmemory\tutime\tstime\n" << benchmark_.rdbuf();
     return ss;
 }
 
@@ -369,6 +363,16 @@ void Tissue::snapshots_append() {
     for (const auto& p: extant_cells_) {
         snapshots_ << time_ << "\t" << *p << "\n";
     }
+}
+
+void Tissue::benchmark_append_ifdef_BENCHMARK() {
+#ifdef BENCHMARK
+    auto ru = wtl::getrusage<std::milli, std::mega>();
+    benchmark_ << extant_cells_.size() << "\t"
+               << ru.maxrss << "\t"
+               << ru.utime << "\t"
+               << ru.stime << "\n";
+#endif
 }
 
 //! Stream operator for debug print

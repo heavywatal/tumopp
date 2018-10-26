@@ -52,13 +52,14 @@ class Tissue {
     std::stringstream snapshots() const;
     //! Stringify #drivers_
     std::stringstream drivers() const;
-    //! Stringify #rusage_
-    std::stringstream rusage() const;
+    //! Stringify #benchmark_
+    std::stringstream benchmark() const;
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond
     bool has_snapshots() const {return snapshots_.rdbuf()->in_avail();};
     bool has_drivers() const {return drivers_.rdbuf()->in_avail();}
+    bool has_benchmark() const {return benchmark_.rdbuf()->in_avail();}
     //! @endcond
 
     //! @name Getter functions
@@ -109,6 +110,8 @@ class Tissue {
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
     //! Write all cells to #snapshots_ with #time_
     void snapshots_append();
+    //! Save current resource usage to #benchmark_
+    void benchmark_append_ifdef_BENCHMARK();
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for extant_cells_
@@ -155,7 +158,7 @@ class Tissue {
     //! record driver mutations
     std::stringstream drivers_;
     //! record resource usage
-    std::stringstream rusage_;
+    std::stringstream benchmark_;
 };
 
 } // namespace tumopp

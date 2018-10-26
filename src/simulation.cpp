@@ -205,10 +205,14 @@ void Simulation::write() const {HERE;
     if (tissue_->has_drivers()) {
         wtl::zlib::ofstream{"drivers.tsv.gz"} << tissue_->drivers().rdbuf();
     }
+    if (tissue_->has_benchmark()) {
+        wtl::zlib::ofstream{"benchmark.tsv.gz"} << tissue_->benchmark().rdbuf();
+    }
 }
 
 std::string Simulation::history() const {return tissue_->history().str();}
 std::string Simulation::snapshots() const {return tissue_->snapshots().str();}
 std::string Simulation::drivers() const {return tissue_->drivers().str();}
+std::string Simulation::benchmark() const {return tissue_->benchmark().str();}
 
 } // namespace tumopp

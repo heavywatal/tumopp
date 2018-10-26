@@ -3,6 +3,7 @@ project(tumopp
   VERSION 0.6.3
   LANGUAGES CXX)
 
+option(BENCHMARK "Build with benchmarking function" OFF)
 include(GNUInstallDirs)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -25,7 +26,7 @@ endfunction()
 
 find_package(ZLIB REQUIRED)
 find_package(sfmt 0.7.1)
-find_package_or_git(wtl 0.7.1 heavywatal/cxxwtl)
+find_package_or_git(wtl 0.7.3 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.7.3 heavywatal/clippson)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -33,7 +34,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-march=native -Wall -Wextra -Wpedantic)
 
-if (NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
@@ -64,6 +65,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson ZLIB::
 if(sfmt_FOUND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
+endif()
+if(BENCHMARK OR ${CMAKE_BUILD_TYPE} STREQUAL dev)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE BENCHMARK)
 endif()
 
 add_executable(${PROJECT_NAME}-exe main.cpp)

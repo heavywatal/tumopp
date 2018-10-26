@@ -37,6 +37,7 @@ class Simulation {
     std::string history() const;
     std::string snapshots() const;
     std::string drivers() const;
+    std::string benchmark() const;
     std::string config() const {return config_;}
     //@}
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
