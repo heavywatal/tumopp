@@ -2,8 +2,8 @@
     @brief Interface of Cell class
 */
 #pragma once
-#ifndef CELL_HPP_
-#define CELL_HPP_
+#ifndef TUMOPP_CELL_HPP_
+#define TUMOPP_CELL_HPP_
 
 #include <cstdint>
 #include <vector>
@@ -181,4 +181,4 @@ class Cell {
 
 } // namespace tumopp
 
-#endif /* CELL_HPP_ */
+#endif // TUMOPP_CELL_HPP_

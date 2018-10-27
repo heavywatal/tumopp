@@ -1,8 +1,8 @@
 #pragma once
-#ifndef TUMOPP_VERSION_HPP
-#define TUMOPP_VERSION_HPP
+#ifndef TUMOPP_VERSION_HPP_
+#define TUMOPP_VERSION_HPP_
 
 constexpr char static PROJECT_NAME[] = "@PROJECT_NAME@";
 constexpr char static PROJECT_VERSION[] = "@PROJECT_VERSION@";
 
-#endif//TUMOPP_VERSION_HPP
+#endif // TUMOPP_VERSION_HPP_

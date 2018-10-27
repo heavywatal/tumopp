@@ -2,8 +2,8 @@
     @brief Coordinate system
 */
 #pragma once
-#ifndef COORD_HPP_
-#define COORD_HPP_
+#ifndef TUMOPP_COORD_HPP_
+#define TUMOPP_COORD_HPP_
 
 #include <array>
 #include <vector>
@@ -171,4 +171,4 @@ class Hexagonal final: public Coord {
 
 } // namespace tumopp
 
-#endif /* COORD_HPP_ */
+#endif // TUMOPP_COORD_HPP_

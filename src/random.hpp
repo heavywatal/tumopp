@@ -1,6 +1,6 @@
 #pragma once
-#ifndef TUMOPP_RANDOM_HPP
-#define TUMOPP_RANDOM_HPP
+#ifndef TUMOPP_RANDOM_HPP_
+#define TUMOPP_RANDOM_HPP_
 
 #ifdef SFMT_FOUND
   #include <sfmt.hpp>
@@ -19,4 +19,4 @@ inline auto& engine64() {
 
 }
 
-#endif//TUMOPP_RANDOM_HPP
+#endif // TUMOPP_RANDOM_HPP_

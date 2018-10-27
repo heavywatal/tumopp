@@ -2,8 +2,8 @@
     @brief Interface of Simulation class
 */
 #pragma once
-#ifndef SIMULATION_HPP_
-#define SIMULATION_HPP_
+#ifndef TUMOPP_SIMULATION_HPP_
+#define TUMOPP_SIMULATION_HPP_
 
 #include <iosfwd>
 #include <vector>
@@ -63,4 +63,4 @@ std::streambuf* std_cerr_rdbuf(std::streambuf*);
 
 } // namespace tumopp
 
-#endif /* SIMULATION_HPP_ */
+#endif // TUMOPP_SIMULATION_HPP_

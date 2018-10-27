@@ -2,8 +2,8 @@
     @brief Interface of Tissue class
 */
 #pragma once
-#ifndef TISSUE_HPP_
-#define TISSUE_HPP_
+#ifndef TUMOPP_TISSUE_HPP_
+#define TUMOPP_TISSUE_HPP_
 
 #include "coord.hpp"
 #include "cell.hpp"
@@ -161,4 +161,4 @@ class Tissue {
 
 } // namespace tumopp
 
-#endif /* TISSUE_HPP_ */
+#endif // TUMOPP_TISSUE_HPP_
