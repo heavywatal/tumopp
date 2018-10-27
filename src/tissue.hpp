@@ -110,8 +110,6 @@ class Tissue {
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
     //! Write all cells to #snapshots_ with #time_
     void snapshots_append();
-    //! Save current resource usage to #benchmark_
-    void benchmark_append_ifdef_BENCHMARK();
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for extant_cells_

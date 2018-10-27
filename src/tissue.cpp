@@ -3,6 +3,7 @@
 */
 #include "tissue.hpp"
 #include "random.hpp"
+#include "benchmark.hpp"
 
 #include <wtl/random.hpp>
 #include <wtl/iostr.hpp>
@@ -11,10 +12,6 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/genetic.hpp>
-
-#ifdef BENCHMARK
-  #include <wtl/resource.hpp>
-#endif
 
 namespace tumopp {
 
@@ -74,11 +71,11 @@ bool Tissue::grow(const size_t max_size, const double max_time,
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
-    benchmark_append_ifdef_BENCHMARK(); // initialize static epoch
+    auto epoch = MAKE_EPOCH_IF_BENCHMARK();
     while (true) {
         if ((++i % 2000U) == 0U) {
             DCERR("\r" << extant_cells_.size());
-            benchmark_append_ifdef_BENCHMARK();
+            APPEND_IF_BENCHMARK(benchmark_, extant_cells_.size(), epoch);
         }
         auto it = queue_.begin();
         time_ = it->first;
@@ -355,7 +352,7 @@ std::stringstream Tissue::drivers() const {
 
 std::stringstream Tissue::benchmark() const {
     std::stringstream ss;
-    ss << "size\tmemory\tutime\tstime\n" << benchmark_.rdbuf();
+    ss << BENCHMARK_HEADER << benchmark_.rdbuf();
     return ss;
 }
 
@@ -363,16 +360,6 @@ void Tissue::snapshots_append() {
     for (const auto& p: extant_cells_) {
         snapshots_ << time_ << "\t" << *p << "\n";
     }
-}
-
-void Tissue::benchmark_append_ifdef_BENCHMARK() {
-#ifdef BENCHMARK
-    auto ru = wtl::getrusage<std::milli, std::mega>();
-    benchmark_ << extant_cells_.size() << "\t"
-               << ru.maxrss << "\t"
-               << ru.utime << "\t"
-               << ru.stime << "\n";
-#endif
 }
 
 //! Stream operator for debug print
