@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 project(tumopp
-  VERSION 0.6.4
+  VERSION 0.6.5
   LANGUAGES CXX)
 
 option(BENCHMARK "Build with benchmarking function" OFF)
