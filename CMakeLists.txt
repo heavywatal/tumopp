@@ -32,7 +32,7 @@ find_package_or_git(clippson 0.7.3 heavywatal/clippson)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_compile_options(-march=native -Wall -Wextra -Wpedantic)
+add_compile_options(-march=native -Wall -Wextra -pedantic)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
