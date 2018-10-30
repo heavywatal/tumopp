@@ -353,7 +353,6 @@ std::stringstream Tissue::drivers() const {
     return ss;
 }
 
-bool Tissue::has_benchmark() const {return bool(benchmark_);}
 std::stringstream Tissue::benchmark() const {
     if (benchmark_) return benchmark_->stringstream();
     return Benchmark{}.stringstream();

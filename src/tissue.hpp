@@ -63,7 +63,7 @@ class Tissue {
     //! @cond
     bool has_snapshots() const {return snapshots_.rdbuf()->in_avail();};
     bool has_drivers() const {return drivers_.rdbuf()->in_avail();}
-    bool has_benchmark() const;
+    bool has_benchmark() const {return bool(benchmark_);}
     //! @endcond
 
     //! @name Getter functions
