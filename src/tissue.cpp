@@ -21,7 +21,8 @@ Tissue::Tissue(
   const std::string& coordinate,
   const std::string& local_density_effect,
   const std::string& displacement_path,
-  const EventRates& init_event_rates) {HERE;
+  const EventRates& init_event_rates,
+  const bool enable_benchmark) {HERE;
     snapshots_.precision(std::cout.precision());
     drivers_.precision(std::cout.precision());
     init_coord(dimensions, coordinate);
@@ -45,7 +46,10 @@ Tissue::Tissue(
         }
     }
     for (const auto& cell: extant_cells_) queue_push(cell);
+    if (enable_benchmark) benchmark_ = std::make_unique<Benchmark>();
 }
+
+Tissue::~Tissue() = default;
 
 void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {HERE;
     std::unordered_map<std::string, std::unique_ptr<Coord>> swtch;
@@ -71,11 +75,10 @@ bool Tissue::grow(const size_t max_size, const double max_time,
     bool success = false;
     size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
-    auto epoch = MAKE_EPOCH_IF_BENCHMARK();
     while (true) {
         if ((++i % 2000U) == 0U) {
             DCERR("\r" << extant_cells_.size());
-            APPEND_IF_BENCHMARK(benchmark_, extant_cells_.size(), epoch);
+            if (benchmark_) benchmark_->append(extant_cells_.size());
         }
         auto it = queue_.begin();
         time_ = it->first;
@@ -350,10 +353,10 @@ std::stringstream Tissue::drivers() const {
     return ss;
 }
 
+bool Tissue::has_benchmark() const {return bool(benchmark_);}
 std::stringstream Tissue::benchmark() const {
-    std::stringstream ss;
-    ss << BENCHMARK_HEADER << benchmark_.rdbuf();
-    return ss;
+    if (benchmark_) return benchmark_->stringstream();
+    return Benchmark{}.stringstream();
 }
 
 void Tissue::snapshots_append() {

@@ -3,7 +3,6 @@ project(tumopp
   VERSION 0.6.5
   LANGUAGES CXX)
 
-option(BENCHMARK "Build with benchmarking function" OFF)
 include(GNUInstallDirs)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -65,9 +64,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson ZLIB::
 if(sfmt_FOUND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
-endif()
-if(BENCHMARK OR ${CMAKE_BUILD_TYPE} STREQUAL dev)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE BENCHMARK)
 endif()
 
 add_executable(${PROJECT_NAME}-exe main.cpp)

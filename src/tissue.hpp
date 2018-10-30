@@ -20,6 +20,8 @@
 
 namespace tumopp {
 
+class Benchmark;
+
 /*! @brief Population of Cell
 */
 class Tissue {
@@ -31,7 +33,9 @@ class Tissue {
       const std::string& coordinate="moore",
       const std::string& local_density_effect="const",
       const std::string& displacement_path="random",
-      const EventRates& init_event_rates=EventRates{});
+      const EventRates& init_event_rates=EventRates{},
+      bool enable_benchmark=false);
+    ~Tissue();
 
     //! main function
     bool grow(
@@ -59,7 +63,7 @@ class Tissue {
     //! @cond
     bool has_snapshots() const {return snapshots_.rdbuf()->in_avail();};
     bool has_drivers() const {return drivers_.rdbuf()->in_avail();}
-    bool has_benchmark() const {return benchmark_.rdbuf()->in_avail();}
+    bool has_benchmark() const;
     //! @endcond
 
     //! @name Getter functions
@@ -156,7 +160,7 @@ class Tissue {
     //! record driver mutations
     std::stringstream drivers_;
     //! record resource usage
-    std::stringstream benchmark_;
+    std::unique_ptr<Benchmark> benchmark_;
 };
 
 } // namespace tumopp

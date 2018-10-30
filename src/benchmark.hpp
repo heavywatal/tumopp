@@ -5,30 +5,40 @@
 #ifndef TUMOPP_BENCHMARK_HPP_
 #define TUMOPP_BENCHMARK_HPP_
 
-#ifdef BENCHMARK
+#ifndef _WIN32
   #include <wtl/resource.hpp>
-  #define MAKE_EPOCH_IF_BENCHMARK() wtl::getrusage()
-  #define APPEND_IF_BENCHMARK(ost, size, epoch) WRITE_BENCHMARK(ost, size, epoch)
-#else
-  #define MAKE_EPOCH_IF_BENCHMARK() 0
-  #define APPEND_IF_BENCHMARK(ost, size, epoch) epoch += 0
-#endif // BENCHMARK
+#endif // _WIN32
+
+#include <sstream>
 
 namespace tumopp {
 
-#ifdef BENCHMARK
-  //! Save current resource usage to #benchmark_
-  template <class RU> inline
-  void WRITE_BENCHMARK(std::ostream& ost, std::size_t size, const RU& epoch) {
-      auto ru = wtl::getrusage<std::milli, std::mega>(epoch);
-      ost << size << "\t"
-          << ru.maxrss << "\t"
-          << ru.utime << "\t"
-          << ru.stime << "\n";
-  }
-#endif // BENCHMARK
-
-constexpr const char* BENCHMARK_HEADER = "size\tmemory\tutime\tstime\n";
+class Benchmark {
+  public:
+    void append(std::size_t size) {
+        sst_ << size;
+        append_ru();
+        sst_ << "\n";
+    }
+    std::stringstream stringstream() const {
+        std::stringstream sst;
+        sst << "size\tmemory\tutime\tstime\n" << sst_.rdbuf();
+        return sst;
+    }
+  private:
+#ifdef _WIN32
+    void append_ru() {}
+#else
+    void append_ru() {
+        auto ru = wtl::getrusage<std::milli, std::mega>(epoch_);
+        sst_ << "\t" << ru.maxrss
+             << "\t" << ru.utime
+             << "\t" << ru.stime;
+    }
+    const rusage epoch_ = wtl::getrusage();
+#endif // _WIN32
+    std::stringstream sst_;
+};
 
 } // namespace tumopp
 

@@ -71,6 +71,7 @@ inline clipp::group simulation_options(nlohmann::json* vm) {HERE;
       wtl::option(vm, {"I", "interval"}, 0.0),
       wtl::option(vm, {"R", "record"}, 0u),
       wtl::option(vm, {"extinction"}, 100u),
+      wtl::option(vm, {"benchmark"}, false),
       wtl::option(vm, {"seed"}, seed)
     ).doc("Simulation:");
 }
@@ -160,24 +161,29 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
 Simulation::~Simulation() = default;
 
 void Simulation::run() {HERE;
-    const auto dimensions = VM.at("dimensions").get<unsigned>();
-    const auto coord = VM.at("coord").get<std::string>();
-    const auto local = VM.at("local").get<std::string>();
-    const auto path = VM.at("path").get<std::string>();
-    const auto init_size = VM.at("origin").get<size_t>();
     const auto max_size = VM.at("max").get<size_t>();
+    const double max_time = std::log2(max_size) * 100.0;
     const auto plateau_time = VM.at("plateau").get<double>();
-    const auto mutate = VM.at("mutate").get<size_t>();
     const auto treatment = VM.at("treatment").get<double>();
     const auto resistant = VM.at("resistant").get<size_t>();
-    const auto interval = VM.at("interval").get<double>();
-    const auto record = VM.at("record").get<size_t>();
     const auto allowed_extinction = VM.at("extinction").get<unsigned>();
-    const double max_time = std::log2(max_size) * 100.0;
-
     for (size_t i=0; i<allowed_extinction; ++i) {
-        tissue_ = std::make_unique<Tissue>(init_size, dimensions, coord, local, path, *init_event_rates_);
-        if (tissue_->grow(max_size, max_time, interval, record, mutate)) break;
+        tissue_ = std::make_unique<Tissue>(
+            VM.at("origin").get<size_t>(),
+            VM.at("dimensions").get<unsigned>(),
+            VM.at("coord").get<std::string>(),
+            VM.at("local").get<std::string>(),
+            VM.at("path").get<std::string>(),
+            *init_event_rates_,
+            VM.at("benchmark").get<bool>()
+        );
+        bool success = tissue_->grow(
+            max_size, max_time,
+            VM.at("interval").get<double>(),
+            VM.at("record").get<size_t>(),
+            VM.at("mutate").get<size_t>()
+        );
+        if (success) break;
     }
     if (tissue_->size() != max_size) {
         std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;
