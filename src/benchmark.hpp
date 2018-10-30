@@ -15,17 +15,20 @@ namespace tumopp {
 
 class Benchmark {
   public:
+    //! Append current state to #sst_
     void append(std::size_t size) {
         sst_ << size;
         append_ru();
         sst_ << "\n";
     }
+    //! Get TSV content as std::stringstream
     std::stringstream stringstream() const {
         std::stringstream sst;
         sst << "size\tmemory\tutime\tstime\n" << sst_.rdbuf();
         return sst;
     }
   private:
+    //! Append current state to #sst_
 #ifdef _WIN32
     void append_ru() {}
 #else
@@ -35,8 +38,10 @@ class Benchmark {
              << "\t" << ru.utime
              << "\t" << ru.stime;
     }
+    //! Reference point
     const rusage epoch_ = wtl::getrusage();
 #endif // _WIN32
+    //! String in TSV format
     std::stringstream sst_;
 };
 

@@ -65,7 +65,7 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="simulation_8hpp_source.html">simulation.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="tissue_8hpp_source.html">tissue.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cell_8hpp_source.html">cell.hpp</a>&quot;</code><br />
-<code>#include &quot;random.hpp&quot;</code><br />
+<code>#include &quot;<a class="el" href="random_8hpp_source.html">random.hpp</a>&quot;</code><br />
 <code>#include &quot;version.hpp&quot;</code><br />
 <code>#include &lt;wtl/debug.hpp&gt;</code><br />
 <code>#include &lt;wtl/iostr.hpp&gt;</code><br />
@@ -87,6 +87,13 @@ clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:ga7d8bddce7dfa18f9f8597b3692706895"><td class="memItemLeft" align="right" valign="top">clipp::group&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__params.html#ga7d8bddce7dfa18f9f8597b3692706895">tumopp::cell_options</a> (nlohmann::json *vm, EventRates *init_event_rates, CellParams *cell_params)</td></tr>
 <tr class="memdesc:ga7d8bddce7dfa18f9f8597b3692706895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters of <a class="el" href="classtumopp_1_1_cell.html" title="Cancer cell. ">Cell</a> class.  <a href="group__params.html#ga7d8bddce7dfa18f9f8597b3692706895">More...</a><br /></td></tr>
 <tr class="separator:ga7d8bddce7dfa18f9f8597b3692706895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Workaround for R/Rcpp</div></td></tr>
+<tr class="memitem:ab485a0c19710609fc8d6a5ccf7b8e5f8"><td class="memItemLeft" align="right" valign="top"><a id="ab485a0c19710609fc8d6a5ccf7b8e5f8"></a>
+std::streambuf *&#160;</td><td class="memItemRight" valign="bottom"><b>tumopp::std_cout_rdbuf</b> (std::streambuf *buf)</td></tr>
+<tr class="separator:ab485a0c19710609fc8d6a5ccf7b8e5f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf8ae4b33f4270a6579512f9294df99a"><td class="memItemLeft" align="right" valign="top"><a id="aaf8ae4b33f4270a6579512f9294df99a"></a>
+std::streambuf *&#160;</td><td class="memItemRight" valign="bottom"><b>tumopp::std_cerr_rdbuf</b> (std::streambuf *buf)</td></tr>
+<tr class="separator:aaf8ae4b33f4270a6579512f9294df99a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

@@ -1,3 +1,6 @@
+/*! @file random.hpp
+    @brief Utilities for random number generation
+*/
 #pragma once
 #ifndef TUMOPP_RANDOM_HPP_
 #define TUMOPP_RANDOM_HPP_
@@ -9,6 +12,7 @@
 
 namespace tumopp {
 
+//! Getter of static instance
 inline auto& engine64() {
 #ifdef SFMT_FOUND
     return wtl::sfmt64();
