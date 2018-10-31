@@ -25,7 +25,7 @@ endfunction()
 
 find_package(ZLIB REQUIRED)
 find_package(sfmt 0.7.1)
-find_package_or_git(wtl 0.7.3 heavywatal/cxxwtl)
+find_package_or_git(wtl 0.7.4 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.7.3 heavywatal/clippson)
 
 set(CMAKE_CXX_STANDARD 14)
