@@ -33,7 +33,7 @@ class Benchmark {
     void append_ru() {}
 #else
     void append_ru() {
-        auto ru = wtl::getrusage<std::milli, std::mega>(epoch_);
+        auto ru = wtl::getrusage<std::milli, std::kilo>(epoch_);
         sst_ << "\t" << ru.maxrss
              << "\t" << ru.utime
              << "\t" << ru.stime;

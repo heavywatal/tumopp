@@ -73,15 +73,12 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                   size_t mutation_timing) {HERE;
     if (recording_early_growth > 0u) {snapshots_append();}
     bool success = false;
-    size_t i = 0;
     double time_snapshot = i_snapshot_ * snapshot_interval;
     while (true) {
-        if ((++i % 2000U) == 0U) {
-            DCERR("\r" << extant_cells_.size());
-            if (benchmark_) benchmark_->append(extant_cells_.size());
-        }
         auto it = queue_.begin();
         time_ = it->first;
+        const auto mother = std::move(it->second);
+        queue_.erase(it);
         if (time_ > max_time || extant_cells_.size() >= max_size) {
             success = true; // maybe not; but want to exit with record
             break;
@@ -90,8 +87,6 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             snapshots_append();
             time_snapshot = ++i_snapshot_ * snapshot_interval;
         }
-        const auto mother = std::move(it->second);
-        queue_.erase(it);
         if (mother->next_event() == Event::birth) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
@@ -108,6 +103,11 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 }
                 queue_push(mother);
                 queue_push(daughter);
+                const auto size = extant_cells_.size();
+                if ((size % 5000U) == 0U) {
+                    DCERR("\r" << size);
+                    if (benchmark_) benchmark_->append(size);
+                }
             } else {
                 queue_push(mother, true);
                 continue;  // skip write()
