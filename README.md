@@ -2,26 +2,38 @@
 
 [![Build Status](https://travis-ci.org/heavywatal/tumopp.svg?branch=master)](https://travis-ci.org/heavywatal/tumopp)
 
-Tumor growth simulator in C++.
+*tumopp* is a fast and flexible tumor growth simulator.
+The core library is written in C++.
+It can be installed and run via [R package](https://github.com/heavywatal/rtumopp/).
+
 
 ## Requirements
 
 - Unix-like environment (macOS, Linux, WSL, MinGW on MSYS2, etc.)
 - C++14 compiler (clang++ >= Apple LLVM 8.1, g++ >= 5.3)
 - [CMake](https://cmake.org/) (>= 3.4.0)
-- [clippson](https://github.com/heavywatal/clippson) (optional)
-- [cxxwtl](https://github.com/heavywatal/cxxwtl) (optional)
-- [sfmt-class](https://github.com/heavywatal/sfmt-class) (optional)
+
+The following libraries are automatically installed or optional:
+
+- [clippson](https://github.com/heavywatal/clippson)
+- [cxxwtl](https://github.com/heavywatal/cxxwtl)
+- [sfmt-class](https://github.com/heavywatal/sfmt-class)
+
 
 ## Installation
 
+See [tumopp R package](https://github.com/heavywatal/rtumopp/).
+
+
+## Alternative installation for command-line execution
+
 The easiest way is to use [Homebrew](https://brew.sh/)/[Linuxbrew](http://linuxbrew.sh/).
-The following command installs tumopp and all the dependencies:
+The following command installs tumopp with its dependencies:
 ```sh
 brew install heavywatal/tap/tumopp
 ```
 
-Alternatively, you can get the source code from GitHub manually:
+You can manually install the latest version from source code to an arbitrary `DESTINATION`:
 ```sh
 git clone https://github.com/heavywatal/tumopp.git
 cd tumopp/
@@ -31,21 +43,17 @@ DESTINATION=${HOME}/local
 cmake -DCMAKE_INSTALL_PREFIX=$DESTINATION ..
 make -j2
 make install
+PATH=${DESTINATION}/bin:$PATH
 ```
 
-If needed, set `CMAKE_PREFIX_PATH` variable so that CMake can find prerequisite libraries,
-e.g., `cmake -DCMAKE_PREFIX_PATH=$(brew --prefix) ..`
-
-
-## Usage
-
-Run tumopp via [R package](https://github.com/heavywatal/rtumopp/)
-
-Alternatively, it can be executed as a command-line program:
+Example:
 ```sh
 tumopp -h
 tumopp -N20000 -D3 -Chex -k100 -d0.1 -m0.5 -o OUTPUT_DIR
 ```
+
+
+## API Document
 
 - [Online documentation generated with doxygen](https://heavywatal.github.io/tumopp/)
 - @ref params
