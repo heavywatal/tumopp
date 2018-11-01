@@ -10,8 +10,8 @@ endif()
 message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp @ONLY
+  ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp.in
+  ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp @ONLY
 )
 
 file(GLOB srcfiles *.cpp)

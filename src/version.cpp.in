@@ -1,0 +1,8 @@
+#include "version.hpp"
+
+namespace tumopp {
+
+const char* const PROJECT_NAME = "@PROJECT_NAME@";
+const char* const PROJECT_VERSION = "@PROJECT_VERSION@";
+
+}
