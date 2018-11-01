@@ -330,32 +330,27 @@ uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
     return cnt;
 }
 
-std::stringstream Tissue::history() const {
-    std::stringstream ss;
-    ss.precision(std::cout.precision());
-    ss << Cell::header() << "\n";
+std::ostream& Tissue::write_history(std::ostream& ost) const {
+    ost.precision(std::cout.precision());
+    ost << Cell::header() << "\n";
     std::unordered_set<unsigned> done;
     for (const auto& p: extant_cells_) {
-        p->traceback(ss, &done);
+        p->traceback(ost, &done);
     }
-    return ss;
+    return ost;
 }
 
-std::stringstream Tissue::snapshots() const {
-    std::stringstream ss;
-    ss << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
-    return ss;
+std::ostream& Tissue::write_snapshots(std::ostream& ost) const {
+    return ost << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
 }
 
-std::stringstream Tissue::drivers() const {
-    std::stringstream ss;
-    ss << "id\ttype\tcoef\n" << drivers_.rdbuf();
-    return ss;
+std::ostream& Tissue::write_drivers(std::ostream& ost) const {
+    return ost << "id\ttype\tcoef\n" << drivers_.rdbuf();
 }
 
-std::stringstream Tissue::benchmark() const {
-    if (benchmark_) return benchmark_->stringstream();
-    return Benchmark{}.stringstream();
+std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
+    if (benchmark_) ost << benchmark_->rdbuf();
+    return ost;
 }
 
 void Tissue::snapshots_append() {

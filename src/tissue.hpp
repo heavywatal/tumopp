@@ -50,14 +50,14 @@ class Tissue {
     //! Simulate medical treatment with the increased death_prob
     void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
-    //! Stringify #extant_cells_ and their ancestors
-    std::stringstream history() const;
-    //! Stringify #snapshots_
-    std::stringstream snapshots() const;
-    //! Stringify #drivers_
-    std::stringstream drivers() const;
-    //! Stringify #benchmark_
-    std::stringstream benchmark() const;
+    //! Write #extant_cells_ and their ancestors
+    std::ostream& write_history(std::ostream&) const;
+    //! Write #snapshots_
+    std::ostream& write_snapshots(std::ostream&) const;
+    //! Write #drivers_
+    std::ostream& write_drivers(std::ostream&) const;
+    //! Write #benchmark_
+    std::ostream& write_benchmark(std::ostream&) const;
     friend std::ostream& operator<< (std::ostream&, const Tissue&);
 
     //! @cond

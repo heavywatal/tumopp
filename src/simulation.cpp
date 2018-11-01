@@ -7,6 +7,7 @@
 #include "cell.hpp"
 #include "random.hpp"
 #include "version.hpp"
+#include "benchmark.hpp"
 
 #include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
@@ -204,22 +205,44 @@ void Simulation::write() const {HERE;
     fs::current_path(outdir);
     std::cerr << "Output: " << outdir << "\n";
     wtl::make_ofs("config.json") << config_;
-    wtl::zlib::ofstream{"population.tsv.gz"} << tissue_->history().rdbuf();
+    {
+        wtl::zlib::ofstream ofs{"population.tsv.gz"};
+        tissue_->write_history(ofs);
+    }
     if (tissue_->has_snapshots()) {
-        wtl::zlib::ofstream{"snapshots.tsv.gz"} << tissue_->snapshots().rdbuf();
+        wtl::zlib::ofstream ofs{"snapshots.tsv.gz"};
+        tissue_->write_snapshots(ofs);
     }
     if (tissue_->has_drivers()) {
-        wtl::zlib::ofstream{"drivers.tsv.gz"} << tissue_->drivers().rdbuf();
+        wtl::zlib::ofstream ofs{"drivers.tsv.gz"};
+        tissue_->write_drivers(ofs);
     }
     if (tissue_->has_benchmark()) {
-        wtl::zlib::ofstream{"benchmark.tsv.gz"} << tissue_->benchmark().rdbuf();
+        wtl::zlib::ofstream ofs{"benchmark.tsv.gz"};
+        tissue_->write_benchmark(ofs);
     }
 }
 
-std::string Simulation::history() const {return tissue_->history().str();}
-std::string Simulation::snapshots() const {return tissue_->snapshots().str();}
-std::string Simulation::drivers() const {return tissue_->drivers().str();}
-std::string Simulation::benchmark() const {return tissue_->benchmark().str();}
+std::string Simulation::history() const {
+    std::ostringstream oss;
+    tissue_->write_history(oss);
+    return oss.str();
+}
+std::string Simulation::snapshots() const {
+    std::ostringstream oss;
+    tissue_->write_snapshots(oss);
+    return oss.str();
+}
+std::string Simulation::drivers() const {
+    std::ostringstream oss;
+    tissue_->write_drivers(oss);
+    return oss.str();
+}
+std::string Simulation::benchmark() const {
+    std::ostringstream oss;
+    tissue_->write_benchmark(oss);
+    return oss.str();
+}
 
 std::streambuf* std_cout_rdbuf(std::streambuf* buf) {
     return std::cout.rdbuf(buf);
