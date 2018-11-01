@@ -349,7 +349,10 @@ std::ostream& Tissue::write_drivers(std::ostream& ost) const {
 }
 
 std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
-    if (benchmark_) ost << benchmark_->rdbuf();
+    if (benchmark_) {
+        benchmark_->append(extant_cells_.size() + 1u);
+        ost << benchmark_->rdbuf();
+    }
     return ost;
 }
 
