@@ -341,11 +341,17 @@ std::ostream& Tissue::write_history(std::ostream& ost) const {
 }
 
 std::ostream& Tissue::write_snapshots(std::ostream& ost) const {
-    return ost << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
+    if (has_snapshots()) {
+        ost << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
+    }
+    return ost;
 }
 
 std::ostream& Tissue::write_drivers(std::ostream& ost) const {
-    return ost << "id\ttype\tcoef\n" << drivers_.rdbuf();
+    if (has_drivers()) {
+        ost << "id\ttype\tcoef\n" << drivers_.rdbuf();
+    }
+    return ost;
 }
 
 std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
