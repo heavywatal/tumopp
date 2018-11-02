@@ -12,7 +12,7 @@ function(find_package_or_git package version repo)
   if(${package}_FOUND)
     return()
   endif()
-  set(subdir external/${package}-v${version})
+  set(subdir ${PROJECT_BINARY_DIR}/${package}-v${version})
   if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/.git)
     execute_process(COMMAND
       ${GIT_EXECUTABLE} clone --recursive --depth=1 --branch=v${version} https://github.com/${repo}.git ${subdir}

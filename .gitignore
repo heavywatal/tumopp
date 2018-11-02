@@ -1,6 +1,4 @@
-*.trace
 /build/
 /docs/*.png
 /docs/*md_source.html
 /src/version.cpp
-/external/
