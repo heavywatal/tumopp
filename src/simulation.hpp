@@ -29,8 +29,11 @@ class Simulation {
     //! Top level function that should be called once from main()
     void run();
 
-    //! Write files unless `--outdir` is empty
-    void write() const;
+    //! @name Output for Rcpp
+    //@{
+    Tissue& tissue() const noexcept {return *tissue_;}
+    std::string outdir() const;
+    //@}
 
     //! @name Output for Rcpp
     //@{

@@ -13,14 +13,9 @@
 #include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
 #include <wtl/exception.hpp>
-#include <wtl/filesystem.hpp>
-#include <wtl/zlib.hpp>
 #include <clippson/clippson.hpp>
 
 namespace tumopp {
-
-//! variables mapper to handle command-line arguments
-namespace fs = wtl::filesystem;
 
 nlohmann::json VM;
 
@@ -197,30 +192,8 @@ void Simulation::run() {HERE;
     }
 }
 
-void Simulation::write() const {HERE;
-    const auto outdir = VM.at("outdir").get<std::string>();
-    if (outdir.empty()) return;
-    DCERR("mkdir && cd to " << outdir << std::endl);
-    fs::create_directory(outdir);
-    fs::current_path(outdir);
-    std::cerr << "Output: " << outdir << "\n";
-    wtl::make_ofs("config.json") << config_;
-    {
-        wtl::zlib::ofstream ofs{"population.tsv.gz"};
-        tissue_->write_history(ofs);
-    }
-    if (tissue_->has_snapshots()) {
-        wtl::zlib::ofstream ofs{"snapshots.tsv.gz"};
-        tissue_->write_snapshots(ofs);
-    }
-    if (tissue_->has_drivers()) {
-        wtl::zlib::ofstream ofs{"drivers.tsv.gz"};
-        tissue_->write_drivers(ofs);
-    }
-    if (tissue_->has_benchmark()) {
-        wtl::zlib::ofstream ofs{"benchmark.tsv.gz"};
-        tissue_->write_benchmark(ofs);
-    }
+std::string Simulation::outdir() const {
+    return VM.at("outdir").get<std::string>();
 }
 
 std::string Simulation::history() const {

@@ -14,5 +14,11 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp @ONLY
 )
 
-file(GLOB srcfiles *.cpp)
-target_sources(${PROJECT_NAME} PRIVATE ${srcfiles})
+# Be patient until 3.13 is popularized
+target_sources(${PROJECT_NAME} PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/cell.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/coord.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/simulation.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tissue.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp
+)
