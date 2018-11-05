@@ -5,7 +5,6 @@
 #include "simulation.hpp"
 #include "tissue.hpp"
 #include "cell.hpp"
-#include "random.hpp"
 #include "version.hpp"
 #include "benchmark.hpp"
 
@@ -146,7 +145,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
         throw wtl::ExitSuccess();
     }
     Cell::param(*cell_params_);
-    engine64().seed(VM.at("seed").get<uint32_t>());
     config_ = VM.dump(2) + "\n";
     if (vm_local["verbose"]) {
         std::cerr << wtl::iso8601datetime() << std::endl;
@@ -171,6 +169,7 @@ void Simulation::run() {HERE;
             VM.at("local").get<std::string>(),
             VM.at("path").get<std::string>(),
             *init_event_rates_,
+            VM.at("seed").get<uint_fast32_t>(),
             VM.at("benchmark").get<bool>()
         );
         bool success = tissue_->grow(

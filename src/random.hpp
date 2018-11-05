@@ -8,19 +8,16 @@
 #ifdef SFMT_FOUND
   #include <sfmt.hpp>
 #endif
-#include <wtl/random.hpp>
+#include <random>
 
 namespace tumopp {
 
-//! Getter of static instance
-inline auto& engine64() {
 #ifdef SFMT_FOUND
-    return wtl::sfmt64();
+    using urbg_t = wtl::sfmt19937_64;
 #else
-    return wtl::mt64();
+    using urbg_t = std::mt19937_64;
 #endif
-}
 
-}
+} // namespace tumopp
 
 #endif // TUMOPP_RANDOM_HPP_

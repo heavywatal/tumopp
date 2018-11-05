@@ -2,7 +2,6 @@
     @brief Implementation of Cell class
 */
 #include "cell.hpp"
-#include "random.hpp"
 
 #include <wtl/iostr.hpp>
 #include <wtl/random.hpp>
@@ -76,47 +75,47 @@ void Cell::param(const param_type& p) {
     GAUSS_MIGRA.param(decltype(GAUSS_MIGRA)::param_type(PARAM_.MEAN_MIGRA, PARAM_.SD_MIGRA));
 }
 
-void Cell::differentiate() {
+void Cell::differentiate(urbg_t& engine) {
     if (is_differentiated()) return;
-    if (BERN_SYMMETRIC(engine64())) return;
+    if (BERN_SYMMETRIC(engine)) return;
     proliferation_capacity_ = static_cast<int8_t>(PARAM_.MAX_PROLIFERATION_CAPACITY);
 }
 
-std::string Cell::mutate() {
+std::string Cell::mutate(urbg_t& engine) {
     auto oss = wtl::make_oss();
-    if (BERN_MUT_BIRTH(engine64())) {
+    if (BERN_MUT_BIRTH(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_BIRTH(engine64());
+        double s = GAUSS_BIRTH(engine);
         oss << id_ << "\tbeta\t" << s << "\n";
         event_rates_->birth_rate *= (s += 1.0);
     }
-    if (BERN_MUT_DEATH(engine64())) {
+    if (BERN_MUT_DEATH(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_DEATH(engine64());
+        double s = GAUSS_DEATH(engine);
         oss << id_ << "\tdelta\t" << s << "\n";
         event_rates_->death_rate *= (s += 1.0);
     }
-    if (BERN_MUT_ALPHA(engine64())) {
+    if (BERN_MUT_ALPHA(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_ALPHA(engine64());
+        double s = GAUSS_ALPHA(engine);
         oss << id_ << "\talpha\t" << s << "\n";
         event_rates_->death_prob *= (s += 1.0);
     }
-    if (BERN_MUT_MIGRA(engine64())) {
+    if (BERN_MUT_MIGRA(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
-        double s = GAUSS_MIGRA(engine64());
+        double s = GAUSS_MIGRA(engine);
         oss << id_ << "\trho\t" << s << "\n";
         event_rates_->migra_rate *= (s += 1.0);
     }
     return oss.str();
 }
 
-std::string Cell::force_mutate() {
+std::string Cell::force_mutate(urbg_t& engine) {
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
-    const double s_birth = GAUSS_BIRTH(engine64());
-    const double s_death = GAUSS_DEATH(engine64());
-    const double s_alpha = GAUSS_ALPHA(engine64());
-    const double s_migra = GAUSS_MIGRA(engine64());
+    const double s_birth = GAUSS_BIRTH(engine);
+    const double s_death = GAUSS_DEATH(engine);
+    const double s_alpha = GAUSS_ALPHA(engine);
+    const double s_migra = GAUSS_MIGRA(engine);
     event_rates_->birth_rate *= (1.0 + s_birth);
     event_rates_->death_rate *= (1.0 + s_death);
     event_rates_->death_prob *= (1.0 + s_alpha);
@@ -129,7 +128,7 @@ std::string Cell::force_mutate() {
     return oss.str();
 }
 
-double Cell::delta_time(const double now, const double positional_value, const bool surrounded) {
+double Cell::delta_time(urbg_t& engine, const double now, const double positional_value, const bool surrounded) {
     double t_birth = std::numeric_limits<double>::infinity();
     double t_death = std::numeric_limits<double>::infinity();
     double t_migra = std::numeric_limits<double>::infinity();
@@ -138,19 +137,19 @@ double Cell::delta_time(const double now, const double positional_value, const b
         mu /= birth_rate();
         mu /= positional_value;
         if (!surrounded) mu -= (now - time_of_birth_);
-        t_birth = GAMMA_FACTORY(mu)(engine64());
+        t_birth = GAMMA_FACTORY(mu)(engine);
     }
     if (death_rate() > 0.0) {
         std::exponential_distribution<double> exponential(death_rate());
-        t_death = exponential(engine64());
+        t_death = exponential(engine);
     }
     if (migra_rate() > 0.0) {
         std::exponential_distribution<double> exponential(migra_rate());
-        t_migra = exponential(engine64());
+        t_migra = exponential(engine);
     }
 
     if (t_birth < t_death && t_birth < t_migra) {
-        next_event_ = bernoulli(death_prob(), engine64())
+        next_event_ = bernoulli(death_prob(), engine)
                       ? Event::death : Event::birth;
         return t_birth;
     } else if (t_death < t_migra) {
@@ -162,11 +161,11 @@ double Cell::delta_time(const double now, const double positional_value, const b
     }
 }
 
-void Cell::set_cycle_dependent_death(const double p) {
+void Cell::set_cycle_dependent_death(urbg_t& engine, const double p) {
     //TODO: reduce redundant copy for susceptible cells
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
     event_rates_->death_prob = p;
-    next_event_ = bernoulli(p, engine64()) ? Event::death : Event::birth;
+    next_event_ = bernoulli(p, engine) ? Event::death : Event::birth;
 }
 
 std::string Cell::header() {

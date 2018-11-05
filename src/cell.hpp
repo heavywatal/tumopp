@@ -5,6 +5,8 @@
 #ifndef TUMOPP_CELL_HPP_
 #define TUMOPP_CELL_HPP_
 
+#include "random.hpp"
+
 #include <cstdint>
 #include <vector>
 #include <array>
@@ -103,14 +105,14 @@ class Cell {
     Cell& operator=(Cell&&) = default;
 
     //! driver mutation
-    std::string mutate();
+    std::string mutate(urbg_t&);
     //! driver mutation on all traits
-    std::string force_mutate();
+    std::string force_mutate(urbg_t&);
 
     //! Calc dt and set #next_event_
-    double delta_time(double now, double positional_value, bool surrounded=false);
+    double delta_time(urbg_t&, double now, double positional_value, bool surrounded=false);
     //! Change #proliferation_capacity_ stochastically
-    void differentiate();
+    void differentiate(urbg_t&);
     //! Set #time_of_birth_; reset other properties
     void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;
@@ -119,7 +121,7 @@ class Cell {
         if (is_differentiated()) {--proliferation_capacity_;}
     }
     //! Set #event_rates_->death_prob and #next_event_
-    void set_cycle_dependent_death(double death_prob);
+    void set_cycle_dependent_death(urbg_t&, double death_prob);
     //! Increase #event_rates_->death_rate to birth_rate() for simulating Moran-like situation
     void increase_death_rate() noexcept {event_rates_->death_rate = birth_rate();}
     //! Check #proliferation_capacity_

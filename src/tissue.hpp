@@ -7,6 +7,7 @@
 
 #include "coord.hpp"
 #include "cell.hpp"
+#include "random.hpp"
 
 #include <cstdint>
 #include <sstream>
@@ -34,6 +35,7 @@ class Tissue {
       const std::string& local_density_effect="const",
       const std::string& displacement_path="random",
       const EventRates& init_event_rates=EventRates{},
+      uint_fast32_t seed=std::random_device{}(),
       bool enable_benchmark=false);
     ~Tissue();
 
@@ -161,6 +163,8 @@ class Tissue {
     std::stringstream drivers_;
     //! record resource usage
     std::unique_ptr<Benchmark> benchmark_;
+    //! random number generator
+    mutable urbg_t engine_;
 };
 
 } // namespace tumopp
