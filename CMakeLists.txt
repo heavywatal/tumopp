@@ -24,7 +24,7 @@ function(find_package_or_git package version repo)
 endfunction()
 
 find_package(sfmt 0.7.1)
-find_package_or_git(wtl 0.7.4 heavywatal/cxxwtl)
+find_package_or_git(wtl 0.7.5 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.7.6 heavywatal/clippson)
 
 set(CMAKE_CXX_STANDARD 14)

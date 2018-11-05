@@ -16,27 +16,24 @@ namespace tumopp {
 class Benchmark {
   public:
     Benchmark() {
-        sst_ << "size\tmemory\tutime\tstime\n";
+        sst_ << "size"
+#ifndef _WIN32
+             << "\t" << wtl::RUSAGE_HEADER
+#endif // _WIN32
+             << "\n";
     }
     //! Append current state to #sst_
     void append(std::size_t size) {
-        sst_ << size;
-        append_ru();
-        sst_ << "\n";
+        sst_ << size
+#ifndef _WIN32
+             << "\t" << wtl::getrusage<std::milli, std::kilo>(epoch_)
+#endif // _WIN32
+             << "\n";
     }
     //! Get TSV stream buffer
     std::streambuf* rdbuf() const {return sst_.rdbuf();}
   private:
-    //! Append current state to #sst_
-#ifdef _WIN32
-    void append_ru() {}
-#else
-    void append_ru() {
-        auto ru = wtl::getrusage<std::milli, std::kilo>(epoch_);
-        sst_ << "\t" << ru.maxrss
-             << "\t" << ru.utime
-             << "\t" << ru.stime;
-    }
+#ifndef _WIN32
     //! Reference point
     const rusage epoch_ = wtl::getrusage();
 #endif // _WIN32

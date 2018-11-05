@@ -6,7 +6,6 @@
 #include "tissue.hpp"
 #include "cell.hpp"
 #include "version.hpp"
-#include "benchmark.hpp"
 
 #include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
