@@ -23,7 +23,6 @@ function(find_package_or_git package version repo)
   add_subdirectory(${subdir} EXCLUDE_FROM_ALL)
 endfunction()
 
-find_package(ZLIB REQUIRED)
 find_package(sfmt 0.7.1)
 find_package_or_git(wtl 0.7.4 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.7.6 heavywatal/clippson)
@@ -67,11 +66,18 @@ if(sfmt_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
 endif()
 
-add_executable(${PROJECT_NAME}-exe src/main.cpp)
-target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} wtl::wtl ZLIB::ZLIB)
-set_target_properties(${PROJECT_NAME}-exe PROPERTIES
-  OUTPUT_NAME ${PROJECT_NAME}
-)
+option(BUILD_EXECUTABLE "Build executable file" ON)
+if(BUILD_EXECUTABLE)
+  find_package(ZLIB REQUIRED)
+  add_executable(${PROJECT_NAME}-exe src/main.cpp)
+  target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} wtl::wtl ZLIB::ZLIB)
+  set_target_properties(${PROJECT_NAME}-exe PROPERTIES
+    OUTPUT_NAME ${PROJECT_NAME}
+  )
+  install(TARGETS ${PROJECT_NAME}-exe
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+endif()
 
 set(VERSION_CONFIG ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake)
 include(CMakePackageConfigHelpers)
@@ -79,9 +85,8 @@ write_basic_package_version_file(
   ${VERSION_CONFIG} COMPATIBILITY AnyNewerVersion
 )
 
-install(TARGETS ${PROJECT_NAME}-exe ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}-config
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(DIRECTORY src/
