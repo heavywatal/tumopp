@@ -5,12 +5,21 @@
 #include "tissue.hpp"
 
 #include <wtl/filesystem.hpp>
-#include <wtl/zlib.hpp>
+#ifdef ZLIB_FOUND
+  #include <wtl/zlib.hpp>
+#endif
 
 #include <iostream>
 #include <fstream>
 
 void write(tumopp::Simulation& simulation) {
+  #ifdef ZLIB_FOUND
+    using ofstream = wtl::zlib::ofstream;
+    const std::string ext = ".tsv.gz";
+  #else
+    using ofstream = std::ofstream;
+    const std::string ext = ".tsv";
+  #endif
     namespace fs = wtl::filesystem;
     const auto outdir = simulation.outdir();
     if (outdir.empty()) return;
@@ -20,19 +29,19 @@ void write(tumopp::Simulation& simulation) {
     std::ofstream{"config.json"} << simulation.config();
     const auto& tissue = simulation.tissue();
     {
-        wtl::zlib::ofstream ofs{"population.tsv.gz"};
+        ofstream ofs{"population" + ext};
         tissue.write_history(ofs);
     }
     if (tissue.has_snapshots()) {
-        wtl::zlib::ofstream ofs{"snapshots.tsv.gz"};
+        ofstream ofs{"snapshots" + ext};
         tissue.write_snapshots(ofs);
     }
     if (tissue.has_drivers()) {
-        wtl::zlib::ofstream ofs{"drivers.tsv.gz"};
+        ofstream ofs{"drivers" + ext};
         tissue.write_drivers(ofs);
     }
     if (tissue.has_benchmark()) {
-        wtl::zlib::ofstream ofs{"benchmark.tsv.gz"};
+        ofstream ofs{"benchmark" + ext};
         tissue.write_benchmark(ofs);
     }
 }

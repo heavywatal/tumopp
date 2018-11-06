@@ -68,9 +68,13 @@ endif()
 
 option(BUILD_EXECUTABLE "Build executable file" ON)
 if(BUILD_EXECUTABLE)
-  find_package(ZLIB REQUIRED)
   add_executable(${PROJECT_NAME}-exe src/main.cpp)
-  target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} wtl::wtl ZLIB::ZLIB)
+  target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} wtl::wtl)
+  find_package(ZLIB)
+  if(ZLIB_FOUND)
+    target_compile_definitions(${PROJECT_NAME}-exe PRIVATE ZLIB_FOUND)
+    target_link_libraries(${PROJECT_NAME}-exe PRIVATE ZLIB::ZLIB)
+  endif()
   set_target_properties(${PROJECT_NAME}-exe PROPERTIES
     OUTPUT_NAME ${PROJECT_NAME}
   )
