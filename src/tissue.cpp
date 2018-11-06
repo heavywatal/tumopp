@@ -342,24 +342,18 @@ std::ostream& Tissue::write_history(std::ostream& ost) const {
 }
 
 std::ostream& Tissue::write_snapshots(std::ostream& ost) const {
-    if (has_snapshots()) {
-        ost << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
-    }
+    ost << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
     return ost;
 }
 
 std::ostream& Tissue::write_drivers(std::ostream& ost) const {
-    if (has_drivers()) {
-        ost << "id\ttype\tcoef\n" << drivers_.rdbuf();
-    }
+    ost << "id\ttype\tcoef\n" << drivers_.rdbuf();
     return ost;
 }
 
 std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
-    if (benchmark_) {
-        benchmark_->append(extant_cells_.size() + 1u);
-        ost << benchmark_->rdbuf();
-    }
+    benchmark_->append(extant_cells_.size() + 1u);
+    ost << benchmark_->rdbuf();
     return ost;
 }
 

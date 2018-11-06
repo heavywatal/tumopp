@@ -29,9 +29,10 @@ class Simulation {
     //! Top level function that should be called once from main()
     void run();
 
-    //! @name Output for Rcpp
+    //! @name Getter for `main()`
     //@{
     Tissue& tissue() const noexcept {return *tissue_;}
+    const std::string& config() const noexcept {return config_;}
     std::string outdir() const;
     //@}
 
@@ -41,7 +42,6 @@ class Simulation {
     std::string snapshots() const;
     std::string drivers() const;
     std::string benchmark() const;
-    std::string config() const {return config_;}
     //@}
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:

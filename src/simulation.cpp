@@ -200,16 +200,19 @@ std::string Simulation::history() const {
     return oss.str();
 }
 std::string Simulation::snapshots() const {
+    if (!tissue_->has_snapshots()) return std::string{};
     std::ostringstream oss;
     tissue_->write_snapshots(oss);
     return oss.str();
 }
 std::string Simulation::drivers() const {
+    if (!tissue_->has_drivers()) return std::string{};
     std::ostringstream oss;
     tissue_->write_drivers(oss);
     return oss.str();
 }
 std::string Simulation::benchmark() const {
+    if (!tissue_->has_benchmark()) return std::string{};
     std::ostringstream oss;
     tissue_->write_benchmark(oss);
     return oss.str();

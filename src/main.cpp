@@ -4,24 +4,21 @@
 #include "simulation.hpp"
 #include "tissue.hpp"
 
-#include <wtl/debug.hpp>
 #include <wtl/filesystem.hpp>
 #include <wtl/zlib.hpp>
 
 #include <iostream>
-
-//! variables mapper to handle command-line arguments
-namespace fs = wtl::filesystem;
+#include <fstream>
 
 void write(tumopp::Simulation& simulation) {
-    const auto& tissue = simulation.tissue();
+    namespace fs = wtl::filesystem;
     const auto outdir = simulation.outdir();
     if (outdir.empty()) return;
-    DCERR("mkdir && cd to " << outdir << std::endl);
     fs::create_directory(outdir);
     fs::current_path(outdir);
-    std::cerr << "Output: " << outdir << "\n";
+    std::cerr << "Output: " << fs::current_path() << "\n";
     std::ofstream{"config.json"} << simulation.config();
+    const auto& tissue = simulation.tissue();
     {
         wtl::zlib::ofstream ofs{"population.tsv.gz"};
         tissue.write_history(ofs);
