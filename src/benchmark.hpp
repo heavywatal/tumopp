@@ -18,7 +18,7 @@ class Benchmark {
     Benchmark() {
         sst_ << "size"
 #ifndef _WIN32
-             << "\t" << wtl::RUSAGE_HEADER
+             << "\t" << wtl::rusage_header()
 #endif // _WIN32
              << "\n";
     }
