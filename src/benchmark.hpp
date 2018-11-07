@@ -1,5 +1,5 @@
 /*! @file benchmark.hpp
-    @brief Utilities for benchmarking
+    @brief Defines Benchmark class
 */
 #pragma once
 #ifndef TUMOPP_BENCHMARK_HPP_
@@ -13,6 +13,7 @@
 
 namespace tumopp {
 
+//! Utility class for benchmarking
 class Benchmark {
   public:
     Benchmark() {

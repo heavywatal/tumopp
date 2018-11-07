@@ -1,5 +1,5 @@
 /*! @file random.hpp
-    @brief Utilities for random number generation
+    @brief Defines type alias `urbg_t`
 */
 #pragma once
 #ifndef TUMOPP_RANDOM_HPP_
@@ -12,6 +12,7 @@
 
 namespace tumopp {
 
+//! Type alias of random number generator
 #ifdef SFMT_FOUND
     using urbg_t = wtl::sfmt19937_64;
 #else

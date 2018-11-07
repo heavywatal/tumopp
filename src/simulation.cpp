@@ -15,6 +15,7 @@
 
 namespace tumopp {
 
+//! Global variables mapper of commane-line arguments
 nlohmann::json VM;
 
 //! Options description for general purpose

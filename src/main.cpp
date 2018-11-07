@@ -1,5 +1,5 @@
 /*! @file main.cpp
-    @brief Only defines tiny main()
+    @brief Defines main() and file output
 */
 #include "simulation.hpp"
 #include "tissue.hpp"
@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 
+//! Write config and simulation result to files
 void write(tumopp::Simulation& simulation) {
   #ifdef ZLIB_FOUND
     using ofstream = wtl::zlib::ofstream;
@@ -46,7 +47,7 @@ void write(tumopp::Simulation& simulation) {
     }
 }
 
-//! Just instantiate and run Simulation
+//! Instantiate and run Simulation
 int main(int argc, char* argv[]) {
     std::vector<std::string> arguments(argv + 1, argv + argc);
     try {
