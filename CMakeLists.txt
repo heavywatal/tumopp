@@ -7,16 +7,15 @@ include(GNUInstallDirs)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 function(find_package_or_git package version repo)
-  find_package(Git)
   find_package(${package} ${version} QUIET)
   if(${package}_FOUND)
     return()
   endif()
   set(subdir ${PROJECT_BINARY_DIR}/${package}-v${version})
-  if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/.git)
+  if(NOT EXISTS ${subdir})
+    find_package(Git)
     execute_process(COMMAND
       ${GIT_EXECUTABLE} clone --recursive --depth=1 --branch=v${version} https://github.com/${repo}.git ${subdir}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
   endif()
   message(STATUS "add_subdirectory(${subdir})")
