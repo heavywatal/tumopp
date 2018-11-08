@@ -121,10 +121,10 @@ std::string Cell::force_mutate(urbg_t& engine) {
     event_rates_->death_prob *= (1.0 + s_alpha);
     event_rates_->migra_rate *= (1.0 + s_migra);
     auto oss = wtl::make_oss();
-    oss << id_ << "\tbeta\t" << s_birth << "\n"
-        << id_ << "\tdelta\t" << s_death << "\n"
-        << id_ << "\talpha\t" << s_alpha << "\n"
-        << id_ << "\trho\t" << s_migra << "\n";
+    if (s_birth != 0.0) {oss << id_ << "\tbeta\t"  << s_birth << "\n";}
+    if (s_death != 0.0) {oss << id_ << "\tdelta\t" << s_death << "\n";}
+    if (s_alpha != 0.0) {oss << id_ << "\talpha\t" << s_alpha << "\n";}
+    if (s_migra != 0.0) {oss << id_ << "\trho\t"   << s_migra << "\n";}
     return oss.str();
 }
 
