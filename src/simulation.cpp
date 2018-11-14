@@ -19,7 +19,7 @@ namespace tumopp {
 nlohmann::json VM;
 
 //! Options description for general purpose
-inline clipp::group general_options(nlohmann::json* vm) {HERE;
+inline clipp::group general_options(nlohmann::json* vm) {
     return (
       wtl::option(vm, {"h", "help"}, false, "print this help"),
       wtl::option(vm, {"version"}, false, "print version"),
@@ -45,7 +45,7 @@ inline clipp::group general_options(nlohmann::json* vm) {HERE;
     `-R,--record`       | -              | -
     `--seed`            | -              | -
 */
-inline clipp::group simulation_options(nlohmann::json* vm) {HERE;
+inline clipp::group simulation_options(nlohmann::json* vm) {
     const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
     const int seed = std::random_device{}(); // 32-bit signed integer for R
     return (
@@ -94,7 +94,7 @@ inline clipp::group simulation_options(nlohmann::json* vm) {HERE;
     `--sm`              | \f$\sigma_\rho\f$   | CellParams::SD_MIGRA
 */
 inline clipp::group
-cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_params) {HERE;
+cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_params) {
     return (
       wtl::option(vm, {"b", "beta0"}, &init_event_rates->birth_rate),
       wtl::option(vm, {"d", "delta0"}, &init_event_rates->death_rate),
@@ -120,7 +120,7 @@ cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_
 
 Simulation::Simulation(const std::vector<std::string>& arguments)
 : init_event_rates_(std::make_unique<EventRates>()),
-  cell_params_(std::make_unique<CellParams>()) {HERE;
+  cell_params_(std::make_unique<CellParams>()) {
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.precision(9);
@@ -154,7 +154,7 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
 
 Simulation::~Simulation() = default;
 
-void Simulation::run() {HERE;
+void Simulation::run() {
     const auto max_size = VM.at("max").get<size_t>();
     const double max_time = std::log2(max_size) * 100.0;
     const auto plateau_time = VM.at("plateau").get<double>();
@@ -179,9 +179,10 @@ void Simulation::run() {HERE;
             VM.at("mutate").get<size_t>()
         );
         if (success) break;
+        std::cerr << "Trial " << i  << ": size = " << tissue_->size() << std::endl;
     }
     if (tissue_->size() != max_size) {
-        std::cerr << "Warning: tissue_.size() " << tissue_->size() << std::endl;
+        std::cerr << "Warning: size = " << tissue_->size() << std::endl;
     }
     if (plateau_time > 0.0) {
         tissue_->plateau(plateau_time);

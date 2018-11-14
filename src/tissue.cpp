@@ -23,7 +23,7 @@ Tissue::Tissue(
   const EventRates& init_event_rates,
   const uint_fast32_t seed,
   const bool enable_benchmark):
-  engine_(seed) {HERE;
+  engine_(seed) {
     snapshots_.precision(std::cout.precision());
     drivers_.precision(std::cout.precision());
     init_coord(dimensions, coordinate);
@@ -52,7 +52,7 @@ Tissue::Tissue(
 
 Tissue::~Tissue() = default;
 
-void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {HERE;
+void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {
     std::unordered_map<std::string, std::unique_ptr<Coord>> swtch;
     swtch["neumann"] = std::make_unique<Neumann>(dimensions);
     swtch["moore"] = std::make_unique<Moore>(dimensions);
@@ -71,7 +71,7 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
 bool Tissue::grow(const size_t max_size, const double max_time,
                   const double snapshot_interval,
                   size_t recording_early_growth,
-                  size_t mutation_timing) {HERE;
+                  size_t mutation_timing) {
     if (recording_early_growth > 0u) {snapshots_append();}
     bool success = false;
     double time_snapshot = i_snapshot_ * snapshot_interval;
@@ -130,7 +130,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
     return success;
 }
 
-void Tissue::plateau(const double time) {HERE;
+void Tissue::plateau(const double time) {
     queue_.clear();
     for (auto& p: extant_cells_) {
         p->increase_death_rate();
@@ -139,7 +139,7 @@ void Tissue::plateau(const double time) {HERE;
     grow(std::numeric_limits<size_t>::max(), time_ + time);
 }
 
-void Tissue::treatment(const double death_prob, const size_t num_resistant_cells) {HERE;
+void Tissue::treatment(const double death_prob, const size_t num_resistant_cells) {
     const size_t original_size = extant_cells_.size();
     std::vector<std::shared_ptr<Cell>> cells;
     cells.reserve(original_size);
