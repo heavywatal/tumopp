@@ -21,9 +21,9 @@ nlohmann::json VM;
 //! Options description for general purpose
 inline clipp::group general_options(nlohmann::json* vm) {
     return (
-      wtl::option(vm, {"h", "help"}, false, "print this help"),
-      wtl::option(vm, {"version"}, false, "print version"),
-      wtl::option(vm, {"v", "verbose"}, false, "verbose output")
+      wtl::option(vm, {"h", "help"}, false, "Print this help"),
+      wtl::option(vm, {"version"}, false, "Print version"),
+      wtl::option(vm, {"v", "verbose"}, false, "Verbose output")
     ).doc("General:");
 }
 
@@ -47,25 +47,31 @@ inline clipp::group general_options(nlohmann::json* vm) {
 */
 inline clipp::group simulation_options(nlohmann::json* vm) {
     const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
-    const int seed = std::random_device{}(); // 32-bit signed integer for R
+    const int seed = static_cast<int>(std::random_device{}()); // 32-bit signed integer for R
     return (
       wtl::option(vm, {"D", "dimensions"}, 3u),
       wtl::option(vm, {"C", "coord"}, "moore",
         "Coordinate/neighborhood system {neumann, moore, hex}"),
       wtl::option(vm, {"L", "local"}, "const",
-        "E2 {const, step, linear}"),
+        "E2: resource competition {const, step, linear}"),
       wtl::option(vm, {"P", "path"}, "random",
         "Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}"),
       wtl::option(vm, {"O", "origin"}, 1u),
-      wtl::option(vm, {"N", "max"}, 16384u),
-      wtl::option(vm, {"T", "plateau"}, 0.0),
-      wtl::option(vm, {"U", "mutate"}, 0u),
+      wtl::option(vm, {"N", "max"}, 16384u,
+        "Maximum number of cells to simulate"),
+      wtl::option(vm, {"T", "plateau"}, 0.0,
+        "Duration of turn-over phase after population growth"),
+      wtl::option(vm, {"U", "mutate"}, 0u,
+        "Introduce a driver mutation to U-th cell"),
       wtl::option(vm, {"treatment"}, 0.0),
       wtl::option(vm, {"resistant"}, 3u),
       wtl::option(vm, {"o", "outdir"}, OUT_DIR),
-      wtl::option(vm, {"I", "interval"}, 0.0),
-      wtl::option(vm, {"R", "record"}, 0u),
-      wtl::option(vm, {"extinction"}, 100u),
+      wtl::option(vm, {"I", "interval"}, 0.0,
+        "Time interval to take snapshots"),
+      wtl::option(vm, {"R", "record"}, 0u,
+        "Tumor size to stop taking snapshots"),
+      wtl::option(vm, {"extinction"}, 100u,
+        "Maximum number of trials in case of extinction"),
       wtl::option(vm, {"benchmark"}, false),
       wtl::option(vm, {"seed"}, seed)
     ).doc("Simulation:");
@@ -96,25 +102,35 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
 inline clipp::group
 cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_params) {
     return (
-      wtl::option(vm, {"b", "beta0"}, &init_event_rates->birth_rate),
-      wtl::option(vm, {"d", "delta0"}, &init_event_rates->death_rate),
-      wtl::option(vm, {"a", "alpha0"}, &init_event_rates->death_prob),
-      wtl::option(vm, {"m", "rho0"}, &init_event_rates->migra_rate),
-      wtl::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE),
-      wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION),
-      wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY),
-      wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH),
-      wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH),
-      wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA),
-      wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA),
-      wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH),
-      wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH),
-      wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA),
-      wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA),
-      wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH),
-      wtl::option(vm, {"sd"}, &cell_params->SD_DEATH),
-      wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA),
-      wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA)
+      wtl::option(vm, {"b", "beta0"}, &init_event_rates->birth_rate, "Basic birth rate"),
+      wtl::option(vm, {"d", "delta0"}, &init_event_rates->death_rate, "Basic death rate"),
+      wtl::option(vm, {"a", "alpha0"}, &init_event_rates->death_prob,
+        "Basic death rate on cell division attempt"),
+      wtl::option(vm, {"m", "rho0"}, &init_event_rates->migra_rate, "Basic migration rate"),
+      wtl::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE,
+        "Shape parameter of waiting time distribution for cell division"),
+      wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
+        "$p_s$: Probability of symmetric division"),
+      wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY,
+        "$\\omega$: Number of cell division allowed for a TAC"),
+      (
+        wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, "$\\mu_\\beta$"),
+        wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, "$\\mu_\\delta$"),
+        wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, "$\\mu_\\alpha$"),
+        wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA, "$\\mu_\\rho$")
+      ).doc("Rate of driver mutations"),
+      (
+        wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, "$\\bar s_\\beta$"),
+        wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, "$\\bar s_\\delta$"),
+        wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, "$\\bar s_\\alpha$"),
+        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA, "$\\bar s_\\rho$")
+      ).doc("Mean effect of driver mutations"),
+      (
+        wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, "$\\sigma_\\beta$"),
+        wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, "$\\sigma_\\delta$"),
+        wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, "$\\sigma_\\alpha$"),
+        wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA, "$\\sigma_\\rho$")
+      ).doc("SD of driver mutations")
     ).doc("Cell:");
 }
 
