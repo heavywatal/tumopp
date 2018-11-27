@@ -51,7 +51,7 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
     return (
       wtl::option(vm, {"D", "dimensions"}, 3u),
       wtl::option(vm, {"C", "coord"}, "moore",
-        "Coordinate/neighborhood system {neumann, moore, hex}"),
+        "Neighborhood {neumann, moore, hex}"),
       wtl::option(vm, {"L", "local"}, "const",
         "E2: resource competition {const, step, linear}"),
       wtl::option(vm, {"P", "path"}, "random",
@@ -112,25 +112,25 @@ cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_
       wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
         "$p_s$: Probability of symmetric division"),
       wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY,
-        "$\\omega$: Number of cell division allowed for a TAC"),
+        "$\\omega$: Maximum number of division for a TAC"),
       (
         wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, "$\\mu_\\beta$"),
         wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, "$\\mu_\\delta$"),
         wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, "$\\mu_\\alpha$"),
         wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA, "$\\mu_\\rho$")
-      ).doc("Rate of driver mutations"),
+      ).doc("Rate of driver mutations:"),
       (
         wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, "$\\bar s_\\beta$"),
         wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, "$\\bar s_\\delta$"),
         wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, "$\\bar s_\\alpha$"),
         wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA, "$\\bar s_\\rho$")
-      ).doc("Mean effect of driver mutations"),
+      ).doc("Mean effect of driver mutations:"),
       (
         wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, "$\\sigma_\\beta$"),
         wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, "$\\sigma_\\delta$"),
         wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, "$\\sigma_\\alpha$"),
         wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA, "$\\sigma_\\rho$")
-      ).doc("SD of driver mutations")
+      ).doc("SD of driver mutations:")
     ).doc("Cell:");
 }
 
@@ -150,8 +150,8 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
       cell_options(&VM, init_event_rates_.get(), cell_params_.get())
     );
     wtl::parse(cli, arguments);
-    auto fmt = wtl::doc_format();
     if (vm_local["help"]) {
+        auto fmt = wtl::doc_format().paragraph_spacing(0);
         std::cout << "Usage: " << PROJECT_NAME << " [options]\n\n";
         std::cout << clipp::documentation(cli, fmt) << "\n";
         throw wtl::ExitSuccess();
