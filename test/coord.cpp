@@ -2,29 +2,28 @@
 
 #include <wtl/iostr.hpp>
 
-template <class T, unsigned N> inline
-void test_coordinate(const tumopp::coord_t& v) {
-    T coord_func(N);
-    std::cout << "core:        " << coord_func.core() << "\n";
-    std::cout << "sphere:      " << coord_func.sphere(20) << "\n";
+template <class T> inline
+void test_coordinate(unsigned dim, const tumopp::coord_t& v) {
+    std::cout << typeid(T).name() << " " << dim << "D ################\n";
+    T coord_func(dim);
     for (auto x: coord_func.directions()) {
         std::cout << x << ": " << coord_func.euclidean_distance(x) << "\n";
     }
+    std::cout << "core:        " << coord_func.core() << "\n";
     std::cout << "neighbors:   " << coord_func.neighbors(v) << "\n";
     std::cout << "dist_g:      " << coord_func.graph_distance(v) << "\n";
     std::cout << "dist_e:      " << coord_func.euclidean_distance(v) << "\n";
 }
 
+void test_dimension(unsigned dim, tumopp::coord_t&& v) {
+    test_coordinate<tumopp::Neumann>(dim, v);
+    test_coordinate<tumopp::Moore>(dim, v);
+    test_coordinate<tumopp::Hexagonal>(dim, v);
+}
+
 int main() {
     std::cout.precision(9);
-    const tumopp::coord_t v2{{3, -2, 0}};
-    test_coordinate<tumopp::Neumann, 2>(v2);
-    test_coordinate<tumopp::Moore, 2>(v2);
-    test_coordinate<tumopp::Hexagonal, 2>(v2);
-
-    const tumopp::coord_t v3{{3, -2, 1}};
-    test_coordinate<tumopp::Neumann, 3>(v3);
-    test_coordinate<tumopp::Moore, 3>(v3);
-    test_coordinate<tumopp::Hexagonal, 3>(v3);
+    test_dimension(2u, {1, -2, 0});
+    test_dimension(3u, {1, -2, 3});
     return 0;
 }
