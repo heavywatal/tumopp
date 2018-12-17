@@ -1,6 +1,7 @@
 #include "coord.hpp"
 
 #include <wtl/iostr.hpp>
+#include <typeinfo>
 
 template <class T> inline
 void test_coordinate(unsigned dim, const tumopp::coord_t& v) {
