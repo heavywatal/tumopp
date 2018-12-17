@@ -121,7 +121,7 @@ class Coord {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
-    //! {2, 3}
+    //! {1, 2, 3}
     const unsigned dimensions_;
     //! initialized in derived class constructor
     std::vector<coord_t> directions_;

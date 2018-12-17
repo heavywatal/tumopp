@@ -44,12 +44,18 @@ double _euclidean_distance(const std::array<T, MAX_DIM>& v) {
 }// namespace
 
 Coord::Coord(unsigned d): dimensions_(d) {
-    if (d < 2U || 3U < d) {
+    if (d < 1u || MAX_DIM < d) {
         throw std::runtime_error("Invalid value for dimensions");
+    }
+    if (dimensions_ == 1u) {
+        directions_.push_back({1, 0, 0});
+        directions_.push_back({-1, 0, 0});
+        dist_direction_.param(decltype(dist_direction_)::param_type(0, 1u));
     }
 }
 
 Neumann::Neumann(const unsigned d): Coord(d) {
+    if (dimensions_ < 2u) return;
     directions_.reserve(2U * dimensions_);
     for (unsigned i = 0; i < dimensions_; ++i) {
         coord_t v{};
@@ -63,6 +69,7 @@ Neumann::Neumann(const unsigned d): Coord(d) {
 }
 
 Moore::Moore(const unsigned d): Coord(d) {
+    if (dimensions_ < 2u) return;
     directions_.reserve(ipow(3u, dimensions_) - 1u);
     for (const int x: {-1, 0, 1}) {
         for (const int y: {-1, 0, 1}) {
@@ -82,6 +89,7 @@ Moore::Moore(const unsigned d): Coord(d) {
 }
 
 Hexagonal::Hexagonal(const unsigned d): Coord(d) {
+    if (dimensions_ < 2u) return;
     coord_t v{{-1, 0, 1}};
     directions_.reserve(6 * (dimensions_ - 1));
     do {

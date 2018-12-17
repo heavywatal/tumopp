@@ -23,6 +23,7 @@ void test_dimension(unsigned dim, tumopp::coord_t&& v) {
 
 int main() {
     std::cout.precision(9);
+    test_dimension(1u, {1, 0, 0});
     test_dimension(2u, {1, -2, 0});
     test_dimension(3u, {1, -2, 3});
     return 0;
