@@ -164,7 +164,7 @@ class Tissue {
     //! record resource usage
     std::unique_ptr<Benchmark> benchmark_;
     //! random number generator
-    mutable urbg_t engine_;
+    std::unique_ptr<urbg_t> engine_;
 };
 
 } // namespace tumopp
