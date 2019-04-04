@@ -6,7 +6,6 @@
 
 #include <wtl/random.hpp>
 #include <wtl/iostr.hpp>
-#include <wtl/debug.hpp>
 #include <wtl/math.hpp>
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
@@ -61,7 +60,7 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
         coord_func_ = std::move(swtch.at(coordinate));
     } catch (std::exception& e) {
         std::ostringstream oss;
-        oss << std::endl << FILE_LINE_PRETTY
+        oss << "\n" << __FILE__ << ':' << __LINE__ << ':' << __PRETTY_FUNCTION__
             << "\nInvalid value for -C (" << coordinate << "); choose from "
             << wtl::keys(swtch);
         throw std::runtime_error(oss.str());
@@ -71,10 +70,12 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
 bool Tissue::grow(const size_t max_size, const double max_time,
                   const double snapshot_interval,
                   size_t recording_early_growth,
-                  size_t mutation_timing) {
+                  size_t mutation_timing,
+                  bool verbose) {
     if (recording_early_growth > 0u) {snapshots_append();}
     bool success = false;
     double time_snapshot = i_snapshot_ * snapshot_interval;
+    constexpr size_t progress_interval{1 << 12};
     while (true) {
         auto it = queue_.begin();
         time_ = it->first;
@@ -105,8 +106,8 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 queue_push(mother);
                 queue_push(daughter);
                 const auto size = extant_cells_.size();
-                if ((size % 5000U) == 0U) {
-                    DCERR("\r" << size);
+                if ((size % progress_interval) == 0u) {
+                    if (verbose) std::cerr << "\r" << size;
                     if (benchmark_) benchmark_->append(size);
                 }
             } else {
@@ -126,7 +127,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             recording_early_growth = 0u;  // prevent restart by cell death
         }
     }
-    DCERR("\r" << extant_cells_.size() << std::endl);
+    if (verbose) std::cerr << "\r" << extant_cells_.size() << std::endl;
     return success;
 }
 
@@ -211,7 +212,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
         insert = swtch.at(local_density_effect).at(displacement_path);
     } catch (std::exception& e) {
         std::ostringstream oss;
-        oss << std::endl << FILE_LINE_PRETTY
+        oss << "\n" << __FILE__ << ':' << __LINE__ << ':' << __PRETTY_FUNCTION__
             << "\nInvalid value for -L/-P ("
             << local_density_effect << "/" << displacement_path
             << "); choose from";

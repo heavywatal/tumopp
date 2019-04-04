@@ -7,7 +7,6 @@
 #include "cell.hpp"
 #include "version.hpp"
 
-#include <wtl/debug.hpp>
 #include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
 #include <wtl/exception.hpp>
@@ -22,8 +21,7 @@ nlohmann::json VM;
 inline clipp::group general_options(nlohmann::json* vm) {
     return (
       wtl::option(vm, {"h", "help"}, false, "Print this help"),
-      wtl::option(vm, {"version"}, false, "Print version"),
-      wtl::option(vm, {"v", "verbose"}, false, "Verbose output")
+      wtl::option(vm, {"version"}, false, "Print version")
     ).doc("General:");
 }
 
@@ -73,7 +71,8 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
       wtl::option(vm, {"extinction"}, 100u,
         "Maximum number of trials in case of extinction"),
       wtl::option(vm, {"benchmark"}, false),
-      wtl::option(vm, {"seed"}, seed)
+      wtl::option(vm, {"seed"}, seed),
+      wtl::option(vm, {"v", "verbose"}, false, "Verbose output")
     ).doc("Simulation:");
 }
 
@@ -162,10 +161,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     }
     Cell::param(*cell_params_);
     config_ = VM.dump(2) + "\n";
-    if (vm_local["verbose"]) {
-        std::cerr << wtl::iso8601datetime() << std::endl;
-        std::cerr << config_ << std::endl;
-    }
 }
 
 Simulation::~Simulation() = default;
@@ -192,7 +187,8 @@ void Simulation::run() {
             max_size, max_time,
             VM.at("interval").get<double>(),
             VM.at("record").get<size_t>(),
-            VM.at("mutate").get<size_t>()
+            VM.at("mutate").get<size_t>(),
+            VM.at("verbose").get<bool>()
         );
         if (success) break;
         std::cerr << "Trial " << i  << ": size = " << tissue_->size() << std::endl;

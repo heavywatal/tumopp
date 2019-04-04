@@ -45,7 +45,8 @@ class Tissue {
       double max_time=100.0,
       double snapshot_interval=0.0,
       size_t recording_early_growth=0u,
-      size_t mutation_timing=0u);
+      size_t mutation_timing=0u,
+      bool verbose=false);
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);
