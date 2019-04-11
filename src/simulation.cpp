@@ -57,6 +57,8 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
       wtl::option(vm, {"O", "origin"}, 1u),
       wtl::option(vm, {"N", "max"}, 16384u,
         "Maximum number of cells to simulate"),
+      wtl::option(vm, {"max_time"}, 0.0,
+        "Maximum time to simulate"),
       wtl::option(vm, {"T", "plateau"}, 0.0,
         "Duration of turn-over phase after population growth"),
       wtl::option(vm, {"U", "mutate"}, 0u,
@@ -167,7 +169,7 @@ Simulation::~Simulation() = default;
 
 void Simulation::run() {
     const auto max_size = VM.at("max").get<size_t>();
-    const double max_time = std::log2(max_size) * 100.0;
+    const double max_time = VM.at("max_time").get<double>();
     const auto plateau_time = VM.at("plateau").get<double>();
     const auto treatment = VM.at("treatment").get<double>();
     const auto resistant = VM.at("resistant").get<size_t>();
@@ -184,7 +186,8 @@ void Simulation::run() {
             VM.at("benchmark").get<bool>()
         );
         bool success = tissue_->grow(
-            max_size, max_time,
+            max_size,
+            max_time > 0.0 ? max_time : std::log2(max_size) * 100.0,
             VM.at("interval").get<double>(),
             VM.at("record").get<size_t>(),
             VM.at("mutate").get<size_t>(),
@@ -193,13 +196,13 @@ void Simulation::run() {
         if (success) break;
         std::cerr << "Trial " << i  << ": size = " << tissue_->size() << std::endl;
     }
-    if (tissue_->size() != max_size) {
+    if (max_time == 0.0 && tissue_->size() != max_size) {
         std::cerr << "Warning: size = " << tissue_->size() << std::endl;
     }
-    if (plateau_time > 0.0) {
+    if (max_time == 0.0 && plateau_time > 0.0) {
         tissue_->plateau(plateau_time);
     }
-    if (treatment > 0.0) {
+    if (max_time == 0.0 && treatment > 0.0) {
         tissue_->treatment(treatment, resistant);
     }
 }
