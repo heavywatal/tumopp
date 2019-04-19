@@ -40,7 +40,7 @@ function(find_package_or_git package version repo)
   add_subdirectory(${subdir} EXCLUDE_FROM_ALL)
 endfunction()
 
-find_package_or_git(wtl 0.8.3 heavywatal/cxxwtl)
+find_package_or_git(wtl 0.8.4 heavywatal/cxxwtl)
 find_package_or_git(clippson 0.8.0 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
