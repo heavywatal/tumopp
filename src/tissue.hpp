@@ -71,8 +71,6 @@ class Tissue {
 
     //! @name Getter functions
     size_t size() const noexcept {return extant_cells_.size();}
-    auto begin() noexcept {return extant_cells_.begin();}
-    auto end() noexcept {return extant_cells_.end();}
     unsigned dimensions() const noexcept {return coord_func_->dimensions();}
     //@}
 
