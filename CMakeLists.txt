@@ -15,9 +15,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 set(CMAKE_CXX_FLAGS_DEV "-O2 -g")
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-march=native -Wall -Wextra -pedantic)
 
 set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
@@ -48,7 +45,13 @@ add_library(${PROJECT_NAME})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 add_subdirectory(src)
 
+target_compile_features(${PROJECT_NAME}
+  PUBLIC cxx_std_11
+  PRIVATE cxx_std_14
+)
 set_target_properties(${PROJECT_NAME} PROPERTIES
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF
   POSITION_INDEPENDENT_CODE ON
   WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
@@ -57,7 +60,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson)
-find_package(sfmt 0.7.1)
+find_package(sfmt 0.7.2)
 if(sfmt_FOUND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
