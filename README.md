@@ -11,7 +11,7 @@ It can be installed and run via [R package](https://github.com/heavywatal/rtumop
 
 - Unix-like environment (macOS, Linux, WSL, MinGW on MSYS2, etc.)
 - C++14 compiler (clang++ >= Apple LLVM 8.1, g++ >= 5.3)
-- [CMake](https://cmake.org/) (>= 3.4.0)
+- [CMake](https://cmake.org/) (>= 3.8.0)
 
 The following libraries are optional or automatically installed:
 
