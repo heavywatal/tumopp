@@ -23,7 +23,7 @@ The following libraries are optional or automatically installed:
 
 ## Installation
 
-See [tumopp R package](https://github.com/heavywatal/rtumopp/).
+See [tumopp R package](https://heavywatal.github.io/rtumopp/).
 
 
 ## Alternative installation for command-line execution
