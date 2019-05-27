@@ -14,6 +14,10 @@
 #include <string>
 #include <memory>
 
+namespace wtl {
+  class DataFrame;
+}
+
 namespace tumopp {
 
 //! event types
@@ -150,6 +154,9 @@ class Cell {
     //! Write TSV while tracing back #ancestor_ recursively
     std::ostream& traceback(std::ostream& ost, std::unordered_set<unsigned>* done) const;
     friend std::ostream& operator<< (std::ostream&, const Cell&);
+
+    static void header(wtl::DataFrame*);
+    void traceback(wtl::DataFrame*, std::unordered_set<unsigned>* done) const;
 
     //! Set #PARAM_
     static void param(const param_type& p);

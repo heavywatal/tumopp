@@ -5,6 +5,7 @@
 
 #include <wtl/iostr.hpp>
 #include <wtl/random.hpp>
+#include <wtl/dataframe.hpp>
 
 #include <type_traits>
 
@@ -192,6 +193,33 @@ std::ostream& Cell::traceback(std::ostream& ost, std::unordered_set<unsigned>* d
         ancestor_->traceback(ost, done);
     }
     return ost;
+}
+
+void Cell::header(wtl::DataFrame* df) {
+    df->reserve_cols(8u)
+      .init_column<unsigned>("ancestor")
+      .init_column<unsigned>("id")
+      .init_column<int>("x")
+      .init_column<int>("y")
+      .init_column<int>("z")
+      .init_column<double>("birth")
+      .init_column<double>("death")
+      .init_column<int>("omega");
+}
+
+void Cell::traceback(wtl::DataFrame* df, std::unordered_set<unsigned>* done) const {
+    df->add_row(
+        (ancestor_ ? ancestor_->id_ : 0u),
+        id_,
+        static_cast<int>(coord_[0]),
+        static_cast<int>(coord_[1]),
+        static_cast<int>(coord_[2]),
+        static_cast<double>(time_of_birth_),
+        static_cast<double>(time_of_death_),
+        static_cast<int>(proliferation_capacity_));
+    if (ancestor_ && done->insert(ancestor_->id_).second) {
+        ancestor_->traceback(df, done);
+    }
 }
 
 //! Stream operator for debug print
