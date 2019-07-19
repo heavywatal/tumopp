@@ -28,7 +28,7 @@ See [tumopp R package](https://heavywatal.github.io/rtumopp/).
 
 ## Alternative installation for command-line execution
 
-The easiest way is to use [Homebrew](https://brew.sh/)/[Linuxbrew](http://linuxbrew.sh/).
+The easiest way is to use [Homebrew](https://brew.sh/).
 The following command installs tumopp with its dependencies:
 ```sh
 brew install heavywatal/tap/tumopp
