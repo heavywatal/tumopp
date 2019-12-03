@@ -2,8 +2,6 @@ language: cpp
 matrix:
   include:
   - os: osx
-  - os: osx
-    osx_image: xcode8.3
   - os: linux
     addons:
       apt:
