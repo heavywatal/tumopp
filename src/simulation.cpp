@@ -5,6 +5,7 @@
 #include "simulation.hpp"
 #include "tissue.hpp"
 #include "cell.hpp"
+#include "random.hpp"
 #include "version.hpp"
 
 #include <wtl/iostr.hpp>
@@ -174,6 +175,7 @@ void Simulation::run() {
     const auto treatment = VM.at("treatment").get<double>();
     const auto resistant = VM.at("resistant").get<size_t>();
     const auto allowed_extinction = VM.at("extinction").get<unsigned>();
+    urbg_t seeder(VM.at("seed").get<uint_fast32_t>());
     for (size_t i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>(
             VM.at("origin").get<size_t>(),
@@ -182,7 +184,7 @@ void Simulation::run() {
             VM.at("local").get<std::string>(),
             VM.at("path").get<std::string>(),
             *init_event_rates_,
-            VM.at("seed").get<uint_fast32_t>(),
+            seeder(),
             VM.at("benchmark").get<bool>()
         );
         bool success = tissue_->grow(
