@@ -23,6 +23,10 @@ Tissue::Tissue(
   const uint_fast32_t seed,
   const bool enable_benchmark):
   engine_(std::make_unique<urbg_t>(seed)) {
+    if (enable_benchmark) {
+        benchmark_ = std::make_unique<Benchmark>();
+        benchmark_->append(0u);
+    }
     snapshots_.precision(std::cout.precision());
     drivers_.precision(std::cout.precision());
     init_coord(dimensions, coordinate);
@@ -46,7 +50,6 @@ Tissue::Tissue(
         }
     }
     for (const auto& cell: extant_cells_) queue_push(cell);
-    if (enable_benchmark) benchmark_ = std::make_unique<Benchmark>();
 }
 
 Tissue::~Tissue() = default;
