@@ -151,8 +151,6 @@ class Tissue {
     std::multimap<double, std::shared_ptr<Cell>> queue_;
     //! continuous time
     double time_ = 0.0;
-    //! counter of periodic snapshots
-    unsigned i_snapshot_ = 1u;
     //! initialized in init_coord() or init_coord_test()
     std::unique_ptr<Coord> coord_func_;
 

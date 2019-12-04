@@ -74,7 +74,8 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                   bool verbose) {
     if (recording_early_growth > 0u) {snapshots_append();}
     bool success = false;
-    double time_snapshot = i_snapshot_ * snapshot_interval;
+    unsigned i_snapshot = 1u;
+    double time_snapshot = i_snapshot * snapshot_interval;
     constexpr size_t progress_interval{1 << 12};
     while (true) {
         auto it = queue_.begin();
@@ -87,7 +88,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
         }
         if (time_snapshot > 0.0 && time_ > time_snapshot) {
             snapshots_append();
-            time_snapshot = ++i_snapshot_ * snapshot_interval;
+            time_snapshot = ++i_snapshot * snapshot_interval;
         }
         if (mother->next_event() == Event::birth) {
             const auto daughter = std::make_shared<Cell>(*mother);
