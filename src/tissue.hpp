@@ -103,11 +103,6 @@ class Tissue {
 
     //! Count adjacent empty sites
     uint_fast8_t num_empty_neighbors(const coord_t&) const;
-    //! num_empty_neighbors() / directions().size()
-    double proportion_empty_neighbors(const coord_t& coord) const {
-        double x = static_cast<double>(num_empty_neighbors(coord));
-        return x /= static_cast<double>(coord_func_->directions().size());
-    }
     //! TODO: Calculate positional value
     double positional_value(const coord_t&) const {return 1.0;}
 

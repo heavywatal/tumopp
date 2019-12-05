@@ -201,10 +201,14 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
         return insert_adjacent(daughter);
     });
     swtch["linear"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
-        const double prob = proportion_empty_neighbors(daughter->coord());
-        if (wtl::generate_canonical(*engine_) < prob) {
-            push(daughter, coord_func_->random_direction(*engine_));
-            return true;
+        const auto x = num_empty_neighbors(daughter->coord());
+        if (x > 0U) {
+            double prob = x;
+            prob /= coord_func_->directions().size();
+            if (wtl::generate_canonical(*engine_) < prob) {
+                push(daughter, coord_func_->random_direction(*engine_));
+                return true;
+            }
         }
         return false;
     });
