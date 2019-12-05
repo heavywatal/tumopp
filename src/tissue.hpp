@@ -104,7 +104,7 @@ class Tissue {
     //! Count adjacent empty sites
     uint_fast8_t num_empty_neighbors(const coord_t&) const;
     //! TODO: Calculate positional value
-    constexpr double positional_value(const coord_t&) const {return 1.0;}
+    double positional_value(const coord_t&) const {return 1.0;}
 
     //! Push a cell to event #queue_
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
