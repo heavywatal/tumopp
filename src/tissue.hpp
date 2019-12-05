@@ -97,14 +97,14 @@ class Tissue {
     //! Count steps to the nearest empty
     size_t steps_to_empty(coord_t current, const coord_t& direction) const;
     //! Direction to the nearest empty
-    coord_t to_nearest_empty(const coord_t& current, const unsigned int search_max=26) const;
+    const coord_t& to_nearest_empty(const coord_t& current, unsigned search_max=26) const;
     //! Direction is selected with a probability proportional with 1/l
     coord_t roulette_direction(const coord_t& current) const;
 
     //! Count adjacent empty sites
     uint_fast8_t num_empty_neighbors(const coord_t&) const;
     //! TODO: Calculate positional value
-    double positional_value(const coord_t&) const {return 1.0;}
+    constexpr double positional_value(const coord_t&) const {return 1.0;}
 
     //! Push a cell to event #queue_
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);

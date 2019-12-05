@@ -213,7 +213,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
         return false;
     });
     swtch["linear"].emplace("mindrag", [this](const std::shared_ptr<Cell>& daughter) {
-        daughter->set_coord(coord_func_->random_neighbor(daughter->coord(), *engine_));
+        daughter->add_coord(coord_func_->random_direction(*engine_));
         return extant_cells_.insert(daughter).second;
     });
     try {
@@ -233,34 +233,34 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
 
 void Tissue::push(std::shared_ptr<Cell> moving, const coord_t& direction) {
     do {
-        moving->set_coord(moving->coord() + direction);
+        moving->add_coord(direction);
     } while (swap_existing(&moving));
 }
 
 void Tissue::push_minimum_drag(std::shared_ptr<Cell> moving) {
     do {
-        moving->set_coord(moving->coord() + to_nearest_empty(moving->coord()));
+        moving->add_coord(to_nearest_empty(moving->coord()));
     } while (swap_existing(&moving));
 }
 
 void Tissue::stroll(std::shared_ptr<Cell> moving, const coord_t& direction) {
     while (!insert_adjacent(moving)) {
-        moving->set_coord(moving->coord() + direction);
+        moving->add_coord(direction);
         swap_existing(&moving);
     }
 }
 
 bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
-    const auto present_coord = moving->coord();
+    auto present_coord = moving->coord();
     auto neighbors = coord_func_->neighbors(present_coord);
     std::shuffle(neighbors.begin(), neighbors.end(), *engine_);
     for (auto& x: neighbors) {
-        moving->set_coord(x);
+        moving->set_coord(std::move(x));
         if (extant_cells_.insert(moving).second) {
             return true;
         }
     }
-    moving->set_coord(present_coord);
+    moving->set_coord(std::move(present_coord));
     return false;
 }
 
@@ -280,42 +280,46 @@ bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
 
 void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
     extant_cells_.erase(moving);
-    const auto orig_pos = moving->coord();
-    moving->set_coord(coord_func_->random_neighbor(moving->coord(), *engine_));
+    auto orig_pos = moving->coord();
+    moving->add_coord(coord_func_->random_direction(*engine_));
     auto result = extant_cells_.insert(moving);
     if (!result.second) {
         std::shared_ptr<Cell> existing = std::move(*result.first);
         extant_cells_.erase(result.first);
         extant_cells_.insert(std::move(moving));
-        existing->set_coord(orig_pos);
+        existing->set_coord(std::move(orig_pos));
         extant_cells_.insert(existing);
     }
 }
 
 size_t Tissue::steps_to_empty(coord_t current, const coord_t& direction) const {
+    thread_local const auto key = std::make_shared<Cell>();
+    const auto& end = extant_cells_.end();
+    key->set_coord(std::move(current));
     size_t steps = 0;
-    const auto key = std::make_shared<Cell>();
     do {
-        key->set_coord(current += direction);
+        key->add_coord(direction);
         ++steps;
-    } while (extant_cells_.find(key) != extant_cells_.end());
+    } while (extant_cells_.find(key) != end);
     return steps;
 }
 
-coord_t Tissue::to_nearest_empty(const coord_t& current, const unsigned search_max) const {
+const coord_t& Tissue::to_nearest_empty(const coord_t& current, unsigned search_max) const {
+    const auto& directions = coord_func_->directions();
+    const unsigned n = directions.size();
+    thread_local auto indices = wtl::seq_len<unsigned>(n);
+    std::shuffle(indices.begin(), indices.end(), *engine_);
+    if (n < search_max) search_max = std::min(search_max, n);
     size_t least_steps = std::numeric_limits<size_t>::max();
-    coord_t best_direction{};
-    auto directions = coord_func_->directions();
-    std::shuffle(directions.begin(), directions.end(), *engine_);
-    if (search_max < directions.size()) directions.resize(search_max);
-    for (const auto& d: directions) {
-        auto n = steps_to_empty(current, d);
-        if (n < least_steps) {
-            least_steps = n;
-            best_direction = d;
+    unsigned best_i = 0u;
+    for (unsigned i=0u; i<search_max; ++i) {
+        auto l = steps_to_empty(current, directions[indices[i]]);
+        if (l < least_steps) {
+            least_steps = l;
+            best_i = i;
         }
     }
-    return best_direction;
+    return directions[indices[best_i]];
 }
 
 coord_t Tissue::roulette_direction(const coord_t& current) const {
@@ -331,11 +335,12 @@ coord_t Tissue::roulette_direction(const coord_t& current) const {
 }
 
 uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
+    thread_local auto nb = std::make_shared<Cell>();
+    const auto& end = extant_cells_.end();
     uint_fast8_t cnt = 0;
-    std::shared_ptr<Cell> nb = std::make_shared<Cell>();
     for (const auto& d: coord_func_->directions()) {
         nb->set_coord(coord + d);
-        if (extant_cells_.find(nb) == extant_cells_.end()) {++cnt;}
+        if (extant_cells_.find(nb) == end) {++cnt;}
     }
     return cnt;
 }

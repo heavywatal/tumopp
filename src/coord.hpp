@@ -85,11 +85,6 @@ class Coord {
     coord_t random_direction(URBG& engine) {
         return directions_[dist_direction_(engine)];
     }
-    //! Choose a random neighbor of the specified site
-    template <class URBG> inline
-    coord_t random_neighbor(const coord_t& v, URBG& engine) {
-        return v + random_direction(engine);
-    }
     //! Direction that maximize the distance from the origin
     coord_t outward(const coord_t& v) const;
 

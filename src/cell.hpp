@@ -5,6 +5,7 @@
 #ifndef TUMOPP_CELL_HPP_
 #define TUMOPP_CELL_HPP_
 
+#include "coord.hpp"
 #include "random.hpp"
 
 #include <cstdint>
@@ -76,8 +77,6 @@ struct CellParams {
 /*! @brief Cancer cell
 */
 class Cell {
-    //! Alias of coordinate type
-    using coord_t = std::array<int, 3>;
   public:
     //! Alias
     using param_type = CellParams;
@@ -129,7 +128,9 @@ class Cell {
 
     //! @name Setter functions
     //@{
+    void add_coord(const coord_t& direction) noexcept {coord_ += direction;}
     void set_coord(const coord_t& v) noexcept {coord_ = v;}
+    void set_coord(coord_t&& v) noexcept {coord_ = std::move(v);}
     void set_time_of_death(double t) noexcept {time_of_death_ = t;}
     //@}
 
