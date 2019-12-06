@@ -51,6 +51,12 @@ std::array<T, MAX_DIM>& operator*=(std::array<T, MAX_DIM>& lhs, const std::array
 }
 
 template <class T> inline
+std::array<T, MAX_DIM>& operator*=(std::array<T, MAX_DIM>& lhs, T rhs) {
+    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] *= rhs;}
+    return lhs;
+}
+
+template <class T> inline
 std::array<T, MAX_DIM> operator+(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
     std::array<T, MAX_DIM> v(lhs);
     return v += rhs;
@@ -67,6 +73,13 @@ std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, const std::a
     std::array<T, MAX_DIM> v(lhs);
     return v *= rhs;
 }
+
+template <class T> inline
+std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, T rhs) {
+    std::array<T, MAX_DIM> v(lhs);
+    return v *= rhs;
+}
+
 //@}
 //! @endcond
 

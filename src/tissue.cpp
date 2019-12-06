@@ -301,22 +301,20 @@ size_t Tissue::steps_to_empty(const coord_t& current, const coord_t& direction) 
     return steps;
 }
 
-const coord_t& Tissue::to_nearest_empty(const coord_t& current, unsigned search_max) const {
+const coord_t& Tissue::to_nearest_empty(const coord_t& current) const {
+    thread_local const auto key = std::make_shared<Cell>();
+    const auto& end = extant_cells_.end();
     const auto& directions = coord_func_->directions();
-    const unsigned n = directions.size();
-    thread_local auto indices = wtl::seq_len<unsigned>(n);
+    thread_local auto indices = wtl::seq_len<unsigned>(directions.size());
     std::shuffle(indices.begin(), indices.end(), *engine_);
-    if (n < search_max) search_max = n;
-    size_t least_steps = std::numeric_limits<size_t>::max();
-    unsigned best_i = 0u;
-    for (unsigned i=0u; i<search_max; ++i) {
-        auto l = steps_to_empty(current, directions[indices[i]]);
-        if (l < least_steps) {
-            least_steps = l;
-            best_i = i;
+    for (int radius = 1; true; ++radius) {
+        for (auto i: indices) {
+            key->set_coord(current + directions[i] * radius);
+            if (extant_cells_.find(key) == end) {
+                return directions[i];
+            }
         }
     }
-    return directions[indices[best_i]];
 }
 
 coord_t Tissue::roulette_direction(const coord_t& current) const {
