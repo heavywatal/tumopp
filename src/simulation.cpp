@@ -54,7 +54,7 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
       wtl::option(vm, {"L", "local"}, "const",
         "E2: resource competition {const, step, linear}"),
       wtl::option(vm, {"P", "path"}, "random",
-        "Push method {1: random, 2: roulette, 3: mindrag, 4: minstraight, 5: stroll}"),
+        "Push method {random, roulette, mindrag, minstraight, stroll}"),
       wtl::option(vm, {"O", "origin"}, 1u),
       wtl::option(vm, {"N", "max"}, 16384u,
         "Maximum number of cells to simulate"),
@@ -112,26 +112,26 @@ cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_
       wtl::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE,
         "Shape parameter of waiting time distribution for cell division"),
       wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
-        "$p_s$: Probability of symmetric division"),
+        "p_s: Probability of symmetric division"),
       wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY,
-        "$\\omega$: Maximum number of division for a TAC"),
+        u8"ω: Maximum number of division for a TAC"),
       (
-        wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, "$\\mu_\\beta$"),
-        wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, "$\\mu_\\delta$"),
-        wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, "$\\mu_\\alpha$"),
-        wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA, "$\\mu_\\rho$")
+        wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, u8"μ_β"),
+        wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, u8"μ_δ"),
+        wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, u8"μ_α"),
+        wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA, u8"μ_ρ")
       ).doc("Rate of driver mutations:"),
       (
-        wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, "$\\bar s_\\beta$"),
-        wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, "$\\bar s_\\delta$"),
-        wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, "$\\bar s_\\alpha$"),
-        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA, "$\\bar s_\\rho$")
+        wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, u8"E[s_β]"),
+        wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, u8"E[s_δ]"),
+        wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, u8"E[s_α]"),
+        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA, u8"E[s_ρ]")
       ).doc("Mean effect of driver mutations:"),
       (
-        wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, "$\\sigma_\\beta$"),
-        wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, "$\\sigma_\\delta$"),
-        wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, "$\\sigma_\\alpha$"),
-        wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA, "$\\sigma_\\rho$")
+        wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, u8"σ_β"),
+        wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, u8"σ_δ"),
+        wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, u8"σ_α"),
+        wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA, u8"σ_ρ")
       ).doc("SD of driver mutations:")
     ).doc("Cell:");
 }
