@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(tumopp
-  VERSION 0.8.3
+  VERSION 0.8.4
   LANGUAGES CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
