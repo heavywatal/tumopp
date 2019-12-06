@@ -265,37 +265,34 @@ bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
 }
 
 bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
-    // The cell must not be in extant_cells_.
     auto result = extant_cells_.insert(*x);
     if (result.second) {
         return false;
     } else {
         std::shared_ptr<Cell> existing = std::move(*result.first);
-        extant_cells_.erase(result.first);
-        extant_cells_.insert(std::move(*x));
-        x->swap(existing);
+        extant_cells_.insert(extant_cells_.erase(result.first), std::move(*x));
+        *x = std::move(existing);
         return true;
     }
 }
 
-void Tissue::migrate(const std::shared_ptr<Cell>& moving) {
-    extant_cells_.erase(moving);
-    auto orig_pos = moving->coord();
-    moving->add_coord(coord_func_->random_direction(*engine_));
-    auto result = extant_cells_.insert(moving);
+void Tissue::migrate(const std::shared_ptr<Cell>& migrant) {
+    extant_cells_.erase(migrant);
+    auto orig_pos = migrant->coord();
+    migrant->add_coord(coord_func_->random_direction(*engine_));
+    auto result = extant_cells_.insert(migrant);
     if (!result.second) {
         std::shared_ptr<Cell> existing = std::move(*result.first);
-        extant_cells_.erase(result.first);
-        extant_cells_.insert(std::move(moving));
+        extant_cells_.insert(extant_cells_.erase(result.first), migrant);
         existing->set_coord(std::move(orig_pos));
-        extant_cells_.insert(existing);
+        extant_cells_.insert(std::move(existing));
     }
 }
 
-size_t Tissue::steps_to_empty(coord_t current, const coord_t& direction) const {
+size_t Tissue::steps_to_empty(const coord_t& current, const coord_t& direction) const {
     thread_local const auto key = std::make_shared<Cell>();
     const auto& end = extant_cells_.end();
-    key->set_coord(std::move(current));
+    key->set_coord(current);
     size_t steps = 0;
     do {
         key->add_coord(direction);
@@ -309,7 +306,7 @@ const coord_t& Tissue::to_nearest_empty(const coord_t& current, unsigned search_
     const unsigned n = directions.size();
     thread_local auto indices = wtl::seq_len<unsigned>(n);
     std::shuffle(indices.begin(), indices.end(), *engine_);
-    if (n < search_max) search_max = std::min(search_max, n);
+    if (n < search_max) search_max = n;
     size_t least_steps = std::numeric_limits<size_t>::max();
     unsigned best_i = 0u;
     for (unsigned i=0u; i<search_max; ++i) {

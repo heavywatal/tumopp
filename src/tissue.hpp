@@ -96,7 +96,7 @@ class Tissue {
     //! Put new cell and return existing.
     bool swap_existing(std::shared_ptr<Cell>* x);
     //! Count steps to the nearest empty
-    size_t steps_to_empty(coord_t current, const coord_t& direction) const;
+    size_t steps_to_empty(const coord_t& current, const coord_t& direction) const;
     //! Direction to the nearest empty
     const coord_t& to_nearest_empty(const coord_t& current, unsigned search_max=26) const;
     //! Direction is selected with a probability proportional with 1/l
