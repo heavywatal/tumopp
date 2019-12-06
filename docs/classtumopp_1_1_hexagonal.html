@@ -63,7 +63,7 @@ $(function() {
 <p>Derived class of <a class="el" href="classtumopp_1_1_coord.html" title="Base class of coordinate system.">Coord</a>.  
  <a href="classtumopp_1_1_hexagonal.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="coord_8hpp_source.html">coord.hpp</a>&gt;</code></p>
+<p><code>#include &lt;coord.hpp&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for tumopp::Hexagonal:</div>
 <div class="dyncontent">
@@ -81,37 +81,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7ff165871d5f9a8eaf0cb4ba945d82c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
 <tr class="separator:a7ff165871d5f9a8eaf0cb4ba945d82c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b82b2066466c909199aea8b25aafef4"><td class="memItemLeft" align="right" valign="top"><a id="a3b82b2066466c909199aea8b25aafef4"></a>
-std::array&lt; double, MAX_DIM &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#a3b82b2066466c909199aea8b25aafef4">continuous</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const override</td></tr>
+std::array&lt; double, MAX_DIM &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#a3b82b2066466c909199aea8b25aafef4">continuous</a> (const coord_t &amp;v) const override</td></tr>
 <tr class="memdesc:a3b82b2066466c909199aea8b25aafef4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert coordinates into continuous scale. <br /></td></tr>
 <tr class="separator:a3b82b2066466c909199aea8b25aafef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a560d4a36162d3edabb972d9b04a14c0c"><td class="memItemLeft" align="right" valign="top"><a id="a560d4a36162d3edabb972d9b04a14c0c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#a560d4a36162d3edabb972d9b04a14c0c">graph_distance</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const override</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#a560d4a36162d3edabb972d9b04a14c0c">graph_distance</a> (const coord_t &amp;v) const override</td></tr>
 <tr class="memdesc:a560d4a36162d3edabb972d9b04a14c0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Graph distance. <br /></td></tr>
 <tr class="separator:a560d4a36162d3edabb972d9b04a14c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcf16be6df3113ba8ba842458be173aa"><td class="memItemLeft" align="right" valign="top"><a id="adcf16be6df3113ba8ba842458be173aa"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#adcf16be6df3113ba8ba842458be173aa">euclidean_distance</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const override</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#adcf16be6df3113ba8ba842458be173aa">euclidean_distance</a> (const coord_t &amp;v) const override</td></tr>
 <tr class="memdesc:adcf16be6df3113ba8ba842458be173aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Euclidean distance. <br /></td></tr>
 <tr class="separator:adcf16be6df3113ba8ba842458be173aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae760af09ecd9e2805d40dbe2a90d6662"><td class="memItemLeft" align="right" valign="top"><a id="ae760af09ecd9e2805d40dbe2a90d6662"></a>
-std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#ae760af09ecd9e2805d40dbe2a90d6662">core</a> () const override</td></tr>
+std::vector&lt; coord_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_hexagonal.html#ae760af09ecd9e2805d40dbe2a90d6662">core</a> () const override</td></tr>
 <tr class="memdesc:ae760af09ecd9e2805d40dbe2a90d6662"><td class="mdescLeft">&#160;</td><td class="mdescRight">square or cube <br /></td></tr>
 <tr class="separator:ae760af09ecd9e2805d40dbe2a90d6662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtumopp_1_1_coord"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtumopp_1_1_coord')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtumopp_1_1_coord.html">tumopp::Coord</a></td></tr>
-<tr class="memitem:a80748590103cd182497e5cfd083bc30c inherit pub_methods_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a80748590103cd182497e5cfd083bc30c"></a>
-std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a80748590103cd182497e5cfd083bc30c">neighbors</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const</td></tr>
-<tr class="memdesc:a80748590103cd182497e5cfd083bc30c inherit pub_methods_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="classtumopp_1_1_coord.html#a610435922fc02aed730226de65596af6" title="initialized in derived class constructor">directions_</a> to absolute coordinates. <br /></td></tr>
-<tr class="separator:a80748590103cd182497e5cfd083bc30c inherit pub_methods_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a697e2b41b2c1787c3cab7a6f9c3b6e04 inherit pub_methods_classtumopp_1_1_coord"><td class="memTemplParams" colspan="2"><a id="a697e2b41b2c1787c3cab7a6f9c3b6e04"></a>
 template&lt;class URBG &gt; </td></tr>
-<tr class="memitem:a697e2b41b2c1787c3cab7a6f9c3b6e04 inherit pub_methods_classtumopp_1_1_coord"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a697e2b41b2c1787c3cab7a6f9c3b6e04">random_direction</a> (URBG &amp;engine)</td></tr>
+<tr class="memitem:a697e2b41b2c1787c3cab7a6f9c3b6e04 inherit pub_methods_classtumopp_1_1_coord"><td class="memTemplItemLeft" align="right" valign="top">coord_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a697e2b41b2c1787c3cab7a6f9c3b6e04">random_direction</a> (URBG &amp;engine)</td></tr>
 <tr class="memdesc:a697e2b41b2c1787c3cab7a6f9c3b6e04 inherit pub_methods_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">Choose a random neighbor. <br /></td></tr>
 <tr class="separator:a697e2b41b2c1787c3cab7a6f9c3b6e04 inherit pub_methods_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a6658150fba57a667aa32ef55aa214a inherit pub_methods_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a2a6658150fba57a667aa32ef55aa214a"></a>
-<a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a2a6658150fba57a667aa32ef55aa214a">outward</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) const</td></tr>
-<tr class="memdesc:a2a6658150fba57a667aa32ef55aa214a inherit pub_methods_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">Direction that maximize the distance from the origin. <br /></td></tr>
-<tr class="separator:a2a6658150fba57a667aa32ef55aa214a inherit pub_methods_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f670d65ecddda9ce1ef32f057db53cc inherit pub_methods_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a2f670d65ecddda9ce1ef32f057db53cc"></a>
-std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a2f670d65ecddda9ce1ef32f057db53cc">sphere</a> (size_t n) const</td></tr>
+std::vector&lt; coord_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a2f670d65ecddda9ce1ef32f057db53cc">sphere</a> (size_t n) const</td></tr>
 <tr class="memdesc:a2f670d65ecddda9ce1ef32f057db53cc inherit pub_methods_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">sphere coordinates with inside-out direction <br /></td></tr>
 <tr class="separator:a2f670d65ecddda9ce1ef32f057db53cc inherit pub_methods_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1de2229eb7f56a1a8abae14abe6d60f5 inherit pub_methods_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a1de2229eb7f56a1a8abae14abe6d60f5"></a>
@@ -119,7 +111,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memdesc:a1de2229eb7f56a1a8abae14abe6d60f5 inherit pub_methods_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
 <tr class="separator:a1de2229eb7f56a1a8abae14abe6d60f5 inherit pub_methods_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0179208c4883f9ccef9dbb42f2ad5219 inherit pub_methods_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a0179208c4883f9ccef9dbb42f2ad5219"></a>
-const std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a0179208c4883f9ccef9dbb42f2ad5219">directions</a> () const noexcept</td></tr>
+const std::vector&lt; coord_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a0179208c4883f9ccef9dbb42f2ad5219">directions</a> () const noexcept</td></tr>
 <tr class="memdesc:a0179208c4883f9ccef9dbb42f2ad5219 inherit pub_methods_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">getter of <a class="el" href="classtumopp_1_1_coord.html#a610435922fc02aed730226de65596af6" title="initialized in derived class constructor">directions_</a> <br /></td></tr>
 <tr class="separator:a0179208c4883f9ccef9dbb42f2ad5219 inherit pub_methods_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a138685c92fd34c38772629a4563be0d4 inherit pub_methods_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a138685c92fd34c38772629a4563be0d4"></a>
@@ -144,7 +136,7 @@ const unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 <tr class="memdesc:a4ad8d5f17deb72cb0ca25cc61bcf584a inherit pro_attribs_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">{1, 2, 3} <br /></td></tr>
 <tr class="separator:a4ad8d5f17deb72cb0ca25cc61bcf584a inherit pro_attribs_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a610435922fc02aed730226de65596af6 inherit pro_attribs_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a610435922fc02aed730226de65596af6"></a>
-std::vector&lt; <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a610435922fc02aed730226de65596af6">directions_</a></td></tr>
+std::vector&lt; coord_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_coord.html#a610435922fc02aed730226de65596af6">directions_</a></td></tr>
 <tr class="memdesc:a610435922fc02aed730226de65596af6 inherit pro_attribs_classtumopp_1_1_coord"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialized in derived class constructor <br /></td></tr>
 <tr class="separator:a610435922fc02aed730226de65596af6 inherit pro_attribs_classtumopp_1_1_coord"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9482986e5b9429ae37afaabffe94aa66 inherit pro_attribs_classtumopp_1_1_coord"><td class="memItemLeft" align="right" valign="top"><a id="a9482986e5b9429ae37afaabffe94aa66"></a>
@@ -155,7 +147,7 @@ std::uniform_int_distribution&lt; unsigned &gt;&#160;</td><td class="memItemRigh
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Derived class of <a class="el" href="classtumopp_1_1_coord.html" title="Base class of coordinate system.">Coord</a>. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/<a class="el" href="coord_8hpp_source.html">coord.hpp</a></li>
+<li>src/coord.hpp</li>
 <li>src/coord.cpp</li>
 </ul>
 </div><!-- contents -->
