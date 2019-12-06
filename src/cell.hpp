@@ -128,19 +128,29 @@ class Cell {
 
     //! @name Setter functions
     //@{
+    //! Add to #coord_
     void add_coord(const coord_t& direction) noexcept {coord_ += direction;}
+    //! Set #coord_
     void set_coord(const coord_t& v) noexcept {coord_ = v;}
+    //! Set #coord_
     void set_coord(coord_t&& v) noexcept {coord_ = std::move(v);}
+    //! Set #time_of_death_
     void set_time_of_death(double t) noexcept {time_of_death_ = t;}
     //@}
 
     //! @name Getter functions
     //@{
+    //! Get EventRates.birth_rate
     double birth_rate() const noexcept {return event_rates_->birth_rate;}
+    //! Get EventRates.death_rate
     double death_rate() const noexcept {return event_rates_->death_rate;}
+    //! Get EventRates.death_prob
     double death_prob() const noexcept {return event_rates_->death_prob;}
+    //! Get EventRates.migra_rate
     double migra_rate() const noexcept {return event_rates_->migra_rate;}
+    //! Get #next_event_
     Event next_event() const noexcept {return next_event_;}
+    //! Get #coord_
     const coord_t& coord() const noexcept {return coord_;}
     //@}
 

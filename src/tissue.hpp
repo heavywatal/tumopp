@@ -70,8 +70,9 @@ class Tissue {
     //! @endcond
 
     //! @name Getter functions
+    //@{
+    //! Get the number of extant cells
     size_t size() const noexcept {return extant_cells_.size();}
-    unsigned dimensions() const noexcept {return coord_func_->dimensions();}
     //@}
 
   private:

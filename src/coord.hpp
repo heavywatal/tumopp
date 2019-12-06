@@ -29,6 +29,7 @@ inline size_t hash(const coord_t& v) {
 }
 
 
+//! @cond
 //! @name Arithmetic operators for std::array
 //@{
 template <class T> inline
@@ -67,6 +68,7 @@ std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, const std::a
     return v *= rhs;
 }
 //@}
+//! @endcond
 
 /*! @brief Base class of coordinate system
 */

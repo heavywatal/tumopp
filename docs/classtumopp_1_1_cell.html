@@ -124,12 +124,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a795e696fb54ac568a875b9f25cf231f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#a0718cb9386cc15ecd9b29dd24e7a923b" title="time of birth">time_of_birth_</a>; reset other properties. <br /></td></tr>
 <tr class="separator:a795e696fb54ac568a875b9f25cf231f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04a304b27ca2408f33394beee60fbf9a"><td class="memItemLeft" align="right" valign="top"><a id="a04a304b27ca2408f33394beee60fbf9a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a04a304b27ca2408f33394beee60fbf9a">set_cycle_dependent_death</a> (<a class="el" href="random_8hpp.html#a83570a087025f43576c4d488937f0c9c">urbg_t</a> &amp;, double death_prob)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a04a304b27ca2408f33394beee60fbf9a">set_cycle_dependent_death</a> (<a class="el" href="random_8hpp.html#a83570a087025f43576c4d488937f0c9c">urbg_t</a> &amp;, double <a class="el" href="classtumopp_1_1_cell.html#ae3910e70a136eb6edf267610cb80fffa">death_prob</a>)</td></tr>
 <tr class="memdesc:a04a304b27ca2408f33394beee60fbf9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1" title="Set of event rates (copy-on-write)">event_rates_</a>-&gt;death_prob and <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration">next_event_</a>. <br /></td></tr>
 <tr class="separator:a04a304b27ca2408f33394beee60fbf9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49f24a9da45429661b7de212c402fb37"><td class="memItemLeft" align="right" valign="top"><a id="a49f24a9da45429661b7de212c402fb37"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a49f24a9da45429661b7de212c402fb37">increase_death_rate</a> () noexcept</td></tr>
-<tr class="memdesc:a49f24a9da45429661b7de212c402fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase <a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1" title="Set of event rates (copy-on-write)">event_rates_</a>-&gt;death_rate to birth_rate() for simulating Moran-like situation. <br /></td></tr>
+<tr class="memdesc:a49f24a9da45429661b7de212c402fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase <a class="el" href="classtumopp_1_1_cell.html#aa2b3674fb9dd9d7b618226d964fa22f1" title="Set of event rates (copy-on-write)">event_rates_</a>-&gt;death_rate to <a class="el" href="classtumopp_1_1_cell.html#ab2661f7ce201cb8f05b04530c9fcda35" title="Get EventRates.birth_rate.">birth_rate()</a> for simulating Moran-like situation. <br /></td></tr>
 <tr class="separator:a49f24a9da45429661b7de212c402fb37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac14979939636aab4fdf0e6c1db68f03"><td class="memItemLeft" align="right" valign="top"><a id="aac14979939636aab4fdf0e6c1db68f03"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aac14979939636aab4fdf0e6c1db68f03">is_differentiated</a> () const noexcept</td></tr>
@@ -137,16 +137,20 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:aac14979939636aab4fdf0e6c1db68f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Setter functions</div></td></tr>
 <tr class="memitem:aaa21980b949f5489e431cd67707d87dc"><td class="memItemLeft" align="right" valign="top"><a id="aaa21980b949f5489e431cd67707d87dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>add_coord</b> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;direction) noexcept</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aaa21980b949f5489e431cd67707d87dc">add_coord</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;direction) noexcept</td></tr>
+<tr class="memdesc:aaa21980b949f5489e431cd67707d87dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add to <a class="el" href="classtumopp_1_1_cell.html#ab81f372a948ad55dbd3516cb21eef57a" title="Position in a tumor.">coord_</a>. <br /></td></tr>
 <tr class="separator:aaa21980b949f5489e431cd67707d87dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a325f05bbde209a36733b551802bd8a51"><td class="memItemLeft" align="right" valign="top"><a id="a325f05bbde209a36733b551802bd8a51"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_coord</b> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) noexcept</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a325f05bbde209a36733b551802bd8a51">set_coord</a> (const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;v) noexcept</td></tr>
+<tr class="memdesc:a325f05bbde209a36733b551802bd8a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#ab81f372a948ad55dbd3516cb21eef57a" title="Position in a tumor.">coord_</a>. <br /></td></tr>
 <tr class="separator:a325f05bbde209a36733b551802bd8a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae56dc7cc3feb09a957eaf179c5171cc2"><td class="memItemLeft" align="right" valign="top"><a id="ae56dc7cc3feb09a957eaf179c5171cc2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_coord</b> (<a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;&amp;v) noexcept</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae56dc7cc3feb09a957eaf179c5171cc2">set_coord</a> (<a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;&amp;v) noexcept</td></tr>
+<tr class="memdesc:ae56dc7cc3feb09a957eaf179c5171cc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#ab81f372a948ad55dbd3516cb21eef57a" title="Position in a tumor.">coord_</a>. <br /></td></tr>
 <tr class="separator:ae56dc7cc3feb09a957eaf179c5171cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e816435058c65bce298b0f4af30685c"><td class="memItemLeft" align="right" valign="top"><a id="a0e816435058c65bce298b0f4af30685c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_time_of_death</b> (double t) noexcept</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a0e816435058c65bce298b0f4af30685c">set_time_of_death</a> (double t) noexcept</td></tr>
+<tr class="memdesc:a0e816435058c65bce298b0f4af30685c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classtumopp_1_1_cell.html#a667e0253ed08a59572e9e96bfc434475" title="time of death">time_of_death_</a>. <br /></td></tr>
 <tr class="separator:a0e816435058c65bce298b0f4af30685c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="member-group"></a>
@@ -188,22 +192,28 @@ int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memdesc:a48c7f319a9cbbe069e314105b64497a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">next event: birth, death, or migration <br /></td></tr>
 <tr class="separator:a48c7f319a9cbbe069e314105b64497a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memItemLeft" align="right" valign="top"><a id="ab2661f7ce201cb8f05b04530c9fcda35"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>birth_rate</b> () const noexcept</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab2661f7ce201cb8f05b04530c9fcda35">birth_rate</a> () const noexcept</td></tr>
+<tr class="memdesc:ab2661f7ce201cb8f05b04530c9fcda35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get <a class="el" href="structtumopp_1_1_event_rates.html#a8a4a99ca3a073a8f2ec665bdc65d7661">EventRates.birth_rate</a>. <br /></td></tr>
 <tr class="separator:ab2661f7ce201cb8f05b04530c9fcda35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74f92a03b9f29f105f61929bc29607b8"><td class="memItemLeft" align="right" valign="top"><a id="a74f92a03b9f29f105f61929bc29607b8"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>death_rate</b> () const noexcept</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#a74f92a03b9f29f105f61929bc29607b8">death_rate</a> () const noexcept</td></tr>
+<tr class="memdesc:a74f92a03b9f29f105f61929bc29607b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get <a class="el" href="structtumopp_1_1_event_rates.html#ae2d9b8056f557364408155cc64e4921b">EventRates.death_rate</a>. <br /></td></tr>
 <tr class="separator:a74f92a03b9f29f105f61929bc29607b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3910e70a136eb6edf267610cb80fffa"><td class="memItemLeft" align="right" valign="top"><a id="ae3910e70a136eb6edf267610cb80fffa"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>death_prob</b> () const noexcept</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae3910e70a136eb6edf267610cb80fffa">death_prob</a> () const noexcept</td></tr>
+<tr class="memdesc:ae3910e70a136eb6edf267610cb80fffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get <a class="el" href="structtumopp_1_1_event_rates.html#a879b9afff20b91990554706632a73b8b" title=", death probability on cell division attempt">EventRates.death_prob</a>. <br /></td></tr>
 <tr class="separator:ae3910e70a136eb6edf267610cb80fffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af85d81421b4467a3eca2cf60aeaa9449"><td class="memItemLeft" align="right" valign="top"><a id="af85d81421b4467a3eca2cf60aeaa9449"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>migra_rate</b> () const noexcept</td></tr>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#af85d81421b4467a3eca2cf60aeaa9449">migra_rate</a> () const noexcept</td></tr>
+<tr class="memdesc:af85d81421b4467a3eca2cf60aeaa9449"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get <a class="el" href="structtumopp_1_1_event_rates.html#a60d8100903d790f7d36f56264d2071fc">EventRates.migra_rate</a>. <br /></td></tr>
 <tr class="separator:af85d81421b4467a3eca2cf60aeaa9449"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="memItemLeft" align="right" valign="top"><a id="ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"></a>
-<a class="el" href="cell_8hpp.html#a6541dc28b22056ce0e9338fc44423fec">Event</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next_event</b> () const noexcept</td></tr>
+<a class="el" href="cell_8hpp.html#a6541dc28b22056ce0e9338fc44423fec">Event</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7">next_event</a> () const noexcept</td></tr>
+<tr class="memdesc:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get <a class="el" href="classtumopp_1_1_cell.html#a48c7f319a9cbbe069e314105b64497a4" title="next event: birth, death, or migration">next_event_</a>. <br /></td></tr>
 <tr class="separator:ae9ee199fe4d1efbcf6c4c8a6ee4a5ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9e89b1fba6b6316821191f22d95abcb"><td class="memItemLeft" align="right" valign="top"><a id="aa9e89b1fba6b6316821191f22d95abcb"></a>
-const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>coord</b> () const noexcept</td></tr>
+const <a class="el" href="coord_8hpp.html#a218622cbed8f180e0c9a27f448836a79">coord_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#aa9e89b1fba6b6316821191f22d95abcb">coord</a> () const noexcept</td></tr>
+<tr class="memdesc:aa9e89b1fba6b6316821191f22d95abcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get <a class="el" href="classtumopp_1_1_cell.html#ab81f372a948ad55dbd3516cb21eef57a" title="Position in a tumor.">coord_</a>. <br /></td></tr>
 <tr class="separator:aa9e89b1fba6b6316821191f22d95abcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab542c6108030c220704f0f7692cbff47"><td class="memItemLeft" align="right" valign="top"><a id="ab542c6108030c220704f0f7692cbff47"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtumopp_1_1_cell.html#ab542c6108030c220704f0f7692cbff47">write</a> (std::ostream &amp;ost) const</td></tr>
