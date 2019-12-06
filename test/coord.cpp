@@ -11,7 +11,6 @@ void test_coordinate(unsigned dim, const tumopp::coord_t& v) {
         std::cout << x << ": " << coord_func.euclidean_distance(x) << "\n";
     }
     std::cout << "core:        " << coord_func.core() << "\n";
-    std::cout << "neighbors:   " << coord_func.neighbors(v) << "\n";
     std::cout << "dist_g:      " << coord_func.graph_distance(v) << "\n";
     std::cout << "dist_e:      " << coord_func.euclidean_distance(v) << "\n";
 }

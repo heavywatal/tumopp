@@ -251,16 +251,17 @@ void Tissue::stroll(std::shared_ptr<Cell> moving, const coord_t& direction) {
 }
 
 bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
-    auto present_coord = moving->coord();
-    auto neighbors = coord_func_->neighbors(present_coord);
-    std::shuffle(neighbors.begin(), neighbors.end(), *engine_);
-    for (auto& x: neighbors) {
-        moving->set_coord(std::move(x));
+    const auto present_coord = moving->coord();
+    const auto& directions = coord_func_->directions();
+    thread_local auto indices = wtl::seq_len<unsigned>(directions.size());
+    std::shuffle(indices.begin(), indices.end(), *engine_);
+    for (const auto i: indices) {
+        moving->add_coord(directions[i]);
         if (extant_cells_.insert(moving).second) {
             return true;
         }
+        moving->set_coord(present_coord);
     }
-    moving->set_coord(std::move(present_coord));
     return false;
 }
 
@@ -308,7 +309,7 @@ const coord_t& Tissue::to_nearest_empty(const coord_t& current) const {
     thread_local auto indices = wtl::seq_len<unsigned>(directions.size());
     std::shuffle(indices.begin(), indices.end(), *engine_);
     for (int radius = 1; true; ++radius) {
-        for (auto i: indices) {
+        for (const auto i: indices) {
             key->set_coord(current + directions[i] * radius);
             if (extant_cells_.find(key) == end) {
                 return directions[i];

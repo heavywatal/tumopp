@@ -212,12 +212,4 @@ std::vector<coord_t> Coord::sphere(const size_t n) const {
     return output;
 }
 
-coord_t Coord::outward(const coord_t& v) const {
-    const auto candidates = neighbors(v);
-    return *std::max_element(candidates.begin(), candidates.end(),
-                             [this](const coord_t& lhs, const coord_t& rhs) {
-        return euclidean_distance(lhs) < euclidean_distance(rhs);
-    });
-}
-
 } // namespace tumopp

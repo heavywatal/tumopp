@@ -87,21 +87,11 @@ std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, T rhs) {
 */
 class Coord {
   public:
-    //! Convert #directions_ to absolute coordinates
-    std::vector<coord_t> neighbors(const coord_t& v) const {
-        std::vector<coord_t> output = directions_;
-        for (auto& d: output) {
-            d += v;
-        }
-        return output;
-    }
     //! Choose a random neighbor
     template <class URBG> inline
     coord_t random_direction(URBG& engine) {
         return directions_[dist_direction_(engine)];
     }
-    //! Direction that maximize the distance from the origin
-    coord_t outward(const coord_t& v) const;
 
     // virtual methods
     //! Convert coordinates into continuous scale
