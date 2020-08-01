@@ -1,6 +1,6 @@
 # tumopp
 
-[![Build Status](https://travis-ci.org/heavywatal/tumopp.svg?branch=master)](https://travis-ci.org/heavywatal/tumopp)
+[![Build status](https://github.com/heavywatal/tumopp/workflows/build/badge.svg)](https://github.com/heavywatal/tumopp/actions)
 
 *tumopp* is a fast and flexible tumor growth simulator.
 The core library is written in C++.
