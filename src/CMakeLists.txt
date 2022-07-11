@@ -10,15 +10,14 @@ endif()
 message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp @ONLY
+  version.cpp.in
+  version.cpp @ONLY
 )
 
-# Be patient until 3.13 is popularized
 target_sources(${PROJECT_NAME} PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/cell.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/coord.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/simulation.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tissue.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp
+  cell.cpp
+  coord.cpp
+  simulation.cpp
+  tissue.cpp
+  version.cpp
 )
