@@ -83,8 +83,6 @@ bool Tissue::grow(const size_t max_size, const double max_time,
     while (true) {
         auto it = queue_.begin();
         time_ = it->first;
-        const auto mother = std::move(it->second);
-        queue_.erase(it);
         if (time_ > max_time || extant_cells_.size() >= max_size) {
             success = true; // maybe not; but want to exit with record
             break;
@@ -93,6 +91,8 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             snapshots_append();
             time_snapshot = ++i_snapshot * snapshot_interval;
         }
+        const auto mother = std::move(it->second);
+        queue_.erase(it);
         if (mother->next_event() == Event::birth) {
             const auto daughter = std::make_shared<Cell>(*mother);
             if (insert(daughter)) {
