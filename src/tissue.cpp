@@ -119,7 +119,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 continue;  // skip write()
             }
         } else if (mother->next_event() == Event::death) {
-            extant_cells_.erase(mother);
+            entomb(mother);
             if (extant_cells_.empty()) break;
         } else {
             migrate(mother);
@@ -339,12 +339,18 @@ uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
     return cnt;
 }
 
+void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
+    dead->set_time_of_death(time_);
+    dead->traceback(cemetary_, &recorded_);
+    extant_cells_.erase(dead);
+}
+
 std::ostream& Tissue::write_history(std::ostream& ost) const {
     ost.precision(std::cout.precision());
     ost << Cell::header() << "\n";
-    std::unordered_set<unsigned> done;
+    ost << cemetary_.rdbuf();
     for (const auto& p: extant_cells_) {
-        p->traceback(ost, &done);
+        p->traceback(ost, &recorded_);
     }
     return ost;
 }

@@ -109,6 +109,8 @@ class Tissue {
 
     //! Push a cell to event #queue_
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
+    //! Put a cell to #cemetary_
+    void entomb(const std::shared_ptr<Cell>&);
     //! Write all cells to #snapshots_ with #time_
     void snapshots_append();
 
@@ -150,10 +152,14 @@ class Tissue {
     //! initialized in init_coord() or init_coord_test()
     std::unique_ptr<Coord> coord_func_;
 
+    //! record dead cells
+    std::stringstream cemetary_;
     //! record snapshots
     std::stringstream snapshots_;
     //! record driver mutations
     std::stringstream drivers_;
+    //! id of recorded cells
+    mutable std::unordered_set<unsigned> recorded_;
     //! record resource usage
     std::unique_ptr<Benchmark> benchmark_;
     //! random number generator
