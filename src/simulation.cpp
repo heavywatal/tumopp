@@ -185,6 +185,7 @@ void Simulation::run() {
             VM.at("path").get<std::string>(),
             *init_event_rates_,
             seeder(),
+            VM.at("verbose").get<bool>(),
             VM.at("benchmark").get<bool>()
         );
         bool success = tissue_->grow(
@@ -192,8 +193,7 @@ void Simulation::run() {
             max_time > 0.0 ? max_time : std::log2(max_size) * 100.0,
             VM.at("interval").get<double>(),
             VM.at("record").get<size_t>(),
-            VM.at("mutate").get<size_t>(),
-            VM.at("verbose").get<bool>()
+            VM.at("mutate").get<size_t>()
         );
         if (success) break;
         std::cerr << "Trial " << i  << ": size = " << tissue_->size() << std::endl;
@@ -205,7 +205,13 @@ void Simulation::run() {
         tissue_->plateau(plateau_time);
     }
     if (max_time == 0.0 && treatment > 0.0) {
+        const size_t margin = 10u * resistant + 10u;
         tissue_->treatment(treatment, resistant);
+        tissue_->grow(
+            tissue_->size() + margin,
+            std::numeric_limits<double>::max(),
+            VM.at("interval").get<double>()
+        );
     }
 }
 

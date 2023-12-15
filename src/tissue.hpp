@@ -36,6 +36,7 @@ class Tissue {
       const std::string& displacement_path="random",
       const EventRates& init_event_rates=EventRates{},
       uint_fast32_t seed=std::random_device{}(),
+      bool verbose=false,
       bool enable_benchmark=false);
     ~Tissue();
 
@@ -45,8 +46,7 @@ class Tissue {
       double max_time=100.0,
       double snapshot_interval=0.0,
       size_t recording_early_growth=0u,
-      size_t mutation_timing=0u,
-      bool verbose=false);
+      size_t mutation_timing=0u);
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);
@@ -158,6 +158,8 @@ class Tissue {
     std::unique_ptr<Benchmark> benchmark_;
     //! random number generator
     std::unique_ptr<urbg_t> engine_;
+    //! print debug info
+    bool verbose_ = false;
 };
 
 } // namespace tumopp

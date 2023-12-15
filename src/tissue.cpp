@@ -21,8 +21,10 @@ Tissue::Tissue(
   const std::string& displacement_path,
   const EventRates& init_event_rates,
   const uint_fast32_t seed,
+  const bool verbose,
   const bool enable_benchmark):
-  engine_(std::make_unique<urbg_t>(seed)) {
+  engine_(std::make_unique<urbg_t>(seed)),
+  verbose_(verbose) {
     if (enable_benchmark) {
         benchmark_ = std::make_unique<Benchmark>();
         benchmark_->append(0u);
@@ -73,8 +75,7 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
 bool Tissue::grow(const size_t max_size, const double max_time,
                   const double snapshot_interval,
                   size_t recording_early_growth,
-                  size_t mutation_timing,
-                  bool verbose) {
+                  size_t mutation_timing) {
     if (recording_early_growth > 0u) {snapshots_append();}
     bool success = false;
     double time_snapshot = snapshot_interval;
@@ -110,7 +111,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 queue_push(daughter);
                 const auto size = extant_cells_.size();
                 if ((size % progress_interval) == 0u) {
-                    if (verbose) std::cerr << "\r" << size;
+                    if (verbose_) std::cerr << "\r" << size;
                     if (benchmark_) benchmark_->append(size);
                 }
             } else {
@@ -130,7 +131,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             recording_early_growth = 0u;  // prevent restart by cell death
         }
     }
-    if (verbose) std::cerr << "\r" << extant_cells_.size() << std::endl;
+    if (verbose_) std::cerr << "\r" << extant_cells_.size() << std::endl;
     return success;
 }
 
@@ -157,8 +158,6 @@ void Tissue::treatment(const double death_prob, const size_t num_resistant_cells
             p->set_cycle_dependent_death(*engine_, death_prob);
         }
     }
-    const size_t margin = 10u * num_resistant_cells + 10u;
-    grow(original_size + margin, std::numeric_limits<double>::max());
 }
 
 void Tissue::queue_push(const std::shared_ptr<Cell>& x, const bool surrounded) {
