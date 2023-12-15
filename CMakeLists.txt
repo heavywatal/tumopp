@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(tumopp
-  VERSION 0.8.4
+  VERSION 0.8.5
   LANGUAGES CXX)
 
 cmake_policy(SET CMP0076 NEW)
