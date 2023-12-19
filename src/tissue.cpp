@@ -348,7 +348,9 @@ void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
 std::ostream& Tissue::write_history(std::ostream& ost) const {
     ost.precision(std::cout.precision());
     ost << Cell::header() << "\n";
-    ost << cemetary_.rdbuf();
+    if (cemetary_.rdbuf()->in_avail()) {
+        ost << cemetary_.rdbuf();
+    }
     for (const auto& p: extant_cells_) {
         p->traceback(ost, &recorded_);
     }
