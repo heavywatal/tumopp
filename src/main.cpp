@@ -31,18 +31,22 @@ void write(tumopp::Simulation& simulation) {
     const auto& tissue = simulation.tissue();
     {
         ofstream ofs{"population" + ext};
+        ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_history(ofs);
     }
     if (tissue.has_snapshots()) {
         ofstream ofs{"snapshots" + ext};
+        ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_snapshots(ofs);
     }
     if (tissue.has_drivers()) {
         ofstream ofs{"drivers" + ext};
+        ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_drivers(ofs);
     }
     if (tissue.has_benchmark()) {
         ofstream ofs{"benchmark" + ext};
+        ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_benchmark(ofs);
     }
 }

@@ -348,9 +348,7 @@ void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
 std::ostream& Tissue::write_history(std::ostream& ost) const {
     ost.precision(std::cout.precision());
     ost << Cell::header() << "\n";
-    if (cemetary_.rdbuf()->in_avail()) {
-        ost << cemetary_.rdbuf();
-    }
+    wtl::write_if_avail(ost, cemetary_.rdbuf());
     for (const auto& p: extant_cells_) {
         p->traceback(ost, &recorded_);
     }
@@ -358,18 +356,20 @@ std::ostream& Tissue::write_history(std::ostream& ost) const {
 }
 
 std::ostream& Tissue::write_snapshots(std::ostream& ost) const {
-    ost << "time\t" << Cell::header() << "\n" << snapshots_.rdbuf();
+    ost << "time\t" << Cell::header() << "\n";
+    wtl::write_if_avail(ost, snapshots_.rdbuf());
     return ost;
 }
 
 std::ostream& Tissue::write_drivers(std::ostream& ost) const {
-    ost << "id\ttype\tcoef\n" << drivers_.rdbuf();
+    ost << "id\ttype\tcoef\n";
+    wtl::write_if_avail(ost, drivers_.rdbuf());
     return ost;
 }
 
 std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
     benchmark_->append(extant_cells_.size() + 1u);
-    ost << benchmark_->rdbuf();
+    wtl::write_if_avail(ost, benchmark_->rdbuf());
     return ost;
 }
 
