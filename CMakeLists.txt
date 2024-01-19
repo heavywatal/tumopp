@@ -38,8 +38,8 @@ function(find_package_or_git package version repo)
   add_subdirectory(${subdir} EXCLUDE_FROM_ALL)
 endfunction()
 
-find_package_or_git(wtl 0.8.6 heavywatal/cxxwtl)
-find_package_or_git(clippson 0.8.3 heavywatal/clippson)
+find_package_or_git(wtl 0.8.8 heavywatal/cxxwtl)
+find_package_or_git(clippson 0.8.5 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 add_library(${PROJECT_NAME})
@@ -61,7 +61,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson)
-find_package(sfmt 0.7.2)
+find_package(sfmt 0.7.3)
 if(sfmt_FOUND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
