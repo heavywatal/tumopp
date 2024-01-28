@@ -5,8 +5,10 @@ project(tumopp
 
 cmake_policy(SET CMP0076 NEW)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+include(CMakePrintHelpers)
+include(FetchContent)
 include(GNUInstallDirs)
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+cmake_print_variables(CMAKE_INSTALL_PREFIX)
 if(${CMAKE_INSTALL_PREFIX} MATCHES linuxbrew)
   set(CMAKE_INSTALL_LIBDIR lib)
 endif()
@@ -14,7 +16,7 @@ endif()
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
-message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+cmake_print_variables(CMAKE_BUILD_TYPE)
 set(CMAKE_CXX_FLAGS_DEV "-O2 -g")
 add_compile_options(-march=native -Wall -Wextra -pedantic)
 
@@ -22,24 +24,44 @@ set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
-function(find_package_or_git package version repo)
-  find_package(${package} ${version} QUIET)
-  if(${package}_FOUND)
-    return()
+function(import_env variable)
+  if(DEFINED ENV{${variable}})
+    set(${variable} $ENV{${variable}} PARENT_SCOPE)
   endif()
-  set(subdir ${PROJECT_BINARY_DIR}/${package}-v${version})
-  if(NOT EXISTS ${subdir})
-    find_package(Git)
-    execute_process(COMMAND
-      ${GIT_EXECUTABLE} clone --recursive --depth=1 --branch=v${version} https://github.com/${repo}.git ${subdir}
-    )
-  endif()
-  message(STATUS "add_subdirectory(${subdir})")
-  add_subdirectory(${subdir} EXCLUDE_FROM_ALL)
 endfunction()
 
-find_package_or_git(wtl 0.8.8 heavywatal/cxxwtl)
-find_package_or_git(clippson 0.8.5 heavywatal/clippson)
+function(find_package_or_fetch package version repo)
+  find_package(${package} ${version} QUIET)  # 3.24
+  if(${package}_FOUND)
+    cmake_print_variables(${package}_DIR)
+    return()
+  endif()
+  string(TOUPPER "${package}" upackage)
+  import_env("FETCHCONTENT_SOURCE_DIR_${upackage}")
+  if(IS_DIRECTORY "${FETCHCONTENT_SOURCE_DIR_${upackage}}")
+    set(tag "HEAD")
+  else()
+    set(tag "v${version}")
+  endif()
+  cmake_print_variables(FETCHCONTENT_SOURCE_DIR_${upackage} tag)
+  set(FETCHCONTENT_QUIET OFF)
+  FetchContent_Declare(
+    ${package}
+    GIT_REPOSITORY https://github.com/${repo}.git
+    GIT_TAG ${tag}
+    GIT_SHALLOW ON
+    # FIND_PACKAGE_ARGS  # 3.24
+  )
+  # FetchContent_MakeAvailable(${package})  # 3.28
+  if(NOT ${package}_POPULATED)
+    FetchContent_Populate(${package})
+    add_subdirectory(${${package}_SOURCE_DIR} ${${package}_BINARY_DIR} EXCLUDE_FROM_ALL)
+  endif()
+  cmake_print_variables(${package}_SOURCE_DIR ${package}_BINARY_DIR)
+endfunction()
+
+find_package_or_fetch(wtl 0.8.9 heavywatal/cxxwtl)
+find_package_or_fetch(clippson 0.8.5 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 add_library(${PROJECT_NAME})
