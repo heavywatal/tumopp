@@ -7,7 +7,7 @@ execute_process(
 if(GIT_DESCRIBE)
   set(PROJECT_VERSION ${GIT_DESCRIBE})
 endif()
-message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
+cmake_print_variables(PROJECT_VERSION)
 
 configure_file(
   version.cpp.in

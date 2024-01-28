@@ -18,7 +18,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 cmake_print_variables(CMAKE_BUILD_TYPE)
 set(CMAKE_CXX_FLAGS_DEV "-O2 -g")
-add_compile_options(-march=native -Wall -Wextra -pedantic)
 
 set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
@@ -68,6 +67,10 @@ add_library(${PROJECT_NAME})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 add_subdirectory(src)
 
+add_library(common INTERFACE)
+target_compile_options(common INTERFACE
+  -march=native -Wall -Wextra -pedantic
+)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_STANDARD_REQUIRED ON
@@ -79,7 +82,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE wtl::wtl clippson::clippson)
+target_link_libraries(${PROJECT_NAME} PRIVATE common wtl::wtl clippson::clippson)
 find_package(sfmt 0.7.3)
 if(sfmt_FOUND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
@@ -89,7 +92,7 @@ endif()
 option(BUILD_EXECUTABLE "Build executable file" ON)
 if(BUILD_EXECUTABLE)
   add_executable(${PROJECT_NAME}-exe src/main.cpp)
-  target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} wtl::wtl)
+  target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} common wtl::wtl)
   find_package(ZLIB)
   if(ZLIB_FOUND)
     target_compile_definitions(${PROJECT_NAME}-exe PRIVATE ZLIB_FOUND)
