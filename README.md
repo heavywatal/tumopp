@@ -10,8 +10,8 @@ It can be installed and run via [R package](https://github.com/heavywatal/rtumop
 ## Requirements
 
 - Unix-like environment (macOS, Linux, WSL, MinGW on MSYS2, etc.)
-- C++14 compiler (clang++ >= Apple LLVM 8.1, g++ >= 5.3)
-- [CMake](https://cmake.org/) (>= 3.13.0)
+- C++17 compiler (clang++ >= Apple LLVM 12, g++ >= 8)
+- [CMake](https://cmake.org/) (>= 3.15.0)
 
 The following libraries are optional or automatically installed:
 
@@ -38,12 +38,10 @@ You can manually install the latest version from source code to an arbitrary `DE
 ```sh
 git clone https://github.com/heavywatal/tumopp.git
 cd tumopp/
-mkdir build
-cd build/
 DESTINATION=${HOME}/local
-cmake -DCMAKE_INSTALL_PREFIX=$DESTINATION ..
-make -j2
-make install
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$DESTINATION
+cmake --build build -j 2
+cmake --install build -j 2
 PATH=${DESTINATION}/bin:$PATH
 ```
 
