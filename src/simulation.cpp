@@ -216,7 +216,11 @@ void Simulation::run() {
 }
 
 std::string Simulation::outdir() const {
-    return VM.at("outdir").get<std::string>();
+    const auto& outdir = VM.at("outdir").get<std::string>();
+    if (VM.at("verbose").get<bool>()) {
+        std::cerr << "Output: " << outdir << "\n";
+    }
+    return outdir;
 }
 
 std::string Simulation::history() const {

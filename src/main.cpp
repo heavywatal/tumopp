@@ -26,7 +26,6 @@ void write(tumopp::Simulation& simulation) {
     if (outdir.empty()) return;
     fs::create_directory(outdir);
     fs::current_path(outdir);
-    std::cerr << "Output: " << fs::current_path() << "\n";
     std::ofstream{"config.json"} << simulation.config();
     const auto& tissue = simulation.tissue();
     {
