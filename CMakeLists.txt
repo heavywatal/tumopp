@@ -59,7 +59,7 @@ function(find_package_or_fetch package version repo)
   cmake_print_variables(${package}_SOURCE_DIR ${package}_BINARY_DIR)
 endfunction()
 
-find_package_or_fetch(wtl 0.8.9 heavywatal/cxxwtl)
+find_package_or_fetch(wtl 0.9.0 heavywatal/cxxwtl)
 find_package_or_fetch(clippson 0.8.5 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)

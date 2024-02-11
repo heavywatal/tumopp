@@ -4,11 +4,11 @@
 #include "simulation.hpp"
 #include "tissue.hpp"
 
-#include <wtl/filesystem.hpp>
 #ifdef ZLIB_FOUND
   #include <wtl/zlib.hpp>
 #endif
 
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 
@@ -21,30 +21,29 @@ void write(tumopp::Simulation& simulation) {
     using ofstream = std::ofstream;
     const std::string ext = ".tsv";
   #endif
-    namespace fs = wtl::filesystem;
-    const auto outdir = simulation.outdir();
+    namespace fs = std::filesystem;
+    const auto outdir = fs::path(simulation.outdir());
     if (outdir.empty()) return;
     fs::create_directory(outdir);
-    fs::current_path(outdir);
-    std::ofstream{"config.json"} << simulation.config();
+    std::ofstream{outdir / "config.json"} << simulation.config();
     const auto& tissue = simulation.tissue();
     {
-        ofstream ofs{"population" + ext};
+        ofstream ofs{outdir / ("population" + ext)};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_history(ofs);
     }
     if (tissue.has_snapshots()) {
-        ofstream ofs{"snapshots" + ext};
+        ofstream ofs{outdir / ("snapshots" + ext)};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_snapshots(ofs);
     }
     if (tissue.has_drivers()) {
-        ofstream ofs{"drivers" + ext};
+        ofstream ofs{outdir / ("drivers" + ext)};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_drivers(ofs);
     }
     if (tissue.has_benchmark()) {
-        ofstream ofs{"benchmark" + ext};
+        ofstream ofs{outdir / ("benchmark" + ext)};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue.write_benchmark(ofs);
     }
