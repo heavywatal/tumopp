@@ -1,12 +1,10 @@
-name: build
-
 on:
   push:
-    branches:
-      - master
+    branches: [main, master]
   pull_request:
-    branches:
-      - master
+    branches: [main, master]
+
+name: build
 
 jobs:
   build:
@@ -20,6 +18,8 @@ jobs:
       - name: cmake
         run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX=${HOME}/local
       - name: build
-        run: cmake --build build -j 2 --target install
+        run: |
+          cmake --build build -j 2
+          cmake --install build
       - name: test
         run: cd build; ctest -V -j 2
