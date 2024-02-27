@@ -223,35 +223,4 @@ std::string Simulation::outdir() const {
     return outdir;
 }
 
-std::string Simulation::history() const {
-    std::ostringstream oss;
-    tissue_->write_history(oss);
-    return oss.str();
-}
-std::string Simulation::snapshots() const {
-    if (!tissue_->has_snapshots()) return std::string{};
-    std::ostringstream oss;
-    tissue_->write_snapshots(oss);
-    return oss.str();
-}
-std::string Simulation::drivers() const {
-    if (!tissue_->has_drivers()) return std::string{};
-    std::ostringstream oss;
-    tissue_->write_drivers(oss);
-    return oss.str();
-}
-std::string Simulation::benchmark() const {
-    if (!tissue_->has_benchmark()) return std::string{};
-    std::ostringstream oss;
-    tissue_->write_benchmark(oss);
-    return oss.str();
-}
-
-std::streambuf* std_cout_rdbuf(std::streambuf* buf) {
-    return std::cout.rdbuf(buf);
-}
-std::streambuf* std_cerr_rdbuf(std::streambuf* buf) {
-    return std::cerr.rdbuf(buf);
-}
-
 } // namespace tumopp
