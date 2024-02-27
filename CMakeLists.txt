@@ -60,7 +60,7 @@ function(find_package_or_fetch package version repo)
 endfunction()
 
 find_package_or_fetch(wtl 0.9.0 heavywatal/cxxwtl)
-find_package_or_fetch(clippson 0.8.5 heavywatal/clippson)
+find_package_or_fetch(clippson 0.8.6 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 add_library(${PROJECT_NAME})
