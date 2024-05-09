@@ -83,7 +83,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE common wtl::wtl clippson::clippson)
-find_package(sfmt 0.7.3)
+find_package(sfmt 0.7.5)
 if(sfmt_FOUND)
   target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
