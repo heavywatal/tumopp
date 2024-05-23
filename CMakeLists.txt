@@ -60,6 +60,7 @@ function(find_package_or_fetch package version repo)
 endfunction()
 
 find_package_or_fetch(wtl 0.9.0 heavywatal/cxxwtl)
+find_package_or_fetch(sfmt 0.7.5 heavywatal/sfmt-class)
 find_package_or_fetch(clippson 0.8.6 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
@@ -69,7 +70,9 @@ add_subdirectory(src)
 
 add_library(common INTERFACE)
 target_compile_options(common INTERFACE
-  -march=native -Wall -Wextra -pedantic
+  -Wall -Wextra -pedantic
+  $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>:-march=native>
+  $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm64>:-march=armv8.3-a+sha3>
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -82,12 +85,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE common wtl::wtl clippson::clippson)
-find_package(sfmt 0.7.5)
-if(sfmt_FOUND)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE SFMT_FOUND)
-  target_link_libraries(${PROJECT_NAME} PRIVATE wtl::sfmt)
-endif()
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC wtl::sfmt
+  PRIVATE common wtl::wtl clippson::clippson
+)
 
 option(BUILD_EXECUTABLE "Build executable file" ON)
 if(BUILD_EXECUTABLE)
