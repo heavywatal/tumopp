@@ -35,7 +35,7 @@ struct EventRates {
     //! \f$\alpha\f$, death probability on cell division attempt
     double death_prob = 0.0;
     //! \f$\rho\f$
-    double migra_rate = 0.0;
+    double migration_rate = 0.0;
 };
 
 //! @brief Parameters for Cell class
@@ -55,7 +55,7 @@ struct CellParams {
     //! \f$\mu_\alpha\f$
     double RATE_ALPHA = 0.0;
     //! \f$\mu_\rho\f$
-    double RATE_MIGRA = 0.0;
+    double RATE_MIG = 0.0;
     //! \f$\bar s_\beta\f$
     double MEAN_BIRTH = 0.0;
     //! \f$\bar s_\delta\f$
@@ -63,7 +63,7 @@ struct CellParams {
     //! \f$\bar s_\alpha\f$
     double MEAN_ALPHA = 0.0;
     //! \f$\bar s_\rho\f$
-    double MEAN_MIGRA = 0.0;
+    double MEAN_MIG = 0.0;
     //! \f$\sigma_\beta\f$
     double SD_BIRTH = 0.0;
     //! \f$\sigma_\delta\f$
@@ -71,7 +71,7 @@ struct CellParams {
     //! \f$\sigma_\alpha\f$
     double SD_ALPHA = 0.0;
     //! \f$\sigma_\rho\f$
-    double SD_MIGRA = 0.0;
+    double SD_MIG = 0.0;
 };
 
 /*! @brief Cancer cell
@@ -146,8 +146,8 @@ class Cell {
     double death_rate() const noexcept {return event_rates_->death_rate;}
     //! Get EventRates.death_prob
     double death_prob() const noexcept {return event_rates_->death_prob;}
-    //! Get EventRates.migra_rate
-    double migra_rate() const noexcept {return event_rates_->migra_rate;}
+    //! Get EventRates.migration_rate
+    double migration_rate() const noexcept {return event_rates_->migration_rate;}
     //! Get #next_event_
     Event next_event() const noexcept {return next_event_;}
     //! Get #coord_

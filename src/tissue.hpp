@@ -109,7 +109,7 @@ class Tissue {
 
     //! Push a cell to event #queue_
     void queue_push(const std::shared_ptr<Cell>&, bool surrounded=false);
-    //! Put a cell to #cemetary_
+    //! Put a cell to #cemetery_
     void entomb(const std::shared_ptr<Cell>&);
     //! Write all cells to #snapshots_ with #time_
     void snapshots_append();
@@ -117,16 +117,16 @@ class Tissue {
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Function object for extant_cells_
 
-    //! Hashing function object for shptr<Cell>
-    struct hash_shptr_cell {
+    //! Hashing function object for shared_pointer<Cell>
+    struct hash_ptr_cell {
         //! hash function
         size_t operator() (const std::shared_ptr<tumopp::Cell>& x) const noexcept {
             return hash(x->coord());
         }
     };
 
-    //! Equal function object for shptr<Cell>
-    struct equal_shptr_cell {
+    //! Equal function object for shared_pointer<Cell>
+    struct equal_ptr_cell {
         //! Compare cell coord
         bool operator() (const std::shared_ptr<tumopp::Cell>& lhs,
                          const std::shared_ptr<tumopp::Cell>& rhs) const noexcept {
@@ -140,8 +140,8 @@ class Tissue {
     //! cells
     std::unordered_set<
         std::shared_ptr<Cell>,
-        hash_shptr_cell,
-        equal_shptr_cell> extant_cells_;
+        hash_ptr_cell,
+        equal_ptr_cell> extant_cells_;
     //! incremented when a new cell is born
     unsigned id_tail_ = 0;
 
@@ -153,7 +153,7 @@ class Tissue {
     std::unique_ptr<Coord> coord_func_;
 
     //! record dead cells
-    std::stringstream cemetary_;
+    std::stringstream cemetery_;
     //! record snapshots
     std::stringstream snapshots_;
     //! record driver mutations

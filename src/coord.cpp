@@ -64,8 +64,8 @@ Neumann::Neumann(const unsigned d): Coord(d) {
         v[i] = -1;
         directions_.push_back(v);
     }
-    auto dirmax = static_cast<unsigned>(directions_.size()) - 1;
-    dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
+    auto max = static_cast<unsigned>(directions_.size()) - 1;
+    dist_direction_.param(decltype(dist_direction_)::param_type(0, max));
 }
 
 Moore::Moore(const unsigned d): Coord(d) {
@@ -84,8 +84,8 @@ Moore::Moore(const unsigned d): Coord(d) {
             }
         }
     }
-    auto dirmax = static_cast<unsigned>(directions_.size()) - 1;
-    dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
+    auto max = static_cast<unsigned>(directions_.size()) - 1;
+    dist_direction_.param(decltype(dist_direction_)::param_type(0, max));
 }
 
 Hexagonal::Hexagonal(const unsigned d): Coord(d) {
@@ -103,8 +103,8 @@ Hexagonal::Hexagonal(const unsigned d): Coord(d) {
         directions_.push_back({{-1, 0, 1}});
         directions_.push_back({{-1, 1, 1}});
     }
-    auto dirmax = static_cast<unsigned>(directions_.size()) - 1;
-    dist_direction_.param(decltype(dist_direction_)::param_type(0, dirmax));
+    auto max = static_cast<unsigned>(directions_.size()) - 1;
+    dist_direction_.param(decltype(dist_direction_)::param_type(0, max));
 }
 
 int Neumann::graph_distance(const coord_t& v) const {

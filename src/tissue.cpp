@@ -341,14 +341,14 @@ uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
 
 void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
     dead->set_time_of_death(time_);
-    dead->traceback(cemetary_, &recorded_);
+    dead->traceback(cemetery_, &recorded_);
     extant_cells_.erase(dead);
 }
 
 std::ostream& Tissue::write_history(std::ostream& ost) const {
     ost.precision(std::cout.precision());
     ost << Cell::header() << "\n";
-    wtl::write_if_avail(ost, cemetary_.rdbuf());
+    wtl::write_if_avail(ost, cemetery_.rdbuf());
     for (const auto& p: extant_cells_) {
         p->traceback(ost, &recorded_);
     }

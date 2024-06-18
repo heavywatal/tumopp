@@ -15,7 +15,7 @@
 
 namespace tumopp {
 
-//! Global variables mapper of commane-line arguments
+//! Global variables mapper of command-line arguments
 nlohmann::json VM;
 
 //! Options description for general purpose
@@ -87,19 +87,19 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
     `-b,--beta0`        | \f$\beta_0\f$       | EventRates::birth_rate
     `-d,--delta0`       | \f$\delta_0\f$      | EventRates::death_rate
     `-a,--alpha0`       | \f$\alpha_0\f$      | EventRates::death_prob
-    `-m,--rho0`         | \f$\rho_0\f$        | EventRates::migra_rate
+    `-m,--rho0`         | \f$\rho_0\f$        | EventRates::migration_rate
     `-k,--shape`        | \f$k\f$             | CellParams::GAMMA_SHAPE
     `-p,--symmetric`    | \f$p_s\f$           | CellParams::PROB_SYMMETRIC_DIVISION
     `-r,--prolif`       | \f$\omega_{\max}\f$ | CellParams::MAX_PROLIFERATION_CAPACITY
     `--ub`              | \f$\mu_\beta\f$     | CellParams::RATE_BIRTH
     `--ud`              | \f$\mu_\delta\f$    | CellParams::RATE_DEATH
-    `--um`              | \f$\mu_\rho\f$      | CellParams::RATE_MIGRA
+    `--um`              | \f$\mu_\rho\f$      | CellParams::RATE_MIG
     `--mb`              | \f$\bar s_\beta\f$  | CellParams::MEAN_BIRTH
     `--md`              | \f$\bar s_\delta\f$ | CellParams::MEAN_DEATH
-    `--mm`              | \f$\bar s_\rho\f$   | CellParams::MEAN_MIGRA
+    `--mm`              | \f$\bar s_\rho\f$   | CellParams::MEAN_MIG
     `--sb`              | \f$\sigma_\beta\f$  | CellParams::SD_BIRTH
     `--sd`              | \f$\sigma_\delta\f$ | CellParams::SD_DEATH
-    `--sm`              | \f$\sigma_\rho\f$   | CellParams::SD_MIGRA
+    `--sm`              | \f$\sigma_\rho\f$   | CellParams::SD_MIG
 */
 inline clipp::group
 cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_params) {
@@ -108,7 +108,7 @@ cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_
       wtl::option(vm, {"d", "delta0"}, &init_event_rates->death_rate, "Basic death rate"),
       wtl::option(vm, {"a", "alpha0"}, &init_event_rates->death_prob,
         "Basic death rate on cell division attempt"),
-      wtl::option(vm, {"m", "rho0"}, &init_event_rates->migra_rate, "Basic migration rate"),
+      wtl::option(vm, {"m", "rho0"}, &init_event_rates->migration_rate, "Basic migration rate"),
       wtl::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE,
         "Shape parameter of waiting time distribution for cell division"),
       wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
@@ -119,19 +119,19 @@ cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_
         wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, u8"μ_β"),
         wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, u8"μ_δ"),
         wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, u8"μ_α"),
-        wtl::option(vm, {"um"}, &cell_params->RATE_MIGRA, u8"μ_ρ")
+        wtl::option(vm, {"um"}, &cell_params->RATE_MIG, u8"μ_ρ")
       ).doc("Rate of driver mutations:"),
       (
         wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, u8"E[s_β]"),
         wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, u8"E[s_δ]"),
         wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, u8"E[s_α]"),
-        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIGRA, u8"E[s_ρ]")
+        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIG, u8"E[s_ρ]")
       ).doc("Mean effect of driver mutations:"),
       (
         wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, u8"σ_β"),
         wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, u8"σ_δ"),
         wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, u8"σ_α"),
-        wtl::option(vm, {"sm"}, &cell_params->SD_MIGRA, u8"σ_ρ")
+        wtl::option(vm, {"sm"}, &cell_params->SD_MIG, u8"σ_ρ")
       ).doc("SD of driver mutations:")
     ).doc("Cell:");
 }
