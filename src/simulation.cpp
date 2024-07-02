@@ -114,24 +114,24 @@ cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_
       wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
         "p_s: Probability of symmetric division"),
       wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY,
-        u8"ω: Maximum number of division for a TAC"),
+        "ω: Maximum number of division for a TAC"),
       (
-        wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, u8"μ_β"),
-        wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, u8"μ_δ"),
-        wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, u8"μ_α"),
-        wtl::option(vm, {"um"}, &cell_params->RATE_MIG, u8"μ_ρ")
+        wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, "μ_β"),
+        wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, "μ_δ"),
+        wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, "μ_α"),
+        wtl::option(vm, {"um"}, &cell_params->RATE_MIG, "μ_ρ")
       ).doc("Rate of driver mutations:"),
       (
-        wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, u8"E[s_β]"),
-        wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, u8"E[s_δ]"),
-        wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, u8"E[s_α]"),
-        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIG, u8"E[s_ρ]")
+        wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, "E[s_β]"),
+        wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, "E[s_δ]"),
+        wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, "E[s_α]"),
+        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIG, "E[s_ρ]")
       ).doc("Mean effect of driver mutations:"),
       (
-        wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, u8"σ_β"),
-        wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, u8"σ_δ"),
-        wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, u8"σ_α"),
-        wtl::option(vm, {"sm"}, &cell_params->SD_MIG, u8"σ_ρ")
+        wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, "σ_β"),
+        wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, "σ_δ"),
+        wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, "σ_α"),
+        wtl::option(vm, {"sm"}, &cell_params->SD_MIG, "σ_ρ")
       ).doc("SD of driver mutations:")
     ).doc("Cell:");
 }
