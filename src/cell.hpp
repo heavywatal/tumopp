@@ -155,7 +155,7 @@ class Cell {
     //@}
 
     //! TSV header
-    static std::string header();
+    static const char* header();
     //! TSV
     std::ostream& write(std::ostream& ost) const;
     //! Write TSV while tracing back #ancestor_ recursively

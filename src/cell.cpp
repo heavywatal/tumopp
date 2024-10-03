@@ -167,13 +167,9 @@ void Cell::set_cycle_dependent_death(urbg_t& engine, const double p) {
     next_event_ = bernoulli(p, engine) ? Event::death : Event::birth;
 }
 
-std::string Cell::header() {
-    std::ostringstream oss;
-    oss << "x\ty\tz\t"
-        << "id\tancestor\t"
-        << "birth\tdeath\t"
-        << "omega";
-    return oss.str();
+const char* Cell::header() {
+    return "x\ty\tz\tid\tancestor\t"
+           "birth\tdeath\tomega";
 }
 
 std::ostream& Cell::write(std::ostream& ost) const {
