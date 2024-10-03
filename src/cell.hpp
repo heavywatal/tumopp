@@ -169,7 +169,7 @@ class Cell {
 
   private:
     //! Parameters shared among instances
-    static param_type PARAM_;
+    static inline param_type PARAM_;
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member

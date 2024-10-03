@@ -12,7 +12,6 @@ namespace tumopp {
 
 static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
 static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
-Cell::param_type Cell::PARAM_;
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace {
