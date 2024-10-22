@@ -27,17 +27,13 @@ class Benchmark {
     void append(std::size_t size) {
         sst_ << size
 #ifndef _WIN32
-             << "\t" << wtl::getrusage<std::milli, std::kilo>(epoch_)
+             << "\t" << wtl::getrusage<std::milli, std::kilo>()
 #endif // _WIN32
              << "\n";
     }
     //! Get TSV stream buffer
     std::streambuf* rdbuf() const {return sst_.rdbuf();}
   private:
-#ifndef _WIN32
-    //! Reference point
-    const rusage epoch_ = wtl::getrusage();
-#endif // _WIN32
     //! String in TSV format
     std::stringstream sst_;
 };
