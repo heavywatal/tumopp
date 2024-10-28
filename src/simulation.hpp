@@ -9,12 +9,18 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <stdexcept>
 
 namespace tumopp {
 
 class Tissue;
 struct EventRates;
 struct CellParams;
+
+class exit_success: public std::logic_error {
+  public:
+    exit_success() noexcept: std::logic_error("") {}
+};
 
 /*! @brief Represents single run
 */

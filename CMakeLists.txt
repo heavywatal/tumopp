@@ -3,7 +3,7 @@ project(tumopp
   VERSION 0.8.7.1
   LANGUAGES CXX)
 
-cmake_policy(SET CMP0076 NEW)
+cmake_policy(SET CMP0169 OLD) # 3.28
 set(CMAKE_VERBOSE_MAKEFILE ON)
 include(CMakePrintHelpers)
 include(FetchContent)
@@ -48,6 +48,7 @@ function(find_package_or_fetch package tag repo)
     # FIND_PACKAGE_ARGS  # 3.24
   )
   # FetchContent_MakeAvailable(${package})  # 3.28
+  FetchContent_GetProperties(${package})
   if(NOT ${package}_POPULATED)
     FetchContent_Populate(${package})
     if(${package} STREQUAL sfmt)
@@ -59,9 +60,9 @@ function(find_package_or_fetch package tag repo)
   cmake_print_variables(${package}_SOURCE_DIR ${package}_BINARY_DIR)
 endfunction()
 
-find_package_or_fetch(wtl v0.9.0 heavywatal/cxxwtl)
-find_package_or_fetch(sfmt v0.7.5 heavywatal/sfmt-class)
-find_package_or_fetch(clippson v0.8.7 heavywatal/clippson)
+find_package_or_fetch(wtl v0.9.1 heavywatal/cxxwtl)
+find_package_or_fetch(sfmt v0.7.6 heavywatal/sfmt-class)
+find_package_or_fetch(clippson v0.8.8 heavywatal/clippson)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 add_library(${PROJECT_NAME})

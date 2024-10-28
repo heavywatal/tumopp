@@ -10,7 +10,6 @@
 
 #include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
-#include <wtl/exception.hpp>
 #include <clippson/clippson.hpp>
 
 namespace tumopp {
@@ -21,8 +20,8 @@ nlohmann::json VM;
 //! Options description for general purpose
 inline clipp::group general_options(nlohmann::json* vm) {
     return (
-      wtl::option(vm, {"h", "help"}, false, "Print this help"),
-      wtl::option(vm, {"version"}, false, "Print version")
+      clippson::option(vm, {"h", "help"}, false, "Print this help"),
+      clippson::option(vm, {"version"}, false, "Print version")
     ).doc("General:");
 }
 
@@ -48,37 +47,37 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
     const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
     const int seed = static_cast<int>(std::random_device{}()); // 32-bit signed integer for R
     return (
-      wtl::option(vm, {"D", "dimensions"}, 3u),
-      wtl::option(vm, {"C", "coord"},
+      clippson::option(vm, {"D", "dimensions"}, 3u),
+      clippson::option(vm, {"C", "coord"},
         {"neumann", "moore", "hex"}, "moore",
         "Neighborhood"),
-      wtl::option(vm, {"L", "local"},
+      clippson::option(vm, {"L", "local"},
         {"const", "step", "linear"}, "const",
         "E2: resource competition"),
-      wtl::option(vm, {"P", "path"},
+      clippson::option(vm, {"P", "path"},
         {"random", "roulette", "mindrag", "minstraight", "stroll"}, "random",
         "Push method"),
-      wtl::option(vm, {"O", "origin"}, 1u),
-      wtl::option(vm, {"N", "max"}, 16384u,
+      clippson::option(vm, {"O", "origin"}, 1u),
+      clippson::option(vm, {"N", "max"}, 16384u,
         "Maximum number of cells to simulate"),
-      wtl::option(vm, {"max_time"}, 0.0,
+      clippson::option(vm, {"max_time"}, 0.0,
         "Maximum time to simulate"),
-      wtl::option(vm, {"T", "plateau"}, 0.0,
+      clippson::option(vm, {"T", "plateau"}, 0.0,
         "Duration of turn-over phase after population growth"),
-      wtl::option(vm, {"U", "mutate"}, 0u,
+      clippson::option(vm, {"U", "mutate"}, 0u,
         "Introduce a driver mutation to U-th cell"),
-      wtl::option(vm, {"treatment"}, 0.0),
-      wtl::option(vm, {"resistant"}, 3u),
-      wtl::option(vm, {"o", "outdir"}, OUT_DIR),
-      wtl::option(vm, {"I", "interval"}, 0.0,
+      clippson::option(vm, {"treatment"}, 0.0),
+      clippson::option(vm, {"resistant"}, 3u),
+      clippson::option(vm, {"o", "outdir"}, OUT_DIR),
+      clippson::option(vm, {"I", "interval"}, 0.0,
         "Time interval to take snapshots"),
-      wtl::option(vm, {"R", "record"}, 0u,
+      clippson::option(vm, {"R", "record"}, 0u,
         "Tumor size to stop taking snapshots"),
-      wtl::option(vm, {"extinction"}, 100u,
+      clippson::option(vm, {"extinction"}, 100u,
         "Maximum number of trials in case of extinction"),
-      wtl::option(vm, {"benchmark"}, false),
-      wtl::option(vm, {"seed"}, seed),
-      wtl::option(vm, {"v", "verbose"}, false, "Verbose output")
+      clippson::option(vm, {"benchmark"}, false),
+      clippson::option(vm, {"seed"}, seed),
+      clippson::option(vm, {"v", "verbose"}, false, "Verbose output")
     ).doc("Simulation:");
 }
 
@@ -107,34 +106,34 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
 inline clipp::group
 cell_options(nlohmann::json* vm, EventRates* init_event_rates, CellParams* cell_params) {
     return (
-      wtl::option(vm, {"b", "beta0"}, &init_event_rates->birth_rate, "Basic birth rate"),
-      wtl::option(vm, {"d", "delta0"}, &init_event_rates->death_rate, "Basic death rate"),
-      wtl::option(vm, {"a", "alpha0"}, &init_event_rates->death_prob,
+      clippson::option(vm, {"b", "beta0"}, &init_event_rates->birth_rate, "Basic birth rate"),
+      clippson::option(vm, {"d", "delta0"}, &init_event_rates->death_rate, "Basic death rate"),
+      clippson::option(vm, {"a", "alpha0"}, &init_event_rates->death_prob,
         "Basic death rate on cell division attempt"),
-      wtl::option(vm, {"m", "rho0"}, &init_event_rates->migration_rate, "Basic migration rate"),
-      wtl::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE,
+      clippson::option(vm, {"m", "rho0"}, &init_event_rates->migration_rate, "Basic migration rate"),
+      clippson::option(vm, {"k", "shape"}, &cell_params->GAMMA_SHAPE,
         "Shape parameter of waiting time distribution for cell division"),
-      wtl::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
+      clippson::option(vm, {"p", "symmetric"}, &cell_params->PROB_SYMMETRIC_DIVISION,
         "p_s: Probability of symmetric division"),
-      wtl::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY,
+      clippson::option(vm, {"r", "prolif"}, &cell_params->MAX_PROLIFERATION_CAPACITY,
         "ω: Maximum number of division for a TAC"),
       (
-        wtl::option(vm, {"ub"}, &cell_params->RATE_BIRTH, "μ_β"),
-        wtl::option(vm, {"ud"}, &cell_params->RATE_DEATH, "μ_δ"),
-        wtl::option(vm, {"ua"}, &cell_params->RATE_ALPHA, "μ_α"),
-        wtl::option(vm, {"um"}, &cell_params->RATE_MIG, "μ_ρ")
+        clippson::option(vm, {"ub"}, &cell_params->RATE_BIRTH, "μ_β"),
+        clippson::option(vm, {"ud"}, &cell_params->RATE_DEATH, "μ_δ"),
+        clippson::option(vm, {"ua"}, &cell_params->RATE_ALPHA, "μ_α"),
+        clippson::option(vm, {"um"}, &cell_params->RATE_MIG, "μ_ρ")
       ).doc("Rate of driver mutations:"),
       (
-        wtl::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, "E[s_β]"),
-        wtl::option(vm, {"md"}, &cell_params->MEAN_DEATH, "E[s_δ]"),
-        wtl::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, "E[s_α]"),
-        wtl::option(vm, {"mm"}, &cell_params->MEAN_MIG, "E[s_ρ]")
+        clippson::option(vm, {"mb"}, &cell_params->MEAN_BIRTH, "E[s_β]"),
+        clippson::option(vm, {"md"}, &cell_params->MEAN_DEATH, "E[s_δ]"),
+        clippson::option(vm, {"ma"}, &cell_params->MEAN_ALPHA, "E[s_α]"),
+        clippson::option(vm, {"mm"}, &cell_params->MEAN_MIG, "E[s_ρ]")
       ).doc("Mean effect of driver mutations:"),
       (
-        wtl::option(vm, {"sb"}, &cell_params->SD_BIRTH, "σ_β"),
-        wtl::option(vm, {"sd"}, &cell_params->SD_DEATH, "σ_δ"),
-        wtl::option(vm, {"sa"}, &cell_params->SD_ALPHA, "σ_α"),
-        wtl::option(vm, {"sm"}, &cell_params->SD_MIG, "σ_ρ")
+        clippson::option(vm, {"sb"}, &cell_params->SD_BIRTH, "σ_β"),
+        clippson::option(vm, {"sd"}, &cell_params->SD_DEATH, "σ_δ"),
+        clippson::option(vm, {"sa"}, &cell_params->SD_ALPHA, "σ_α"),
+        clippson::option(vm, {"sm"}, &cell_params->SD_MIG, "σ_ρ")
       ).doc("SD of driver mutations:")
     ).doc("Cell:");
 }
@@ -154,16 +153,16 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
       simulation_options(&VM),
       cell_options(&VM, init_event_rates_.get(), cell_params_.get())
     );
-    wtl::parse(cli, arguments);
+    clippson::parse(cli, arguments);
     if (vm_local["help"]) {
-        auto fmt = wtl::doc_format().paragraph_spacing(0);
+        auto fmt = clippson::doc_format().paragraph_spacing(0);
         std::cout << "Usage: " << PROJECT_NAME << " [options]\n\n";
         std::cout << clipp::documentation(cli, fmt) << "\n";
-        throw wtl::ExitSuccess();
+        throw exit_success();
     }
     if (vm_local["version"]) {
         std::cout << PROJECT_VERSION << "\n";
-        throw wtl::ExitSuccess();
+        throw exit_success();
     }
     Cell::param(*cell_params_);
     config_ = VM.dump(2) + "\n";
