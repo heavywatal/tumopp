@@ -1,4 +1,4 @@
-# Doxyfile 1.10.0
+# Doxyfile 1.12.0
 
 #---------------------------------------------------------------------------
 # Project related configuration options
@@ -98,6 +98,7 @@ SHOW_NAMESPACES        = YES
 FILE_VERSION_FILTER    =
 LAYOUT_FILE            =
 CITE_BIB_FILES         =
+EXTERNAL_TOOL_PATH     =
 #---------------------------------------------------------------------------
 # Configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
@@ -203,6 +204,7 @@ DISABLE_INDEX          = NO
 GENERATE_TREEVIEW      = NO
 FULL_SIDEBAR           = NO
 ENUM_VALUES_PER_LINE   = 4
+SHOW_ENUM_VALUES       = NO
 TREEVIEW_WIDTH         = 250
 EXT_LINKS_IN_WINDOW    = NO
 OBFUSCATE_EMAILS       = YES
@@ -252,6 +254,7 @@ COMPACT_RTF            = NO
 RTF_HYPERLINKS         = NO
 RTF_STYLESHEET_FILE    =
 RTF_EXTENSIONS_FILE    =
+RTF_EXTRA_FILES        =
 #---------------------------------------------------------------------------
 # Configuration options related to the man page output
 #---------------------------------------------------------------------------
