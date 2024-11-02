@@ -60,6 +60,12 @@ add_library(${PROJECT_NAME} STATIC)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 add_subdirectory(src)
 
+find_package(ZLIB)
+if(ZLIB_FOUND)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE ZLIB_FOUND)
+  target_link_libraries(${PROJECT_NAME} PUBLIC ZLIB::ZLIB)
+endif()
+
 target_compile_options(${PROJECT_NAME} PRIVATE
   -Wall -Wextra -pedantic
   $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>:-march=native>
@@ -77,12 +83,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 add_executable(${PROJECT_NAME}-exe src/main.cpp)
-target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME} wtl::wtl)
-find_package(ZLIB)
-if(ZLIB_FOUND)
-  target_compile_definitions(${PROJECT_NAME}-exe PRIVATE ZLIB_FOUND)
-  target_link_libraries(${PROJECT_NAME}-exe PRIVATE ZLIB::ZLIB)
-endif()
+target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME}-exe PROPERTIES
   OUTPUT_NAME ${PROJECT_NAME}
 )

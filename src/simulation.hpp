@@ -35,15 +35,9 @@ class Simulation {
     //! Top level function that should be called once from main()
     void run();
 
-    //! @name Getter for `main()`
-    //@{
-    //! Get #tissue_
-    Tissue& tissue() const noexcept {return *tissue_;}
-    //! Get #config_
-    const std::string& config() const noexcept {return config_;}
-    //! Get VM["outdir"]
-    std::string outdir() const;
-    //@}
+    //! Write results to files
+    void write() const;
+
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
   private:
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
