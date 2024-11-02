@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(tumopp
-  VERSION 0.8.9
+  VERSION 0.9.0
   LANGUAGES CXX)
 
 cmake_policy(SET CMP0169 OLD) # 3.28
@@ -15,10 +15,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 cmake_print_variables(CMAKE_BUILD_TYPE)
 set(CMAKE_CXX_FLAGS_DEV "-O2 -g")
-
-set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
-set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
 function(import_env variable)
   if(DEFINED ENV{${variable}})
@@ -51,17 +47,13 @@ function(find_package_or_fetch package tag repo)
   FetchContent_GetProperties(${package})
   if(NOT ${package}_POPULATED)
     FetchContent_Populate(${package})
-    if(${package} STREQUAL sfmt)
-      add_subdirectory(${${package}_SOURCE_DIR} ${${package}_BINARY_DIR})
-    else()
-      add_subdirectory(${${package}_SOURCE_DIR} ${${package}_BINARY_DIR} EXCLUDE_FROM_ALL)
-    endif()
+    add_subdirectory(${${package}_SOURCE_DIR} ${${package}_BINARY_DIR} EXCLUDE_FROM_ALL)
   endif()
   cmake_print_variables(${package}_SOURCE_DIR ${package}_BINARY_DIR)
 endfunction()
 
 find_package_or_fetch(wtl v0.9.1 heavywatal/cxxwtl)
-find_package_or_fetch(sfmt v0.7.6 heavywatal/sfmt-class)
+find_package_or_fetch(pcglite v0.1.2 heavywatal/pcglite)
 find_package_or_fetch(clippson v0.8.8 heavywatal/clippson)
 
 add_library(${PROJECT_NAME} STATIC)
@@ -80,7 +72,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC wtl::sfmt
+  PUBLIC pcglite::pcglite
   PRIVATE wtl::wtl clippson::clippson
 )
 
@@ -94,8 +86,7 @@ endif()
 set_target_properties(${PROJECT_NAME}-exe PROPERTIES
   OUTPUT_NAME ${PROJECT_NAME}
 )
-install(TARGETS ${PROJECT_NAME}-exe)
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME}-exe
   EXPORT ${PROJECT_NAME}-config
 )
 

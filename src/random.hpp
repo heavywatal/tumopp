@@ -5,13 +5,13 @@
 #ifndef TUMOPP_RANDOM_HPP_
 #define TUMOPP_RANDOM_HPP_
 
-#include <sfmt.hpp>
+#include <pcglite/pcglite.hpp>
 #include <random>
 
 namespace tumopp {
 
 //! Type alias of random number generator
-using urbg_t = wtl::sfmt19937_64;
+using urbg_t = pcglite::pcg64;
 
 } // namespace tumopp
 
