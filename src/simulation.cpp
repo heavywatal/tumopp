@@ -49,14 +49,17 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
     return (
       clippson::option(vm, {"D", "dimensions"}, 3u),
       clippson::option(vm, {"C", "coord"},
-        {"neumann", "moore", "hex"}, "moore",
-        "Neighborhood"),
+        "moore",
+        "Neighborhood"
+        " {neumann, moore, hex}"), // TODO
       clippson::option(vm, {"L", "local"},
-        {"const", "step", "linear"}, "const",
-        "E2: resource competition"),
+        "const",
+        "E2: resource competition"
+        " {const, step, linear}"), // TODO
       clippson::option(vm, {"P", "path"},
-        {"random", "roulette", "mindrag", "minstraight", "stroll"}, "random",
-        "Push method"),
+        "random",
+        "Push method"
+        " {random, roulette, mindrag, minstraight, stroll}"), // TODO
       clippson::option(vm, {"O", "origin"}, 1u),
       clippson::option(vm, {"N", "max"}, 16384u,
         "Maximum number of cells to simulate"),
