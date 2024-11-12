@@ -18,7 +18,7 @@ Tissue::Tissue(
   const std::string& local_density_effect,
   const std::string& displacement_path,
   const EventRates& init_event_rates,
-  const uint_fast32_t seed,
+  const uint32_t seed,
   const bool verbose,
   const bool enable_benchmark):
   engine_(std::make_unique<urbg_t>(seed)),

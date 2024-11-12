@@ -187,7 +187,7 @@ void Simulation::run() {
     const auto treatment = VM.at("treatment").get<double>();
     const auto resistant = VM.at("resistant").get<size_t>();
     const auto allowed_extinction = VM.at("extinction").get<unsigned>();
-    urbg_t seeder(VM.at("seed").get<uint_fast32_t>());
+    urbg_t seeder(VM.at("seed").get<uint32_t>());
     for (size_t i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>(
             VM.at("origin").get<size_t>(),

@@ -34,7 +34,7 @@ class Tissue {
       const std::string& local_density_effect="const",
       const std::string& displacement_path="random",
       const EventRates& init_event_rates=EventRates{},
-      uint_fast32_t seed=std::random_device{}(),
+      uint32_t seed=std::random_device{}(),
       bool verbose=false,
       bool enable_benchmark=false);
     ~Tissue();
