@@ -35,7 +35,7 @@ class Benchmark {
     std::streambuf* rdbuf() const {return sst_.rdbuf();}
   private:
     //! String in TSV format
-    std::stringstream sst_;
+    std::stringstream sst_{};
 };
 
 } // namespace tumopp

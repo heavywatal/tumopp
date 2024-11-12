@@ -43,13 +43,13 @@ class Simulation {
     // Data member
 
     //! Tissue instance
-    std::unique_ptr<Tissue> tissue_;
+    std::unique_ptr<Tissue> tissue_{nullptr};
     //! EventRates instance
-    std::unique_ptr<EventRates> init_event_rates_;
+    std::unique_ptr<EventRates> init_event_rates_{nullptr};
     //! CellParams instance
-    std::unique_ptr<CellParams> cell_params_;
+    std::unique_ptr<CellParams> cell_params_{nullptr};
     //! Parameters
-    std::string config_;
+    std::string config_{};
 };
 
 } // namespace tumopp

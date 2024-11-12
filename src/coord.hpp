@@ -122,11 +122,11 @@ class Coord {
     // Data member
 
     //! {1, 2, 3}
-    const unsigned dimensions_;
+    const unsigned dimensions_{};
     //! initialized in derived class constructor
-    std::vector<coord_t> directions_;
+    std::vector<coord_t> directions_{};
     //! initialized in derived class constructor
-    std::uniform_int_distribution<unsigned> dist_direction_;
+    std::uniform_int_distribution<unsigned> dist_direction_{};
 };
 
 /*! @brief Derived class of Coord

@@ -140,31 +140,31 @@ class Tissue {
     std::unordered_set<
         std::shared_ptr<Cell>,
         hash_ptr_cell,
-        equal_ptr_cell> extant_cells_;
+        equal_ptr_cell> extant_cells_{};
     //! incremented when a new cell is born
-    unsigned id_tail_ = 0;
+    unsigned id_tail_{0};
 
     //! event queue
-    std::multimap<double, std::shared_ptr<Cell>> queue_;
+    std::multimap<double, std::shared_ptr<Cell>> queue_{};
     //! continuous time
-    double time_ = 0.0;
+    double time_{0.0};
     //! initialized in init_coord() or init_coord_test()
-    std::unique_ptr<Coord> coord_func_;
+    std::unique_ptr<Coord> coord_func_{nullptr};
 
     //! record dead cells
-    std::stringstream cemetery_;
+    std::stringstream cemetery_{};
     //! record snapshots
-    std::stringstream snapshots_;
+    std::stringstream snapshots_{};
     //! record driver mutations
-    std::stringstream drivers_;
+    std::stringstream drivers_{};
     //! id of recorded cells
-    mutable std::unordered_set<unsigned> recorded_;
+    mutable std::unordered_set<unsigned> recorded_{};
     //! record resource usage
-    std::unique_ptr<Benchmark> benchmark_;
+    std::unique_ptr<Benchmark> benchmark_{nullptr};
     //! random number generator
-    std::unique_ptr<urbg_t> engine_;
+    std::unique_ptr<urbg_t> engine_{nullptr};
     //! print debug info
-    bool verbose_ = false;
+    bool verbose_{false};
 };
 
 } // namespace tumopp

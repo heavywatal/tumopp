@@ -173,21 +173,21 @@ class Cell {
     // Data member
 
     //! pointer to the ancestor
-    std::shared_ptr<Cell> ancestor_;
+    std::shared_ptr<Cell> ancestor_{nullptr};
     //! Set of event rates (copy-on-write)
-    std::shared_ptr<EventRates> event_rates_;
+    std::shared_ptr<EventRates> event_rates_{nullptr};
     //! time of birth
-    double time_of_birth_ = 0.0;
+    double time_of_birth_{0.0};
     //! time of death
-    double time_of_death_ = 0.0;
+    double time_of_death_{0.0};
     //! Position in a tumor
-    coord_t coord_ = {};
+    coord_t coord_{};
     //! ID
-    unsigned id_;
+    unsigned id_{};
     //! \f$\omega\f$; stem cell if negative
-    int8_t proliferation_capacity_ = -1;
+    int8_t proliferation_capacity_{-1};
     //! next event: birth, death, or migration
-    Event next_event_ = Event::birth;
+    Event next_event_{Event::birth};
 };
 
 } // namespace tumopp
