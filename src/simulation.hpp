@@ -5,7 +5,6 @@
 #ifndef TUMOPP_SIMULATION_HPP_
 #define TUMOPP_SIMULATION_HPP_
 
-#include <iosfwd>
 #include <vector>
 #include <string>
 #include <memory>

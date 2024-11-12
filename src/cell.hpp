@@ -9,8 +9,6 @@
 #include "random.hpp"
 
 #include <cstdint>
-#include <vector>
-#include <array>
 #include <unordered_set>
 #include <string>
 #include <memory>
