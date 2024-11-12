@@ -6,10 +6,8 @@
 
 #include <wtl/random.hpp>
 #include <wtl/iostr.hpp>
-#include <wtl/math.hpp>
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
-#include <wtl/genetic.hpp>
 
 namespace tumopp {
 
@@ -325,7 +323,8 @@ coord_t Tissue::roulette_direction(const coord_t& current) const {
         if (l == 0U) {return d;}
         roulette.push_back(1.0 / l);
     }
-    return directions[wtl::roulette_select(roulette, *engine_)];
+    std::discrete_distribution<unsigned> discrete(roulette.begin(), roulette.end());
+    return directions[discrete(*engine_)];
 }
 
 uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
