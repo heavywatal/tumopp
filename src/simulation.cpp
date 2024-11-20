@@ -8,10 +8,7 @@
 #include "random.hpp"
 #include "version.hpp"
 
-#ifdef ZLIB_FOUND
-  #include <wtl/zlib.hpp>
-#endif
-
+#include <wtl/zlib.hpp>
 #include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
 #include <clippson/clippson.hpp>
@@ -229,35 +226,28 @@ void Simulation::run() {
 
 //! Write config and simulation result to files
 void Simulation::write() const {
-  #ifdef ZLIB_FOUND
-    using ofstream = wtl::zlib::ofstream;
-    const std::string ext = ".tsv.gz";
-  #else
-    using ofstream = std::ofstream;
-    const std::string ext = ".tsv";
-  #endif
     namespace fs = std::filesystem;
     const auto& outdir = VM.at("outdir").get<fs::path>();
     if (outdir.empty()) return;
     fs::create_directory(outdir);
     std::ofstream{outdir / "config.json"} << config_;
     {
-        ofstream ofs{outdir / ("population" + ext)};
+        wtl::zlib::ofstream ofs{outdir / "population.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue_->write_history(ofs);
     }
     if (tissue_->has_snapshots()) {
-        ofstream ofs{outdir / ("snapshots" + ext)};
+        wtl::zlib::ofstream ofs{outdir / "snapshots.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue_->write_snapshots(ofs);
     }
     if (tissue_->has_drivers()) {
-        ofstream ofs{outdir / ("drivers" + ext)};
+        wtl::zlib::ofstream ofs{outdir / "drivers.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue_->write_drivers(ofs);
     }
     if (tissue_->has_benchmark()) {
-        ofstream ofs{outdir / ("benchmark" + ext)};
+        wtl::zlib::ofstream ofs{outdir / "benchmark.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         tissue_->write_benchmark(ofs);
     }

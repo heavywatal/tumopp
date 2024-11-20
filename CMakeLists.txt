@@ -52,7 +52,7 @@ function(find_package_or_fetch package tag repo)
   cmake_print_variables(${package}_SOURCE_DIR ${package}_BINARY_DIR)
 endfunction()
 
-find_package_or_fetch(wtl v0.9.1 heavywatal/cxxwtl)
+find_package_or_fetch(wtl v0.9.2 heavywatal/cxxwtl)
 find_package_or_fetch(pcglite v0.1.2 heavywatal/pcglite)
 find_package_or_fetch(clippson v0.8.8 heavywatal/clippson)
 
@@ -60,13 +60,7 @@ add_library(${PROJECT_NAME} STATIC)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 add_subdirectory(src)
 
-find_package(ZLIB)
-if(ZLIB_FOUND)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE ZLIB_FOUND)
-  target_link_libraries(${PROJECT_NAME} PUBLIC ZLIB::ZLIB)
-endif()
-
-target_compile_options(${PROJECT_NAME} PRIVATE
+target_compile_options(${PROJECT_NAME} PUBLIC
   -Wall -Wextra -pedantic
   $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>:-march=native>
   $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm64>:-march=armv8.3-a+sha3>
@@ -79,7 +73,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 target_link_libraries(${PROJECT_NAME}
   PUBLIC pcglite::pcglite
-  PRIVATE wtl::wtl clippson::clippson
+  PRIVATE wtl::wtl wtl::zlib clippson::clippson
 )
 
 add_executable(${PROJECT_NAME}-exe src/main.cpp)
