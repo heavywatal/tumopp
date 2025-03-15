@@ -1,6 +1,10 @@
 #include "cell.hpp"
 
 #include <iostream>
+#include <type_traits>
+
+static_assert(std::is_nothrow_copy_constructible_v<tumopp::Cell>, "");
+static_assert(std::is_nothrow_move_constructible_v<tumopp::Cell>, "");
 
 int main() {
     std::cout << "sizeof(Cell): " << sizeof(tumopp::Cell) << "\n";

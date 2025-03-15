@@ -6,12 +6,7 @@
 #include <wtl/iostr.hpp>
 #include <wtl/random.hpp>
 
-#include <type_traits>
-
 namespace tumopp {
-
-static_assert(std::is_nothrow_copy_constructible<Cell>{}, "");
-static_assert(std::is_nothrow_move_constructible<Cell>{}, "");
 
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
 namespace {
