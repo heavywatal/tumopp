@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.21)
 project(tumopp
   VERSION 0.9.0
   LANGUAGES CXX)
@@ -63,7 +63,7 @@ add_subdirectory(src)
 target_compile_options(${PROJECT_NAME} PUBLIC
   -Wall -Wextra -pedantic
   $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>:-march=native>
-  $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm64>:-march=armv8.3-a+sha3>
+  $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm64>:-march=armv8.4-a>
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
@@ -101,6 +101,6 @@ install(FILES ${version_file}
 )
 
 include(CTest)
-if(BUILD_TESTING AND ${CMAKE_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
+if(BUILD_TESTING AND PROJECT_IS_TOP_LEVEL)
   add_subdirectory(test)
 endif()
