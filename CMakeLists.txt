@@ -53,7 +53,7 @@ function(find_package_or_fetch package tag repo)
 endfunction()
 
 find_package_or_fetch(wtl v0.10.0 heavywatal/cxxwtl)
-find_package_or_fetch(pcglite v0.2.0 heavywatal/pcglite)
+find_package_or_fetch(pcglite v0.2.1 heavywatal/pcglite)
 find_package_or_fetch(clippson v0.8.8 heavywatal/clippson)
 
 add_library(${PROJECT_NAME} STATIC)
