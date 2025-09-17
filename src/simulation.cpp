@@ -48,8 +48,6 @@ inline clipp::group general_options(nlohmann::json* vm) {
     `--seed`            | -              | -
 */
 inline clipp::group simulation_options(nlohmann::json* vm) {
-    const std::string OUT_DIR = wtl::strftime("tumopp_%Y%m%d_%H%M%S");
-    const int seed = static_cast<int>(std::random_device{}()); // 32-bit signed integer for R
     return (
       clippson::option(vm, {"D", "dimensions"}, 3u),
       clippson::option(vm, {"C", "coord"},
@@ -75,7 +73,7 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
         "Introduce a driver mutation to U-th cell"),
       clippson::option(vm, {"treatment"}, 0.0),
       clippson::option(vm, {"resistant"}, 3u),
-      clippson::option(vm, {"o", "outdir"}, OUT_DIR),
+      clippson::option(vm, {"o", "outdir"}, "tumopp_%Y%m%d_%H%M%S"),
       clippson::option(vm, {"I", "interval"}, 0.0,
         "Time interval to take snapshots"),
       clippson::option(vm, {"R", "record"}, 0u,
@@ -83,7 +81,8 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
       clippson::option(vm, {"extinction"}, 100u,
         "Maximum number of trials in case of extinction"),
       clippson::option(vm, {"benchmark"}, false),
-      clippson::option(vm, {"seed"}, seed),
+      clippson::option(vm, {"seed"}, 0,
+        "Initialized with `std::random_device` if 0"),
       clippson::option(vm, {"v", "verbose"}, false, "Verbose output")
     ).doc("Simulation:");
 }
@@ -172,6 +171,10 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
         throw exit_success();
     }
     Cell::param(*cell_params_);
+    VM["outdir"] = wtl::strftime(VM.at("outdir").get<std::string>().c_str());
+    if (VM.at("seed").get<int32_t>() == 0) {// 32-bit signed integer for R
+      VM["seed"] = static_cast<int32_t>(std::random_device{}());
+    }
     config_ = VM.dump(2) + "\n";
 }
 
