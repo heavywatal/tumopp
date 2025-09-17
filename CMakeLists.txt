@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 project(tumopp
-  VERSION 0.9.1
+  VERSION 0.9.2
   LANGUAGES CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -44,9 +44,9 @@ FetchContent_Declare(clippson
 
 FetchContent_Declare(wtl
   GIT_REPOSITORY https://github.com/heavywatal/cxxwtl.git
-  GIT_TAG 13bfb062d89f9ef50e30a899b71e9ec8ac5097f2
+  GIT_TAG 64d10cd35a5690629bd84c89b2fb46b35215581a
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 0.10.1
+  FIND_PACKAGE_ARGS 0.10.2
 )
 
 Pkg_MakeAvailable(pcglite clippson wtl)

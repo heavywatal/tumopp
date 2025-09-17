@@ -171,7 +171,10 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
         throw exit_success();
     }
     Cell::param(*cell_params_);
-    VM["outdir"] = wtl::strftime(VM.at("outdir").get<std::string>().c_str());
+    const auto vm_o = VM.at("outdir").get<std::string>();
+    if (vm_o.find('%') != std::string::npos) {
+      VM["outdir"] = wtl::strftime(vm_o.c_str());
+    }
     if (VM.at("seed").get<int32_t>() == 0) {// 32-bit signed integer for R
       VM["seed"] = static_cast<int32_t>(std::random_device{}());
     }
