@@ -262,12 +262,12 @@ bool Tissue::insert_adjacent(const std::shared_ptr<Cell>& moving) {
 }
 
 bool Tissue::swap_existing(std::shared_ptr<Cell>* x) {
-    auto result = extant_cells_.insert(*x);
-    if (result.second) {
+    auto [it, success] = extant_cells_.insert(*x);
+    if (success) {
         return false;
     } else {
-        std::shared_ptr<Cell> existing = std::move(*result.first);
-        extant_cells_.insert(extant_cells_.erase(result.first), std::move(*x));
+        std::shared_ptr<Cell> existing(*it);
+        extant_cells_.insert(extant_cells_.erase(it), std::move(*x));
         *x = std::move(existing);
         return true;
     }
@@ -277,10 +277,10 @@ void Tissue::migrate(const std::shared_ptr<Cell>& migrant) {
     extant_cells_.erase(migrant);
     auto orig_pos = migrant->coord();
     migrant->add_coord(coord_func_->random_direction(*engine_));
-    auto result = extant_cells_.insert(migrant);
-    if (!result.second) {
-        std::shared_ptr<Cell> existing = std::move(*result.first);
-        extant_cells_.insert(extant_cells_.erase(result.first), migrant);
+    auto [it, success] = extant_cells_.insert(migrant);
+    if (!success) {
+        std::shared_ptr<Cell> existing(*it);
+        extant_cells_.insert(extant_cells_.erase(it), migrant);
         existing->set_coord(std::move(orig_pos));
         extant_cells_.insert(std::move(existing));
     }
