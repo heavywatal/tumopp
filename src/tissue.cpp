@@ -4,10 +4,13 @@
 #include "tissue.hpp"
 #include "benchmark.hpp"
 
+#include <fmt/format.h>
+#include <fmt/ranges.h>
 #include <wtl/random.hpp>
-#include <wtl/iostr.hpp>
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
+
+#include <cstdio>
 
 namespace tumopp {
 
@@ -27,8 +30,6 @@ Tissue::Tissue(
         benchmark_ = std::make_unique<Benchmark>();
         benchmark_->append(0u);
     }
-    snapshots_.precision(std::cout.precision());
-    drivers_.precision(std::cout.precision());
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
     const auto initial_coords = coord_func_->sphere(initial_size);
@@ -62,11 +63,12 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
     try {
         coord_func_ = std::move(swtch.at(coordinate));
     } catch (std::exception& e) {
-        std::ostringstream oss;
-        oss << "\n" << __FILE__ << ':' << __LINE__ << ':' << __PRETTY_FUNCTION__
-            << "\nInvalid value for -C (" << coordinate << "); choose from "
-            << wtl::keys(swtch);
-        throw std::runtime_error(oss.str());
+        const auto msg = fmt::format(
+          "\n{}:{}:{}\nInvalid value for -C ({}); choose from {}\n",
+          __FILE__, __LINE__, __PRETTY_FUNCTION__,
+          coordinate, wtl::keys(swtch)
+        );
+        throw std::runtime_error(msg);
     }
 }
 
@@ -99,17 +101,17 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 mother->set_time_of_birth(time_, ++id_tail_, ancestor);
                 daughter->differentiate(*engine_);
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
-                drivers_ << mother->mutate(*engine_);
-                drivers_ << daughter->mutate(*engine_);
+                mother->mutate(drivers_, *engine_);
+                daughter->mutate(drivers_, *engine_);
                 if (extant_cells_.size() == mutation_timing) {
                     mutation_timing = 0u; // once
-                    drivers_ << daughter->force_mutate(*engine_);
+                    daughter->force_mutate(drivers_, *engine_);
                 }
                 queue_push(mother);
                 queue_push(daughter);
                 const auto size = extant_cells_.size();
                 if ((size % progress_interval) == 0u) {
-                    if (verbose_) std::cerr << "\r" << size;
+                    if (verbose_) fmt::print(stderr, "\r{}", size);
                     if (benchmark_) benchmark_->append(size);
                 }
             } else {
@@ -129,7 +131,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             recording_early_growth = 0u;  // prevent restart by cell death
         }
     }
-    if (verbose_) std::cerr << "\r" << extant_cells_.size() << std::endl;
+    if (verbose_) fmt::println(stderr, "\r{}", extant_cells_.size());
     return success;
 }
 
@@ -215,15 +217,16 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     try {
         insert = swtch.at(local_density_effect).at(displacement_path);
     } catch (std::exception& e) {
-        std::ostringstream oss;
-        oss << "\n" << __FILE__ << ':' << __LINE__ << ':' << __PRETTY_FUNCTION__
-            << "\nInvalid value for -L/-P ("
-            << local_density_effect << "/" << displacement_path
-            << "); choose from";
+        std::string msg;
+        fmt::format_to(std::back_inserter(msg),
+          "\n{}:{}:{}\nInvalid value for -L/-P ({}/{}); choose from",
+          __FILE__, __LINE__, __PRETTY_FUNCTION__,
+          local_density_effect, displacement_path
+        );
         for (const auto& p: swtch) {
-            oss << "\n -L" << p.first << " -P " << wtl::keys(p.second);
+            fmt::format_to(std::back_inserter(msg), "\n -L{} -P {}", p.first, wtl::keys(p.second));
         }
-        throw std::runtime_error(oss.str());
+        throw std::runtime_error(msg);
     }
 }
 
@@ -340,50 +343,50 @@ uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
 
 void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
     dead->set_time_of_death(time_);
-    dead->traceback(cemetery_, &recorded_);
+    dead->traceback(cemetery_, recorded_);
     extant_cells_.erase(dead);
 }
 
 std::ostream& Tissue::write_history(std::ostream& ost) const {
-    ost.precision(std::cout.precision());
-    ost << Cell::header() << "\n";
-    wtl::write_if_avail(ost, cemetery_.rdbuf());
+    std::string buffer;
+    fmt::format_to(std::back_inserter(buffer), "{}\n{}", Cell::header(), cemetery_);
     for (const auto& p: extant_cells_) {
-        p->traceback(ost, &recorded_);
+        p->traceback(buffer, recorded_);
     }
+    ost << buffer;
     return ost;
 }
 
 std::ostream& Tissue::write_snapshots(std::ostream& ost) const {
     ost << "time\t" << Cell::header() << "\n";
-    wtl::write_if_avail(ost, snapshots_.rdbuf());
+    ost << snapshots_;
     return ost;
 }
 
 std::ostream& Tissue::write_drivers(std::ostream& ost) const {
     ost << "id\ttype\tcoef\n";
-    wtl::write_if_avail(ost, drivers_.rdbuf());
+    ost << drivers_;
     return ost;
 }
 
 std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
     benchmark_->append(extant_cells_.size() + 1u);
-    wtl::write_if_avail(ost, benchmark_->rdbuf());
+    if (benchmark_->rdbuf()->in_avail()) ost << benchmark_->rdbuf();
     return ost;
 }
 
 void Tissue::snapshots_append() {
     for (const auto& p: extant_cells_) {
-        snapshots_ << time_ << "\t" << *p << "\n";
+        fmt::format_to(std::back_inserter(snapshots_), "{}\t{}", time_, *p);
     }
 }
 
-//! Stream operator for debug print
-std::ostream& operator<< (std::ostream& ost, const Tissue& tissue) {
-    for (const auto& p: tissue.extant_cells_) {
-        ost << *p << "\n";
+std::string Tissue::format() const {
+    std::string buffer;
+    for (const auto& p: extant_cells_) {
+        p->format_to_back(buffer);
     }
-    return ost;
+    return buffer;
 }
 
 } // namespace tumopp

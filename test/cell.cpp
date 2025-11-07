@@ -1,15 +1,15 @@
 #include "cell.hpp"
 
-#include <iostream>
+#include <fmt/format.h>
+
 #include <type_traits>
 
 static_assert(std::is_nothrow_copy_constructible_v<tumopp::Cell>, "");
 static_assert(std::is_nothrow_move_constructible_v<tumopp::Cell>, "");
 
 int main() {
-    std::cout << "sizeof(Cell): " << sizeof(tumopp::Cell) << "\n";
+    fmt::println("sizeof(Cell): {}", sizeof(tumopp::Cell));
     tumopp::Cell cell({{1, 2, 3}}, 42);
-    std::cout << tumopp::Cell::header() << "\n"
-              << cell << "\n";
+    fmt::print("{}\n{}\n", tumopp::Cell::header(), cell);
     return 0;
 }

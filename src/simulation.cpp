@@ -8,13 +8,14 @@
 #include "random.hpp"
 #include "version.hpp"
 
+#include <fmt/format.h>
 #include <wtl/zlib.hpp>
-#include <wtl/iostr.hpp>
 #include <wtl/chrono.hpp>
 #include <clippson/clippson.hpp>
 
 #include <filesystem>
 #include <fstream>
+#include <cstdio>
 
 namespace tumopp {
 
@@ -149,9 +150,6 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
   cell_params_(std::make_unique<CellParams>()) {
     std::ios::sync_with_stdio(false);
     std::cin.tie(0);
-    std::cout.precision(9);
-    std::cerr.precision(6);
-
     VM.clear();
     nlohmann::json vm_local;
     auto cli = (
@@ -161,13 +159,13 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
     );
     clippson::parse(cli, arguments);
     if (vm_local["help"]) {
-        auto fmt = clippson::doc_format().paragraph_spacing(0);
-        std::cout << "Usage: " << PROJECT_NAME << " [options]\n\n";
-        std::cout << clipp::documentation(cli, fmt) << "\n";
+        auto doc_fmt = clippson::doc_format().paragraph_spacing(0);
+        fmt::println("Usage: {} [options]\n", PROJECT_NAME);
+        fmt::println("{}", clipp::documentation(cli, doc_fmt).str());
         throw exit_success();
     }
     if (vm_local["version"]) {
-        std::cout << PROJECT_VERSION << "\n";
+        fmt::println("{}", PROJECT_VERSION);
         throw exit_success();
     }
     Cell::param(*cell_params_);
@@ -211,10 +209,10 @@ void Simulation::run() {
             VM.at("mutate").get<size_t>()
         );
         if (success) break;
-        std::cerr << "Trial " << i  << ": size = " << tissue_->size() << std::endl;
+        fmt::println(stderr, "Trial {}: size = {}", i, tissue_->size());
     }
     if (max_time == 0.0 && tissue_->size() != max_size) {
-        std::cerr << "Warning: size = " << tissue_->size() << std::endl;
+        fmt::println(stderr, "Warning: size = {}", tissue_->size());
     }
     if (max_time == 0.0 && plateau_time > 0.0) {
         tissue_->plateau(plateau_time);

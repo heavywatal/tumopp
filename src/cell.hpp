@@ -102,9 +102,9 @@ class Cell {
     Cell& operator=(Cell&&) = default;
 
     //! driver mutation
-    std::string mutate(urbg_t&);
+    void mutate(std::string&, urbg_t&);
     //! driver mutation on all traits
-    std::string force_mutate(urbg_t&);
+    void force_mutate(std::string&, urbg_t&);
 
     //! Calc dt and set #next_event_
     double delta_time(urbg_t&, double now, double positional_value, bool surrounded=false);
@@ -155,10 +155,9 @@ class Cell {
     //! TSV header
     static const char* header();
     //! TSV
-    std::ostream& write(std::ostream& ost) const;
+    void format_to_back(std::string& buffer) const;
     //! Write TSV while tracing back #ancestor_ recursively
-    std::ostream& traceback(std::ostream& ost, std::unordered_set<unsigned>* done) const;
-    friend std::ostream& operator<< (std::ostream&, const Cell&);
+    void traceback(std::string& buffer, std::unordered_set<unsigned>& done) const;
 
     //! Set #PARAM_
     static void param(const param_type& p);
@@ -189,6 +188,12 @@ class Cell {
     //! next event: birth, death, or migration
     Event next_event_{Event::birth};
 };
+
+inline auto format_as(const Cell& x) {
+    std::string buffer;
+    x.format_to_back(buffer);
+    return buffer;
+}
 
 } // namespace tumopp
 

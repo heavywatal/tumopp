@@ -28,6 +28,13 @@ macro(Pkg_MakeAvailable)
   endforeach()
 endmacro()
 
+FetchContent_Declare(fmt
+  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+  GIT_TAG e69e5f977d458f2650bb346dadf2ad30c5320281
+  EXCLUDE_FROM_ALL
+  FIND_PACKAGE_ARGS 10.2.1
+)
+
 FetchContent_Declare(pcglite
   GIT_REPOSITORY https://github.com/heavywatal/pcglite.git
   GIT_TAG 45fd73104aa1026624d87ea2f2e387c3498b34b0
@@ -49,7 +56,7 @@ FetchContent_Declare(wtl
   FIND_PACKAGE_ARGS 0.10.2
 )
 
-Pkg_MakeAvailable(pcglite clippson wtl)
+Pkg_MakeAvailable(fmt pcglite clippson wtl)
 
 add_library(${PROJECT_NAME} STATIC)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -63,7 +70,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 target_link_libraries(${PROJECT_NAME}
   PUBLIC pcglite::pcglite
-  PRIVATE wtl::wtl wtl::zlib clippson::clippson
+  PRIVATE fmt::fmt wtl::wtl wtl::zlib clippson::clippson
 )
 
 add_executable(${PROJECT_NAME}-exe src/main.cpp)

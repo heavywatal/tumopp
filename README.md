@@ -15,6 +15,7 @@ It can be installed and run via [R package](https://github.com/heavywatal/rtumop
 
 The following libraries are optional or automatically installed:
 
+- [fmt](https://fmt.dev/)
 - [clippson](https://github.com/heavywatal/clippson)
 - [cxxwtl](https://github.com/heavywatal/cxxwtl)
 - [pcglite](https://github.com/heavywatal/pcglite)

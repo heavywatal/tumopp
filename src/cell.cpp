@@ -3,7 +3,7 @@
 */
 #include "cell.hpp"
 
-#include <wtl/iostr.hpp>
+#include <fmt/format.h>
 #include <wtl/random.hpp>
 
 namespace tumopp {
@@ -75,36 +75,34 @@ void Cell::differentiate(urbg_t& engine) {
     proliferation_capacity_ = static_cast<int8_t>(PARAM_.MAX_PROLIFERATION_CAPACITY);
 }
 
-std::string Cell::mutate(urbg_t& engine) {
-    auto oss = wtl::make_oss();
+void Cell::mutate(std::string& buffer, urbg_t& engine) {
     if (BERN_MUT_BIRTH(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_BIRTH(engine);
-        oss << id_ << "\tbeta\t" << s << "\n";
+        fmt::format_to(std::back_inserter(buffer), "{}\tbeta\t{:.9g}\n", id_, s);
         event_rates_->birth_rate *= (s += 1.0);
     }
     if (BERN_MUT_DEATH(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_DEATH(engine);
-        oss << id_ << "\tdelta\t" << s << "\n";
+        fmt::format_to(std::back_inserter(buffer), "{}\tdelta\t{:.9g}\n", id_, s);
         event_rates_->death_rate *= (s += 1.0);
     }
     if (BERN_MUT_ALPHA(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_ALPHA(engine);
-        oss << id_ << "\talpha\t" << s << "\n";
+        fmt::format_to(std::back_inserter(buffer), "{}\talpha\t{:.9g}\n", id_, s);
         event_rates_->death_prob *= (s += 1.0);
     }
     if (BERN_MUT_MIG(engine)) {
         event_rates_ = std::make_shared<EventRates>(*event_rates_);
         double s = GAUSS_MIG(engine);
-        oss << id_ << "\trho\t" << s << "\n";
+        fmt::format_to(std::back_inserter(buffer), "{}\trho\t{:.9g}\n", id_, s);
         event_rates_->migration_rate *= (s += 1.0);
     }
-    return oss.str();
 }
 
-std::string Cell::force_mutate(urbg_t& engine) {
+void Cell::force_mutate(std::string& buffer, urbg_t& engine) {
     event_rates_ = std::make_shared<EventRates>(*event_rates_);
     const double s_birth = GAUSS_BIRTH(engine);
     const double s_death = GAUSS_DEATH(engine);
@@ -114,12 +112,18 @@ std::string Cell::force_mutate(urbg_t& engine) {
     event_rates_->death_rate *= (1.0 + s_death);
     event_rates_->death_prob *= (1.0 + s_alpha);
     event_rates_->migration_rate *= (1.0 + s_migration);
-    auto oss = wtl::make_oss();
-    if (s_birth != 0.0) {oss << id_ << "\tbeta\t"  << s_birth << "\n";}
-    if (s_death != 0.0) {oss << id_ << "\tdelta\t" << s_death << "\n";}
-    if (s_alpha != 0.0) {oss << id_ << "\talpha\t" << s_alpha << "\n";}
-    if (s_migration != 0.0) {oss << id_ << "\trho\t"   << s_migration << "\n";}
-    return oss.str();
+    if (s_birth != 0.0) {
+        fmt::format_to(std::back_inserter(buffer), "{}\tbeta\t{:.9g}\n", id_, s_birth);
+    }
+    if (s_death != 0.0) {
+        fmt::format_to(std::back_inserter(buffer), "{}\tdelta\t{:.9g}\n", id_, s_death);
+    }
+    if (s_alpha != 0.0) {
+        fmt::format_to(std::back_inserter(buffer), "{}\talpha\t{:.9g}\n", id_, s_alpha);
+    }
+    if (s_migration != 0.0) {
+        fmt::format_to(std::back_inserter(buffer), "{}\trho\t{:.9g}\n", id_, s_migration);
+    }
 }
 
 double Cell::delta_time(urbg_t& engine, const double now, const double positional_value, const bool surrounded) {
@@ -167,26 +171,21 @@ const char* Cell::header() {
            "birth\tdeath\tomega";
 }
 
-std::ostream& Cell::write(std::ostream& ost) const {
-    return ost
-        << coord_[0] << "\t" << coord_[1] << "\t" << coord_[2] << "\t"
-        << id_ << "\t"
-        << (ancestor_ ? ancestor_->id_ : 0u) << "\t"
-        << time_of_birth_ << "\t" << time_of_death_ << "\t"
-        << static_cast<int>(proliferation_capacity_);
+void Cell::format_to_back(std::string& buffer) const {
+    fmt::format_to(std::back_inserter(buffer),
+      "{}\t{}\t{}\t{}\t{}\t{:.9g}\t{:.9g}\t{}\n",
+      coord_[0], coord_[1], coord_[2],
+      id_,
+      (ancestor_ ? ancestor_->id_ : 0u),
+      time_of_birth_, time_of_death_,
+      static_cast<int>(proliferation_capacity_));
 }
 
-std::ostream& Cell::traceback(std::ostream& ost, std::unordered_set<unsigned>* done) const {
-    write(ost) << "\n";
-    if (ancestor_ && done->insert(ancestor_->id_).second) {
-        ancestor_->traceback(ost, done);
+void Cell::traceback(std::string& buffer, std::unordered_set<unsigned>& done) const {
+    format_to_back(buffer);
+    if (ancestor_ && done.insert(ancestor_->id_).second) {
+        ancestor_->traceback(buffer, done);
     }
-    return ost;
-}
-
-//! Stream operator for debug print
-std::ostream& operator<< (std::ostream& ost, const Cell& x) {
-    return x.write(ost);
 }
 
 } // namespace tumopp

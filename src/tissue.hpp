@@ -10,7 +10,6 @@
 #include "random.hpp"
 
 #include <cstdint>
-#include <sstream>
 #include <string>
 #include <array>
 #include <unordered_set>
@@ -60,11 +59,12 @@ class Tissue {
     std::ostream& write_drivers(std::ostream&) const;
     //! Write #benchmark_
     std::ostream& write_benchmark(std::ostream&) const;
-    friend std::ostream& operator<< (std::ostream&, const Tissue&);
+    //! Write all cells to buffer
+    std::string format() const;
 
     //! @cond
-    bool has_snapshots() const {return snapshots_.rdbuf()->in_avail();};
-    bool has_drivers() const {return drivers_.rdbuf()->in_avail();}
+    bool has_snapshots() const {return !snapshots_.empty();};
+    bool has_drivers() const {return !drivers_.empty();}
     bool has_benchmark() const {return bool(benchmark_);}
     //! @endcond
 
@@ -152,11 +152,11 @@ class Tissue {
     std::unique_ptr<Coord> coord_func_{nullptr};
 
     //! record dead cells
-    std::stringstream cemetery_{};
+    std::string cemetery_{};
     //! record snapshots
-    std::stringstream snapshots_{};
+    std::string snapshots_{};
     //! record driver mutations
-    std::stringstream drivers_{};
+    std::string drivers_{};
     //! id of recorded cells
     mutable std::unordered_set<unsigned> recorded_{};
     //! record resource usage
@@ -166,6 +166,8 @@ class Tissue {
     //! print debug info
     bool verbose_{false};
 };
+
+inline std::string format_as(const Tissue& x) { return x.format(); }
 
 } // namespace tumopp
 
