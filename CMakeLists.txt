@@ -10,7 +10,9 @@ include(GNUInstallDirs)
 cmake_print_variables(CMAKE_INSTALL_PREFIX)
 
 add_compile_options(
-  -Wall -Wextra -pedantic
+  -Wall -Wextra -Wpedantic
+  -Wconversion -Wsign-conversion -Wshadow
+  $<IF:$<BOOL:$<CONFIG>>,,-Werror>
   $<IF:$<BOOL:$<CONFIG>>,,-O2>
   $<IF:$<BOOL:$<CONFIG>>,,-g>
   $<$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>:-march=native>
@@ -30,30 +32,30 @@ endmacro()
 
 FetchContent_Declare(fmt
   GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-  GIT_TAG e69e5f977d458f2650bb346dadf2ad30c5320281
+  GIT_TAG 407c905e45ad75fc29bf0f9bb7c5c2fd3475976f
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 10.2.1
+  FIND_PACKAGE_ARGS 12.1.0
 )
 
 FetchContent_Declare(pcglite
   GIT_REPOSITORY https://github.com/heavywatal/pcglite.git
-  GIT_TAG 45fd73104aa1026624d87ea2f2e387c3498b34b0
+  GIT_TAG 4eff9c9088e8b503c63c5147eb2e0a994b07a57a
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 0.2.1
+  FIND_PACKAGE_ARGS 0.2.2
 )
 
 FetchContent_Declare(clippson
   GIT_REPOSITORY https://github.com/heavywatal/clippson.git
-  GIT_TAG fb915f6f3b00e4854ab159aea38f620c4934da5c
+  GIT_TAG df72e9dc1ceac38a46db452e8102e807301784c5
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 0.8.11
+  FIND_PACKAGE_ARGS 0.8.12
 )
 
 FetchContent_Declare(wtl
   GIT_REPOSITORY https://github.com/heavywatal/cxxwtl.git
-  GIT_TAG 64d10cd35a5690629bd84c89b2fb46b35215581a
+  GIT_TAG fdaa1420abdb25a54ae7262aeaddf622c21a5935
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 0.10.2
+  FIND_PACKAGE_ARGS 0.11.0 COMPONENTS zlib
 )
 
 Pkg_MakeAvailable(fmt pcglite clippson wtl)
