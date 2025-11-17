@@ -202,7 +202,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
         const auto x = num_empty_neighbors(daughter->coord());
         if (x > 0U) {
             double prob = x;
-            prob /= coord_func_->directions().size();
+            prob /= static_cast<double>(coord_func_->directions().size());
             if (wtl::generate_canonical(*engine_) < prob) {
                 push(daughter, coord_func_->random_direction(*engine_));
                 return true;
@@ -324,7 +324,7 @@ coord_t Tissue::roulette_direction(const coord_t& current) const {
     for (const auto& d: directions) {
         const auto l = steps_to_empty(current, d);
         if (l == 0U) {return d;}
-        roulette.push_back(1.0 / l);
+        roulette.push_back(1.0 / static_cast<double>(l));
     }
     std::discrete_distribution<unsigned> discrete(roulette.begin(), roulette.end());
     return directions[discrete(*engine_)];
