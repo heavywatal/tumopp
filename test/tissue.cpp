@@ -8,6 +8,6 @@ int main() {
     tumopp::Tissue tissue;
     tissue.grow(10);
     fmt::println("{}", tissue);
-    tissue.write_history(std::cout);
+    std::cout << tissue.str_history();
     return 0;
 }

@@ -347,32 +347,25 @@ void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
     extant_cells_.erase(dead);
 }
 
-std::ostream& Tissue::write_history(std::ostream& ost) const {
-    std::string buffer;
-    fmt::format_to(std::back_inserter(buffer), "{}\n{}", Cell::header(), cemetery_);
+std::string Tissue::str_history() const {
+    std::string buffer = fmt::format("{}\n{}", Cell::header(), cemetery_);
     for (const auto& p: extant_cells_) {
         p->traceback(buffer, recorded_);
     }
-    ost << buffer;
-    return ost;
+    return buffer;
 }
 
-std::ostream& Tissue::write_snapshots(std::ostream& ost) const {
-    ost << "time\t" << Cell::header() << "\n";
-    ost << snapshots_;
-    return ost;
+std::string Tissue::str_snapshots() const {
+    return fmt::format("time\t{}\n{}", Cell::header(), snapshots_);
 }
 
-std::ostream& Tissue::write_drivers(std::ostream& ost) const {
-    ost << "id\ttype\tcoef\n";
-    ost << drivers_;
-    return ost;
+std::string Tissue::str_drivers() const {
+    return fmt::format("id\ttype\tcoef\n{}", drivers_);
 }
 
-std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
+std::string Tissue::str_benchmark() const {
     benchmark_->append(extant_cells_.size() + 1u);
-    ost << benchmark_->str();
-    return ost;
+    return benchmark_->str();
 }
 
 void Tissue::snapshots_append() {

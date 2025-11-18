@@ -238,22 +238,22 @@ void Simulation::write() const {
     {
         wtl::zlib::ofstream ofs{outdir / "population.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-        tissue_->write_history(ofs);
+        ofs << tissue_->str_history();
     }
     if (tissue_->has_snapshots()) {
         wtl::zlib::ofstream ofs{outdir / "snapshots.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-        tissue_->write_snapshots(ofs);
+        ofs << tissue_->str_snapshots();
     }
     if (tissue_->has_drivers()) {
         wtl::zlib::ofstream ofs{outdir / "drivers.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-        tissue_->write_drivers(ofs);
+        ofs << tissue_->str_drivers();
     }
     if (tissue_->has_benchmark()) {
         wtl::zlib::ofstream ofs{outdir / "benchmark.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-        tissue_->write_benchmark(ofs);
+        ofs << tissue_->str_benchmark();
     }
 }
 

@@ -52,13 +52,13 @@ class Tissue {
     void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
     //! Write #extant_cells_ and their ancestors
-    std::ostream& write_history(std::ostream&) const;
+    std::string str_history() const;
     //! Write #snapshots_
-    std::ostream& write_snapshots(std::ostream&) const;
+    std::string str_snapshots() const;
     //! Write #drivers_
-    std::ostream& write_drivers(std::ostream&) const;
+    std::string str_drivers() const;
     //! Write #benchmark_
-    std::ostream& write_benchmark(std::ostream&) const;
+    std::string str_benchmark() const;
     //! Write all cells to buffer
     std::string format() const;
 
