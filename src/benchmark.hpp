@@ -6,9 +6,10 @@
 #define TUMOPP_BENCHMARK_HPP_
 
 #include <wtl/resource.hpp>
-#include <fmt/format.h>
+#include <fmt/base.h>
 #include <fmt/ranges.h>
-#include <sstream>
+
+#include <iterator>
 
 namespace tumopp {
 
@@ -16,20 +17,19 @@ namespace tumopp {
 class Benchmark {
   public:
     Benchmark() {
-        sst_ << "size\t"
-             << fmt::format("{}\n", fmt::join(wtl::rusage_names, "\t"));
+        fmt::format_to(std::back_inserter(buffer_), "size\t{}\n",
+                       fmt::join(wtl::rusage_names, "\t"));
     }
-    //! Append current state to #sst_
+    //! Append current state to #buffer_
     void append(std::size_t size) {
-        sst_ << size
-             << "\t"
-             << fmt::format("{}\n", fmt::join(wtl::get_rusage<std::milli, std::kilo>(), "\t"));
+        fmt::format_to(std::back_inserter(buffer_), "{}\t{}\n",
+                       size, fmt::join(wtl::get_rusage<std::milli, std::kilo>(), "\t"));
     }
-    //! Get TSV stream buffer
-    std::streambuf* rdbuf() const {return sst_.rdbuf();}
+    //! Get string in TSV format
+    const std::string& str() const {return buffer_;}
   private:
     //! String in TSV format
-    std::stringstream sst_{};
+    std::string buffer_;
 };
 
 } // namespace tumopp

@@ -74,6 +74,9 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC pcglite::pcglite
   PRIVATE fmt::fmt wtl::wtl wtl::zlib clippson::clippson
 )
+target_compile_definitions(${PROJECT_NAME}
+  PRIVATE FMT_USE_LOCALE=0
+)
 
 add_executable(${PROJECT_NAME}-exe src/main.cpp)
 target_link_libraries(${PROJECT_NAME}-exe PRIVATE ${PROJECT_NAME})

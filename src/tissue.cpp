@@ -371,7 +371,7 @@ std::ostream& Tissue::write_drivers(std::ostream& ost) const {
 
 std::ostream& Tissue::write_benchmark(std::ostream& ost) const {
     benchmark_->append(extant_cells_.size() + 1u);
-    if (benchmark_->rdbuf()->in_avail()) ost << benchmark_->rdbuf();
+    ost << benchmark_->str();
     return ost;
 }
 
