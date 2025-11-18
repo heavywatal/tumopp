@@ -5,10 +5,9 @@
 #ifndef TUMOPP_BENCHMARK_HPP_
 #define TUMOPP_BENCHMARK_HPP_
 
-#ifndef _WIN32
-  #include <wtl/resource.hpp>
-#endif // _WIN32
-
+#include <wtl/resource.hpp>
+#include <fmt/format.h>
+#include <fmt/ranges.h>
 #include <sstream>
 
 namespace tumopp {
@@ -17,19 +16,14 @@ namespace tumopp {
 class Benchmark {
   public:
     Benchmark() {
-        sst_ << "size"
-#ifndef _WIN32
-             << "\t" << wtl::rusage_header()
-#endif // _WIN32
-             << "\n";
+        sst_ << "size\t"
+             << fmt::format("{}\n", fmt::join(wtl::rusage_names, "\t"));
     }
     //! Append current state to #sst_
     void append(std::size_t size) {
         sst_ << size
-#ifndef _WIN32
-             << "\t" << wtl::getrusage<std::milli, std::kilo>()
-#endif // _WIN32
-             << "\n";
+             << "\t"
+             << fmt::format("{}\n", fmt::join(wtl::get_rusage<std::milli, std::kilo>(), "\t"));
     }
     //! Get TSV stream buffer
     std::streambuf* rdbuf() const {return sst_.rdbuf();}
