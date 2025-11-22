@@ -250,9 +250,10 @@ void Simulation::write() const {
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
         ofs << tissue_->str_drivers();
     }
-    if (tissue_->has_benchmark()) {
+    if (!tissue_->str_benchmark().empty()) {
         wtl::zlib::ofstream ofs{outdir / "benchmark.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+        tissue_->benchmark_append(tissue_->size() + 1u);
         ofs << tissue_->str_benchmark();
     }
 }

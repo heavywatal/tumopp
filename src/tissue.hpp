@@ -19,8 +19,6 @@
 
 namespace tumopp {
 
-class Benchmark;
-
 /*! @brief Population of Cell
 */
 class Tissue {
@@ -51,21 +49,22 @@ class Tissue {
     //! Simulate medical treatment with the increased death_prob
     void treatment(double death_prob, size_t num_resistant_cells = 3u);
 
+    //! Append current state to #benchmark_
+    void benchmark_append(const size_t size);
     //! Write #extant_cells_ and their ancestors
     std::string str_history() const;
     //! Write #snapshots_
     std::string str_snapshots() const;
     //! Write #drivers_
     std::string str_drivers() const;
-    //! Write #benchmark_
-    std::string str_benchmark() const;
+    //! View #benchmark_
+    std::string_view str_benchmark() const { return benchmark_; }
     //! Write all cells to buffer
     std::string format() const;
 
     //! @cond
     bool has_snapshots() const {return !snapshots_.empty();};
     bool has_drivers() const {return !drivers_.empty();}
-    bool has_benchmark() const {return bool(benchmark_);}
     //! @endcond
 
     //! @name Getter functions
@@ -160,7 +159,7 @@ class Tissue {
     //! id of recorded cells
     mutable std::unordered_set<unsigned> recorded_{};
     //! record resource usage
-    std::unique_ptr<Benchmark> benchmark_{nullptr};
+    std::string benchmark_{};
     //! random number generator
     std::unique_ptr<urbg_t> engine_{nullptr};
     //! print debug info

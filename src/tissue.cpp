@@ -2,13 +2,13 @@
     @brief Implementation of Tissue class
 */
 #include "tissue.hpp"
-#include "benchmark.hpp"
 
 #include <fmt/format.h>
 #include <fmt/ranges.h>
 #include <wtl/random.hpp>
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
+#include <wtl/resource.hpp>
 
 #include <cstdio>
 
@@ -27,8 +27,7 @@ Tissue::Tissue(
   engine_(std::make_unique<urbg_t>(seed)),
   verbose_(verbose) {
     if (enable_benchmark) {
-        benchmark_ = std::make_unique<Benchmark>();
-        benchmark_->append(0u);
+        benchmark_append(0u);
     }
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
@@ -112,7 +111,7 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 const auto size = extant_cells_.size();
                 if ((size % progress_interval) == 0u) {
                     if (verbose_) fmt::print(stderr, "\r{}", size);
-                    if (benchmark_) benchmark_->append(size);
+                    if (!benchmark_.empty()) benchmark_append(size);
                 }
             } else {
                 queue_push(mother, true);
@@ -363,9 +362,9 @@ std::string Tissue::str_drivers() const {
     return fmt::format("id\ttype\tcoef\n{}", drivers_);
 }
 
-std::string Tissue::str_benchmark() const {
-    benchmark_->append(extant_cells_.size() + 1u);
-    return benchmark_->str();
+void Tissue::benchmark_append(const size_t size) {
+    const auto ru = wtl::get_rusage<std::milli, std::kilo>();
+    fmt::format_to(std::back_inserter(benchmark_), "{}\t{}\n", size, fmt::join(ru, "\t"));
 }
 
 void Tissue::snapshots_append() {
