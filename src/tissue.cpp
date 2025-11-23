@@ -17,7 +17,7 @@ namespace tumopp {
 
 Tissue::Tissue(
   const ptrdiff_t initial_size,
-  const unsigned dimensions,
+  const int dimensions,
   const std::string& coordinate,
   const std::string& local_density_effect,
   const std::string& displacement_path,
@@ -55,7 +55,7 @@ Tissue::Tissue(
 
 Tissue::~Tissue() = default;
 
-void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate) {
+void Tissue::init_coord(const int dimensions, const std::string& coordinate) {
     std::unordered_map<std::string, std::unique_ptr<Coord>> swtch;
     swtch["neumann"] = std::make_unique<Neumann>(dimensions);
     swtch["moore"] = std::make_unique<Moore>(dimensions);

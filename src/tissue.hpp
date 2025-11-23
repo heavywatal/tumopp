@@ -26,7 +26,7 @@ class Tissue {
     //! Constructor
     Tissue(
       ptrdiff_t initial_size=1,
-      unsigned dimensions=3u,
+      int dimensions=3,
       const std::string& coordinate="moore",
       const std::string& local_density_effect="const",
       const std::string& displacement_path="random",
@@ -75,7 +75,7 @@ class Tissue {
 
   private:
     //! Set #coord_func_
-    void init_coord(unsigned dimensions, const std::string& coordinate);
+    void init_coord(int dimensions, const std::string& coordinate);
     //! Set #insert function
     void init_insert_function(const std::string& local_density_effect, const std::string& displacement_path);
     //! initialized in init_insert_function()

@@ -1,5 +1,7 @@
 #include "coord.hpp"
 
+#include <wtl/signed.hpp>
+
 #include <cmath>
 #include <numeric>
 #include <algorithm>
@@ -11,9 +13,10 @@ namespace tumopp {
 namespace {
 
 //! constexpr pow function for integers
-constexpr size_t ipow(size_t base, size_t exponent) noexcept {
-  return exponent <= 0u ? 1u
-       : exponent == 1u ? base
+template <class T> inline
+constexpr T ipow(T base, T exponent) noexcept {
+  return exponent <= 0 ? 1
+       : exponent == 1 ? base
        : base * ipow(base, --exponent);
 }
 
@@ -43,37 +46,37 @@ double _euclidean_distance(const std::array<T, MAX_DIM>& v) {
 
 }// namespace
 
-Coord::Coord(unsigned d): dimensions_(d) {
-    if (d < 1u || MAX_DIM < d) {
+Coord::Coord(int d): dimensions_(d) {
+    if (d < 1 || MAX_DIM < d) {
         throw std::runtime_error("Invalid value for dimensions");
     }
-    if (dimensions_ == 1u) {
+    if (dimensions_ == 1) {
         directions_.push_back({1, 0, 0});
         directions_.push_back({-1, 0, 0});
         dist_direction_.param(decltype(dist_direction_)::param_type(0, 1u));
     }
 }
 
-Neumann::Neumann(const unsigned d): Coord(d) {
-    if (dimensions_ < 2u) return;
-    directions_.reserve(2U * dimensions_);
-    for (unsigned i = 0; i < dimensions_; ++i) {
+Neumann::Neumann(const int d): Coord(d) {
+    if (dimensions_ < 2) return;
+    wtl::reserve(directions_, 2 * dimensions_);
+    for (int i = 0; i < dimensions_; ++i) {
         coord_t v{};
-        v[i] = 1;
+        v[wtl::cast_u(i)] = 1;
         directions_.push_back(v);
-        v[i] = -1;
+        v[wtl::cast_u(i)] = -1;
         directions_.push_back(v);
     }
     auto max = static_cast<unsigned>(directions_.size()) - 1;
     dist_direction_.param(decltype(dist_direction_)::param_type(0, max));
 }
 
-Moore::Moore(const unsigned d): Coord(d) {
-    if (dimensions_ < 2u) return;
-    directions_.reserve(ipow(3u, dimensions_) - 1u);
+Moore::Moore(const int d): Coord(d) {
+    if (dimensions_ < 2) return;
+    wtl::reserve(directions_, ipow(3, dimensions_) - 1);
     for (const int x: {-1, 0, 1}) {
         for (const int y: {-1, 0, 1}) {
-            if (dimensions_ == 2U) {
+            if (dimensions_ == 2) {
                 if (x == 0 && y == 0) continue;
                 directions_.push_back({{x, y, 0}});
                 continue;
@@ -88,14 +91,14 @@ Moore::Moore(const unsigned d): Coord(d) {
     dist_direction_.param(decltype(dist_direction_)::param_type(0, max));
 }
 
-Hexagonal::Hexagonal(const unsigned d): Coord(d) {
-    if (dimensions_ < 2u) return;
+Hexagonal::Hexagonal(const int d): Coord(d) {
+    if (dimensions_ < 2) return;
     coord_t v{{-1, 0, 1}};
-    directions_.reserve(6 * (dimensions_ - 1));
+    wtl::reserve(directions_, 6 * (dimensions_ - 1));
     do {
         directions_.push_back({{v[0], v[1], 0}});
     } while (std::next_permutation(std::begin(v), std::end(v)));
-    if (dimensions_ > 2u) {
+    if (dimensions_ > 2) {
         directions_.push_back({{0, 0, -1}});
         directions_.push_back({{1, 0, -1}});
         directions_.push_back({{1, -1, -1}});
@@ -127,7 +130,7 @@ std::array<double, MAX_DIM> Hexagonal::continuous(const coord_t& v) const {
     true_pos[1] += static_cast<double>(v[1]);
     true_pos[1] += true_pos[0] * 0.5;
     true_pos[0] *= std::sqrt(3.0 / 4.0);
-    if (dimensions_ > 2U) {
+    if (dimensions_ > 2) {
         true_pos[2] += static_cast<double>(v[2]);
         true_pos[0] += true_pos[2] / std::sqrt(3.0);
         true_pos[2] *= std::sqrt(2.0 / 3.0);
@@ -137,7 +140,7 @@ std::array<double, MAX_DIM> Hexagonal::continuous(const coord_t& v) const {
 
 int Hexagonal::graph_distance(const coord_t& v) const {
     int d = std::max(max(abs(v)), std::abs(v[0] + v[1]));
-    if (dimensions_ > 2U) {
+    if (dimensions_ > 2) {
         return std::max(d, std::abs(v[0] + v[2]));
     }
     return d;
@@ -152,14 +155,14 @@ double Hexagonal::euclidean_distance(const coord_t& v) const {
 }
 
 std::vector<coord_t> Coord::core() const {
-    const size_t n = ipow(2u, dimensions_);
+    const auto n = ipow(2, dimensions_);
     std::vector<coord_t> output;
-    output.reserve(n);
-    for (size_t i=0; i<n; ++i) {
-        std::bitset<MAX_DIM> bs(i);
+    wtl::reserve(output, n);
+    for (int i=0; i<n; ++i) {
+        std::bitset<MAX_DIM> bs(wtl::cast_u(i));
         coord_t v{};
-        for (size_t j=0; j<dimensions_; ++j) {
-            v[j] = static_cast<int>(bs[j]);
+        for (int j=0; j<dimensions_; ++j) {
+            v[wtl::cast_u(j)] = static_cast<int>(bs[wtl::cast_u(j)]);
         }
         output.push_back(v);
     }
@@ -168,7 +171,7 @@ std::vector<coord_t> Coord::core() const {
 
 std::vector<coord_t> Hexagonal::core() const {
     std::vector<coord_t> output = Neumann(dimensions_).core();
-    if (dimensions_ == 3U) {
+    if (dimensions_ == 3) {
         output.resize(3);
         output.push_back({{1, 0, -1}});
     }
@@ -177,7 +180,7 @@ std::vector<coord_t> Hexagonal::core() const {
 
 std::vector<coord_t> Coord::sphere(const ptrdiff_t n) const {
     std::vector<coord_t> output;
-    if (dimensions_ == 2U) {
+    if (dimensions_ == 2) {
         const int lim = 9;
         // radius 9: regular: 253, hex: 281
         output.reserve(281);
@@ -208,7 +211,7 @@ std::vector<coord_t> Coord::sphere(const ptrdiff_t n) const {
         [this](const coord_t& lhs, const coord_t& rhs){
             return euclidean_distance(lhs) < euclidean_distance(rhs);
     });
-    output.resize(static_cast<size_t>(n));
+    wtl::resize(output, n);
     return output;
 }
 

@@ -51,7 +51,7 @@ inline clipp::group general_options(nlohmann::json* vm) {
 */
 inline clipp::group simulation_options(nlohmann::json* vm) {
     return (
-      clippson::option(vm, {"D", "dimensions"}, 3u),
+      clippson::option(vm, {"D", "dimensions"}, 3),
       clippson::option(vm, {"C", "coord"},
         "moore",
         "Neighborhood"
@@ -193,7 +193,7 @@ void Simulation::run() {
     for (int i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>(
             VM.at("origin").get<ptrdiff_t>(),
-            VM.at("dimensions").get<unsigned>(),
+            VM.at("dimensions").get<int>(),
             VM.at("coord").get<std::string>(),
             VM.at("local").get<std::string>(),
             VM.at("path").get<std::string>(),

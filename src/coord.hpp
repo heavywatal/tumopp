@@ -13,7 +13,7 @@
 namespace tumopp {
 
 //! Maximum dimensions
-constexpr unsigned MAX_DIM = 3u;
+constexpr int MAX_DIM = 3;
 
 //! Alias of coordinate type
 using coord_t = std::array<int, MAX_DIM>;
@@ -122,19 +122,19 @@ class Coord {
     //! getter of #directions_
     const std::vector<coord_t>& directions() const noexcept {return directions_;}
     //! getter of #dimensions_
-    unsigned dimensions() const noexcept {return dimensions_;}
+    int dimensions() const noexcept {return dimensions_;}
 
   protected:
     //! Default constructor is deleted
     Coord() = delete;
     //! Constructor: initialize and check #dimensions_
-    explicit Coord(unsigned d);
+    explicit Coord(int d);
 
     /////1/////////2/////////3/////////4/////////5/////////6/////////7/////////
     // Data member
 
     //! {1, 2, 3}
-    const unsigned dimensions_{};
+    const int dimensions_{};
     //! initialized in derived class constructor
     std::vector<coord_t> directions_{};
     //! initialized in derived class constructor
@@ -147,7 +147,7 @@ class Neumann final: public Coord {
   public:
     Neumann() = delete;
     //! Constructor
-    explicit Neumann(const unsigned d);
+    explicit Neumann(const int d);
     ~Neumann() = default;
     //! Manhattan distance
     int graph_distance(const coord_t& v) const override;
@@ -161,7 +161,7 @@ class Moore final: public Coord {
   public:
     Moore() = delete;
     //! Constructor
-    explicit Moore(const unsigned d);
+    explicit Moore(const int d);
     ~Moore() = default;
     //! Chebyshev/chessboard distance
     int graph_distance(const coord_t& v) const override;
@@ -173,7 +173,7 @@ class Hexagonal final: public Coord {
   public:
     Hexagonal() = delete;
     //! Constructor
-    explicit Hexagonal(const unsigned d);
+    explicit Hexagonal(const int d);
     ~Hexagonal() = default;
     std::array<double, MAX_DIM> continuous(const coord_t& v) const override;
     int graph_distance(const coord_t& v) const override;
