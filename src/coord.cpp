@@ -175,7 +175,7 @@ std::vector<coord_t> Hexagonal::core() const {
     return output;
 }
 
-std::vector<coord_t> Coord::sphere(const size_t n) const {
+std::vector<coord_t> Coord::sphere(const ptrdiff_t n) const {
     std::vector<coord_t> output;
     if (dimensions_ == 2U) {
         const int lim = 9;
@@ -208,7 +208,7 @@ std::vector<coord_t> Coord::sphere(const size_t n) const {
         [this](const coord_t& lhs, const coord_t& rhs){
             return euclidean_distance(lhs) < euclidean_distance(rhs);
     });
-    output.resize(n);
+    output.resize(static_cast<size_t>(n));
     return output;
 }
 

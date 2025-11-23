@@ -103,7 +103,7 @@ class Coord {
     //! square or cube
     virtual std::vector<coord_t> core() const;
     //! sphere coordinates with inside-out direction
-    std::vector<coord_t> sphere(size_t n) const;
+    std::vector<coord_t> sphere(ptrdiff_t n) const;
     //! Destructor
     virtual ~Coord() = default;
 

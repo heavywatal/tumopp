@@ -9,13 +9,14 @@
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
 #include <wtl/resource.hpp>
+#include <wtl/signed.hpp>
 
 #include <cstdio>
 
 namespace tumopp {
 
 Tissue::Tissue(
-  const size_t initial_size,
+  const ptrdiff_t initial_size,
   const unsigned dimensions,
   const std::string& coordinate,
   const std::string& local_density_effect,
@@ -27,7 +28,7 @@ Tissue::Tissue(
   engine_(std::make_unique<urbg_t>(seed)),
   verbose_(verbose) {
     if (enable_benchmark) {
-        benchmark_append(0u);
+        benchmark_append(0);
     }
     init_coord(dimensions, coordinate);
     init_insert_function(local_density_effect, displacement_path);
@@ -37,7 +38,7 @@ Tissue::Tissue(
       std::make_shared<EventRates>(init_event_rates)
     );
     extant_cells_.insert(origin);
-    while (extant_cells_.size() < initial_size) {
+    while (wtl::ssize(extant_cells_) < initial_size) {
         for (const auto& mother: extant_cells_) {
             const auto daughter = std::make_shared<Cell>(*mother);
             const auto ancestor = std::make_shared<Cell>(*mother);
@@ -46,7 +47,7 @@ Tissue::Tissue(
             daughter->set_time_of_birth(0.0, ++id_tail_, ancestor);
             daughter->set_coord(initial_coords[extant_cells_.size()]);
             extant_cells_.insert(daughter);
-            if (extant_cells_.size() >= initial_size) break;
+            if (wtl::ssize(extant_cells_) >= initial_size) break;
         }
     }
     for (const auto& cell: extant_cells_) queue_push(cell);
@@ -71,18 +72,18 @@ void Tissue::init_coord(const unsigned dimensions, const std::string& coordinate
     }
 }
 
-bool Tissue::grow(const size_t max_size, const double max_time,
+bool Tissue::grow(const ptrdiff_t max_size, const double max_time,
                   const double snapshot_interval,
-                  size_t recording_early_growth,
-                  size_t mutation_timing) {
-    if (recording_early_growth > 0u) {snapshots_append();}
+                  ptrdiff_t recording_early_growth,
+                  ptrdiff_t mutation_timing) {
+    if (recording_early_growth > 0) {snapshots_append();}
     bool success = false;
     double time_snapshot = snapshot_interval;
-    constexpr size_t progress_interval{1 << 12};
+    constexpr ptrdiff_t progress_interval{1 << 12};
     while (true) {
         auto it = queue_.begin();
         time_ = it->first;
-        if (time_ > max_time || extant_cells_.size() >= max_size) {
+        if (time_ > max_time || wtl::ssize(extant_cells_) >= max_size) {
             success = true; // maybe not; but want to exit with record
             break;
         }
@@ -102,14 +103,14 @@ bool Tissue::grow(const size_t max_size, const double max_time,
                 daughter->set_time_of_birth(time_, ++id_tail_, ancestor);
                 mother->mutate(drivers_, *engine_);
                 daughter->mutate(drivers_, *engine_);
-                if (extant_cells_.size() == mutation_timing) {
-                    mutation_timing = 0u; // once
+                if (wtl::ssize(extant_cells_) == mutation_timing) {
+                    mutation_timing = 0; // once
                     daughter->force_mutate(drivers_, *engine_);
                 }
                 queue_push(mother);
                 queue_push(daughter);
-                const auto size = extant_cells_.size();
-                if ((size % progress_interval) == 0u) {
+                const auto size = wtl::ssize(extant_cells_);
+                if ((size % progress_interval) == 0) {
                     if (verbose_) fmt::print(stderr, "\r{}", size);
                     if (!benchmark_.empty()) benchmark_append(size);
                 }
@@ -124,10 +125,10 @@ bool Tissue::grow(const size_t max_size, const double max_time,
             migrate(mother);
             queue_push(mother);
         }
-        if (extant_cells_.size() < recording_early_growth) {
+        if (wtl::ssize(extant_cells_) < recording_early_growth) {
             snapshots_append();
         } else {
-            recording_early_growth = 0u;  // prevent restart by cell death
+            recording_early_growth = 0;  // prevent restart by cell death
         }
     }
     if (verbose_) fmt::println(stderr, "\r{}", extant_cells_.size());
@@ -140,19 +141,19 @@ void Tissue::plateau(const double time) {
         p->increase_death_rate();
         queue_push(p);
     }
-    grow(std::numeric_limits<size_t>::max(), time_ + time);
+    grow(std::numeric_limits<ptrdiff_t>::max(), time_ + time);
 }
 
-void Tissue::treatment(const double death_prob, const size_t num_resistant_cells) {
-    const size_t original_size = extant_cells_.size();
+void Tissue::treatment(const double death_prob, const ptrdiff_t num_resistant_cells) {
+    const ptrdiff_t original_size = wtl::ssize(extant_cells_);
     std::vector<std::shared_ptr<Cell>> cells;
-    cells.reserve(original_size);
+    wtl::reserve(cells, original_size);
     for (const auto& p: queue_) { // for reproducibility
         cells.emplace_back(p.second);
     }
     std::shuffle(cells.begin(), cells.end(), *engine_);
-    for (size_t i=0; i<original_size; ++i) {
-        const auto& p = cells[i];
+    for (ptrdiff_t i=0; i<original_size; ++i) {
+        const auto& p = cells[wtl::cast_u(i)];
         if (i >= num_resistant_cells) {
             p->set_cycle_dependent_death(*engine_, death_prob);
         }
@@ -190,7 +191,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
         return true;
     });
     swtch["step"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
-        if (num_empty_neighbors(daughter->coord()) == 0U) {return false;}
+        if (num_empty_neighbors(daughter->coord()) == 0) {return false;}
         push(daughter, coord_func_->random_direction(*engine_));
         return true;
     });
@@ -199,7 +200,7 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     });
     swtch["linear"].emplace("random", [this](const std::shared_ptr<Cell>& daughter) {
         const auto x = num_empty_neighbors(daughter->coord());
-        if (x > 0U) {
+        if (x > 0) {
             double prob = x;
             prob /= static_cast<double>(coord_func_->directions().size());
             if (wtl::generate_canonical(*engine_) < prob) {
@@ -288,11 +289,11 @@ void Tissue::migrate(const std::shared_ptr<Cell>& migrant) {
     }
 }
 
-size_t Tissue::steps_to_empty(const coord_t& current, const coord_t& direction) const {
+ptrdiff_t Tissue::steps_to_empty(const coord_t& current, const coord_t& direction) const {
     thread_local const auto key = std::make_shared<Cell>();
     const auto& end = extant_cells_.end();
     key->set_coord(current);
-    size_t steps = 0;
+    ptrdiff_t steps = 0;
     do {
         key->add_coord(direction);
         ++steps;
@@ -322,17 +323,17 @@ coord_t Tissue::roulette_direction(const coord_t& current) const {
     std::vector<double> roulette;
     for (const auto& d: directions) {
         const auto l = steps_to_empty(current, d);
-        if (l == 0U) {return d;}
+        if (l == 0) {return d;}
         roulette.push_back(1.0 / static_cast<double>(l));
     }
     std::discrete_distribution<unsigned> discrete(roulette.begin(), roulette.end());
     return directions[discrete(*engine_)];
 }
 
-uint_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
+int_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
     thread_local auto nb = std::make_shared<Cell>();
     const auto& end = extant_cells_.end();
-    uint_fast8_t cnt = 0;
+    int_fast8_t cnt = 0;
     for (const auto& d: coord_func_->directions()) {
         nb->set_coord(coord + d);
         if (extant_cells_.find(nb) == end) {++cnt;}
@@ -362,7 +363,7 @@ std::string Tissue::str_drivers() const {
     return fmt::format("id\ttype\tcoef\n{}", drivers_);
 }
 
-void Tissue::benchmark_append(const size_t size) {
+void Tissue::benchmark_append(const ptrdiff_t size) {
     const auto ru = wtl::get_rusage<std::milli, std::kilo>();
     fmt::format_to(std::back_inserter(benchmark_), "{}\t{}\n", size, fmt::join(ru, "\t"));
 }

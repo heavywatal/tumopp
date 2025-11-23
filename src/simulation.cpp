@@ -11,6 +11,7 @@
 #include <fmt/format.h>
 #include <wtl/zlib.hpp>
 #include <wtl/chrono.hpp>
+#include <wtl/signed.hpp>
 #include <clippson/clippson.hpp>
 
 #include <filesystem>
@@ -63,23 +64,23 @@ inline clipp::group simulation_options(nlohmann::json* vm) {
         "random",
         "Push method"
         " {random, roulette, mindrag, minstraight, stroll}"), // TODO
-      clippson::option(vm, {"O", "origin"}, 1u),
-      clippson::option(vm, {"N", "max"}, 16384u,
+      clippson::option(vm, {"O", "origin"}, 1),
+      clippson::option(vm, {"N", "max"}, 16384,
         "Maximum number of cells to simulate"),
       clippson::option(vm, {"max_time"}, 0.0,
         "Maximum time to simulate"),
       clippson::option(vm, {"T", "plateau"}, 0.0,
         "Duration of turn-over phase after population growth"),
-      clippson::option(vm, {"U", "mutate"}, 0u,
+      clippson::option(vm, {"U", "mutate"}, 0,
         "Introduce a driver mutation to U-th cell"),
       clippson::option(vm, {"treatment"}, 0.0),
-      clippson::option(vm, {"resistant"}, 3u),
+      clippson::option(vm, {"resistant"}, 3),
       clippson::option(vm, {"o", "outdir"}, "tumopp_%Y%m%d_%H%M%S"),
       clippson::option(vm, {"I", "interval"}, 0.0,
         "Time interval to take snapshots"),
-      clippson::option(vm, {"R", "record"}, 0u,
+      clippson::option(vm, {"R", "record"}, 0,
         "Tumor size to stop taking snapshots"),
-      clippson::option(vm, {"extinction"}, 100u,
+      clippson::option(vm, {"extinction"}, 100,
         "Maximum number of trials in case of extinction"),
       clippson::option(vm, {"benchmark"}, false),
       clippson::option(vm, {"seed"}, 0,
@@ -182,16 +183,16 @@ Simulation::Simulation(const std::vector<std::string>& arguments)
 Simulation::~Simulation() = default;
 
 void Simulation::run() {
-    const auto max_size = VM.at("max").get<size_t>();
+    const auto max_size = VM.at("max").get<ptrdiff_t>();
     const double max_time = VM.at("max_time").get<double>();
     const auto plateau_time = VM.at("plateau").get<double>();
     const auto treatment = VM.at("treatment").get<double>();
-    const auto resistant = VM.at("resistant").get<size_t>();
-    const auto allowed_extinction = VM.at("extinction").get<unsigned>();
+    const auto resistant = VM.at("resistant").get<ptrdiff_t>();
+    const auto allowed_extinction = VM.at("extinction").get<int>();
     urbg_t seeder(VM.at("seed").get<uint32_t>());
-    for (size_t i=0; i<allowed_extinction; ++i) {
+    for (int i=0; i<allowed_extinction; ++i) {
         tissue_ = std::make_unique<Tissue>(
-            VM.at("origin").get<size_t>(),
+            VM.at("origin").get<ptrdiff_t>(),
             VM.at("dimensions").get<unsigned>(),
             VM.at("coord").get<std::string>(),
             VM.at("local").get<std::string>(),
@@ -205,23 +206,23 @@ void Simulation::run() {
             max_size,
             max_time > 0.0 ? max_time : std::log2(max_size) * 100.0,
             VM.at("interval").get<double>(),
-            VM.at("record").get<size_t>(),
-            VM.at("mutate").get<size_t>()
+            VM.at("record").get<ptrdiff_t>(),
+            VM.at("mutate").get<ptrdiff_t>()
         );
         if (success) break;
-        fmt::println(stderr, "Trial {}: size = {}", i, tissue_->size());
+        fmt::println(stderr, "Trial {}: size = {}", i, wtl::ssize(*tissue_));
     }
-    if (max_time == 0.0 && tissue_->size() != max_size) {
-        fmt::println(stderr, "Warning: size = {}", tissue_->size());
+    if (max_time == 0.0 && wtl::ssize(*tissue_) != max_size) {
+        fmt::println(stderr, "Warning: size = {}", wtl::ssize(*tissue_));
     }
     if (max_time == 0.0 && plateau_time > 0.0) {
         tissue_->plateau(plateau_time);
     }
     if (max_time == 0.0 && treatment > 0.0) {
-        const size_t margin = 10u * resistant + 10u;
+        const ptrdiff_t margin = 10 * resistant + 10;
         tissue_->treatment(treatment, resistant);
         tissue_->grow(
-            tissue_->size() + margin,
+            wtl::ssize(*tissue_) + margin,
             std::numeric_limits<double>::max(),
             VM.at("interval").get<double>()
         );
@@ -253,7 +254,7 @@ void Simulation::write() const {
     if (!tissue_->str_benchmark().empty()) {
         wtl::zlib::ofstream ofs{outdir / "benchmark.tsv.gz"};
         ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-        tissue_->benchmark_append(tissue_->size() + 1u);
+        tissue_->benchmark_append(wtl::ssize(*tissue_) + 1);
         ofs << tissue_->str_benchmark();
     }
 }

@@ -25,7 +25,7 @@ class Tissue {
   public:
     //! Constructor
     Tissue(
-      size_t initial_size=1u,
+      ptrdiff_t initial_size=1,
       unsigned dimensions=3u,
       const std::string& coordinate="moore",
       const std::string& local_density_effect="const",
@@ -38,19 +38,19 @@ class Tissue {
 
     //! main function
     bool grow(
-      size_t max_size,
+      ptrdiff_t max_size,
       double max_time=100.0,
       double snapshot_interval=0.0,
-      size_t recording_early_growth=0u,
-      size_t mutation_timing=0u);
+      ptrdiff_t recording_early_growth=0,
+      ptrdiff_t mutation_timing=0);
 
     //! Simulate turnover with the increased death_rate
     void plateau(double time);
     //! Simulate medical treatment with the increased death_prob
-    void treatment(double death_prob, size_t num_resistant_cells = 3u);
+    void treatment(double death_prob, ptrdiff_t num_resistant_cells = 3);
 
     //! Append current state to #benchmark_
-    void benchmark_append(const size_t size);
+    void benchmark_append(const ptrdiff_t size);
     //! Write #extant_cells_ and their ancestors
     std::string str_history() const;
     //! Write #snapshots_
@@ -94,14 +94,14 @@ class Tissue {
     //! Put new cell and return existing.
     bool swap_existing(std::shared_ptr<Cell>* x);
     //! Count steps to the nearest empty
-    size_t steps_to_empty(const coord_t& current, const coord_t& direction) const;
+    ptrdiff_t steps_to_empty(const coord_t& current, const coord_t& direction) const;
     //! Direction to the nearest empty
     const coord_t& to_nearest_empty(const coord_t& current) const;
     //! Direction is selected with a probability proportional with 1/l
     coord_t roulette_direction(const coord_t& current) const;
 
     //! Count adjacent empty sites
-    uint_fast8_t num_empty_neighbors(const coord_t&) const;
+    int_fast8_t num_empty_neighbors(const coord_t&) const;
     //! TODO: Calculate positional value
     double positional_value(const coord_t&) const {return 1.0;}
 
