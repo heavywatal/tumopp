@@ -32,51 +32,63 @@ inline size_t hash(const coord_t& v) {
 //! @cond
 //! @name Arithmetic operators for std::array
 //@{
-template <class T> inline
-std::array<T, MAX_DIM>& operator+=(std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
-    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] += rhs[i];}
+template <class T, class Func, std::size_t ...I> inline
+std::array<T, sizeof...(I)>& array_arith_assign(
+  std::array<T, sizeof...(I)>& lhs, const std::array<T, sizeof...(I)>& rhs,
+  Func&& func, std::index_sequence<I...>) {
+    (func(lhs[I], rhs[I]), ...);
     return lhs;
 }
 
-template <class T> inline
-std::array<T, MAX_DIM>& operator-=(std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
-    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] -= rhs[i];}
+template <class T, class Func, std::size_t ...I> inline
+std::array<T, sizeof...(I)>& array_val_arith_assign(
+  std::array<T, sizeof...(I)>& lhs, const T rhs,
+  Func&& func, std::index_sequence<I...>) {
+    (func(lhs[I], rhs), ...);
     return lhs;
 }
 
-template <class T> inline
-std::array<T, MAX_DIM>& operator*=(std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
-    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] *= rhs[i];}
-    return lhs;
+template <class T, std::size_t N> inline
+std::array<T, N>& operator+=(std::array<T, N>& lhs, const std::array<T, N>& rhs) {
+    return array_arith_assign(lhs, rhs, [](T& l, T r) { l += r; }, std::make_index_sequence<N>{});
 }
 
-template <class T> inline
-std::array<T, MAX_DIM>& operator*=(std::array<T, MAX_DIM>& lhs, T rhs) {
-    for (unsigned i = 0u; i < MAX_DIM; ++i) {lhs[i] *= rhs;}
-    return lhs;
+template <class T, std::size_t N> inline
+std::array<T, N>& operator-=(std::array<T, N>& lhs, const std::array<T, N>& rhs) {
+    return array_arith_assign(lhs, rhs, [](T& l, T r) { l -= r; }, std::make_index_sequence<N>{});
 }
 
-template <class T> inline
-std::array<T, MAX_DIM> operator+(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
-    std::array<T, MAX_DIM> v(lhs);
+template <class T, std::size_t N> inline
+std::array<T, N>& operator*=(std::array<T, N>& lhs, const std::array<T, N>& rhs) {
+    return array_arith_assign(lhs, rhs, [](T& l, T r) { l *= r; }, std::make_index_sequence<N>{});
+}
+
+template <class T, std::size_t N> inline
+std::array<T, N>& operator*=(std::array<T, N>& lhs, T rhs) {
+    return array_val_arith_assign(lhs, rhs, [](T& l, T r) { l *= r; }, std::make_index_sequence<N>{});
+}
+
+template <class T, std::size_t N> inline
+std::array<T, N> operator+(const std::array<T, N>& lhs, const std::array<T, N>& rhs) {
+    std::array<T, N> v(lhs);
     return v += rhs;
 }
 
-template <class T> inline
-std::array<T, MAX_DIM> operator-(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
-    std::array<T, MAX_DIM> v(lhs);
+template <class T, std::size_t N> inline
+std::array<T, N> operator-(const std::array<T, N>& lhs, const std::array<T, N>& rhs) {
+    std::array<T, N> v(lhs);
     return v -= rhs;
 }
 
-template <class T> inline
-std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, const std::array<T, MAX_DIM>& rhs) {
-    std::array<T, MAX_DIM> v(lhs);
+template <class T, std::size_t N> inline
+std::array<T, N> operator*(const std::array<T, N>& lhs, const std::array<T, N>& rhs) {
+    std::array<T, N> v(lhs);
     return v *= rhs;
 }
 
-template <class T> inline
-std::array<T, MAX_DIM> operator*(const std::array<T, MAX_DIM>& lhs, T rhs) {
-    std::array<T, MAX_DIM> v(lhs);
+template <class T, std::size_t N> inline
+std::array<T, N> operator*(const std::array<T, N>& lhs, T rhs) {
+    std::array<T, N> v(lhs);
     return v *= rhs;
 }
 
