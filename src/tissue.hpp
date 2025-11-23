@@ -141,7 +141,7 @@ class Tissue {
         hash_ptr_cell,
         equal_ptr_cell> extant_cells_{};
     //! incremented when a new cell is born
-    unsigned id_tail_{0};
+    int id_tail_{0};
 
     //! event queue
     std::multimap<double, std::shared_ptr<Cell>> queue_{};
@@ -157,7 +157,7 @@ class Tissue {
     //! record driver mutations
     std::string drivers_{};
     //! id of recorded cells
-    mutable std::unordered_set<unsigned> recorded_{};
+    mutable std::unordered_set<int> recorded_{};
     //! record resource usage
     std::string benchmark_{};
     //! random number generator

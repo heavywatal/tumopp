@@ -176,12 +176,12 @@ void Cell::format_to_back(std::string& buffer) const {
       "{}\t{}\t{}\t{}\t{}\t{:.9g}\t{:.9g}\t{}\n",
       coord_[0], coord_[1], coord_[2],
       id_,
-      (ancestor_ ? ancestor_->id_ : 0u),
+      (ancestor_ ? ancestor_->id_ : 0),
       time_of_birth_, time_of_death_,
       static_cast<int>(proliferation_capacity_));
 }
 
-void Cell::traceback(std::string& buffer, std::unordered_set<unsigned>& done) const {
+void Cell::traceback(std::string& buffer, std::unordered_set<int>& done) const {
     format_to_back(buffer);
     if (ancestor_ && done.insert(ancestor_->id_).second) {
         ancestor_->traceback(buffer, done);

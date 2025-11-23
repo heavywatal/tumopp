@@ -45,7 +45,7 @@ struct CellParams {
     //! \f$p_s\f$
     double PROB_SYMMETRIC_DIVISION = 1.0;
     //! \f$\omega_\text{max}\f$
-    unsigned MAX_PROLIFERATION_CAPACITY = 10u;
+    int MAX_PROLIFERATION_CAPACITY = 10;
     //! \f$\mu_\beta\f$
     double RATE_BIRTH = 0.0;
     //! \f$\mu_\delta\f$
@@ -81,7 +81,7 @@ class Cell {
     //! Default constructor
     Cell() = default;
     //! Constructor for first cells
-    Cell(const coord_t& v, unsigned i,
+    Cell(const coord_t& v, int i,
          std::shared_ptr<EventRates> er=std::make_shared<EventRates>()) noexcept:
       event_rates_(er), coord_(v), id_(i) {}
     //! Copy constructor
@@ -111,7 +111,7 @@ class Cell {
     //! Change #proliferation_capacity_ stochastically
     void differentiate(urbg_t&);
     //! Set #time_of_birth_; reset other properties
-    void set_time_of_birth(double t, unsigned i, const std::shared_ptr<Cell>& ancestor) noexcept {
+    void set_time_of_birth(double t, int i, const std::shared_ptr<Cell>& ancestor) noexcept {
         time_of_birth_ = t;
         id_ = i;
         ancestor_ = ancestor;
@@ -157,7 +157,7 @@ class Cell {
     //! TSV
     void format_to_back(std::string& buffer) const;
     //! Write TSV while tracing back #ancestor_ recursively
-    void traceback(std::string& buffer, std::unordered_set<unsigned>& done) const;
+    void traceback(std::string& buffer, std::unordered_set<int>& done) const;
 
     //! Set #PARAM_
     static void param(const param_type& p);
@@ -182,7 +182,7 @@ class Cell {
     //! Position in a tumor
     coord_t coord_{};
     //! ID
-    unsigned id_{};
+    int id_{};
     //! \f$\omega\f$; stem cell if negative
     int8_t proliferation_capacity_{-1};
     //! next event: birth, death, or migration
