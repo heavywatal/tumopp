@@ -9,6 +9,7 @@
 #include "random.hpp"
 
 #include <cstdint>
+#include <iterator>
 #include <unordered_set>
 #include <string>
 #include <memory>
@@ -155,7 +156,7 @@ class Cell {
     //! TSV header
     static const char* header();
     //! TSV
-    void format_to_back(std::string& buffer) const;
+    std::back_insert_iterator<std::string> format_to_back(std::string& buffer) const;
     //! Write TSV while tracing back #ancestor_ recursively
     void traceback(std::string& buffer, std::unordered_set<int>& done) const;
 

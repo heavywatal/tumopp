@@ -9,6 +9,7 @@ include(FetchContent)
 include(GNUInstallDirs)
 cmake_print_variables(CMAKE_INSTALL_PREFIX)
 
+add_compile_definitions("_LIBCPP_REMOVE_TRANSITIVE_INCLUDES")
 add_compile_options(
   -Wall -Wextra -Wpedantic
   -Wconversion -Wsign-conversion -Wshadow

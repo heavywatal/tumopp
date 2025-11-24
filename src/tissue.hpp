@@ -59,8 +59,8 @@ class Tissue {
     std::string str_drivers() const;
     //! View #benchmark_
     std::string_view str_benchmark() const { return benchmark_; }
-    //! Write all cells to buffer
-    std::string format() const;
+    //! Write all extant cells
+    friend std::string format_as(const Tissue& x);
 
     //! @cond
     bool has_snapshots() const {return !snapshots_.empty();};
@@ -165,8 +165,6 @@ class Tissue {
     //! print debug info
     bool verbose_{false};
 };
-
-inline std::string format_as(const Tissue& x) { return x.format(); }
 
 } // namespace tumopp
 

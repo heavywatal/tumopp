@@ -374,9 +374,9 @@ void Tissue::snapshots_append() {
     }
 }
 
-std::string Tissue::format() const {
+std::string format_as(const Tissue& x) {
     std::string buffer;
-    for (const auto& p: extant_cells_) {
+    for (const auto& p: x.extant_cells_) {
         p->format_to_back(buffer);
     }
     return buffer;

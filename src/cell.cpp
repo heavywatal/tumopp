@@ -171,8 +171,8 @@ const char* Cell::header() {
            "birth\tdeath\tomega";
 }
 
-void Cell::format_to_back(std::string& buffer) const {
-    fmt::format_to(std::back_inserter(buffer),
+std::back_insert_iterator<std::string> Cell::format_to_back(std::string& buffer) const {
+    return fmt::format_to(std::back_inserter(buffer),
       "{}\t{}\t{}\t{}\t{}\t{:.9g}\t{:.9g}\t{}\n",
       coord_[0], coord_[1], coord_[2],
       id_,
