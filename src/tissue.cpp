@@ -148,8 +148,8 @@ void Tissue::treatment(const double death_prob, const ptrdiff_t num_resistant_ce
     const ptrdiff_t original_size = wtl::ssize(extant_cells_);
     std::vector<std::shared_ptr<Cell>> cells;
     wtl::reserve(cells, original_size);
-    for (const auto& p: queue_) { // for reproducibility
-        cells.emplace_back(p.second);
+    for (const auto& [_time, sh_ptr]: queue_) { // for reproducibility
+        cells.emplace_back(sh_ptr);
     }
     std::shuffle(cells.begin(), cells.end(), *engine_);
     for (ptrdiff_t i=0; i<original_size; ++i) {
@@ -223,8 +223,8 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
           __FILE__, __LINE__, __PRETTY_FUNCTION__,
           local_density_effect, displacement_path
         );
-        for (const auto& p: swtch) {
-            fmt::format_to(std::back_inserter(msg), "\n -L{} -P {}", p.first, wtl::keys(p.second));
+        for (const auto& [key, map]: swtch) {
+            fmt::format_to(std::back_inserter(msg), "\n -L{} -P {}", key, wtl::keys(map));
         }
         throw std::runtime_error(msg);
     }
