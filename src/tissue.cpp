@@ -5,6 +5,7 @@
 
 #include <fmt/format.h>
 #include <fmt/ranges.h>
+#include <iterator>
 #include <wtl/random.hpp>
 #include <wtl/numeric.hpp>
 #include <wtl/algorithm.hpp>
@@ -217,16 +218,17 @@ void Tissue::init_insert_function(const std::string& local_density_effect, const
     try {
         insert = swtch.at(local_density_effect).at(displacement_path);
     } catch (std::exception& e) {
-        std::string msg;
-        fmt::format_to(std::back_inserter(msg),
+        std::string buffer;
+        auto out = std::back_inserter(buffer);
+        fmt::format_to(out,
           "\n{}:{}:{}\nInvalid value for -L/-P ({}/{}); choose from",
           __FILE__, __LINE__, __PRETTY_FUNCTION__,
           local_density_effect, displacement_path
         );
         for (const auto& [key, map]: swtch) {
-            fmt::format_to(std::back_inserter(msg), "\n -L{} -P {}", key, wtl::keys(map));
+            fmt::format_to(out, "\n -L{} -P {}", key, wtl::keys(map));
         }
-        throw std::runtime_error(msg);
+        throw std::runtime_error(buffer);
     }
 }
 
@@ -343,14 +345,15 @@ int_fast8_t Tissue::num_empty_neighbors(const coord_t& coord) const {
 
 void Tissue::entomb(const std::shared_ptr<Cell>& dead) {
     dead->set_time_of_death(time_);
-    dead->traceback(cemetery_, recorded_);
+    dead->traceback(std::back_inserter(cemetery_), recorded_);
     extant_cells_.erase(dead);
 }
 
 std::string Tissue::str_history() const {
     std::string buffer = fmt::format("{}\n{}", Cell::header(), cemetery_);
+    auto out = std::back_inserter(buffer);
     for (const auto& p: extant_cells_) {
-        p->traceback(buffer, recorded_);
+        p->traceback(out, recorded_);
     }
     return buffer;
 }
@@ -369,15 +372,17 @@ void Tissue::benchmark_append(const ptrdiff_t size) {
 }
 
 void Tissue::snapshots_append() {
+    auto out = std::back_inserter(snapshots_);
     for (const auto& p: extant_cells_) {
-        fmt::format_to(std::back_inserter(snapshots_), "{}\t{}", time_, *p);
+        fmt::format_to(out, "{}\t{}", time_, *p);
     }
 }
 
 std::string format_as(const Tissue& x) {
     std::string buffer;
+    auto out = std::back_inserter(buffer);
     for (const auto& p: x.extant_cells_) {
-        p->format_to_back(buffer);
+        p->format_to(out);
     }
     return buffer;
 }

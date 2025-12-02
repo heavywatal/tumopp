@@ -73,6 +73,8 @@ struct CellParams {
     double SD_MIG = 0.0;
 };
 
+using OutputIt = std::back_insert_iterator<std::string>;
+
 /*! @brief Cancer cell
 */
 class Cell {
@@ -155,10 +157,10 @@ class Cell {
 
     //! TSV header
     static const char* header();
-    //! TSV
-    std::back_insert_iterator<std::string> format_to_back(std::string& buffer) const;
-    //! Write TSV while tracing back #ancestor_ recursively
-    void traceback(std::string& buffer, std::unordered_set<int>& done) const;
+    //! Append a TSV row to the iterator
+    OutputIt format_to(OutputIt out) const;
+    //! Append TSV rows while tracing back #ancestor_ recursively
+    void traceback(OutputIt out, std::unordered_set<int>& done) const;
 
     //! Set #PARAM_
     static void param(const param_type& p);
@@ -192,7 +194,7 @@ class Cell {
 
 inline auto format_as(const Cell& x) {
     std::string buffer;
-    x.format_to_back(buffer);
+    x.format_to(std::back_inserter(buffer));
     return buffer;
 }
 

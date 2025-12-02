@@ -171,8 +171,8 @@ const char* Cell::header() {
            "birth\tdeath\tomega";
 }
 
-std::back_insert_iterator<std::string> Cell::format_to_back(std::string& buffer) const {
-    return fmt::format_to(std::back_inserter(buffer),
+OutputIt Cell::format_to(OutputIt out) const {
+    return fmt::format_to(out,
       "{}\t{}\t{}\t{}\t{}\t{:.9g}\t{:.9g}\t{}\n",
       coord_[0], coord_[1], coord_[2],
       id_,
@@ -181,10 +181,10 @@ std::back_insert_iterator<std::string> Cell::format_to_back(std::string& buffer)
       static_cast<int>(proliferation_capacity_));
 }
 
-void Cell::traceback(std::string& buffer, std::unordered_set<int>& done) const {
-    format_to_back(buffer);
+void Cell::traceback(OutputIt out, std::unordered_set<int>& done) const {
+    out = format_to(out);
     if (ancestor_ && done.insert(ancestor_->id_).second) {
-        ancestor_->traceback(buffer, done);
+        ancestor_->traceback(out, done);
     }
 }
 
