@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [macOS-latest, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: cmake
         run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX="${HOME}/local"
       - run: cmake --build build -j 2
