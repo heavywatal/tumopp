@@ -58,9 +58,9 @@ FetchContent_Declare(clippson
 
 FetchContent_Declare(wtl
   GIT_REPOSITORY https://github.com/heavywatal/cxxwtl.git
-  GIT_TAG f66a31048c0d934c29882082099988d9423b6bf3
+  GIT_TAG 78f39e7fb2ccc147356647a93137b7d025e475a0
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 0.11.2 COMPONENTS zlib
+  FIND_PACKAGE_ARGS 0.11.3 COMPONENTS zlib
 )
 
 Pkg_MakeAvailable(fmt pcglite clippson wtl)
