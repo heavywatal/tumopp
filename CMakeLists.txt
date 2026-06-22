@@ -36,29 +36,29 @@ macro(Pkg_MakeAvailable)
 endmacro()
 
 FetchContent_Declare(fmt
-  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-  GIT_TAG 407c905e45ad75fc29bf0f9bb7c5c2fd3475976f
+  URL https://github.com/fmtlib/fmt/archive/refs/tags/12.2.0.tar.gz
+  URL_HASH SHA256=8b852bb5aa6e7d8564f9e81394055395dd1d1936d38dfd3a17792a02bebd7af0
   EXCLUDE_FROM_ALL
-  FIND_PACKAGE_ARGS 12.1.0
+  FIND_PACKAGE_ARGS 12.2.0
 )
 
 FetchContent_Declare(pcglite
-  GIT_REPOSITORY https://github.com/heavywatal/pcglite.git
-  GIT_TAG 4eff9c9088e8b503c63c5147eb2e0a994b07a57a
+  URL https://github.com/heavywatal/pcglite/archive/refs/tags/v0.2.2.tar.gz
+  URL_HASH SHA256=f082db23389a653630a9596704bdea9e587486a2cb3a100e106529a4de7b0193
   EXCLUDE_FROM_ALL
   FIND_PACKAGE_ARGS 0.2.2
 )
 
 FetchContent_Declare(clippson
-  GIT_REPOSITORY https://github.com/heavywatal/clippson.git
-  GIT_TAG df72e9dc1ceac38a46db452e8102e807301784c5
+  URL https://github.com/heavywatal/clippson/archive/refs/tags/v0.8.12.tar.gz
+  URL_HASH SHA256=aea4fa10a078a41e31ad2980e883c65025f35510465e8ef7a72a0535c0c4f555
   EXCLUDE_FROM_ALL
   FIND_PACKAGE_ARGS 0.8.12
 )
 
 FetchContent_Declare(wtl
-  GIT_REPOSITORY https://github.com/heavywatal/cxxwtl.git
-  GIT_TAG 78f39e7fb2ccc147356647a93137b7d025e475a0
+  URL https://github.com/heavywatal/cxxwtl/archive/refs/tags/v0.11.3.tar.gz
+  URL_HASH SHA256=b8df5b253ddb7d8772a432deef7fa5d92eed05e16720c9a1eb14e630a47aea70
   EXCLUDE_FROM_ALL
   FIND_PACKAGE_ARGS 0.11.3 COMPONENTS zlib
 )
@@ -78,9 +78,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
   PUBLIC pcglite::pcglite
   PRIVATE fmt::fmt wtl::wtl wtl::zlib clippson::clippson
-)
-target_compile_definitions(${PROJECT_NAME}
-  PRIVATE FMT_USE_LOCALE=0
 )
 
 add_executable(${PROJECT_NAME}-exe src/main.cpp)
